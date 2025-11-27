@@ -2,6 +2,8 @@
 
 import { Facebook, Instagram, Mail, Phone, Copy, Check } from "lucide-react"
 import { useState } from "react"
+import { handleNavigationClick } from "@/lib/scroll"
+import { SECTION_IDS } from "@/lib/constants"
 
 export function Footer() {
   const [copied, setCopied] = useState(false)
@@ -27,22 +29,38 @@ export function Footer() {
             <h4 className="text-sm font-semibold mb-4">Enlaces Rápidos</h4>
             <ul className="space-y-2">
               <li>
-                <a href="#quienes-somos" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                <a 
+                  href={`#${SECTION_IDS.QUIENES_SOMOS}`}
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors cursor-pointer"
+                  onClick={(e) => handleNavigationClick(e, SECTION_IDS.QUIENES_SOMOS)}
+                >
                   Quiénes Somos
                 </a>
               </li>
               <li>
-                <a href="#talleres" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                <a 
+                  href={`#${SECTION_IDS.TALLERES}`}
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors cursor-pointer"
+                  onClick={(e) => handleNavigationClick(e, SECTION_IDS.TALLERES)}
+                >
                   Talleres
                 </a>
               </li>
               <li>
-                <a href="#testimonios" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                <a 
+                  href={`#${SECTION_IDS.TESTIMONIOS}`}
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors cursor-pointer"
+                  onClick={(e) => handleNavigationClick(e, SECTION_IDS.TESTIMONIOS)}
+                >
                   Testimonios
                 </a>
               </li>
               <li>
-                <a href="#equipo" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                <a 
+                  href={`#${SECTION_IDS.EQUIPO}`}
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors cursor-pointer"
+                  onClick={(e) => handleNavigationClick(e, SECTION_IDS.EQUIPO)}
+                >
                   Equipo
                 </a>
               </li>

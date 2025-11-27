@@ -4,8 +4,11 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { MessageSquare, Video } from "lucide-react"
 import { useEffect, useState } from "react"
+import { scrollToElement } from "@/lib/scroll"
+import { SECTION_IDS, HEADER_OFFSET } from "@/lib/constants"
+import type { WrittenTestimonial, VideoTestimonial } from "@/lib/types"
 
-const writtenTestimonials = [
+const writtenTestimonials: WrittenTestimonial[] = [
   {
     name: "Ainhoa Almonacid",
     image: "/Testimonio Ainhoa almonacid.jpg",
@@ -32,7 +35,7 @@ const writtenTestimonials = [
   },
 ]
 
-const videoTestimonials = [
+const videoTestimonials: VideoTestimonial[] = [
   {
     name: "Natali",
     video: "/Testimonio Visual de Natali.mp4",
@@ -63,29 +66,20 @@ export function Testimonials() {
     // Función para actualizar la pestaña activa basada en el hash (solo desde el menú)
     const updateTabFromHash = () => {
       const hash = window.location.hash
-      if (hash === "#testimonios-video") {
+      if (hash === `#${SECTION_IDS.TESTIMONIOS_VIDEO}`) {
         setActiveTab("video")
-      } else if (hash === "#testimonios-escritos") {
+      } else if (hash === `#${SECTION_IDS.TESTIMONIOS_ESCRITOS}`) {
         setActiveTab("written")
       }
     }
 
     // Detectar hash inicial solo si viene del menú
     const hash = window.location.hash
-    if (hash === "#testimonios-video" || hash === "#testimonios-escritos") {
+    if (hash === `#${SECTION_IDS.TESTIMONIOS_VIDEO}` || hash === `#${SECTION_IDS.TESTIMONIOS_ESCRITOS}`) {
       updateTabFromHash()
-      // Scroll suave a la sección si hay hash, teniendo en cuenta el header sticky
+      // Scroll suave a la sección si hay hash
       setTimeout(() => {
-        const element = document.getElementById("testimonios")
-        if (element) {
-          const headerOffset = 80
-          const elementPosition = element.getBoundingClientRect().top
-          const offsetPosition = elementPosition + window.pageYOffset - headerOffset
-          window.scrollTo({
-            top: offsetPosition,
-            behavior: "smooth"
-          })
-        }
+        scrollToElement(SECTION_IDS.TESTIMONIOS, HEADER_OFFSET)
       }, 100)
     }
 
@@ -93,16 +87,7 @@ export function Testimonials() {
     const handleHashChange = () => {
       updateTabFromHash()
       setTimeout(() => {
-        const element = document.getElementById("testimonios")
-        if (element) {
-          const headerOffset = 80
-          const elementPosition = element.getBoundingClientRect().top
-          const offsetPosition = elementPosition + window.pageYOffset - headerOffset
-          window.scrollTo({
-            top: offsetPosition,
-            behavior: "smooth"
-          })
-        }
+        scrollToElement(SECTION_IDS.TESTIMONIOS, HEADER_OFFSET)
       }, 100)
     }
 
@@ -115,7 +100,7 @@ export function Testimonials() {
   }, [])
 
   return (
-    <section id="testimonios" className="py-20 bg-secondary/30">
+    <section id={SECTION_IDS.TESTIMONIOS} className="py-20 bg-secondary/30">
       <div className="container px-4">
         <div className="max-w-3xl mx-auto text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-6 text-balance">Testimonios</h2>
@@ -134,7 +119,7 @@ export function Testimonials() {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent id="testimonios-escritos" value="written">
+          <TabsContent id={SECTION_IDS.TESTIMONIOS_ESCRITOS} value="written">
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {writtenTestimonials.map((testimonial, index) => (
                 <Card key={index} className="overflow-hidden">
@@ -150,7 +135,7 @@ export function Testimonials() {
             </div>
           </TabsContent>
 
-          <TabsContent id="testimonios-video" value="video">
+          <TabsContent id={SECTION_IDS.TESTIMONIOS_VIDEO} value="video">
             <div className="grid md:grid-cols-2 gap-6">
               {videoTestimonials.map((testimonial, index) => (
                 <Card key={index} className="overflow-hidden">

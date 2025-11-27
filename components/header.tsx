@@ -13,6 +13,8 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu"
 import { cn } from "@/lib/utils"
+import { scrollToElement, handleNavigationClick } from "@/lib/scroll"
+import { SECTION_IDS, HEADER_OFFSET } from "@/lib/constants"
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false)
@@ -21,58 +23,6 @@ export function Header() {
   useEffect(() => {
     setMounted(true)
   }, [])
-
-  // Función helper para hacer scroll suave a un elemento
-  const scrollToElement = (elementId: string) => {
-    // Función interna para hacer el scroll
-    const performScroll = () => {
-      // Buscar el elemento de múltiples formas
-      let element = document.getElementById(elementId)
-      
-      // Si no se encuentra, intentar buscar por selector
-      if (!element) {
-        element = document.querySelector(`[id="${elementId}"]`) as HTMLElement
-      }
-      
-      // Si aún no se encuentra, buscar en todas las secciones
-      if (!element) {
-        const sections = document.querySelectorAll('section[id]')
-        sections.forEach((section) => {
-          if (section.id === elementId) {
-            element = section as HTMLElement
-          }
-        })
-      }
-      
-      if (element) {
-        const headerOffset = 80
-        // Obtener la posición absoluta del elemento
-        const rect = element.getBoundingClientRect()
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop
-        const elementTop = rect.top + scrollTop
-        const offsetPosition = elementTop - headerOffset
-        
-        window.scrollTo({
-          top: Math.max(0, offsetPosition),
-          behavior: "smooth"
-        })
-        return true
-      }
-      return false
-    }
-    
-    // Esperar un poco para que el DOM esté listo
-    requestAnimationFrame(() => {
-      setTimeout(() => {
-        if (!performScroll()) {
-          // Reintentar después de más tiempo
-          setTimeout(() => {
-            performScroll()
-          }, 200)
-        }
-      }, 150)
-    })
-  }
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -92,11 +42,8 @@ export function Header() {
                     <li>
                       <NavigationMenuLink asChild>
                         <a
-                          href="#quienes-somos"
-                          onClick={(e) => {
-                            e.preventDefault()
-                            scrollToElement("quienes-somos")
-                          }}
+                          href={`#${SECTION_IDS.QUIENES_SOMOS}`}
+                          onClick={(e) => handleNavigationClick(e, SECTION_IDS.QUIENES_SOMOS)}
                           className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                         >
                           <div className="text-sm font-medium leading-none">Quiénes Somos</div>
@@ -109,11 +56,8 @@ export function Header() {
                     <li>
                       <NavigationMenuLink asChild>
                         <a
-                          href="#que-hacemos"
-                          onClick={(e) => {
-                            e.preventDefault()
-                            scrollToElement("que-hacemos")
-                          }}
+                          href={`#${SECTION_IDS.QUE_HACEMOS}`}
+                          onClick={(e) => handleNavigationClick(e, SECTION_IDS.QUE_HACEMOS)}
                           className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                         >
                           <div className="text-sm font-medium leading-none">Qué Hacemos</div>
@@ -126,11 +70,8 @@ export function Header() {
                     <li>
                       <NavigationMenuLink asChild>
                         <a
-                          href="#ofrecemos"
-                          onClick={(e) => {
-                            e.preventDefault()
-                            scrollToElement("ofrecemos")
-                          }}
+                          href={`#${SECTION_IDS.OFRECEMOS}`}
+                          onClick={(e) => handleNavigationClick(e, SECTION_IDS.OFRECEMOS)}
                           className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                         >
                           <div className="text-sm font-medium leading-none">Qué Ofrecemos</div>
@@ -143,11 +84,8 @@ export function Header() {
                     <li>
                       <NavigationMenuLink asChild>
                         <a
-                          href="#para-quien"
-                          onClick={(e) => {
-                            e.preventDefault()
-                            scrollToElement("para-quien")
-                          }}
+                          href={`#${SECTION_IDS.PARA_QUIEN}`}
+                          onClick={(e) => handleNavigationClick(e, SECTION_IDS.PARA_QUIEN)}
                           className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                         >
                           <div className="text-sm font-medium leading-none">Nuestra Misión va Dirigida</div>
@@ -163,11 +101,8 @@ export function Header() {
 
               <NavigationMenuItem>
                 <NavigationMenuLink
-                  href="#proximos-eventos"
-                  onClick={(e) => {
-                    e.preventDefault()
-                    scrollToElement("proximos-eventos")
-                  }}
+                  href={`#${SECTION_IDS.PROXIMOS_EVENTOS}`}
+                  onClick={(e) => handleNavigationClick(e, SECTION_IDS.PROXIMOS_EVENTOS)}
                   className={cn(
                     "group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 cursor-pointer",
                   )}
@@ -178,11 +113,8 @@ export function Header() {
 
               <NavigationMenuItem>
                 <NavigationMenuLink
-                  href="#inspiracion"
-                  onClick={(e) => {
-                    e.preventDefault()
-                    scrollToElement("inspiracion")
-                  }}
+                  href={`#${SECTION_IDS.INSPIRACION}`}
+                  onClick={(e) => handleNavigationClick(e, SECTION_IDS.INSPIRACION)}
                   className={cn(
                     "group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 cursor-pointer",
                   )}
@@ -198,12 +130,38 @@ export function Header() {
                     <li>
                       <NavigationMenuLink asChild>
                         <a
-                          href="#testimonios-escritos"
+                          href="#"
                           onClick={(e) => {
                             e.preventDefault()
-                            window.location.hash = "#testimonios-escritos"
-                            window.dispatchEvent(new HashChangeEvent("hashchange"))
-                            scrollToElement("testimonios")
+                            e.stopPropagation()
+                            // Cerrar el menú primero
+                            const trigger = document.querySelector('[data-state="open"]')
+                            if (trigger) {
+                              (trigger as HTMLElement).click()
+                            }
+                            // Esperar a que el menú se cierre
+                            setTimeout(() => {
+                              window.location.hash = `#${SECTION_IDS.TESTIMONIOS_ESCRITOS}`
+                              window.dispatchEvent(new HashChangeEvent("hashchange"))
+                              // Usar scrollIntoView que es más confiable
+                              setTimeout(() => {
+                                const element = document.getElementById(SECTION_IDS.TESTIMONIOS)
+                                if (element) {
+                                  element.scrollIntoView({ 
+                                    behavior: 'smooth', 
+                                    block: 'start' 
+                                  })
+                                  // Ajustar el offset del header después del scroll
+                                  setTimeout(() => {
+                                    const currentScroll = window.pageYOffset || document.documentElement.scrollTop
+                                    window.scrollTo({
+                                      top: currentScroll - HEADER_OFFSET,
+                                      behavior: 'smooth'
+                                    })
+                                  }, 100)
+                                }
+                              }, 200)
+                            }, 300)
                           }}
                           className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                         >
@@ -214,12 +172,38 @@ export function Header() {
                     <li>
                       <NavigationMenuLink asChild>
                         <a
-                          href="#testimonios-video"
+                          href="#"
                           onClick={(e) => {
                             e.preventDefault()
-                            window.location.hash = "#testimonios-video"
-                            window.dispatchEvent(new HashChangeEvent("hashchange"))
-                            scrollToElement("testimonios")
+                            e.stopPropagation()
+                            // Cerrar el menú primero
+                            const trigger = document.querySelector('[data-state="open"]')
+                            if (trigger) {
+                              (trigger as HTMLElement).click()
+                            }
+                            // Esperar a que el menú se cierre
+                            setTimeout(() => {
+                              window.location.hash = `#${SECTION_IDS.TESTIMONIOS_VIDEO}`
+                              window.dispatchEvent(new HashChangeEvent("hashchange"))
+                              // Usar scrollIntoView que es más confiable
+                              setTimeout(() => {
+                                const element = document.getElementById(SECTION_IDS.TESTIMONIOS)
+                                if (element) {
+                                  element.scrollIntoView({ 
+                                    behavior: 'smooth', 
+                                    block: 'start' 
+                                  })
+                                  // Ajustar el offset del header después del scroll
+                                  setTimeout(() => {
+                                    const currentScroll = window.pageYOffset || document.documentElement.scrollTop
+                                    window.scrollTo({
+                                      top: currentScroll - HEADER_OFFSET,
+                                      behavior: 'smooth'
+                                    })
+                                  }, 100)
+                                }
+                              }, 200)
+                            }, 300)
                           }}
                           className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                         >
@@ -238,7 +222,7 @@ export function Header() {
                     <li>
                       <NavigationMenuLink asChild>
                         <a
-                          href="#liderazgo"
+                          href={`#${SECTION_IDS.LIDERAZGO}`}
                           onClick={(e) => {
                             e.preventDefault()
                             // Cerrar el menú primero
@@ -251,9 +235,9 @@ export function Header() {
                             }
                             // Esperar a que el menú se cierre antes de hacer scroll
                             setTimeout(() => {
-                              window.location.hash = "#liderazgo"
+                              window.location.hash = `#${SECTION_IDS.LIDERAZGO}`
                               window.dispatchEvent(new HashChangeEvent("hashchange"))
-                              scrollToElement("talleres")
+                              scrollToElement(SECTION_IDS.TALLERES)
                             }, 200)
                           }}
                           className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
@@ -268,7 +252,7 @@ export function Header() {
                     <li>
                       <NavigationMenuLink asChild>
                         <a
-                          href="#otros-talleres"
+                          href={`#${SECTION_IDS.OTROS_TALLERES}`}
                           onClick={(e) => {
                             e.preventDefault()
                             // Cerrar el menú primero
@@ -281,9 +265,9 @@ export function Header() {
                             }
                             // Esperar a que el menú se cierre antes de hacer scroll
                             setTimeout(() => {
-                              window.location.hash = "#otros-talleres"
+                              window.location.hash = `#${SECTION_IDS.OTROS_TALLERES}`
                               window.dispatchEvent(new HashChangeEvent("hashchange"))
-                              scrollToElement("talleres")
+                              scrollToElement(SECTION_IDS.TALLERES)
                             }, 200)
                           }}
                           className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
@@ -298,7 +282,7 @@ export function Header() {
                     <li>
                       <NavigationMenuLink asChild>
                         <a
-                          href="#sesiones"
+                          href={`#${SECTION_IDS.SESIONES}`}
                           onClick={(e) => {
                             e.preventDefault()
                             // Cerrar el menú primero
@@ -311,9 +295,9 @@ export function Header() {
                             }
                             // Esperar a que el menú se cierre antes de hacer scroll
                             setTimeout(() => {
-                              window.location.hash = "#sesiones"
+                              window.location.hash = `#${SECTION_IDS.SESIONES}`
                               window.dispatchEvent(new HashChangeEvent("hashchange"))
-                              scrollToElement("talleres")
+                              scrollToElement(SECTION_IDS.TALLERES)
                             }, 200)
                           }}
                           className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
@@ -331,11 +315,8 @@ export function Header() {
 
               <NavigationMenuItem>
                 <NavigationMenuLink
-                  href="#equipo"
-                  onClick={(e) => {
-                    e.preventDefault()
-                    scrollToElement("equipo")
-                  }}
+                  href={`#${SECTION_IDS.EQUIPO}`}
+                  onClick={(e) => handleNavigationClick(e, SECTION_IDS.EQUIPO)}
                   className={cn(
                     "group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 cursor-pointer",
                   )}
@@ -357,116 +338,134 @@ export function Header() {
           <SheetContent side="right" className="w-[300px] sm:w-[400px]">
             <nav className="flex flex-col gap-4 mt-8">
               <a
-                href="#quienes-somos"
+                href={`#${SECTION_IDS.QUIENES_SOMOS}`}
                 className="text-lg font-medium hover:text-primary transition-colors"
                 onClick={(e) => {
-                  e.preventDefault()
-                  setIsOpen(false)
-                  scrollToElement("quienes-somos")
+                  handleNavigationClick(e, SECTION_IDS.QUIENES_SOMOS, () => setIsOpen(false))
                 }}
               >
                 Quiénes Somos
               </a>
               <a
-                href="#que-hacemos"
+                href={`#${SECTION_IDS.QUE_HACEMOS}`}
                 className="text-lg font-medium hover:text-primary transition-colors"
                 onClick={(e) => {
-                  e.preventDefault()
-                  setIsOpen(false)
-                  scrollToElement("que-hacemos")
+                  handleNavigationClick(e, SECTION_IDS.QUE_HACEMOS, () => setIsOpen(false))
                 }}
               >
                 Qué Hacemos
               </a>
               <a
-                href="#ofrecemos"
+                href={`#${SECTION_IDS.OFRECEMOS}`}
                 className="text-lg font-medium hover:text-primary transition-colors"
                 onClick={(e) => {
-                  e.preventDefault()
-                  setIsOpen(false)
-                  scrollToElement("ofrecemos")
+                  handleNavigationClick(e, SECTION_IDS.OFRECEMOS, () => setIsOpen(false))
                 }}
               >
                 Qué Ofrecemos
               </a>
               <a
-                href="#para-quien"
+                href={`#${SECTION_IDS.PARA_QUIEN}`}
                 className="text-lg font-medium hover:text-primary transition-colors"
                 onClick={(e) => {
-                  e.preventDefault()
-                  setIsOpen(false)
-                  scrollToElement("para-quien")
+                  handleNavigationClick(e, SECTION_IDS.PARA_QUIEN, () => setIsOpen(false))
                 }}
               >
                 Nuestra Misión va Dirigida
               </a>
               <a
-                href="#proximos-eventos"
+                href={`#${SECTION_IDS.PROXIMOS_EVENTOS}`}
                 className="text-lg font-medium hover:text-primary transition-colors"
                 onClick={(e) => {
-                  e.preventDefault()
-                  setIsOpen(false)
-                  scrollToElement("proximos-eventos")
+                  handleNavigationClick(e, SECTION_IDS.PROXIMOS_EVENTOS, () => setIsOpen(false))
                 }}
               >
                 Próximos Eventos
               </a>
               <a
-                href="#inspiracion"
+                href={`#${SECTION_IDS.INSPIRACION}`}
                 className="text-lg font-medium hover:text-primary transition-colors"
                 onClick={(e) => {
-                  e.preventDefault()
-                  setIsOpen(false)
-                  scrollToElement("inspiracion")
+                  handleNavigationClick(e, SECTION_IDS.INSPIRACION, () => setIsOpen(false))
                 }}
               >
                 Inspiración
               </a>
               <div className="text-lg font-medium">Testimonios</div>
               <a
-                href="#testimonios-escritos"
+                href={`#${SECTION_IDS.TESTIMONIOS_ESCRITOS}`}
                 className="text-base font-medium hover:text-primary transition-colors ml-4"
                 onClick={(e) => {
                   e.preventDefault()
+                  e.stopPropagation()
                   setIsOpen(false)
-                  window.location.hash = "#testimonios-escritos"
-                  window.dispatchEvent(new HashChangeEvent("hashchange"))
-                  scrollToElement("testimonios")
+                  window.location.hash = `#${SECTION_IDS.TESTIMONIOS_ESCRITOS}`
+                  setTimeout(() => {
+                    window.dispatchEvent(new HashChangeEvent("hashchange"))
+                    const testimoniosElement = document.getElementById(SECTION_IDS.TESTIMONIOS)
+                    if (testimoniosElement) {
+                      testimoniosElement.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'start' 
+                      })
+                      // Ajustar el offset del header después del scroll
+                      setTimeout(() => {
+                        const currentScroll = window.pageYOffset || document.documentElement.scrollTop
+                        window.scrollTo({
+                          top: currentScroll - HEADER_OFFSET,
+                          behavior: 'smooth'
+                        })
+                      }, 100)
+                    }
+                  }, 200)
                 }}
               >
                 Escritos
               </a>
               <a
-                href="#testimonios-video"
+                href={`#${SECTION_IDS.TESTIMONIOS_VIDEO}`}
                 className="text-base font-medium hover:text-primary transition-colors ml-4"
                 onClick={(e) => {
                   e.preventDefault()
+                  e.stopPropagation()
                   setIsOpen(false)
-                  window.location.hash = "#testimonios-video"
-                  window.dispatchEvent(new HashChangeEvent("hashchange"))
-                  scrollToElement("testimonios")
+                  window.location.hash = `#${SECTION_IDS.TESTIMONIOS_VIDEO}`
+                  setTimeout(() => {
+                    window.dispatchEvent(new HashChangeEvent("hashchange"))
+                    const testimoniosElement = document.getElementById(SECTION_IDS.TESTIMONIOS)
+                    if (testimoniosElement) {
+                      testimoniosElement.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'start' 
+                      })
+                      // Ajustar el offset del header después del scroll
+                      setTimeout(() => {
+                        const currentScroll = window.pageYOffset || document.documentElement.scrollTop
+                        window.scrollTo({
+                          top: currentScroll - HEADER_OFFSET,
+                          behavior: 'smooth'
+                        })
+                      }, 100)
+                    }
+                  }, 200)
                 }}
               >
                 Visuales
               </a>
               <a
-                href="#talleres"
+                href={`#${SECTION_IDS.TALLERES}`}
                 className="text-lg font-medium hover:text-primary transition-colors"
                 onClick={(e) => {
-                  e.preventDefault()
-                  setIsOpen(false)
-                  scrollToElement("talleres")
+                  handleNavigationClick(e, SECTION_IDS.TALLERES, () => setIsOpen(false))
                 }}
               >
                 Talleres y Sesiones
               </a>
               <a
-                href="#equipo"
+                href={`#${SECTION_IDS.EQUIPO}`}
                 className="text-lg font-medium hover:text-primary transition-colors"
                 onClick={(e) => {
-                  e.preventDefault()
-                  setIsOpen(false)
-                  scrollToElement("equipo")
+                  handleNavigationClick(e, SECTION_IDS.EQUIPO, () => setIsOpen(false))
                 }}
               >
                 Equipo

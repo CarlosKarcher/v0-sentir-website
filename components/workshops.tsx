@@ -6,6 +6,8 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Brain, Sparkles, Trophy, Sword, Baby, Activity, Users, MessageCircle } from "lucide-react"
 import { useEffect, useState } from "react"
+import { scrollToElement } from "@/lib/scroll"
+import { SECTION_IDS, HEADER_OFFSET } from "@/lib/constants"
 
 export function Workshops() {
   const [activeTab, setActiveTab] = useState("liderazgo")
@@ -19,31 +21,22 @@ export function Workshops() {
     // Función para actualizar la pestaña activa basada en el hash (solo desde el menú)
     const updateTabFromHash = () => {
       const hash = window.location.hash
-      if (hash === "#liderazgo") {
+      if (hash === `#${SECTION_IDS.LIDERAZGO}`) {
         setActiveTab("liderazgo")
-      } else if (hash === "#otros-talleres") {
+      } else if (hash === `#${SECTION_IDS.OTROS_TALLERES}`) {
         setActiveTab("otros")
-      } else if (hash === "#sesiones") {
+      } else if (hash === `#${SECTION_IDS.SESIONES}`) {
         setActiveTab("sesiones")
       }
     }
 
     // Detectar hash inicial solo si viene del menú
     const hash = window.location.hash
-    if (hash === "#liderazgo" || hash === "#otros-talleres" || hash === "#sesiones") {
+    if (hash === `#${SECTION_IDS.LIDERAZGO}` || hash === `#${SECTION_IDS.OTROS_TALLERES}` || hash === `#${SECTION_IDS.SESIONES}`) {
       updateTabFromHash()
-      // Scroll suave a la sección si hay hash, teniendo en cuenta el header sticky
+      // Scroll suave a la sección si hay hash
       setTimeout(() => {
-        const element = document.getElementById("talleres")
-        if (element) {
-          const headerOffset = 80
-          const elementPosition = element.getBoundingClientRect().top
-          const offsetPosition = elementPosition + window.pageYOffset - headerOffset
-          window.scrollTo({
-            top: offsetPosition,
-            behavior: "smooth"
-          })
-        }
+        scrollToElement(SECTION_IDS.TALLERES, HEADER_OFFSET)
       }, 100)
     }
 
@@ -51,16 +44,7 @@ export function Workshops() {
     const handleHashChange = () => {
       updateTabFromHash()
       setTimeout(() => {
-        const element = document.getElementById("talleres")
-        if (element) {
-          const headerOffset = 80
-          const elementPosition = element.getBoundingClientRect().top
-          const offsetPosition = elementPosition + window.pageYOffset - headerOffset
-          window.scrollTo({
-            top: offsetPosition,
-            behavior: "smooth"
-          })
-        }
+        scrollToElement(SECTION_IDS.TALLERES, HEADER_OFFSET)
       }, 100)
     }
 
@@ -73,7 +57,7 @@ export function Workshops() {
   }, [])
 
   return (
-    <section id="talleres" className="py-20">
+    <section id={SECTION_IDS.TALLERES} className="py-20">
       <div className="container px-4">
         <div className="max-w-3xl mx-auto text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-6 text-balance">Talleres, Charlas y Sesiones</h2>
@@ -89,7 +73,7 @@ export function Workshops() {
             <TabsTrigger value="sesiones">Sesiones</TabsTrigger>
           </TabsList>
 
-          <TabsContent id="liderazgo" value="liderazgo">
+          <TabsContent id={SECTION_IDS.LIDERAZGO} value="liderazgo">
             <div className="grid md:grid-cols-3 gap-6">
               <Card className="hover:shadow-lg transition-shadow">
                 <CardHeader>
@@ -143,7 +127,7 @@ export function Workshops() {
             </div>
           </TabsContent>
 
-          <TabsContent id="otros-talleres" value="otros">
+          <TabsContent id={SECTION_IDS.OTROS_TALLERES} value="otros">
             <div className="grid md:grid-cols-3 gap-6">
               <Card className="hover:shadow-lg transition-shadow">
                 <CardHeader>
@@ -204,7 +188,7 @@ export function Workshops() {
             </div>
           </TabsContent>
 
-          <TabsContent id="sesiones" value="sesiones">
+          <TabsContent id={SECTION_IDS.SESIONES} value="sesiones">
             <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
               <Card className="hover:shadow-lg transition-shadow">
                 <CardHeader>

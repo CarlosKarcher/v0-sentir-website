@@ -3,6 +3,8 @@
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
 import { useState, useEffect } from "react"
+import { scrollToElement } from "@/lib/scroll"
+import { SECTION_IDS } from "@/lib/constants"
 
 const heroImages = [
   {
@@ -108,14 +110,20 @@ export function Hero() {
           Un espacio de transformación, crecimiento y autoconocimiento donde descubrirás tu verdadero potencial
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button size="lg" asChild className="text-base">
-            <a href="#quienes-somos">
-              Comenza tu camino..
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </a>
+          <Button 
+            size="lg" 
+            className="text-base"
+            onClick={() => scrollToElement(SECTION_IDS.QUIENES_SOMOS)}
+          >
+            Comenza tu camino..
+            <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
-          <Button size="lg" asChild className="text-base bg-emerald-600 hover:bg-emerald-700 text-white">
-            <a href="#contacto">Contacto</a>
+          <Button 
+            size="lg" 
+            className="text-base bg-emerald-600 hover:bg-emerald-700 text-white"
+            onClick={() => scrollToElement(SECTION_IDS.CONTACTO)}
+          >
+            Contacto
           </Button>
         </div>
       </div>

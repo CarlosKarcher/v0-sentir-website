@@ -6,10 +6,11 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { useState } from "react"
+import { scrollToElement } from "@/lib/scroll"
+import { CONTACT_PHONE_NUMBER, SECTION_IDS } from "@/lib/constants"
+import type { Event } from "@/lib/types"
 
-const phoneNumber = "+5492966595803" // Número sin espacios para WhatsApp
-
-function EventCard({ event }: { event: any }) {
+function EventCard({ event }: { event: Event }) {
   const [flyerOpen, setFlyerOpen] = useState(false)
   const [imageError, setImageError] = useState(false)
   const [imageSrc, setImageSrc] = useState(event.flyerImage || "/flyer-transformacion-rio-gallegos.jpg")
@@ -108,17 +109,10 @@ function EventCard({ event }: { event: any }) {
               variant="outline"
               size="sm"
               className="flex items-center gap-2"
-              onClick={() => {
-                const footer = document.getElementById('contacto')
-                if (footer) {
-                  const headerOffset = 80
-                  const elementPosition = footer.getBoundingClientRect().top
-                  const offsetPosition = elementPosition + window.pageYOffset - headerOffset
-                  window.scrollTo({
-                    top: offsetPosition,
-                    behavior: 'smooth'
-                  })
-                }
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                scrollToElement(SECTION_IDS.CONTACTO)
               }}
             >
               <Phone className="h-4 w-4" />

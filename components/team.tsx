@@ -8,14 +8,14 @@ const team = [
     role: "Líder de la Comunidad Sentir",
     specialties: ["Coach Ontológico", "Conferencista", "Facilitador en Constelaciones Familiares"],
     image: "/images/fernando-20carcamo.png",
-    phone: "2966595803",
+    phone: "5492966595803",
   },
   {
     name: "Carlos Eduardo Karcher",
     role: "Coach en Biodecodificación",
     specialties: ["Staff de Sentir"],
     image: "/images/carlos-20karcher.jpg",
-    phone: "2966211547",
+    phone: "5492966211547",
   },
   {
     name: "Vanesa Miranda",
@@ -29,49 +29,49 @@ const team = [
     role: "Prof. de Educación Física y Coach Ontológico",
     specialties: ["Entrenadora Personal", "Staff de Sentir"],
     image: "/images/sol-20diaz.png",
-    phone: "2966499363",
+    phone: "5492966499363",
   },
   {
     name: "Zuni Wolert",
     role: "Coach Ontológico Profesional",
     specialties: ["Staff de Sentir"],
     image: "/images/zuni-20wolert.png",
-    phone: "2966675729",
+    phone: "5492966675729",
   },
   {
     name: "Marcelo Dalla Longa",
     role: "Coach Transformacional",
     specialties: ["Abordajes Vibroacústicos", "Biodecodificación"],
     image: "/images/marcelo-20dalla-20longa.png",
-    phone: "2975152081",
+    phone: "5492975152081",
   },
   {
     name: "Mariela Devetac",
     role: "Instructora de Gimnasia Aeróbica y localizada",
     specialties: ["Staff de Sentir"],
     image: "/images/mariela-20devetac.png",
-    phone: "2966639509",
+    phone: "5492966639509",
   },
   {
     name: "José Matulich",
     role: "Péndulo Hebreo y Reiki",
     specialties: ["Staff de Sentir"],
     image: "/images/jose-20matulich.png",
-    phone: "2966646975",
+    phone: "5492966646975",
   },
   {
     name: "Angélica Caicheo",
     role: "Sesiones de Reiki y Acupuntura",
     specialties: ["Staff de Sentir"],
     image: "/images/angelica-20caicheo.png",
-    phone: "2966232480",
+    phone: "5492966232480",
   },
   {
     name: "Natali Maresca",
     role: "Community Manager",
     specialties: ["Representante de Sentir en Tandil, Prov. de Buenos Aires", "Staff de Sentir"],
     image: "/images/natali-20maresca.png",
-    phone: "2494622736",
+    phone: "5492494622736",
   },
 ]
 
@@ -116,10 +116,7 @@ export function Team() {
                     className="flex items-center gap-2 text-sm text-primary hover:underline"
                   >
                     <Phone className="h-4 w-4" />
-                    Contacto:{" "}
-                    {member.phone.startsWith("56")
-                      ? `+${member.phone.replace(/(\d{2})(\d)(\d{4})(\d{4})/, "$1 $2 $3 $4")}`
-                      : member.phone.replace(/(\d{4})(\d{6})/, "$1-$2")}
+                    Contacto
                   </a>
                 )}
               </CardContent>

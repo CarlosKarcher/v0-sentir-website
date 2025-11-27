@@ -9,6 +9,7 @@ import { Inspiration } from "@/components/inspiration"
 import { Testimonials } from "@/components/testimonials"
 import { Workshops } from "@/components/workshops"
 import { Team } from "@/components/team"
+import { SentirDesdeAdentro } from "@/components/sentir-desde-adentro"
 import { Footer } from "@/components/footer"
 
 export default function Page() {
@@ -38,6 +39,7 @@ export default function Page() {
       <Testimonials />
       <Workshops />
       <Team />
+      <SentirDesdeAdentro />
       <Footer />
     </main>
   )

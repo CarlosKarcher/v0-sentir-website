@@ -126,6 +126,15 @@ export function Hero() {
             Contacto
           </Button>
         </div>
+        <div className="mt-4">
+          <Button 
+            size="lg" 
+            className="text-base bg-emerald-600 hover:bg-emerald-700 text-white"
+            onClick={() => scrollToElement(SECTION_IDS.SENTIR_DESDE_ADENTRO)}
+          >
+            Sentir desde Adentro
+          </Button>
+        </div>
       </div>
     </section>
   )

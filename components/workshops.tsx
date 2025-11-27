@@ -1,0 +1,268 @@
+"use client"
+
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Brain, Sparkles, Trophy, Sword, Baby, Activity, Users, MessageCircle } from "lucide-react"
+import { useEffect, useState } from "react"
+
+export function Workshops() {
+  const [activeTab, setActiveTab] = useState("liderazgo")
+
+  // Manejar cambio de pestaña desde clic directo
+  const handleTabChange = (value: string) => {
+    setActiveTab(value)
+  }
+
+  useEffect(() => {
+    // Función para actualizar la pestaña activa basada en el hash (solo desde el menú)
+    const updateTabFromHash = () => {
+      const hash = window.location.hash
+      if (hash === "#liderazgo") {
+        setActiveTab("liderazgo")
+      } else if (hash === "#otros-talleres") {
+        setActiveTab("otros")
+      } else if (hash === "#sesiones") {
+        setActiveTab("sesiones")
+      }
+    }
+
+    // Detectar hash inicial solo si viene del menú
+    const hash = window.location.hash
+    if (hash === "#liderazgo" || hash === "#otros-talleres" || hash === "#sesiones") {
+      updateTabFromHash()
+      // Scroll suave a la sección si hay hash, teniendo en cuenta el header sticky
+      setTimeout(() => {
+        const element = document.getElementById("talleres")
+        if (element) {
+          const headerOffset = 80
+          const elementPosition = element.getBoundingClientRect().top
+          const offsetPosition = elementPosition + window.pageYOffset - headerOffset
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth"
+          })
+        }
+      }, 100)
+    }
+
+    // Escuchar cambios en el hash (solo desde el menú)
+    const handleHashChange = () => {
+      updateTabFromHash()
+      setTimeout(() => {
+        const element = document.getElementById("talleres")
+        if (element) {
+          const headerOffset = 80
+          const elementPosition = element.getBoundingClientRect().top
+          const offsetPosition = elementPosition + window.pageYOffset - headerOffset
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth"
+          })
+        }
+      }, 100)
+    }
+
+    // Escuchar eventos de hashchange
+    window.addEventListener("hashchange", handleHashChange)
+
+    return () => {
+      window.removeEventListener("hashchange", handleHashChange)
+    }
+  }, [])
+
+  return (
+    <section id="talleres" className="py-20">
+      <div className="container px-4">
+        <div className="max-w-3xl mx-auto text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-balance">Talleres, Charlas y Sesiones</h2>
+          <p className="text-lg text-muted-foreground text-pretty">
+            Programas diseñados para tu crecimiento y transformación personal
+          </p>
+        </div>
+
+        <Tabs value={activeTab} onValueChange={handleTabChange} className="max-w-6xl mx-auto">
+          <TabsList className="grid w-full max-w-2xl mx-auto grid-cols-3 mb-12">
+            <TabsTrigger value="liderazgo">Liderazgo</TabsTrigger>
+            <TabsTrigger value="otros">Otros Talleres</TabsTrigger>
+            <TabsTrigger value="sesiones">Sesiones</TabsTrigger>
+          </TabsList>
+
+          <TabsContent id="liderazgo" value="liderazgo">
+            <div className="grid md:grid-cols-3 gap-6">
+              <Card className="hover:shadow-lg transition-shadow">
+                <CardHeader>
+                  <div className="rounded-full bg-primary/10 w-12 h-12 flex items-center justify-center mb-4">
+                    <Brain className="h-6 w-6 text-primary" />
+                  </div>
+                  <CardTitle>1. Autoconocimiento</CardTitle>
+                  <CardDescription>Descubre tu esencia</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground mb-4 text-pretty">
+                    Explora tu interior, identifica tus patrones y conecta con tu verdadero ser. El primer paso hacia el
+                    liderazgo auténtico.
+                  </p>
+                  <Badge variant="secondary">Nivel 1</Badge>
+                </CardContent>
+              </Card>
+
+              <Card className="hover:shadow-lg transition-shadow">
+                <CardHeader>
+                  <div className="rounded-full bg-accent/10 w-12 h-12 flex items-center justify-center mb-4">
+                    <Sparkles className="h-6 w-6 text-accent" />
+                  </div>
+                  <CardTitle>2. Transformación</CardTitle>
+                  <CardDescription>Evoluciona conscientemente</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground mb-4 text-pretty">
+                    Libera creencias limitantes, transforma tus paradigmas y crea la versión más poderosa de ti mismo.
+                  </p>
+                  <Badge variant="secondary">Nivel 2</Badge>
+                </CardContent>
+              </Card>
+
+              <Card className="hover:shadow-lg transition-shadow">
+                <CardHeader>
+                  <div className="rounded-full bg-primary/10 w-12 h-12 flex items-center justify-center mb-4">
+                    <Trophy className="h-6 w-6 text-primary" />
+                  </div>
+                  <CardTitle>3. MyL - Metas y Logros</CardTitle>
+                  <CardDescription>Alcanza tus objetivos</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground mb-4 text-pretty">
+                    Define objetivos claros, diseña tu plan de acción y materializa tus sueños con estrategias efectivas
+                    de liderazgo.
+                  </p>
+                  <Badge variant="secondary">Nivel 3</Badge>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          <TabsContent id="otros-talleres" value="otros">
+            <div className="grid md:grid-cols-3 gap-6">
+              <Card className="hover:shadow-lg transition-shadow">
+                <CardHeader>
+                  <div className="rounded-full bg-accent/10 w-12 h-12 flex items-center justify-center mb-4">
+                    <Sword className="h-6 w-6 text-accent" />
+                  </div>
+                  <CardTitle>Camino del Guerrero</CardTitle>
+                  <CardDescription>Fortaleza y coraje</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground mb-4 text-pretty">
+                    Desarrolla valentía, disciplina y resiliencia. Aprende a enfrentar desafíos con la fuerza y
+                    sabiduría de un guerrero consciente.
+                  </p>
+                  <Button variant="outline" className="w-full bg-transparent">
+                    Más información
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <Card className="hover:shadow-lg transition-shadow">
+                <CardHeader>
+                  <div className="rounded-full bg-primary/10 w-12 h-12 flex items-center justify-center mb-4">
+                    <Baby className="h-6 w-6 text-primary" />
+                  </div>
+                  <CardTitle>Sanando Niño Interior</CardTitle>
+                  <CardDescription>Sanación emocional profunda</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground mb-4 text-pretty">
+                    Reconecta con tu niño interior, sana heridas del pasado y recupera la inocencia, alegría y
+                    espontaneidad.
+                  </p>
+                  <Button variant="outline" className="w-full bg-transparent">
+                    Más información
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <Card className="hover:shadow-lg transition-shadow">
+                <CardHeader>
+                  <div className="rounded-full bg-accent/10 w-12 h-12 flex items-center justify-center mb-4">
+                    <Activity className="h-6 w-6 text-accent" />
+                  </div>
+                  <CardTitle>Biodecodificación</CardTitle>
+                  <CardDescription>Tu cuerpo tiene algo que contarte</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground mb-4 text-pretty">
+                    Descubre el mensaje emocional detrás de tus síntomas físicos. Aprende a escuchar y sanar desde la
+                    raíz.
+                  </p>
+                  <Button variant="outline" className="w-full bg-transparent">
+                    Más información
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          <TabsContent id="sesiones" value="sesiones">
+            <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+              <Card className="hover:shadow-lg transition-shadow">
+                <CardHeader>
+                  <div className="rounded-full bg-primary/10 w-12 h-12 flex items-center justify-center mb-4">
+                    <Users className="h-6 w-6 text-primary" />
+                  </div>
+                  <CardTitle>Constelaciones Familiares</CardTitle>
+                  <CardDescription>Grupales e Individuales</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground mb-4 text-pretty">
+                    Explora y sana las dinámicas familiares que afectan tu vida. Libera patrones transgeneracionales y
+                    encuentra paz en tus relaciones.
+                  </p>
+                  <ul className="space-y-2 mb-4">
+                    <li className="flex items-center gap-2 text-sm">
+                      <div className="h-1.5 w-1.5 rounded-full bg-primary" />
+                      Sesiones grupales mensuales
+                    </li>
+                    <li className="flex items-center gap-2 text-sm">
+                      <div className="h-1.5 w-1.5 rounded-full bg-primary" />
+                      Sesiones individuales personalizadas
+                    </li>
+                  </ul>
+                  <Button className="w-full">Agendar sesión</Button>
+                </CardContent>
+              </Card>
+
+              <Card className="hover:shadow-lg transition-shadow">
+                <CardHeader>
+                  <div className="rounded-full bg-accent/10 w-12 h-12 flex items-center justify-center mb-4">
+                    <MessageCircle className="h-6 w-6 text-accent" />
+                  </div>
+                  <CardTitle>Sesiones de Coaching</CardTitle>
+                  <CardDescription>Acompañamiento personalizado</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground mb-4 text-pretty">
+                    Recibe acompañamiento uno a uno para alcanzar tus metas personales y profesionales. Coaching
+                    ontológico y de vida.
+                  </p>
+                  <ul className="space-y-2 mb-4">
+                    <li className="flex items-center gap-2 text-sm">
+                      <div className="h-1.5 w-1.5 rounded-full bg-accent" />
+                      Sesiones presenciales y online
+                    </li>
+                    <li className="flex items-center gap-2 text-sm">
+                      <div className="h-1.5 w-1.5 rounded-full bg-accent" />
+                      Planes personalizados
+                    </li>
+                  </ul>
+                  <Button className="w-full">Agendar sesión</Button>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+        </Tabs>
+      </div>
+    </section>
+  )
+}

@@ -1,0 +1,52 @@
+import { Card, CardContent } from "@/components/ui/card"
+import { Quote } from "lucide-react"
+
+const inspirations = [
+  {
+    text: "La verdadera transformación comienza cuando te atreves a mirarte al espejo del alma.",
+    type: "Frase",
+  },
+  {
+    text: "Había una vez un águila que creció entre pollos y creía que era uno de ellos, hasta que un día miró al cielo y recordó quién era realmente.",
+    type: "Relato",
+  },
+  {
+    text: "El liderazgo no es un cargo, es una actitud de servicio y autenticidad.",
+    type: "Frase",
+  },
+  {
+    text: "Un sabio maestro le dijo a su discípulo: 'No busques la luz fuera de ti, tú mismo eres la lámpara que ilumina el camino.'",
+    type: "Cuento",
+  },
+]
+
+export function Inspiration() {
+  return (
+    <section id="inspiracion" className="py-20">
+      <div className="container px-4">
+        <div className="max-w-3xl mx-auto text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-balance">Inspiración y Reflexión</h2>
+          <p className="text-lg text-muted-foreground text-pretty">
+            Relatos, cuentos y frases que elevan el espíritu y nutren el alma
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+          {inspirations.map((item, index) => (
+            <Card key={index} className="bg-card hover:shadow-lg transition-shadow">
+              <CardContent className="pt-6">
+                <div className="flex items-start gap-4">
+                  <Quote className="h-8 w-8 text-primary flex-shrink-0 mt-1" />
+                  <div>
+                    <p className="text-base md:text-lg mb-4 text-pretty leading-relaxed italic">{item.text}</p>
+                    <span className="text-sm text-muted-foreground font-medium">{item.type}</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}

@@ -109,7 +109,16 @@ function EventCard({ event }: { event: any }) {
               size="sm"
               className="flex items-center gap-2"
               onClick={() => {
-                window.open(`https://wa.me/${phoneNumber}`, '_blank')
+                const footer = document.getElementById('contacto')
+                if (footer) {
+                  const headerOffset = 80
+                  const elementPosition = footer.getBoundingClientRect().top
+                  const offsetPosition = elementPosition + window.pageYOffset - headerOffset
+                  window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                  })
+                }
               }}
             >
               <Phone className="h-4 w-4" />

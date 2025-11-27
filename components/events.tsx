@@ -180,6 +180,18 @@ export function Events() {
       flyerImageAlt: "/images/Autoconocimiento Punta Arenas febrero 2026.jpg",
     },
     {
+      title: "El Camino del Guerrero - Río Gallegos",
+      date: "Febrero, 2026",
+      time: "Por confirmar",
+      location: "Río Gallegos",
+      type: "Otro Taller",
+      available: true,
+      availabilityText: "Cupos disponibles",
+      hasFlyer: true,
+      flyerImage: "/El Camino de Guerrero febrero 2026.jpg",
+      flyerImageAlt: "/images/El Camino de Guerrero febrero 2026.jpg",
+    },
+    {
       title: "Taller de Autoconocimiento - Tandil (Buenos Aires)",
       date: "10, 11 y 12 de Abril, 2026",
       time: "Inicio: Viernes 10, 17 Horas",

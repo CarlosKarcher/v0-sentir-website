@@ -126,7 +126,10 @@ export function Footer() {
 
         <div className="border-t pt-8 text-center">
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} SENTIR. Todos los derechos reservados.
+            © {new Date().getFullYear()} SENTIR LIDERES. Todos los derechos reservados.
+          </p>
+          <p className="text-sm text-muted-foreground mt-2">
+            © 2025 - Idea y Desarrollo de la Web: Erick Karcher & Carlos Karcher
           </p>
         </div>
       </div>

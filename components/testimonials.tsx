@@ -54,8 +54,13 @@ const videoTestimonials = [
 export function Testimonials() {
   const [activeTab, setActiveTab] = useState("written")
 
+  // Manejar cambio de pestaña desde clic directo
+  const handleTabChange = (value: string) => {
+    setActiveTab(value)
+  }
+
   useEffect(() => {
-    // Función para actualizar la pestaña activa basada en el hash
+    // Función para actualizar la pestaña activa basada en el hash (solo desde el menú)
     const updateTabFromHash = () => {
       const hash = window.location.hash
       if (hash === "#testimonios-video") {
@@ -65,12 +70,11 @@ export function Testimonials() {
       }
     }
 
-    // Detectar hash inicial
-    updateTabFromHash()
-    
-    // Scroll suave a la sección si hay hash, teniendo en cuenta el header sticky
+    // Detectar hash inicial solo si viene del menú
     const hash = window.location.hash
     if (hash === "#testimonios-video" || hash === "#testimonios-escritos") {
+      updateTabFromHash()
+      // Scroll suave a la sección si hay hash, teniendo en cuenta el header sticky
       setTimeout(() => {
         const element = document.getElementById("testimonios")
         if (element) {
@@ -85,7 +89,7 @@ export function Testimonials() {
       }, 100)
     }
 
-    // Escuchar cambios en el hash
+    // Escuchar cambios en el hash (solo desde el menú)
     const handleHashChange = () => {
       updateTabFromHash()
       setTimeout(() => {
@@ -104,21 +108,11 @@ export function Testimonials() {
 
     // Escuchar eventos de hashchange
     window.addEventListener("hashchange", handleHashChange)
-    // También escuchar cambios manuales del hash
-    const interval = setInterval(() => {
-      const currentHash = window.location.hash
-      if (currentHash === "#testimonios-video" && activeTab !== "video") {
-        setActiveTab("video")
-      } else if (currentHash === "#testimonios-escritos" && activeTab !== "written") {
-        setActiveTab("written")
-      }
-    }, 100)
 
     return () => {
       window.removeEventListener("hashchange", handleHashChange)
-      clearInterval(interval)
     }
-  }, [activeTab])
+  }, [])
 
   return (
     <section id="testimonios" className="py-20 bg-secondary/30">
@@ -128,7 +122,7 @@ export function Testimonials() {
           <p className="text-lg text-muted-foreground text-pretty">Historias reales de transformación y crecimiento</p>
         </div>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="max-w-6xl mx-auto">
+        <Tabs value={activeTab} onValueChange={handleTabChange} className="max-w-6xl mx-auto">
           <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-12">
             <TabsTrigger value="written" className="flex items-center gap-2">
               <MessageSquare className="h-4 w-4" />

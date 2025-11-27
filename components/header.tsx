@@ -22,6 +22,58 @@ export function Header() {
     setMounted(true)
   }, [])
 
+  // Función helper para hacer scroll suave a un elemento
+  const scrollToElement = (elementId: string) => {
+    // Función interna para hacer el scroll
+    const performScroll = () => {
+      // Buscar el elemento de múltiples formas
+      let element = document.getElementById(elementId)
+      
+      // Si no se encuentra, intentar buscar por selector
+      if (!element) {
+        element = document.querySelector(`[id="${elementId}"]`) as HTMLElement
+      }
+      
+      // Si aún no se encuentra, buscar en todas las secciones
+      if (!element) {
+        const sections = document.querySelectorAll('section[id]')
+        sections.forEach((section) => {
+          if (section.id === elementId) {
+            element = section as HTMLElement
+          }
+        })
+      }
+      
+      if (element) {
+        const headerOffset = 80
+        // Obtener la posición absoluta del elemento
+        const rect = element.getBoundingClientRect()
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop
+        const elementTop = rect.top + scrollTop
+        const offsetPosition = elementTop - headerOffset
+        
+        window.scrollTo({
+          top: Math.max(0, offsetPosition),
+          behavior: "smooth"
+        })
+        return true
+      }
+      return false
+    }
+    
+    // Esperar un poco para que el DOM esté listo
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        if (!performScroll()) {
+          // Reintentar después de más tiempo
+          setTimeout(() => {
+            performScroll()
+          }, 200)
+        }
+      }, 150)
+    })
+  }
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-start gap-8">
@@ -43,16 +95,7 @@ export function Header() {
                           href="#quienes-somos"
                           onClick={(e) => {
                             e.preventDefault()
-                            const element = document.getElementById("quienes-somos")
-                            if (element) {
-                              const headerOffset = 80
-                              const elementPosition = element.getBoundingClientRect().top
-                              const offsetPosition = elementPosition + window.pageYOffset - headerOffset
-                              window.scrollTo({
-                                top: offsetPosition,
-                                behavior: "smooth"
-                              })
-                            }
+                            scrollToElement("quienes-somos")
                           }}
                           className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                         >
@@ -69,16 +112,7 @@ export function Header() {
                           href="#que-hacemos"
                           onClick={(e) => {
                             e.preventDefault()
-                            const element = document.getElementById("que-hacemos")
-                            if (element) {
-                              const headerOffset = 80
-                              const elementPosition = element.getBoundingClientRect().top
-                              const offsetPosition = elementPosition + window.pageYOffset - headerOffset
-                              window.scrollTo({
-                                top: offsetPosition,
-                                behavior: "smooth"
-                              })
-                            }
+                            scrollToElement("que-hacemos")
                           }}
                           className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                         >
@@ -95,16 +129,7 @@ export function Header() {
                           href="#ofrecemos"
                           onClick={(e) => {
                             e.preventDefault()
-                            const element = document.getElementById("ofrecemos")
-                            if (element) {
-                              const headerOffset = 80
-                              const elementPosition = element.getBoundingClientRect().top
-                              const offsetPosition = elementPosition + window.pageYOffset - headerOffset
-                              window.scrollTo({
-                                top: offsetPosition,
-                                behavior: "smooth"
-                              })
-                            }
+                            scrollToElement("ofrecemos")
                           }}
                           className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                         >
@@ -121,16 +146,7 @@ export function Header() {
                           href="#para-quien"
                           onClick={(e) => {
                             e.preventDefault()
-                            const element = document.getElementById("para-quien")
-                            if (element) {
-                              const headerOffset = 80
-                              const elementPosition = element.getBoundingClientRect().top
-                              const offsetPosition = elementPosition + window.pageYOffset - headerOffset
-                              window.scrollTo({
-                                top: offsetPosition,
-                                behavior: "smooth"
-                              })
-                            }
+                            scrollToElement("para-quien")
                           }}
                           className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                         >
@@ -148,8 +164,12 @@ export function Header() {
               <NavigationMenuItem>
                 <NavigationMenuLink
                   href="#proximos-eventos"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    scrollToElement("proximos-eventos")
+                  }}
                   className={cn(
-                    "group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50",
+                    "group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 cursor-pointer",
                   )}
                 >
                   Próximos Eventos
@@ -159,8 +179,12 @@ export function Header() {
               <NavigationMenuItem>
                 <NavigationMenuLink
                   href="#inspiracion"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    scrollToElement("inspiracion")
+                  }}
                   className={cn(
-                    "group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50",
+                    "group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 cursor-pointer",
                   )}
                 >
                   Inspiración
@@ -177,20 +201,9 @@ export function Header() {
                           href="#testimonios-escritos"
                           onClick={(e) => {
                             e.preventDefault()
-                            // Cambiar el hash para que el componente lo detecte
                             window.location.hash = "#testimonios-escritos"
-                            // Disparar evento hashchange manualmente para que se detecte inmediatamente
                             window.dispatchEvent(new HashChangeEvent("hashchange"))
-                            const element = document.getElementById("testimonios")
-                            if (element) {
-                              const headerOffset = 80
-                              const elementPosition = element.getBoundingClientRect().top
-                              const offsetPosition = elementPosition + window.pageYOffset - headerOffset
-                              window.scrollTo({
-                                top: offsetPosition,
-                                behavior: "smooth"
-                              })
-                            }
+                            scrollToElement("testimonios")
                           }}
                           className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                         >
@@ -204,20 +217,9 @@ export function Header() {
                           href="#testimonios-video"
                           onClick={(e) => {
                             e.preventDefault()
-                            // Cambiar el hash para que el componente lo detecte
                             window.location.hash = "#testimonios-video"
-                            // Disparar evento hashchange manualmente para que se detecte inmediatamente
                             window.dispatchEvent(new HashChangeEvent("hashchange"))
-                            const element = document.getElementById("testimonios")
-                            if (element) {
-                              const headerOffset = 80
-                              const elementPosition = element.getBoundingClientRect().top
-                              const offsetPosition = elementPosition + window.pageYOffset - headerOffset
-                              window.scrollTo({
-                                top: offsetPosition,
-                                behavior: "smooth"
-                              })
-                            }
+                            scrollToElement("testimonios")
                           }}
                           className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                         >
@@ -239,18 +241,20 @@ export function Header() {
                           href="#liderazgo"
                           onClick={(e) => {
                             e.preventDefault()
-                            window.location.hash = "#liderazgo"
-                            window.dispatchEvent(new HashChangeEvent("hashchange"))
-                            const element = document.getElementById("talleres")
-                            if (element) {
-                              const headerOffset = 80
-                              const elementPosition = element.getBoundingClientRect().top
-                              const offsetPosition = elementPosition + window.pageYOffset - headerOffset
-                              window.scrollTo({
-                                top: offsetPosition,
-                                behavior: "smooth"
-                              })
+                            // Cerrar el menú primero
+                            const menuContent = e.currentTarget.closest('[role="menu"]')
+                            if (menuContent) {
+                              const trigger = document.querySelector('[data-state="open"]')
+                              if (trigger) {
+                                (trigger as HTMLElement).click()
+                              }
                             }
+                            // Esperar a que el menú se cierre antes de hacer scroll
+                            setTimeout(() => {
+                              window.location.hash = "#liderazgo"
+                              window.dispatchEvent(new HashChangeEvent("hashchange"))
+                              scrollToElement("talleres")
+                            }, 200)
                           }}
                           className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                         >
@@ -267,18 +271,20 @@ export function Header() {
                           href="#otros-talleres"
                           onClick={(e) => {
                             e.preventDefault()
-                            window.location.hash = "#otros-talleres"
-                            window.dispatchEvent(new HashChangeEvent("hashchange"))
-                            const element = document.getElementById("talleres")
-                            if (element) {
-                              const headerOffset = 80
-                              const elementPosition = element.getBoundingClientRect().top
-                              const offsetPosition = elementPosition + window.pageYOffset - headerOffset
-                              window.scrollTo({
-                                top: offsetPosition,
-                                behavior: "smooth"
-                              })
+                            // Cerrar el menú primero
+                            const menuContent = e.currentTarget.closest('[role="menu"]')
+                            if (menuContent) {
+                              const trigger = document.querySelector('[data-state="open"]')
+                              if (trigger) {
+                                (trigger as HTMLElement).click()
+                              }
                             }
+                            // Esperar a que el menú se cierre antes de hacer scroll
+                            setTimeout(() => {
+                              window.location.hash = "#otros-talleres"
+                              window.dispatchEvent(new HashChangeEvent("hashchange"))
+                              scrollToElement("talleres")
+                            }, 200)
                           }}
                           className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                         >
@@ -295,18 +301,20 @@ export function Header() {
                           href="#sesiones"
                           onClick={(e) => {
                             e.preventDefault()
-                            window.location.hash = "#sesiones"
-                            window.dispatchEvent(new HashChangeEvent("hashchange"))
-                            const element = document.getElementById("talleres")
-                            if (element) {
-                              const headerOffset = 80
-                              const elementPosition = element.getBoundingClientRect().top
-                              const offsetPosition = elementPosition + window.pageYOffset - headerOffset
-                              window.scrollTo({
-                                top: offsetPosition,
-                                behavior: "smooth"
-                              })
+                            // Cerrar el menú primero
+                            const menuContent = e.currentTarget.closest('[role="menu"]')
+                            if (menuContent) {
+                              const trigger = document.querySelector('[data-state="open"]')
+                              if (trigger) {
+                                (trigger as HTMLElement).click()
+                              }
                             }
+                            // Esperar a que el menú se cierre antes de hacer scroll
+                            setTimeout(() => {
+                              window.location.hash = "#sesiones"
+                              window.dispatchEvent(new HashChangeEvent("hashchange"))
+                              scrollToElement("talleres")
+                            }, 200)
                           }}
                           className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                         >
@@ -324,8 +332,12 @@ export function Header() {
               <NavigationMenuItem>
                 <NavigationMenuLink
                   href="#equipo"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    scrollToElement("equipo")
+                  }}
                   className={cn(
-                    "group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50",
+                    "group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 cursor-pointer",
                   )}
                 >
                   Equipo
@@ -345,37 +357,68 @@ export function Header() {
           <SheetContent side="right" className="w-[300px] sm:w-[400px]">
             <nav className="flex flex-col gap-4 mt-8">
               <a
+                href="#quienes-somos"
+                className="text-lg font-medium hover:text-primary transition-colors"
+                onClick={(e) => {
+                  e.preventDefault()
+                  setIsOpen(false)
+                  scrollToElement("quienes-somos")
+                }}
+              >
+                Quiénes Somos
+              </a>
+              <a
                 href="#que-hacemos"
                 className="text-lg font-medium hover:text-primary transition-colors"
-                onClick={() => setIsOpen(false)}
+                onClick={(e) => {
+                  e.preventDefault()
+                  setIsOpen(false)
+                  scrollToElement("que-hacemos")
+                }}
               >
                 Qué Hacemos
               </a>
               <a
                 href="#ofrecemos"
                 className="text-lg font-medium hover:text-primary transition-colors"
-                onClick={() => setIsOpen(false)}
+                onClick={(e) => {
+                  e.preventDefault()
+                  setIsOpen(false)
+                  scrollToElement("ofrecemos")
+                }}
               >
                 Qué Ofrecemos
               </a>
               <a
                 href="#para-quien"
                 className="text-lg font-medium hover:text-primary transition-colors"
-                onClick={() => setIsOpen(false)}
+                onClick={(e) => {
+                  e.preventDefault()
+                  setIsOpen(false)
+                  scrollToElement("para-quien")
+                }}
               >
                 Nuestra Misión va Dirigida
               </a>
               <a
                 href="#proximos-eventos"
                 className="text-lg font-medium hover:text-primary transition-colors"
-                onClick={() => setIsOpen(false)}
+                onClick={(e) => {
+                  e.preventDefault()
+                  setIsOpen(false)
+                  scrollToElement("proximos-eventos")
+                }}
               >
                 Próximos Eventos
               </a>
               <a
                 href="#inspiracion"
                 className="text-lg font-medium hover:text-primary transition-colors"
-                onClick={() => setIsOpen(false)}
+                onClick={(e) => {
+                  e.preventDefault()
+                  setIsOpen(false)
+                  scrollToElement("inspiracion")
+                }}
               >
                 Inspiración
               </a>
@@ -383,28 +426,48 @@ export function Header() {
               <a
                 href="#testimonios-escritos"
                 className="text-base font-medium hover:text-primary transition-colors ml-4"
-                onClick={() => setIsOpen(false)}
+                onClick={(e) => {
+                  e.preventDefault()
+                  setIsOpen(false)
+                  window.location.hash = "#testimonios-escritos"
+                  window.dispatchEvent(new HashChangeEvent("hashchange"))
+                  scrollToElement("testimonios")
+                }}
               >
                 Escritos
               </a>
               <a
                 href="#testimonios-video"
                 className="text-base font-medium hover:text-primary transition-colors ml-4"
-                onClick={() => setIsOpen(false)}
+                onClick={(e) => {
+                  e.preventDefault()
+                  setIsOpen(false)
+                  window.location.hash = "#testimonios-video"
+                  window.dispatchEvent(new HashChangeEvent("hashchange"))
+                  scrollToElement("testimonios")
+                }}
               >
                 Visuales
               </a>
               <a
                 href="#talleres"
                 className="text-lg font-medium hover:text-primary transition-colors"
-                onClick={() => setIsOpen(false)}
+                onClick={(e) => {
+                  e.preventDefault()
+                  setIsOpen(false)
+                  scrollToElement("talleres")
+                }}
               >
                 Talleres y Sesiones
               </a>
               <a
                 href="#equipo"
                 className="text-lg font-medium hover:text-primary transition-colors"
-                onClick={() => setIsOpen(false)}
+                onClick={(e) => {
+                  e.preventDefault()
+                  setIsOpen(false)
+                  scrollToElement("equipo")
+                }}
               >
                 Equipo
               </a>

@@ -22,16 +22,16 @@ const inspirations = [
 
 export function Inspiration() {
   return (
-    <section id="inspiracion" className="py-20">
+    <section id="inspiracion" className="py-12 sm:py-16 md:py-20">
       <div className="container px-4">
-        <div className="max-w-3xl mx-auto text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-balance">Inspiración y Reflexión</h2>
-          <p className="text-lg text-muted-foreground text-pretty">
+        <div className="max-w-3xl mx-auto text-center mb-10 sm:mb-12 md:mb-16">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 text-balance">Inspiración y Reflexión</h2>
+          <p className="text-base sm:text-lg text-muted-foreground text-pretty">
             Relatos, cuentos y frases que elevan el espíritu y nutren el alma
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+        <div className="grid sm:grid-cols-2 gap-4 sm:gap-6 max-w-5xl mx-auto">
           {inspirations.map((item, index) => (
             <Card key={index} className="bg-card hover:shadow-lg transition-shadow">
               <CardContent className="pt-6">

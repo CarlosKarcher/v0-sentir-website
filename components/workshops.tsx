@@ -57,24 +57,24 @@ export function Workshops() {
   }, [])
 
   return (
-    <section id={SECTION_IDS.TALLERES} className="py-20">
+    <section id={SECTION_IDS.TALLERES} className="py-12 sm:py-16 md:py-20">
       <div className="container px-4">
-        <div className="max-w-3xl mx-auto text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-balance">Talleres, Charlas y Sesiones</h2>
-          <p className="text-lg text-muted-foreground text-pretty">
+        <div className="max-w-3xl mx-auto text-center mb-10 sm:mb-12 md:mb-16">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 text-balance">Talleres, Charlas y Sesiones</h2>
+          <p className="text-base sm:text-lg text-muted-foreground text-pretty">
             Programas diseñados para tu crecimiento y transformación personal
           </p>
         </div>
 
         <Tabs value={activeTab} onValueChange={handleTabChange} className="max-w-6xl mx-auto">
-          <TabsList className="grid w-full max-w-2xl mx-auto grid-cols-3 mb-12">
-            <TabsTrigger value="liderazgo">Liderazgo</TabsTrigger>
-            <TabsTrigger value="otros">Otros Talleres</TabsTrigger>
-            <TabsTrigger value="sesiones">Sesiones</TabsTrigger>
+          <TabsList className="grid w-full max-w-2xl mx-auto grid-cols-3 mb-8 sm:mb-12 overflow-x-auto">
+            <TabsTrigger value="liderazgo" className="text-xs sm:text-sm">Liderazgo</TabsTrigger>
+            <TabsTrigger value="otros" className="text-xs sm:text-sm">Otros Talleres</TabsTrigger>
+            <TabsTrigger value="sesiones" className="text-xs sm:text-sm">Sesiones</TabsTrigger>
           </TabsList>
 
           <TabsContent id={SECTION_IDS.LIDERAZGO} value="liderazgo">
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               <Card className="hover:shadow-lg transition-shadow">
                 <CardHeader>
                   <div className="rounded-full bg-primary/10 w-12 h-12 flex items-center justify-center mb-4">
@@ -128,7 +128,7 @@ export function Workshops() {
           </TabsContent>
 
           <TabsContent id={SECTION_IDS.OTROS_TALLERES} value="otros">
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               <Card className="hover:shadow-lg transition-shadow">
                 <CardHeader>
                   <div className="rounded-full bg-accent/10 w-12 h-12 flex items-center justify-center mb-4">
@@ -189,7 +189,7 @@ export function Workshops() {
           </TabsContent>
 
           <TabsContent id={SECTION_IDS.SESIONES} value="sesiones">
-            <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <div className="grid sm:grid-cols-2 gap-6 sm:gap-8 max-w-4xl mx-auto">
               <Card className="hover:shadow-lg transition-shadow">
                 <CardHeader>
                   <div className="rounded-full bg-primary/10 w-12 h-12 flex items-center justify-center mb-4">

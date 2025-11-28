@@ -16,17 +16,17 @@ export function Footer() {
 
   return (
     <footer className="bg-muted/50 border-t" id="contacto">
-      <div className="container px-4 py-12">
-        <div className="grid md:grid-cols-4 gap-8 mb-8">
+      <div className="container px-4 py-8 sm:py-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 mb-6 sm:mb-8">
           <div>
-            <h3 className="text-lg font-semibold mb-4 text-primary">SENTIR</h3>
-            <p className="text-sm text-muted-foreground text-pretty">
+            <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-primary">SENTIR</h3>
+            <p className="text-xs sm:text-sm text-muted-foreground text-pretty">
               Comunidad para el liderazgo y desarrollo personal
             </p>
           </div>
 
           <div>
-            <h4 className="text-sm font-semibold mb-4">Enlaces Rápidos</h4>
+            <h4 className="text-xs sm:text-sm font-semibold mb-3 sm:mb-4">Enlaces Rápidos</h4>
             <ul className="space-y-2">
               <li>
                 <a 
@@ -68,7 +68,7 @@ export function Footer() {
           </div>
 
           <div>
-            <h4 className="text-sm font-semibold mb-4">Contacto</h4>
+            <h4 className="text-xs sm:text-sm font-semibold mb-3 sm:mb-4">Contacto</h4>
             <ul className="space-y-3">
               <li className="flex items-start gap-2">
                 <Mail className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
@@ -118,7 +118,7 @@ export function Footer() {
           </div>
 
           <div>
-            <h4 className="text-sm font-semibold mb-4">Síguenos</h4>
+            <h4 className="text-xs sm:text-sm font-semibold mb-3 sm:mb-4">Síguenos</h4>
             <div className="flex gap-4">
               <a
                 href="https://www.facebook.com/CARCAMOFERNANDOJAVIER"
@@ -142,11 +142,11 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="border-t pt-8 text-center">
-          <p className="text-sm text-muted-foreground">
+        <div className="border-t pt-6 sm:pt-8 text-center">
+          <p className="text-xs sm:text-sm text-muted-foreground">
             © {new Date().getFullYear()} SENTIR LIDERES. Todos los derechos reservados.
           </p>
-          <p className="text-sm text-muted-foreground mt-2">
+          <p className="text-xs sm:text-sm text-muted-foreground mt-2">
             © 2025 - Idea y Desarrollo de la Web: Erick Karcher & Carlos Karcher
           </p>
         </div>

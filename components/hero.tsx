@@ -49,7 +49,7 @@ export function Hero() {
   }, [])
 
   return (
-    <section className="relative min-h-[700px] flex justify-center overflow-hidden">
+    <section className="relative min-h-[500px] sm:min-h-[600px] md:min-h-[700px] flex justify-center overflow-hidden">
       <div className="absolute inset-0 z-0">
         <div className="relative w-full h-full">
           {heroImages.map((image, index) => (
@@ -98,38 +98,37 @@ export function Hero() {
         ))}
       </div>
 
-      <div className="container relative z-10 text-center px-4 pt-8 pb-20">
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-2 text-balance leading-tight">
+      <div className="container relative z-10 text-center px-4 pt-8 sm:pt-12 md:pt-16 pb-12 sm:pb-16 md:pb-20">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-2 text-balance leading-tight">
           <span className="text-lime-400">SENTIR</span>
         </h1>
-        <p className="text-xl md:text-2xl lg:text-3xl font-bold mb-8 text-balance max-w-4xl mx-auto">
+        <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-6 sm:mb-8 text-balance max-w-4xl mx-auto px-2">
           Comunidad para el Liderazgo y Desarrollo Personal
         </p>
-        {/* </CHANGE> */}
-        <p className="text-base md:text-lg text-muted-foreground mb-8 max-w-2xl mx-auto text-pretty">
+        <p className="text-sm sm:text-base md:text-lg text-muted-foreground mb-6 sm:mb-8 max-w-2xl mx-auto text-pretty px-2">
           Un espacio de transformación, crecimiento y autoconocimiento donde descubrirás tu verdadero potencial
         </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
           <Button 
             size="lg" 
-            className="text-base"
+            className="text-sm sm:text-base w-full sm:w-auto"
             onClick={() => scrollToElement(SECTION_IDS.QUIENES_SOMOS)}
           >
             Comenza tu camino..
-            <ArrowRight className="ml-2 h-5 w-5" />
+            <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
           </Button>
           <Button 
             size="lg" 
-            className="text-base bg-emerald-600 hover:bg-emerald-700 text-white"
+            className="text-sm sm:text-base bg-emerald-600 hover:bg-emerald-700 text-white w-full sm:w-auto"
             onClick={() => scrollToElement(SECTION_IDS.CONTACTO)}
           >
             Contacto
           </Button>
         </div>
-        <div className="mt-4">
+        <div className="mt-3 sm:mt-4 px-4">
           <Button 
             size="lg" 
-            className="text-base bg-emerald-600 hover:bg-emerald-700 text-white"
+            className="text-sm sm:text-base bg-emerald-600 hover:bg-emerald-700 text-white w-full sm:w-auto"
             onClick={() => scrollToElement(SECTION_IDS.SENTIR_DESDE_ADENTRO)}
           >
             Sentir desde Adentro

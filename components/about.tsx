@@ -3,27 +3,27 @@ import { Heart, Target, Users, Sparkles } from "lucide-react"
 
 export function About() {
   return (
-    <section id="quienes-somos" className="py-20 bg-secondary/30">
+    <section id="quienes-somos" className="py-12 sm:py-16 md:py-20 bg-secondary/30">
       <div className="container px-4">
-        <div className="max-w-3xl mx-auto text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-balance">Quiénes Somos</h2>
-          <p className="text-lg text-muted-foreground text-pretty">
+        <div className="max-w-3xl mx-auto text-center mb-10 sm:mb-12 md:mb-16">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 text-balance">Quiénes Somos</h2>
+          <p className="text-base sm:text-lg text-muted-foreground text-pretty">
             SENTIR es una comunidad dedicada al desarrollo personal y liderazgo transformacional. Creemos en el poder
             del autoconocimiento y la transformación consciente para vivir una vida plena y auténtica.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-10 sm:mb-12 md:mb-16">
           {/* 1. Qué Hacemos */}
           <Card className="border-2 hover:border-primary/50 transition-colors">
             <CardContent className="pt-6">
               <div className="rounded-full bg-primary/10 w-16 h-16 flex items-center justify-center mb-4 mx-auto">
                 <Heart className="h-8 w-8 text-primary" />
               </div>
-              <h3 id="que-hacemos" className="text-xl font-semibold mb-3 text-center">
+              <h3 id="que-hacemos" className="text-lg sm:text-xl font-semibold mb-3 text-center">
                 Qué Hacemos
               </h3>
-              <p className="text-muted-foreground text-center text-pretty">
+              <p className="text-sm sm:text-base text-muted-foreground text-center text-pretty">
                 Somos un equipo de profesionales apasionados por acompañar procesos de crecimiento real. Creamos
                 espacios de aprendizaje, donde cada persona puede transformar su vida personal y profesional, logrando
                 nuevos y mejores resultados y construyendo su propio bien–estar. Con más de 10 años de experiencia,
@@ -39,10 +39,10 @@ export function About() {
               <div className="rounded-full bg-accent/10 w-16 h-16 flex items-center justify-center mb-4 mx-auto">
                 <Sparkles className="h-8 w-8 text-accent" />
               </div>
-              <h3 id="ofrecemos" className="text-xl font-semibold mb-3 text-center">
+              <h3 id="ofrecemos" className="text-lg sm:text-xl font-semibold mb-3 text-center">
                 Qué Ofrecemos
               </h3>
-              <div className="text-muted-foreground text-sm space-y-3">
+              <div className="text-muted-foreground text-xs sm:text-sm space-y-2 sm:space-y-3">
                 <div>
                   <p className="font-semibold text-foreground mb-1">
                     Talleres Vivenciales de Liderazgo y Desarrollo Personal
@@ -94,8 +94,8 @@ export function About() {
               <div className="rounded-full bg-primary/10 w-16 h-16 flex items-center justify-center mb-4 mx-auto">
                 <Target className="h-8 w-8 text-primary" />
               </div>
-              <h3 className="text-xl font-semibold mb-3 text-center">Nuestra Misión</h3>
-              <p className="text-muted-foreground text-center text-pretty mb-6">
+              <h3 className="text-lg sm:text-xl font-semibold mb-3 text-center">Nuestra Misión</h3>
+              <p className="text-sm sm:text-base text-muted-foreground text-center text-pretty mb-4 sm:mb-6">
                 Acompañar a las personas en su viaje de autoconocimiento y transformación, proporcionando herramientas
                 efectivas para alcanzar sus metas y vivir en plenitud y autenticidad.
               </p>
@@ -104,10 +104,10 @@ export function About() {
                 <div className="rounded-full bg-accent/10 w-16 h-16 flex items-center justify-center mb-4 mx-auto">
                   <Users className="h-8 w-8 text-accent" />
                 </div>
-                <h3 id="para-quien" className="text-xl font-semibold mb-3 text-center">
+                <h3 id="para-quien" className="text-lg sm:text-xl font-semibold mb-3 text-center">
                   A Quién Va Dirigido
                 </h3>
-                <p className="text-muted-foreground text-center text-pretty">
+                <p className="text-sm sm:text-base text-muted-foreground text-center text-pretty">
                   A todas las personas que buscan crecer, transformarse y desarrollar su liderazgo personal. No importa tu
                   edad o experiencia, aquí encontrarás un espacio seguro para tu desarrollo.
                 </p>

@@ -31,7 +31,7 @@ function EventCard({ event }: { event: Event }) {
           <Badge variant={event.available ? "default" : "secondary"}>{event.availabilityText}</Badge>
           <Badge variant="outline">{event.type}</Badge>
         </div>
-        <CardTitle className="text-xl">{event.title}</CardTitle>
+        <CardTitle className="text-lg sm:text-xl">{event.title}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -49,7 +49,7 @@ function EventCard({ event }: { event: Event }) {
         
         {/* Botones para Taller de Transformación */}
         {event.hasFlyer && (
-          <div className="flex flex-wrap gap-2 pt-2">
+          <div className="flex flex-col sm:flex-row flex-wrap gap-2 pt-2">
             <Sheet open={flyerOpen} onOpenChange={handleOpenChange}>
               <SheetTrigger asChild>
                 <Button variant="outline" size="sm" className="flex items-center gap-2">
@@ -57,7 +57,7 @@ function EventCard({ event }: { event: Event }) {
                   Ver Flyer
                 </Button>
               </SheetTrigger>
-              <SheetContent side="bottom" className="h-[90vh] overflow-auto">
+              <SheetContent side="bottom" className="h-[85vh] sm:h-[90vh] overflow-auto">
                 <SheetHeader>
                   <SheetTitle>Flyer - {event.title}</SheetTitle>
                 </SheetHeader>
@@ -221,16 +221,16 @@ export function Events() {
   ]
 
   return (
-    <section className="py-16 bg-muted/30" id="proximos-eventos">
+    <section className="py-12 sm:py-16 bg-muted/30" id="proximos-eventos">
       <div className="container px-4">
-        <div className="max-w-3xl mx-auto text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-balance">Próximos Eventos</h2>
-          <p className="text-lg text-muted-foreground text-pretty">
+        <div className="max-w-3xl mx-auto text-center mb-8 sm:mb-12">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 text-balance">Próximos Eventos</h2>
+          <p className="text-base sm:text-lg text-muted-foreground text-pretty">
             Únete a nuestros próximos talleres y sesiones de transformación personal
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+        <div className="grid sm:grid-cols-2 gap-4 sm:gap-6 max-w-5xl mx-auto">
           {events.map((event, index) => (
             <EventCard key={index} event={event} />
           ))}

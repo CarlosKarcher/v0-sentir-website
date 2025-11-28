@@ -77,16 +77,16 @@ const team = [
 
 export function Team() {
   return (
-    <section id="equipo" className="py-20 bg-secondary/30">
+    <section id="equipo" className="py-12 sm:py-16 md:py-20 bg-secondary/30">
       <div className="container px-4">
-        <div className="max-w-3xl mx-auto text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-balance">Nuestro Equipo</h2>
-          <p className="text-lg text-muted-foreground text-pretty">
+        <div className="max-w-3xl mx-auto text-center mb-10 sm:mb-12 md:mb-16">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 text-balance">Nuestro Equipo</h2>
+          <p className="text-base sm:text-lg text-muted-foreground text-pretty">
             Profesionales comprometidos con tu transformación y crecimiento personal
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto">
           {team.map((member, index) => (
             <Card key={index} className="overflow-hidden hover:shadow-lg transition-shadow">
               <div className="aspect-square overflow-hidden">
@@ -97,8 +97,8 @@ export function Team() {
                 />
               </div>
               <CardContent className="pt-6">
-                <h3 className="text-xl font-semibold mb-1">{member.name}</h3>
-                <p className="text-sm text-muted-foreground mb-4">{member.role}</p>
+                <h3 className="text-lg sm:text-xl font-semibold mb-1">{member.name}</h3>
+                <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4">{member.role}</p>
                 {member.specialties.length > 0 && (
                   <div className="flex flex-wrap gap-2 mb-4">
                     {member.specialties.map((specialty, idx) => (

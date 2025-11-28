@@ -100,15 +100,15 @@ export function Testimonials() {
   }, [])
 
   return (
-    <section id={SECTION_IDS.TESTIMONIOS} className="py-20 bg-secondary/30">
+    <section id={SECTION_IDS.TESTIMONIOS} className="py-12 sm:py-16 md:py-20 bg-secondary/30">
       <div className="container px-4">
-        <div className="max-w-3xl mx-auto text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-balance">Testimonios</h2>
-          <p className="text-lg text-muted-foreground text-pretty">Historias reales de transformación y crecimiento</p>
+        <div className="max-w-3xl mx-auto text-center mb-10 sm:mb-12 md:mb-16">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 text-balance">Testimonios</h2>
+          <p className="text-base sm:text-lg text-muted-foreground text-pretty">Historias reales de transformación y crecimiento</p>
         </div>
 
         <Tabs value={activeTab} onValueChange={handleTabChange} className="max-w-6xl mx-auto">
-          <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-12">
+          <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-8 sm:mb-12">
             <TabsTrigger value="written" className="flex items-center gap-2">
               <MessageSquare className="h-4 w-4" />
               Escritos
@@ -120,7 +120,7 @@ export function Testimonials() {
           </TabsList>
 
           <TabsContent id={SECTION_IDS.TESTIMONIOS_ESCRITOS} value="written">
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {writtenTestimonials.map((testimonial, index) => (
                 <Card key={index} className="overflow-hidden">
                   <CardContent className="p-0">
@@ -136,7 +136,7 @@ export function Testimonials() {
           </TabsContent>
 
           <TabsContent id={SECTION_IDS.TESTIMONIOS_VIDEO} value="video">
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
               {videoTestimonials.map((testimonial, index) => (
                 <Card key={index} className="overflow-hidden">
                   <CardContent className="p-0">

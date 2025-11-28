@@ -26,13 +26,13 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-start gap-8">
+      <div className="container flex h-14 sm:h-16 items-center justify-between sm:justify-start gap-4 sm:gap-8 px-4">
         <div className="flex items-center gap-2">
-          <span className="text-xl font-bold text-primary">SENTIR</span>
+          <span className="text-lg sm:text-xl font-bold text-primary">SENTIR</span>
         </div>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-6">
+        <nav className="hidden md:flex items-center gap-4 lg:gap-6">
           <NavigationMenu viewport={false}>
             <NavigationMenuList>
               <NavigationMenuItem>
@@ -335,11 +335,11 @@ export function Header() {
               <span className="sr-only">Abrir menú</span>
             </Button>
           </SheetTrigger>
-          <SheetContent side="right" className="w-[300px] sm:w-[400px]">
-            <nav className="flex flex-col gap-4 mt-8">
+          <SheetContent side="right" className="w-[280px] sm:w-[350px]">
+            <nav className="flex flex-col gap-3 sm:gap-4 mt-6 sm:mt-8">
               <a
                 href={`#${SECTION_IDS.QUIENES_SOMOS}`}
-                className="text-lg font-medium hover:text-primary transition-colors"
+                className="text-base sm:text-lg font-medium hover:text-primary transition-colors"
                 onClick={(e) => {
                   handleNavigationClick(e, SECTION_IDS.QUIENES_SOMOS, () => setIsOpen(false))
                 }}
@@ -348,7 +348,7 @@ export function Header() {
               </a>
               <a
                 href={`#${SECTION_IDS.QUE_HACEMOS}`}
-                className="text-lg font-medium hover:text-primary transition-colors"
+                className="text-base sm:text-lg font-medium hover:text-primary transition-colors"
                 onClick={(e) => {
                   handleNavigationClick(e, SECTION_IDS.QUE_HACEMOS, () => setIsOpen(false))
                 }}
@@ -357,7 +357,7 @@ export function Header() {
               </a>
               <a
                 href={`#${SECTION_IDS.OFRECEMOS}`}
-                className="text-lg font-medium hover:text-primary transition-colors"
+                className="text-base sm:text-lg font-medium hover:text-primary transition-colors"
                 onClick={(e) => {
                   handleNavigationClick(e, SECTION_IDS.OFRECEMOS, () => setIsOpen(false))
                 }}
@@ -366,7 +366,7 @@ export function Header() {
               </a>
               <a
                 href={`#${SECTION_IDS.PARA_QUIEN}`}
-                className="text-lg font-medium hover:text-primary transition-colors"
+                className="text-base sm:text-lg font-medium hover:text-primary transition-colors"
                 onClick={(e) => {
                   handleNavigationClick(e, SECTION_IDS.PARA_QUIEN, () => setIsOpen(false))
                 }}
@@ -375,7 +375,7 @@ export function Header() {
               </a>
               <a
                 href={`#${SECTION_IDS.PROXIMOS_EVENTOS}`}
-                className="text-lg font-medium hover:text-primary transition-colors"
+                className="text-base sm:text-lg font-medium hover:text-primary transition-colors"
                 onClick={(e) => {
                   handleNavigationClick(e, SECTION_IDS.PROXIMOS_EVENTOS, () => setIsOpen(false))
                 }}
@@ -384,17 +384,17 @@ export function Header() {
               </a>
               <a
                 href={`#${SECTION_IDS.INSPIRACION}`}
-                className="text-lg font-medium hover:text-primary transition-colors"
+                className="text-base sm:text-lg font-medium hover:text-primary transition-colors"
                 onClick={(e) => {
                   handleNavigationClick(e, SECTION_IDS.INSPIRACION, () => setIsOpen(false))
                 }}
               >
                 Inspiración
               </a>
-              <div className="text-lg font-medium">Testimonios</div>
+              <div className="text-base sm:text-lg font-medium">Testimonios</div>
               <a
                 href={`#${SECTION_IDS.TESTIMONIOS_ESCRITOS}`}
-                className="text-base font-medium hover:text-primary transition-colors ml-4"
+                className="text-sm sm:text-base font-medium hover:text-primary transition-colors ml-4"
                 onClick={(e) => {
                   e.preventDefault()
                   e.stopPropagation()
@@ -424,7 +424,7 @@ export function Header() {
               </a>
               <a
                 href={`#${SECTION_IDS.TESTIMONIOS_VIDEO}`}
-                className="text-base font-medium hover:text-primary transition-colors ml-4"
+                className="text-sm sm:text-base font-medium hover:text-primary transition-colors ml-4"
                 onClick={(e) => {
                   e.preventDefault()
                   e.stopPropagation()
@@ -454,7 +454,7 @@ export function Header() {
               </a>
               <a
                 href={`#${SECTION_IDS.TALLERES}`}
-                className="text-lg font-medium hover:text-primary transition-colors"
+                className="text-base sm:text-lg font-medium hover:text-primary transition-colors"
                 onClick={(e) => {
                   handleNavigationClick(e, SECTION_IDS.TALLERES, () => setIsOpen(false))
                 }}
@@ -463,7 +463,7 @@ export function Header() {
               </a>
               <a
                 href={`#${SECTION_IDS.EQUIPO}`}
-                className="text-lg font-medium hover:text-primary transition-colors"
+                className="text-base sm:text-lg font-medium hover:text-primary transition-colors"
                 onClick={(e) => {
                   handleNavigationClick(e, SECTION_IDS.EQUIPO, () => setIsOpen(false))
                 }}

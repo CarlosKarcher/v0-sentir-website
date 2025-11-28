@@ -44,17 +44,17 @@ export function SentirDesdeAdentro() {
   const [activeTab, setActiveTab] = useState("institucional")
 
   return (
-    <section id={SECTION_IDS.SENTIR_DESDE_ADENTRO} className="py-20 bg-secondary/30">
+    <section id={SECTION_IDS.SENTIR_DESDE_ADENTRO} className="py-12 sm:py-16 md:py-20 bg-secondary/30">
       <div className="container px-4">
-        <div className="max-w-3xl mx-auto text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-balance">Sentir desde Adentro</h2>
-          <p className="text-lg text-muted-foreground text-pretty">
+        <div className="max-w-3xl mx-auto text-center mb-10 sm:mb-12 md:mb-16">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 text-balance">Sentir desde Adentro</h2>
+          <p className="text-base sm:text-lg text-muted-foreground text-pretty">
             Videos que reflejan nuestra esencia y misión
           </p>
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="max-w-6xl mx-auto">
-          <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-12">
+          <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-8 sm:mb-12">
             <TabsTrigger value="institucional" className="flex items-center gap-2">
               <Video className="h-4 w-4" />
               Institucional
@@ -66,7 +66,7 @@ export function SentirDesdeAdentro() {
           </TabsList>
 
           <TabsContent value="institucional">
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {videosInstitucionales.map((video, index) => (
                 <Card key={index} className="overflow-hidden">
                   <CardContent className="p-0">
@@ -97,7 +97,7 @@ export function SentirDesdeAdentro() {
           </TabsContent>
 
           <TabsContent value="asi-somos">
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {videosAsiSomos.map((video, index) => (
                 <Card key={index} className="overflow-hidden">
                   <CardContent className="p-0">

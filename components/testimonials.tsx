@@ -100,8 +100,8 @@ export function Testimonials() {
   }, [])
 
   return (
-    <section id={SECTION_IDS.TESTIMONIOS} className="py-12 sm:py-16 md:py-20 bg-secondary/30">
-      <div className="container px-4 mx-auto">
+    <section id={SECTION_IDS.TESTIMONIOS} className="py-12 sm:py-16 md:py-20 bg-secondary/30 w-full flex justify-center">
+      <div className="container px-4 mx-auto w-full max-w-7xl">
         <div className="max-w-3xl mx-auto text-center mb-10 sm:mb-12 md:mb-16">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 text-balance">Testimonios</h2>
           <p className="text-base sm:text-lg text-muted-foreground text-pretty">Historias reales de transformación y crecimiento</p>

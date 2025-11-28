@@ -126,6 +126,11 @@
     @apply w-full;
   }
   .container {
-    @apply mx-auto;
+    @apply mx-auto !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+  section {
+    @apply w-full;
   }
 }

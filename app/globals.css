@@ -119,18 +119,19 @@
   * {
     @apply border-border outline-ring/50;
   }
+  html, body {
+    @apply w-full m-0 p-0;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
   body {
     @apply bg-background text-foreground;
   }
-  html, body {
+  main {
     @apply w-full;
-  }
-  .container {
-    @apply mx-auto !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
   }
   section {
-    @apply w-full;
+    @apply w-full block;
+    display: block !important;
   }
 }

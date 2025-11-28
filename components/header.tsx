@@ -28,13 +28,13 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="w-full max-w-7xl mx-auto flex h-14 sm:h-16 items-center justify-between px-4">
         <div className="flex items-center gap-3">
+          <span className="text-lg sm:text-xl font-bold text-primary">SENTIR</span>
           <img 
             src="/Fuego de Sentir.png" 
             alt="Fuego de Sentir" 
-            className="h-[1.2em] w-auto object-contain"
-            style={{ height: '1.2em', width: 'auto' }}
+            className="h-[2.4em] w-auto object-contain"
+            style={{ height: '2.4em', width: 'auto' }}
           />
-          <span className="text-lg sm:text-xl font-bold text-primary">SENTIR</span>
         </div>
 
         {/* Desktop Navigation */}

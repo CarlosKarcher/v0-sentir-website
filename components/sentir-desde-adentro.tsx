@@ -12,20 +12,16 @@ const videosInstitucionales = [
     video: "/No ha sido facil.mp4",
   },
   {
-    title: "Quiénes Somos",
-    video: "/Quienes Somos.mp4",
-  },
-  {
     title: "Tres días para vos",
     video: "/tres dias para vos.mp4",
   },
-]
-
-const videosAsiSomos = [
   {
     title: "Círculo Sentir Vialidad",
     video: "/Circulo Sentir Vialidad.mp4",
   },
+]
+
+const videosAsiSomos = [
   {
     title: "Fer Pogo uno",
     video: "/Fer Pogo uno.mp4",
@@ -35,8 +31,8 @@ const videosAsiSomos = [
     video: "/Fer Prevencion del Suicidio.mp4",
   },
   {
-    title: "Noche Mágica club Mataderos",
-    video: "/Noche Magica club Mataderos.mp4",
+    title: "Sentir en club Mataderos",
+    video: "/Sentir en club Mataderos.mp4",
   },
   {
     title: "Sentir mano 4D",

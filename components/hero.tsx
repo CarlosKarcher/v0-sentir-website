@@ -64,15 +64,16 @@ export function Hero() {
               <img
                 src={image.src || "/placeholder.svg"}
                 alt={image.alt}
-                className="w-full h-full"
+                className="w-full h-full mx-auto"
                 style={{
                   objectFit: "cover",
-                  objectPosition: "center",
+                  objectPosition: "center center",
                   imageRendering: "-webkit-optimize-contrast",
                   filter: "none",
                   backfaceVisibility: "hidden",
                   transform: "translate3d(0, 0, 0)",
                   willChange: "opacity",
+                  display: "block",
                 }}
                 loading="eager"
                 fetchPriority="high"

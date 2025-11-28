@@ -67,8 +67,8 @@ function EventCard({ event }: { event: Event }) {
                       key={imageSrc}
                       src={imageSrc}
                       alt="Flyer Taller de Transformación Río Gallegos"
-                      className="max-w-full h-auto rounded-lg shadow-lg"
-                      style={{ maxHeight: '80vh', objectFit: 'contain' }}
+                      className="max-w-full h-auto rounded-lg shadow-lg mx-auto block"
+                      style={{ maxHeight: '80vh', objectFit: 'contain', objectPosition: 'center' }}
                       onError={(e) => {
                         console.error('Error al cargar el flyer desde:', imageSrc)
                         // Intentar con ruta alternativa si existe

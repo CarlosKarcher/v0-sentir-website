@@ -123,11 +123,11 @@ export function Testimonials() {
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {writtenTestimonials.map((testimonial, index) => (
                 <Card key={index} className="overflow-hidden">
-                  <CardContent className="p-0">
+                  <CardContent className="p-0 flex justify-center items-center">
                     <img
                       src={testimonial.image}
                       alt={`Testimonio de ${testimonial.name}`}
-                      className="w-full h-auto object-cover"
+                      className="w-full h-auto object-contain mx-auto block"
                     />
                   </CardContent>
                 </Card>
@@ -140,11 +140,11 @@ export function Testimonials() {
               {videoTestimonials.map((testimonial, index) => (
                 <Card key={index} className="overflow-hidden">
                   <CardContent className="p-0">
-                    <div className="relative">
+                    <div className="relative flex justify-center items-center">
                       <video
                         src={testimonial.video}
                         controls
-                        className="w-full h-auto"
+                        className="w-full h-auto mx-auto block"
                         preload="metadata"
                         playsInline
                         onError={(e) => {

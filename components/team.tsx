@@ -89,11 +89,11 @@ export function Team() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto">
           {team.map((member, index) => (
             <Card key={index} className="overflow-hidden hover:shadow-lg transition-shadow">
-              <div className="aspect-square overflow-hidden">
+              <div className="aspect-square overflow-hidden flex justify-center items-center bg-muted">
                 <img
                   src={member.image || "/placeholder.svg"}
                   alt={member.name}
-                  className="w-full h-full object-cover hover:scale-105 transition-transform"
+                  className="w-full h-full object-cover object-center hover:scale-105 transition-transform mx-auto block"
                 />
               </div>
               <CardContent className="pt-6">

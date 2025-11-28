@@ -70,11 +70,11 @@ export function SentirDesdeAdentro() {
               {videosInstitucionales.map((video, index) => (
                 <Card key={index} className="overflow-hidden">
                   <CardContent className="p-0">
-                    <div className="relative">
+                    <div className="relative flex justify-center items-center">
                       <video
                         src={video.video}
                         controls
-                        className="w-full h-auto"
+                        className="w-full h-auto mx-auto block"
                         preload="metadata"
                         playsInline
                         onError={(e) => {
@@ -101,11 +101,11 @@ export function SentirDesdeAdentro() {
               {videosAsiSomos.map((video, index) => (
                 <Card key={index} className="overflow-hidden">
                   <CardContent className="p-0">
-                    <div className="relative">
+                    <div className="relative flex justify-center items-center">
                       <video
                         src={video.video}
                         controls
-                        className="w-full h-auto"
+                        className="w-full h-auto mx-auto block"
                         preload="metadata"
                         playsInline
                         onError={(e) => {

@@ -4,7 +4,7 @@ import { Heart, Target, Users, Sparkles } from "lucide-react"
 export function About() {
   return (
     <section id="quienes-somos" className="py-12 sm:py-16 md:py-20 bg-secondary/30">
-      <div className="container px-4">
+      <div className="container px-4 mx-auto">
         <div className="max-w-3xl mx-auto text-center mb-10 sm:mb-12 md:mb-16">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 text-balance">Quiénes Somos</h2>
           <p className="text-base sm:text-lg text-muted-foreground text-pretty">
@@ -13,7 +13,7 @@ export function About() {
           </p>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-10 sm:mb-12 md:mb-16">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-10 sm:mb-12 md:mb-16 max-w-6xl mx-auto">
           {/* 1. Qué Hacemos */}
           <Card className="border-2 hover:border-primary/50 transition-colors">
             <CardContent className="pt-6">

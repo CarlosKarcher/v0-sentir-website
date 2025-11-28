@@ -16,7 +16,7 @@ export function Footer() {
 
   return (
     <footer className="bg-muted/50 border-t" id="contacto">
-      <div className="container px-4 py-8 sm:py-12">
+      <div className="container px-4 py-8 sm:py-12 mx-auto">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 mb-6 sm:mb-8">
           <div>
             <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-primary">SENTIR</h3>

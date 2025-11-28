@@ -15,16 +15,16 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       {
-        url: "/Fuego de Sentir.png",
+        url: "/fuego-de-sentir.png",
         type: "image/png",
       },
       {
-        url: "/Fuego de Sentir.png",
+        url: "/fuego-de-sentir.png",
         sizes: "32x32",
         type: "image/png",
       },
       {
-        url: "/Fuego de Sentir.png",
+        url: "/fuego-de-sentir.png",
         sizes: "16x16",
         type: "image/png",
       },

@@ -30,7 +30,7 @@ export function Header() {
         <div className="flex items-center gap-3">
           <span className="text-lg sm:text-xl font-bold text-primary">SENTIR</span>
           <img 
-            src="/Fuego de Sentir.png" 
+            src="/fuego-de-sentir.png" 
             alt="Fuego de Sentir" 
             className="h-[2.4em] w-auto object-contain"
             style={{ height: '2.4em', width: 'auto' }}

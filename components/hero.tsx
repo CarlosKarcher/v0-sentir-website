@@ -99,7 +99,7 @@ export function Hero() {
         ))}
       </div>
 
-      <div className="container relative z-10 text-center px-4 pt-8 sm:pt-12 md:pt-16 pb-12 sm:pb-16 md:pb-20">
+      <div className="container mx-auto relative z-10 text-center px-4 pt-8 sm:pt-12 md:pt-16 pb-12 sm:pb-16 md:pb-20">
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-2 text-balance leading-tight">
           <span className="text-lime-400">SENTIR</span>
         </h1>

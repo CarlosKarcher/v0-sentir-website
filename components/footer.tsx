@@ -75,7 +75,7 @@ export function Footer() {
                 <div className="flex flex-col gap-1 flex-1">
                   <a
                     href="mailto:Sentirpsc@gmail.com"
-                    className="text-sm text-muted-foreground hover:text-primary transition-colors break-all underline"
+                    className="text-sm text-blue-900 hover:text-blue-800 transition-colors break-all underline font-medium"
                   >
                     Sentirpsc@gmail.com
                   </a>

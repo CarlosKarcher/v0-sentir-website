@@ -36,7 +36,7 @@ export function Inspiration() {
             <Card key={index} className="bg-card hover:shadow-lg transition-shadow">
               <CardContent className="pt-6">
                 <div className="flex items-start gap-4">
-                  <Quote className="h-8 w-8 text-primary flex-shrink-0 mt-1" />
+                  <Quote className="h-8 w-8 text-blue-900 flex-shrink-0 mt-1" />
                   <div>
                     <p className="text-base md:text-lg mb-4 text-pretty leading-relaxed italic">{item.text}</p>
                     <span className="text-sm text-muted-foreground font-medium">{item.type}</span>

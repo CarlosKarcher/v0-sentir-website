@@ -17,8 +17,8 @@ export function About() {
           {/* 1. Qué Hacemos */}
           <Card className="border-2 hover:border-primary/50 transition-colors">
             <CardContent className="pt-6">
-              <div className="rounded-full bg-primary/10 w-16 h-16 flex items-center justify-center mb-4 mx-auto">
-                <Heart className="h-8 w-8 text-primary" />
+              <div className="rounded-full bg-blue-900/10 w-16 h-16 flex items-center justify-center mb-4 mx-auto">
+                <Heart className="h-8 w-8 text-blue-900" />
               </div>
               <h3 id="que-hacemos" className="text-lg sm:text-xl font-semibold mb-3 text-center">
                 Qué Hacemos
@@ -36,8 +36,8 @@ export function About() {
           {/* 2. Qué Ofrecemos */}
           <Card className="border-2 hover:border-primary/50 transition-colors">
             <CardContent className="pt-6">
-              <div className="rounded-full bg-accent/10 w-16 h-16 flex items-center justify-center mb-4 mx-auto">
-                <Sparkles className="h-8 w-8 text-accent" />
+              <div className="rounded-full bg-blue-900/10 w-16 h-16 flex items-center justify-center mb-4 mx-auto">
+                <Sparkles className="h-8 w-8 text-blue-900" />
               </div>
               <h3 id="ofrecemos" className="text-lg sm:text-xl font-semibold mb-3 text-center">
                 Qué Ofrecemos
@@ -91,8 +91,8 @@ export function About() {
           {/* 3. Nuestra Misión va Dirigida - Combinado */}
           <Card className="border-2 hover:border-primary/50 transition-colors">
             <CardContent className="pt-6">
-              <div className="rounded-full bg-primary/10 w-16 h-16 flex items-center justify-center mb-4 mx-auto">
-                <Target className="h-8 w-8 text-primary" />
+              <div className="rounded-full bg-blue-900/10 w-16 h-16 flex items-center justify-center mb-4 mx-auto">
+                <Target className="h-8 w-8 text-blue-900" />
               </div>
               <h3 className="text-lg sm:text-xl font-semibold mb-3 text-center">Nuestra Misión</h3>
               <p className="text-sm sm:text-base text-muted-foreground text-center text-pretty mb-4 sm:mb-6">
@@ -101,8 +101,8 @@ export function About() {
               </p>
               
               <div className="border-t pt-6 mt-6">
-                <div className="rounded-full bg-accent/10 w-16 h-16 flex items-center justify-center mb-4 mx-auto">
-                  <Users className="h-8 w-8 text-accent" />
+                <div className="rounded-full bg-blue-900/10 w-16 h-16 flex items-center justify-center mb-4 mx-auto">
+                  <Users className="h-8 w-8 text-blue-900" />
                 </div>
                 <h3 id="para-quien" className="text-lg sm:text-xl font-semibold mb-3 text-center">
                   A Quién Va Dirigido

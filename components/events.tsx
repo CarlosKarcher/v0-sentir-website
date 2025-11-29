@@ -28,7 +28,7 @@ function EventCard({ event }: { event: Event }) {
     <Card className="overflow-hidden">
       <CardHeader>
         <div className="flex items-start justify-between gap-2 mb-2">
-          <Badge variant={event.available ? "default" : "secondary"}>{event.availabilityText}</Badge>
+          <Badge variant={event.available ? "default" : "secondary"} className={event.available ? "bg-blue-900 text-white hover:bg-blue-800 border-blue-900" : ""}>{event.availabilityText}</Badge>
           <Badge variant="outline">{event.type}</Badge>
         </div>
         <CardTitle className="text-lg sm:text-xl">{event.title}</CardTitle>

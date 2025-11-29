@@ -111,7 +111,7 @@ export function Workshops() {
               <Card className="hover:shadow-lg transition-shadow">
                 <CardHeader>
                   <div className="rounded-full bg-blue-900/10 w-12 h-12 flex items-center justify-center mb-4 overflow-hidden">
-                    <img src="/Mano 4D.png" alt="Mano 4D" className="w-full h-full object-contain" />
+                    <img src="/Vuelo de Gansos.jpg" alt="Vuelo de Gansos" className="w-full h-full object-contain" />
                   </div>
                   <CardTitle>3. MyL - Metas y Logros</CardTitle>
                   <CardDescription>Alcanza tus objetivos</CardDescription>

@@ -198,6 +198,7 @@ export function Events() {
       flyerImage: "/Autoconocimiento Rio Gallegos Enero 2026.jpg",
       flyerImageAlt: "/images/Autoconocimiento Rio Gallegos Enero 2026.jpg",
       level: "1er Nivel",
+      contactPhone: "+54 9 2966 595803",
     },
     {
       title: "Taller de Autoconocimiento - Punta Arenas",
@@ -211,6 +212,7 @@ export function Events() {
       flyerImage: "/Autoconocimiento Punta Arenas febrero 2026.jpg",
       flyerImageAlt: "/images/Autoconocimiento Punta Arenas febrero 2026.jpg",
       level: "1er Nivel",
+      contactPhone: "+56 9 6113 0835",
     },
     {
       title: "El Camino del Guerrero - Río Gallegos",
@@ -223,6 +225,7 @@ export function Events() {
       hasFlyer: true,
       flyerImage: "/El Camino de Guerrero febrero 2026.jpg",
       flyerImageAlt: "/images/El Camino de Guerrero febrero 2026.jpg",
+      contactPhone: "+54 9 2966 595803",
     },
     {
       title: "Taller de Autoconocimiento - Tandil (Buenos Aires)",
@@ -236,6 +239,7 @@ export function Events() {
       flyerImage: "/Autoconocimiento Tandil Abril 2026.jpg",
       flyerImageAlt: "/images/Autoconocimiento Tandil Abril 2026.jpg",
       level: "1er Nivel",
+      contactPhone: "+54 9 2966 595803",
     },
     {
       title: "Taller de Autoconocimiento - Necochea (Buenos Aires)",
@@ -249,6 +253,7 @@ export function Events() {
       flyerImage: "/autoconocimiento Necochea Abril 2026.jpg",
       flyerImageAlt: "/images/autoconocimiento Necochea Abril 2026.jpg",
       level: "1er Nivel",
+      contactPhone: "+54 9 2966 595803",
     },
   ]
 

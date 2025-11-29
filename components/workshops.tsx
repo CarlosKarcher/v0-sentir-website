@@ -77,8 +77,8 @@ export function Workshops() {
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               <Card className="hover:shadow-lg transition-shadow">
                 <CardHeader>
-                  <div className="rounded-full bg-blue-900/10 w-12 h-12 flex items-center justify-center mb-4">
-                    <Brain className="h-6 w-6 text-blue-900" />
+                  <div className="rounded-full bg-blue-900/10 w-12 h-12 flex items-center justify-center mb-4 overflow-hidden">
+                    <img src="/Mano 4D.png" alt="Mano 4D" className="w-full h-full object-contain" />
                   </div>
                   <CardTitle>1. Autoconocimiento</CardTitle>
                   <CardDescription>Descubre tu esencia</CardDescription>
@@ -94,8 +94,8 @@ export function Workshops() {
 
               <Card className="hover:shadow-lg transition-shadow">
                 <CardHeader>
-                  <div className="rounded-full bg-blue-900/10 w-12 h-12 flex items-center justify-center mb-4">
-                    <Sparkles className="h-6 w-6 text-blue-900" />
+                  <div className="rounded-full bg-blue-900/10 w-12 h-12 flex items-center justify-center mb-4 overflow-hidden">
+                    <img src="/Mano 4D.png" alt="Mano 4D" className="w-full h-full object-contain" />
                   </div>
                   <CardTitle>2. Transformación</CardTitle>
                   <CardDescription>Evoluciona conscientemente</CardDescription>
@@ -110,8 +110,8 @@ export function Workshops() {
 
               <Card className="hover:shadow-lg transition-shadow">
                 <CardHeader>
-                  <div className="rounded-full bg-blue-900/10 w-12 h-12 flex items-center justify-center mb-4">
-                    <Trophy className="h-6 w-6 text-blue-900" />
+                  <div className="rounded-full bg-blue-900/10 w-12 h-12 flex items-center justify-center mb-4 overflow-hidden">
+                    <img src="/Mano 4D.png" alt="Mano 4D" className="w-full h-full object-contain" />
                   </div>
                   <CardTitle>3. MyL - Metas y Logros</CardTitle>
                   <CardDescription>Alcanza tus objetivos</CardDescription>
@@ -131,8 +131,8 @@ export function Workshops() {
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               <Card className="hover:shadow-lg transition-shadow">
                 <CardHeader>
-                  <div className="rounded-full bg-accent/10 w-12 h-12 flex items-center justify-center mb-4">
-                    <Sword className="h-6 w-6 text-accent" />
+                  <div className="rounded-full bg-accent/10 w-12 h-12 flex items-center justify-center mb-4 overflow-hidden">
+                    <img src="/Camino del Guerrero.png" alt="Camino del Guerrero" className="w-full h-full object-contain" />
                   </div>
                   <CardTitle>Camino del Guerrero</CardTitle>
                   <CardDescription>Fortaleza y coraje</CardDescription>
@@ -169,8 +169,8 @@ export function Workshops() {
 
               <Card className="hover:shadow-lg transition-shadow">
                 <CardHeader>
-                  <div className="rounded-full bg-accent/10 w-12 h-12 flex items-center justify-center mb-4">
-                    <Activity className="h-6 w-6 text-accent" />
+                  <div className="rounded-full bg-accent/10 w-12 h-12 flex items-center justify-center mb-4 overflow-hidden">
+                    <img src="/Biodecodificacion.png" alt="Biodecodificación" className="w-full h-full object-contain" />
                   </div>
                   <CardTitle>Biodecodificación</CardTitle>
                   <CardDescription>Tu cuerpo tiene algo que contarte</CardDescription>

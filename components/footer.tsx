@@ -104,13 +104,13 @@ export function Footer() {
                     href="tel:+542966595803"
                     className="text-sm text-muted-foreground hover:text-primary transition-colors"
                   >
-                    2966-595803
+                    2966-595803 - Fernando Cárcamo
                   </a>
                   <a
                     href="tel:+542966211547"
                     className="text-sm text-muted-foreground hover:text-primary transition-colors"
                   >
-                    2966-211547
+                    2966-211547 - Carlos Karcher
                   </a>
                 </div>
               </li>

@@ -14,6 +14,7 @@ export interface Event {
   flyerImage?: string
   flyerImageAlt?: string
   level?: string
+  contactPhone?: string
 }
 
 export interface WrittenTestimonial {

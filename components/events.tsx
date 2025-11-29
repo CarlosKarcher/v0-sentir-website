@@ -10,6 +10,12 @@ import { scrollToElement } from "@/lib/scroll"
 import { CONTACT_PHONE_NUMBER, SECTION_IDS } from "@/lib/constants"
 import type { Event } from "@/lib/types"
 
+// Función helper para generar enlace de WhatsApp
+const getWhatsAppLink = (phoneNumber: string) => {
+  const cleanNumber = phoneNumber.replace(/\s+/g, '')
+  return `https://wa.me/${cleanNumber}`
+}
+
 function EventCard({ event }: { event: Event }) {
   const [flyerOpen, setFlyerOpen] = useState(false)
   const [imageError, setImageError] = useState(false)
@@ -113,7 +119,11 @@ function EventCard({ event }: { event: Event }) {
                 onClick={(e) => {
                   e.preventDefault()
                   e.stopPropagation()
-                  scrollToElement(SECTION_IDS.CONTACTO)
+                  if (event.contactPhone) {
+                    window.open(getWhatsAppLink(event.contactPhone), '_blank')
+                  } else {
+                    scrollToElement(SECTION_IDS.CONTACTO)
+                  }
                 }}
               >
                 <Phone className="h-4 w-4" />
@@ -154,6 +164,7 @@ export function Events() {
       // También intentar con diferentes rutas posibles
       flyerImageAlt: "/images/flyer-transformacion-rio-gallegos.jpg",
       level: "2do. Nivel",
+      contactPhone: "+54 9 2966 595803",
     },
     {
       title: "Taller de MyL: Creativa",

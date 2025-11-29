@@ -13,6 +13,7 @@ export interface Event {
   hasFlyer?: boolean
   flyerImage?: string
   flyerImageAlt?: string
+  level?: string
 }
 
 export interface WrittenTestimonial {

@@ -25,7 +25,7 @@ function EventCard({ event }: { event: Event }) {
   }
   
   return (
-    <Card className="overflow-hidden">
+    <Card className="overflow-hidden relative">
       <CardHeader>
         <div className="flex items-start justify-between gap-2 mb-2">
           <Badge variant={event.available ? "default" : "secondary"} className={event.available ? "bg-blue-900 text-white hover:bg-blue-800 border-blue-900" : ""}>{event.availabilityText}</Badge>
@@ -121,6 +121,13 @@ function EventCard({ event }: { event: Event }) {
           </div>
         )}
       </CardContent>
+      {event.level && (
+        <div className="absolute bottom-2 right-2">
+          <Badge className="bg-blue-900 text-white hover:bg-blue-800 border-blue-900 text-xs font-semibold px-2 py-1">
+            {event.level}
+          </Badge>
+        </div>
+      )}
     </Card>
   )
 }
@@ -139,6 +146,7 @@ export function Events() {
       flyerImage: "/flyer-transformacion-rio-gallegos.jpg",
       // También intentar con diferentes rutas posibles
       flyerImageAlt: "/images/flyer-transformacion-rio-gallegos.jpg",
+      level: "2do. Nivel",
     },
     {
       title: "Taller de MyL: Creativa",
@@ -148,6 +156,7 @@ export function Events() {
       type: "Taller de Liderazgo",
       available: false,
       availabilityText: "Cupos Agotados",
+      level: "3er Nivel",
     },
     {
       title: "Taller de MyL - Cierre y Campamento",
@@ -157,6 +166,7 @@ export function Events() {
       type: "Taller de Liderazgo",
       available: false,
       availabilityText: "Cupos Agotados",
+      level: "3er Nivel",
     },
     {
       title: "Taller de Autoconocimiento - Río Gallegos",
@@ -169,6 +179,7 @@ export function Events() {
       hasFlyer: true,
       flyerImage: "/Autoconocimiento Rio Gallegos Enero 2026.jpg",
       flyerImageAlt: "/images/Autoconocimiento Rio Gallegos Enero 2026.jpg",
+      level: "1er Nivel",
     },
     {
       title: "Taller de Autoconocimiento - Punta Arenas",
@@ -181,6 +192,7 @@ export function Events() {
       hasFlyer: true,
       flyerImage: "/Autoconocimiento Punta Arenas febrero 2026.jpg",
       flyerImageAlt: "/images/Autoconocimiento Punta Arenas febrero 2026.jpg",
+      level: "1er Nivel",
     },
     {
       title: "El Camino del Guerrero - Río Gallegos",
@@ -205,6 +217,7 @@ export function Events() {
       hasFlyer: true,
       flyerImage: "/Autoconocimiento Tandil Abril 2026.jpg",
       flyerImageAlt: "/images/Autoconocimiento Tandil Abril 2026.jpg",
+      level: "1er Nivel",
     },
     {
       title: "Taller de Autoconocimiento - Necochea (Buenos Aires)",
@@ -217,6 +230,7 @@ export function Events() {
       hasFlyer: true,
       flyerImage: "/autoconocimiento Necochea Abril 2026.jpg",
       flyerImageAlt: "/images/autoconocimiento Necochea Abril 2026.jpg",
+      level: "1er Nivel",
     },
   ]
 

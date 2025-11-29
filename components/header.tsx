@@ -28,7 +28,7 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="w-full max-w-7xl mx-auto flex h-14 sm:h-16 items-center justify-between px-4">
         <div className="flex items-center gap-3">
-          <span className="text-lg sm:text-xl font-bold text-primary">SENTIR</span>
+          <span className="text-lg sm:text-xl font-bold text-blue-900">SENTIR</span>
           <img 
             src="/fuego-de-sentir.png" 
             alt="Fuego de Sentir" 

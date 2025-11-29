@@ -101,7 +101,7 @@ export function Hero() {
 
       <div className="w-full max-w-7xl mx-auto relative z-10 text-center px-4 pt-8 sm:pt-12 md:pt-16 pb-12 sm:pb-16 md:pb-20">
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-2 text-balance leading-tight">
-          <span className="text-lime-400">SENTIR</span>
+          <span className="text-blue-900">SENTIR</span>
         </h1>
         <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-6 sm:mb-8 text-balance max-w-4xl mx-auto px-2">
           Comunidad para el Liderazgo y Desarrollo Personal
@@ -112,7 +112,7 @@ export function Hero() {
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
           <Button 
             size="lg" 
-            className="text-sm sm:text-base w-full sm:w-auto"
+            className="text-sm sm:text-base bg-blue-900 hover:bg-blue-800 text-white w-full sm:w-auto"
             onClick={() => scrollToElement(SECTION_IDS.QUIENES_SOMOS)}
           >
             Comenza tu camino..
@@ -120,7 +120,7 @@ export function Hero() {
           </Button>
           <Button 
             size="lg" 
-            className="text-sm sm:text-base bg-emerald-600 hover:bg-emerald-700 text-white w-full sm:w-auto"
+            className="text-sm sm:text-base bg-blue-900 hover:bg-blue-800 text-white w-full sm:w-auto"
             onClick={() => scrollToElement(SECTION_IDS.CONTACTO)}
           >
             Contacto
@@ -129,7 +129,7 @@ export function Hero() {
         <div className="mt-3 sm:mt-4 px-4">
           <Button 
             size="lg" 
-            className="text-sm sm:text-base bg-emerald-600 hover:bg-emerald-700 text-white w-full sm:w-auto"
+            className="text-sm sm:text-base bg-blue-900 hover:bg-blue-800 text-white w-full sm:w-auto"
             onClick={() => scrollToElement(SECTION_IDS.SENTIR_DESDE_ADENTRO)}
           >
             Sentir desde Adentro

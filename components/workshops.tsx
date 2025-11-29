@@ -213,7 +213,7 @@ export function Workshops() {
                       Sesiones individuales personalizadas
                     </li>
                   </ul>
-                  <Button className="w-full">Agendar sesión</Button>
+                  <Button className="w-full bg-blue-900 hover:bg-blue-800 text-white">Agendar sesión</Button>
                 </CardContent>
               </Card>
 
@@ -240,7 +240,7 @@ export function Workshops() {
                       Planes personalizados
                     </li>
                   </ul>
-                  <Button className="w-full">Agendar sesión</Button>
+                  <Button className="w-full bg-blue-900 hover:bg-blue-800 text-white">Agendar sesión</Button>
                 </CardContent>
               </Card>
             </div>

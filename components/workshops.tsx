@@ -95,7 +95,7 @@ export function Workshops() {
               <Card className="hover:shadow-lg transition-shadow">
                 <CardHeader>
                   <div className="rounded-full bg-blue-900/10 w-12 h-12 flex items-center justify-center mb-4 overflow-hidden">
-                    <img src="/Mano 4D.png" alt="Mano 4D" className="w-full h-full object-contain" />
+                    <img src="/Transfor Gaviotas.jpg" alt="Transformación" className="w-full h-full object-contain" />
                   </div>
                   <CardTitle>2. Transformación</CardTitle>
                   <CardDescription>Evoluciona conscientemente</CardDescription>
@@ -150,8 +150,8 @@ export function Workshops() {
 
               <Card className="hover:shadow-lg transition-shadow">
                 <CardHeader>
-                  <div className="rounded-full bg-primary/10 w-12 h-12 flex items-center justify-center mb-4">
-                    <Baby className="h-6 w-6 text-primary" />
+                  <div className="rounded-full bg-primary/10 w-12 h-12 flex items-center justify-center mb-4 overflow-hidden">
+                    <img src="/Niño interior.jpg" alt="Niño Interior" className="w-full h-full object-contain" />
                   </div>
                   <CardTitle>Sanando Niño Interior</CardTitle>
                   <CardDescription>Sanación emocional profunda</CardDescription>
@@ -170,7 +170,7 @@ export function Workshops() {
               <Card className="hover:shadow-lg transition-shadow">
                 <CardHeader>
                   <div className="rounded-full bg-accent/10 w-12 h-12 flex items-center justify-center mb-4 overflow-hidden">
-                    <img src="/Biodecodificacion.png" alt="Biodecodificación" className="w-full h-full object-contain" />
+                    <img src="/biodecodificacion cuerpo.png" alt="Biodecodificación" className="w-full h-full object-contain" />
                   </div>
                   <CardTitle>Biodecodificación</CardTitle>
                   <CardDescription>Tu cuerpo tiene algo que contarte</CardDescription>
@@ -192,8 +192,8 @@ export function Workshops() {
             <div className="grid sm:grid-cols-2 gap-6 sm:gap-8 max-w-4xl mx-auto">
               <Card className="hover:shadow-lg transition-shadow">
                 <CardHeader>
-                  <div className="rounded-full bg-primary/10 w-12 h-12 flex items-center justify-center mb-4">
-                    <Users className="h-6 w-6 text-primary" />
+                  <div className="rounded-full bg-primary/10 w-12 h-12 flex items-center justify-center mb-4 overflow-hidden">
+                    <img src="/Constelaciones.jpg" alt="Constelaciones Familiares" className="w-full h-full object-contain" />
                   </div>
                   <CardTitle>Constelaciones Familiares</CardTitle>
                   <CardDescription>Grupales e Individuales</CardDescription>
@@ -219,8 +219,8 @@ export function Workshops() {
 
               <Card className="hover:shadow-lg transition-shadow">
                 <CardHeader>
-                  <div className="rounded-full bg-accent/10 w-12 h-12 flex items-center justify-center mb-4">
-                    <MessageCircle className="h-6 w-6 text-accent" />
+                  <div className="rounded-full bg-accent/10 w-12 h-12 flex items-center justify-center mb-4 overflow-hidden">
+                    <img src="/sesiones de Coaching.jpg" alt="Sesiones de Coaching" className="w-full h-full object-contain" />
                   </div>
                   <CardTitle>Sesiones de Coaching</CardTitle>
                   <CardDescription>Acompañamiento personalizado</CardDescription>

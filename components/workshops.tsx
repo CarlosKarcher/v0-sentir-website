@@ -97,9 +97,8 @@ export function Workshops() {
                   <div className="flex items-center justify-between">
                     <Badge variant="secondary">Nivel 1</Badge>
                     <Button 
-                      variant="outline" 
                       size="sm"
-                      className="text-xs"
+                      className="text-xs bg-blue-900 hover:bg-blue-800 text-white"
                       onClick={() => window.open(getWhatsAppLink('+5492966595803'), '_blank')}
                     >
                       Más Información...
@@ -123,9 +122,8 @@ export function Workshops() {
                   <div className="flex items-center justify-between">
                     <Badge variant="secondary">Nivel 2</Badge>
                     <Button 
-                      variant="outline" 
                       size="sm"
-                      className="text-xs"
+                      className="text-xs bg-blue-900 hover:bg-blue-800 text-white"
                       onClick={() => window.open(getWhatsAppLink('+5492966595803'), '_blank')}
                     >
                       Más Información...
@@ -150,9 +148,8 @@ export function Workshops() {
                   <div className="flex items-center justify-between">
                     <Badge variant="secondary">Nivel 3</Badge>
                     <Button 
-                      variant="outline" 
                       size="sm"
-                      className="text-xs"
+                      className="text-xs bg-blue-900 hover:bg-blue-800 text-white"
                       onClick={() => window.open(getWhatsAppLink('+5492966595803'), '_blank')}
                     >
                       Más Información...
@@ -179,8 +176,7 @@ export function Workshops() {
                     sabiduría de un guerrero consciente.
                   </p>
                   <Button 
-                    variant="outline" 
-                    className="w-full bg-transparent"
+                    className="w-full bg-blue-900 hover:bg-blue-800 text-white"
                     onClick={() => window.open(getWhatsAppLink('+5492966595803'), '_blank')}
                   >
                     Más Información...
@@ -202,8 +198,7 @@ export function Workshops() {
                     espontaneidad.
                   </p>
                   <Button 
-                    variant="outline" 
-                    className="w-full bg-transparent"
+                    className="w-full bg-blue-900 hover:bg-blue-800 text-white"
                     onClick={() => window.open(getWhatsAppLink('+5492966595803'), '_blank')}
                   >
                     Más Información...
@@ -216,7 +211,7 @@ export function Workshops() {
                   <div className="rounded-full bg-accent/10 w-12 h-12 flex items-center justify-center mb-4 overflow-hidden">
                     <img src="/biodecodificacion cuerpo.png" alt="Biodecodificación" className="w-full h-full object-contain" />
                   </div>
-                  <CardTitle>Biodecodificación</CardTitle>
+                  <CardTitle>Taller de Biodecodificación</CardTitle>
                   <CardDescription>Tu cuerpo tiene algo que contarte</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -225,8 +220,7 @@ export function Workshops() {
                     raíz.
                   </p>
                   <Button 
-                    variant="outline" 
-                    className="w-full bg-transparent"
+                    className="w-full bg-blue-900 hover:bg-blue-800 text-white"
                     onClick={() => window.open(getWhatsAppLink('+5492966211547'), '_blank')}
                   >
                     Más Información...

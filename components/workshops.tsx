@@ -100,7 +100,7 @@ export function Workshops() {
                       variant="outline" 
                       size="sm"
                       className="text-xs"
-                      onClick={() => window.open(getWhatsAppLink('+5492966585903'), '_blank')}
+                      onClick={() => window.open(getWhatsAppLink('+5492966595803'), '_blank')}
                     >
                       Más Información...
                     </Button>
@@ -126,7 +126,7 @@ export function Workshops() {
                       variant="outline" 
                       size="sm"
                       className="text-xs"
-                      onClick={() => window.open(getWhatsAppLink('+5492966585903'), '_blank')}
+                      onClick={() => window.open(getWhatsAppLink('+5492966595803'), '_blank')}
                     >
                       Más Información...
                     </Button>
@@ -153,7 +153,7 @@ export function Workshops() {
                       variant="outline" 
                       size="sm"
                       className="text-xs"
-                      onClick={() => window.open(getWhatsAppLink('+5492966585903'), '_blank')}
+                      onClick={() => window.open(getWhatsAppLink('+5492966595803'), '_blank')}
                     >
                       Más Información...
                     </Button>
@@ -181,7 +181,7 @@ export function Workshops() {
                   <Button 
                     variant="outline" 
                     className="w-full bg-transparent"
-                    onClick={() => window.open(getWhatsAppLink('+5492966585903'), '_blank')}
+                    onClick={() => window.open(getWhatsAppLink('+5492966595803'), '_blank')}
                   >
                     Más Información...
                   </Button>
@@ -204,7 +204,7 @@ export function Workshops() {
                   <Button 
                     variant="outline" 
                     className="w-full bg-transparent"
-                    onClick={() => window.open(getWhatsAppLink('+5492966585903'), '_blank')}
+                    onClick={() => window.open(getWhatsAppLink('+5492966595803'), '_blank')}
                   >
                     Más Información...
                   </Button>
@@ -263,7 +263,7 @@ export function Workshops() {
                   </ul>
                   <Button 
                     className="w-full bg-blue-900 hover:bg-blue-800 text-white"
-                    onClick={() => window.open(getWhatsAppLink('+5492966585903'), '_blank')}
+                    onClick={() => window.open(getWhatsAppLink('+5492966595803'), '_blank')}
                   >
                     Más Información...
                   </Button>
@@ -295,7 +295,7 @@ export function Workshops() {
                   </ul>
                   <Button 
                     className="w-full bg-blue-900 hover:bg-blue-800 text-white"
-                    onClick={() => window.open(getWhatsAppLink('+5492966585903'), '_blank')}
+                    onClick={() => window.open(getWhatsAppLink('+5492966595803'), '_blank')}
                   >
                     Más Información...
                   </Button>

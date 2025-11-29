@@ -9,6 +9,12 @@ import { useEffect, useState } from "react"
 import { scrollToElement } from "@/lib/scroll"
 import { SECTION_IDS, HEADER_OFFSET } from "@/lib/constants"
 
+// Función helper para generar enlace de WhatsApp
+const getWhatsAppLink = (phoneNumber: string) => {
+  const cleanNumber = phoneNumber.replace(/\s+/g, '')
+  return `https://wa.me/${cleanNumber}`
+}
+
 export function Workshops() {
   const [activeTab, setActiveTab] = useState("liderazgo")
 
@@ -88,7 +94,17 @@ export function Workshops() {
                     Explora tu interior, identifica tus patrones y conecta con tu verdadero ser. El primer paso hacia el
                     liderazgo auténtico.
                   </p>
-                  <Badge variant="secondary">Nivel 1</Badge>
+                  <div className="flex items-center justify-between">
+                    <Badge variant="secondary">Nivel 1</Badge>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      className="text-xs"
+                      onClick={() => window.open(getWhatsAppLink('+5492966585903'), '_blank')}
+                    >
+                      Más Información...
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
 
@@ -104,7 +120,17 @@ export function Workshops() {
                   <p className="text-muted-foreground mb-4 text-pretty">
                     Libera creencias limitantes, transforma tus paradigmas y crea la versión más poderosa de ti mismo.
                   </p>
-                  <Badge variant="secondary">Nivel 2</Badge>
+                  <div className="flex items-center justify-between">
+                    <Badge variant="secondary">Nivel 2</Badge>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      className="text-xs"
+                      onClick={() => window.open(getWhatsAppLink('+5492966585903'), '_blank')}
+                    >
+                      Más Información...
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
 
@@ -121,7 +147,17 @@ export function Workshops() {
                     Define objetivos claros, diseña tu plan de acción y materializa tus sueños con estrategias efectivas
                     de liderazgo.
                   </p>
-                  <Badge variant="secondary">Nivel 3</Badge>
+                  <div className="flex items-center justify-between">
+                    <Badge variant="secondary">Nivel 3</Badge>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      className="text-xs"
+                      onClick={() => window.open(getWhatsAppLink('+5492966585903'), '_blank')}
+                    >
+                      Más Información...
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             </div>
@@ -134,7 +170,7 @@ export function Workshops() {
                   <div className="rounded-full bg-accent/10 w-12 h-12 flex items-center justify-center mb-4 overflow-hidden">
                     <img src="/Camino del Guerrero.png" alt="Camino del Guerrero" className="w-full h-full object-contain" />
                   </div>
-                  <CardTitle>Camino del Guerrero</CardTitle>
+                  <CardTitle>El Camino del Guerrero</CardTitle>
                   <CardDescription>Fortaleza y coraje</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -142,8 +178,12 @@ export function Workshops() {
                     Desarrolla valentía, disciplina y resiliencia. Aprende a enfrentar desafíos con la fuerza y
                     sabiduría de un guerrero consciente.
                   </p>
-                  <Button variant="outline" className="w-full bg-transparent">
-                    Más información
+                  <Button 
+                    variant="outline" 
+                    className="w-full bg-transparent"
+                    onClick={() => window.open(getWhatsAppLink('+5492966585903'), '_blank')}
+                  >
+                    Más Información...
                   </Button>
                 </CardContent>
               </Card>
@@ -153,7 +193,7 @@ export function Workshops() {
                   <div className="rounded-full bg-primary/10 w-12 h-12 flex items-center justify-center mb-4 overflow-hidden">
                     <img src="/Niño interior.jpg" alt="Niño Interior" className="w-full h-full object-contain" />
                   </div>
-                  <CardTitle>Sanando Niño Interior</CardTitle>
+                  <CardTitle>Sanando mi Niño Interior</CardTitle>
                   <CardDescription>Sanación emocional profunda</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -161,8 +201,12 @@ export function Workshops() {
                     Reconecta con tu niño interior, sana heridas del pasado y recupera la inocencia, alegría y
                     espontaneidad.
                   </p>
-                  <Button variant="outline" className="w-full bg-transparent">
-                    Más información
+                  <Button 
+                    variant="outline" 
+                    className="w-full bg-transparent"
+                    onClick={() => window.open(getWhatsAppLink('+5492966585903'), '_blank')}
+                  >
+                    Más Información...
                   </Button>
                 </CardContent>
               </Card>
@@ -180,8 +224,12 @@ export function Workshops() {
                     Descubre el mensaje emocional detrás de tus síntomas físicos. Aprende a escuchar y sanar desde la
                     raíz.
                   </p>
-                  <Button variant="outline" className="w-full bg-transparent">
-                    Más información
+                  <Button 
+                    variant="outline" 
+                    className="w-full bg-transparent"
+                    onClick={() => window.open(getWhatsAppLink('+5492966211547'), '_blank')}
+                  >
+                    Más Información...
                   </Button>
                 </CardContent>
               </Card>
@@ -213,7 +261,12 @@ export function Workshops() {
                       Sesiones individuales personalizadas
                     </li>
                   </ul>
-                  <Button className="w-full bg-blue-900 hover:bg-blue-800 text-white">Agendar sesión</Button>
+                  <Button 
+                    className="w-full bg-blue-900 hover:bg-blue-800 text-white"
+                    onClick={() => window.open(getWhatsAppLink('+5492966585903'), '_blank')}
+                  >
+                    Más Información...
+                  </Button>
                 </CardContent>
               </Card>
 
@@ -240,7 +293,12 @@ export function Workshops() {
                       Planes personalizados
                     </li>
                   </ul>
-                  <Button className="w-full bg-blue-900 hover:bg-blue-800 text-white">Agendar sesión</Button>
+                  <Button 
+                    className="w-full bg-blue-900 hover:bg-blue-800 text-white"
+                    onClick={() => window.open(getWhatsAppLink('+5492966585903'), '_blank')}
+                  >
+                    Más Información...
+                  </Button>
                 </CardContent>
               </Card>
             </div>

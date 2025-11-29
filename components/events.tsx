@@ -49,85 +49,92 @@ function EventCard({ event }: { event: Event }) {
         
         {/* Botones para Taller de Transformación */}
         {event.hasFlyer && (
-          <div className="flex flex-col sm:flex-row flex-wrap gap-2 pt-2">
-            <Sheet open={flyerOpen} onOpenChange={handleOpenChange}>
-              <SheetTrigger asChild>
-                <Button variant="outline" size="sm" className="flex items-center gap-2">
-                  <FileText className="h-4 w-4" />
-                  Ver Flyer
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="bottom" className="h-[85vh] sm:h-[90vh] overflow-auto">
-                <SheetHeader>
-                  <SheetTitle>Flyer - {event.title}</SheetTitle>
-                </SheetHeader>
-                <div className="mt-4 flex justify-center items-center min-h-[400px] w-full p-4">
-                  {!imageError ? (
-                    <img
-                      key={imageSrc}
-                      src={imageSrc}
-                      alt="Flyer Taller de Transformación Río Gallegos"
-                      className="max-w-full h-auto rounded-lg shadow-lg mx-auto block"
-                      style={{ maxHeight: '80vh', objectFit: 'contain', objectPosition: 'center' }}
-                      onError={(e) => {
-                        console.error('Error al cargar el flyer desde:', imageSrc)
-                        // Intentar con ruta alternativa si existe
-                        if (event.flyerImageAlt && imageSrc === event.flyerImage) {
-                          console.log('Intentando con ruta alternativa:', event.flyerImageAlt)
-                          setImageSrc(event.flyerImageAlt)
-                          setImageError(false)
-                          return
-                        }
-                        setImageError(true)
-                      }}
-                      onLoad={() => {
-                        console.log('Flyer cargado correctamente desde:', imageSrc)
-                        setImageError(false)
-                      }}
-                    />
-                  ) : (
-                    <div className="text-center text-muted-foreground p-8">
-                      <p className="text-lg font-semibold mb-2">No se pudo cargar el flyer</p>
-                      <p className="text-sm mb-4">Ruta intentada: {imageSrc}</p>
-                      <p className="text-sm mb-4">Asegúrate de que el archivo esté en: public/flyer-transformacion-rio-gallegos.jpg</p>
-                      <Button 
-                        variant="outline" 
-                        onClick={() => {
-                          setImageError(false)
-                          setImageSrc(event.flyerImage)
+          <div className="flex flex-col sm:flex-row flex-wrap gap-2 pt-2 items-center justify-between">
+            <div className="flex flex-col sm:flex-row flex-wrap gap-2">
+              <Sheet open={flyerOpen} onOpenChange={handleOpenChange}>
+                <SheetTrigger asChild>
+                  <Button variant="outline" size="sm" className="flex items-center gap-2">
+                    <FileText className="h-4 w-4" />
+                    Ver Flyer
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="bottom" className="h-[85vh] sm:h-[90vh] overflow-auto">
+                  <SheetHeader>
+                    <SheetTitle>Flyer - {event.title}</SheetTitle>
+                  </SheetHeader>
+                  <div className="mt-4 flex justify-center items-center min-h-[400px] w-full p-4">
+                    {!imageError ? (
+                      <img
+                        key={imageSrc}
+                        src={imageSrc}
+                        alt="Flyer Taller de Transformación Río Gallegos"
+                        className="max-w-full h-auto rounded-lg shadow-lg mx-auto block"
+                        style={{ maxHeight: '80vh', objectFit: 'contain', objectPosition: 'center' }}
+                        onError={(e) => {
+                          console.error('Error al cargar el flyer desde:', imageSrc)
+                          // Intentar con ruta alternativa si existe
+                          if (event.flyerImageAlt && imageSrc === event.flyerImage) {
+                            console.log('Intentando con ruta alternativa:', event.flyerImageAlt)
+                            setImageSrc(event.flyerImageAlt)
+                            setImageError(false)
+                            return
+                          }
+                          setImageError(true)
                         }}
-                      >
-                        Reintentar
-                      </Button>
-                    </div>
-                  )}
-                </div>
-              </SheetContent>
-            </Sheet>
-            
-            <Button
-              variant="outline"
-              size="sm"
-              className="flex items-center gap-2"
-              onClick={(e) => {
-                e.preventDefault()
-                e.stopPropagation()
-                scrollToElement(SECTION_IDS.CONTACTO)
-              }}
-            >
-              <Phone className="h-4 w-4" />
-              Contacto
-            </Button>
+                        onLoad={() => {
+                          console.log('Flyer cargado correctamente desde:', imageSrc)
+                          setImageError(false)
+                        }}
+                      />
+                    ) : (
+                      <div className="text-center text-muted-foreground p-8">
+                        <p className="text-lg font-semibold mb-2">No se pudo cargar el flyer</p>
+                        <p className="text-sm mb-4">Ruta intentada: {imageSrc}</p>
+                        <p className="text-sm mb-4">Asegúrate de que el archivo esté en: public/flyer-transformacion-rio-gallegos.jpg</p>
+                        <Button 
+                          variant="outline" 
+                          onClick={() => {
+                            setImageError(false)
+                            setImageSrc(event.flyerImage)
+                          }}
+                        >
+                          Reintentar
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                </SheetContent>
+              </Sheet>
+              
+              <Button
+                variant="outline"
+                size="sm"
+                className="flex items-center gap-2"
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  scrollToElement(SECTION_IDS.CONTACTO)
+                }}
+              >
+                <Phone className="h-4 w-4" />
+                Contacto
+              </Button>
+            </div>
+            {event.level && (
+              <Badge className="bg-blue-900 text-white hover:bg-blue-800 border-blue-900 text-xs font-semibold px-2 py-1">
+                {event.level}
+              </Badge>
+            )}
+          </div>
+        )}
+        {!event.hasFlyer && event.level && (
+          <div className="flex justify-end pt-2">
+            <Badge className="bg-blue-900 text-white hover:bg-blue-800 border-blue-900 text-xs font-semibold px-2 py-1">
+              {event.level}
+            </Badge>
           </div>
         )}
       </CardContent>
-      {event.level && (
-        <div className="absolute bottom-2 right-2">
-          <Badge className="bg-blue-900 text-white hover:bg-blue-800 border-blue-900 text-xs font-semibold px-2 py-1">
-            {event.level}
-          </Badge>
-        </div>
-      )}
     </Card>
   )
 }

@@ -252,7 +252,7 @@ export function Workshops() {
                     </li>
                     <li className="flex items-center gap-2 text-sm">
                       <div className="h-1.5 w-1.5 rounded-full bg-primary" />
-                      Sesiones individuales personalizadas
+                      Sesiones individuales Presenciales y On Line
                     </li>
                   </ul>
                   <Button 

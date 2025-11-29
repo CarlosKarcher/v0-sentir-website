@@ -204,7 +204,7 @@ export function Events() {
       title: "Taller de Autoconocimiento - Punta Arenas",
       date: "6, 7 y 8 de Febrero, 2026",
       time: "Inicio: Viernes 6, 17 Horas",
-      location: "Chile - SEDE Club Huracán",
+      location: "Avda. Jorge Alessandri #264 B° Sur - Sede Club Deportivo Huracán.",
       type: "Taller de Liderazgo",
       available: true,
       availabilityText: "Cupos disponibles",

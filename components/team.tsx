@@ -49,7 +49,7 @@ const team = [
     name: "Mariela Devetac",
     role: "Instructora de Gimnasia Aeróbica y localizada",
     specialties: ["Staff de Sentir"],
-    image: "/images/mariela-20devetac.png",
+    image: "/images/Mariela Devetac.jpg",
     phone: "5492966639509",
   },
   {

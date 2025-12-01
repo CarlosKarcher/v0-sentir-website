@@ -35,7 +35,7 @@ const team = [
     name: "Zuni Wolert",
     role: "Coach Ontológico Profesional",
     specialties: ["Staff de Sentir"],
-    image: "/images/zuni-20wolert.png",
+    image: "/Zuni Wolert.jpg",
     phone: "5492966675729",
   },
   {

@@ -28,7 +28,7 @@ const team = [
     name: "Maria Sol Diaz",
     role: "Prof. de Educación Física y Coach Ontológico",
     specialties: ["Entrenadora Personal", "Staff de Sentir"],
-    image: "/images/sol-20diaz.png",
+    image: "/Sol Dias.jpg",
     phone: "5492966499363",
   },
   {

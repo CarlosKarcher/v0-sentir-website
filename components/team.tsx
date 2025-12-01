@@ -42,7 +42,7 @@ const team = [
     name: "Marcelo Dalla Longa",
     role: "Coach Transformacional",
     specialties: ["Abordajes Vibroacústicos", "Biodecodificación"],
-    image: "/images/marcelo-20dalla-20longa.png",
+    image: "/images/Marcelo Dalla Longa.jpg",
     phone: "5492975152081",
   },
   {
@@ -63,7 +63,7 @@ const team = [
     name: "Angélica Caicheo",
     role: "Sesiones de Reiki y Acupuntura",
     specialties: ["Staff de Sentir"],
-    image: "/images/angelica-20caicheo.png",
+    image: "/images/Angelica Caicheo.jpg",
     phone: "5492966232480",
   },
   {

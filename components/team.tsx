@@ -70,7 +70,7 @@ const team = [
     name: "Natali Maresca",
     role: "Community Manager",
     specialties: ["Representante de Sentir en Tandil, Prov. de Buenos Aires", "Staff de Sentir"],
-    image: "/images/natali-20maresca.png",
+    image: "/natali Maresca.jpg",
     phone: "5492494622736",
   },
 ]

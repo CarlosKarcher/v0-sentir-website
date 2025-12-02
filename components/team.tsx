@@ -21,7 +21,7 @@ const team = [
     name: "Vanesa Miranda",
     role: "Representante de Sentir Punta Arenas",
     specialties: ["Staff de Sentir"],
-    image: "/images/vanesa-20miranda.png",
+    image: "/images/Vanesa Miranda.jpg",
     phone: "56961130835",
   },
   {

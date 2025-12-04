@@ -1,30 +1,35 @@
 import { NextResponse } from 'next/server'
+import { promises as fs } from 'fs'
+import path from 'path'
 
-// Variable global para almacenar el contador
-// Se inicializa en 1500 como base
-let visitCount = 1500
+const COUNTER_FILE = path.join(process.cwd(), 'visit-counter.json')
 
-// Inicializar desde variable de entorno si existe
-if (typeof process !== 'undefined' && process.env.VISIT_COUNT) {
-  const envCount = parseInt(process.env.VISIT_COUNT)
-  if (envCount > visitCount) {
-    visitCount = envCount
+async function getCount(): Promise<number> {
+  try {
+    const data = await fs.readFile(COUNTER_FILE, 'utf-8')
+    const json = JSON.parse(data)
+    return json.count || 1500
+  } catch {
+    // Si no existe el archivo, crear con valor inicial
+    await fs.writeFile(COUNTER_FILE, JSON.stringify({ count: 1500 }))
+    return 1500
   }
 }
 
+async function setCount(count: number): Promise<void> {
+  await fs.writeFile(COUNTER_FILE, JSON.stringify({ count }))
+}
+
 export async function GET() {
-  return NextResponse.json({ 
-    count: visitCount,
-    timestamp: Date.now() 
-  })
+  const count = await getCount()
+  return NextResponse.json({ count })
 }
 
 export async function POST() {
-  visitCount += 1
-  console.log('Visita incrementada. Total:', visitCount)
-  return NextResponse.json({ 
-    count: visitCount,
-    timestamp: Date.now() 
-  })
+  const currentCount = await getCount()
+  const newCount = currentCount + 1
+  await setCount(newCount)
+  console.log('Visita incrementada. Total:', newCount)
+  return NextResponse.json({ count: newCount })
 }
 

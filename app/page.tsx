@@ -11,6 +11,7 @@ import { Workshops } from "@/components/workshops"
 import { Team } from "@/components/team"
 import { SentirDesdeAdentro } from "@/components/sentir-desde-adentro"
 import { Footer } from "@/components/footer"
+import { VisitTracker } from "@/components/visit-tracker"
 
 export default function Page() {
   useEffect(() => {
@@ -83,6 +84,7 @@ export default function Page() {
 
   return (
     <main className="min-h-screen w-full">
+      <VisitTracker />
       <Header />
       <Hero />
       <About />

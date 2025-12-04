@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react"
 
 export function VisitorCounter() {
-  const [displayCount, setDisplayCount] = useState(1500)
+  const [displayCount, setDisplayCount] = useState(0)
+  const [error, setError] = useState(false)
 
   useEffect(() => {
     const fetchCounter = async () => {
@@ -15,14 +16,16 @@ export function VisitorCounter() {
         
         if (response.ok) {
           const data = await response.json()
-          const count = data.count || 1500
-          
-          console.log('Mostrando contador:', count)
-          setDisplayCount(count)
+          console.log('✅ Contador desde KV:', data.count)
+          setDisplayCount(data.count)
+          setError(false)
+        } else {
+          console.error('❌ Error HTTP:', response.status)
+          setError(true)
         }
       } catch (error) {
-        console.error('Error al obtener contador:', error)
-        setDisplayCount(1500)
+        console.error('❌ Error al obtener contador:', error)
+        setError(true)
       }
     }
 
@@ -34,6 +37,10 @@ export function VisitorCounter() {
     
     return () => clearInterval(interval)
   }, [])
+
+  if (error) {
+    return <span className="tabular-nums text-red-500">Error</span>
+  }
 
   return (
     <span className="tabular-nums">

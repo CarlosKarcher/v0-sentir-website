@@ -1,14 +1,17 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
+// Contador de visitas global usando Supabase
 function getSupabaseClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
   
   if (!supabaseUrl || !supabaseKey) {
+    console.error('❌ Variables de Supabase no configuradas')
     throw new Error('Supabase no está configurado')
   }
   
+  console.log('✅ Supabase configurado:', supabaseUrl)
   return createClient(supabaseUrl, supabaseKey)
 }
 

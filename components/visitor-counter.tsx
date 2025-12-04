@@ -3,48 +3,52 @@
 import { useEffect, useState } from "react"
 
 export function VisitorCounter() {
-  const [displayCount, setDisplayCount] = useState(0)
-  const [error, setError] = useState(false)
+  const [displayCount, setDisplayCount] = useState<number | null>(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchCounter = async () => {
       try {
         const response = await fetch('/api/visits', { 
           method: 'GET',
-          cache: 'no-store'
+          cache: 'no-store',
+          headers: { 'Content-Type': 'application/json' }
         })
         
-        if (response.ok) {
-          const data = await response.json()
-          console.log('✅ Contador desde KV:', data.count)
+        const data = await response.json()
+        
+        if (data.success !== false) {
+          console.log('✅ Contador:', data.count)
           setDisplayCount(data.count)
-          setError(false)
         } else {
-          console.error('❌ Error HTTP:', response.status)
-          setError(true)
+          console.log('⚠️ API devolvió success=false')
+          setDisplayCount(0)
         }
+        
+        setLoading(false)
       } catch (error) {
-        console.error('❌ Error al obtener contador:', error)
-        setError(true)
+        console.error('❌ Error:', error)
+        setDisplayCount(0)
+        setLoading(false)
       }
     }
 
     // Obtener contador inicial
     fetchCounter()
     
-    // Actualizar cada 3 segundos para ver cambios
-    const interval = setInterval(fetchCounter, 3000)
+    // Actualizar cada 5 segundos
+    const interval = setInterval(fetchCounter, 5000)
     
     return () => clearInterval(interval)
   }, [])
 
-  if (error) {
-    return <span className="tabular-nums text-red-500">Error</span>
+  if (loading) {
+    return <span className="tabular-nums text-muted-foreground">...</span>
   }
 
   return (
     <span className="tabular-nums">
-      {displayCount.toLocaleString('es-ES')}
+      {displayCount !== null ? displayCount.toLocaleString('es-ES') : '0'}
     </span>
   )
 }

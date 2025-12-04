@@ -3,16 +3,28 @@ import Redis from 'ioredis'
 
 const COUNTER_KEY = 'sentir:visit-count'
 
-// Crear conexión Redis Serverless (solo una instancia)
+// Configurar cliente Redis con reintentos
+function createRedisClient() {
+  if (!process.env.REDIS_URL) {
+    throw new Error('REDIS_URL no está configurada')
+  }
+  
+  return new Redis(process.env.REDIS_URL, {
+    maxRetriesPerRequest: 3,
+    retryStrategy(times) {
+      const delay = Math.min(times * 50, 2000)
+      return delay
+    },
+    enableReadyCheck: true,
+    lazyConnect: false,
+  })
+}
+
 let redis: Redis | null = null
 
 function getRedisClient() {
-  if (!redis) {
-    redis = new Redis(process.env.REDIS_URL!, {
-      maxRetriesPerRequest: 3,
-      enableReadyCheck: false,
-      lazyConnect: true,
-    })
+  if (!redis || redis.status === 'end') {
+    redis = createRedisClient()
   }
   return redis
 }
@@ -22,24 +34,33 @@ export async function GET() {
     const client = getRedisClient()
     const count = await client.get(COUNTER_KEY)
     const finalCount = count ? parseInt(count) : 0
-    console.log('✅ GET contador desde Redis:', finalCount)
-    return NextResponse.json({ count: finalCount })
-  } catch (error) {
-    console.error('❌ Error al obtener contador:', error)
-    return NextResponse.json({ count: 0 }, { status: 500 })
+    
+    console.log('✅ GET contador Redis:', finalCount)
+    return NextResponse.json({ count: finalCount, success: true })
+  } catch (error: any) {
+    console.error('❌ Error Redis GET:', error.message)
+    return NextResponse.json({ 
+      count: 0, 
+      success: false, 
+      error: error.message 
+    }, { status: 500 })
   }
 }
 
 export async function POST() {
   try {
     const client = getRedisClient()
-    // Incrementar el contador en Redis (operación atómica)
     const newCount = await client.incr(COUNTER_KEY)
-    console.log('✅ POST - Visita incrementada. Total:', newCount)
-    return NextResponse.json({ count: newCount })
-  } catch (error) {
-    console.error('❌ Error al incrementar contador:', error)
-    return NextResponse.json({ count: 0 }, { status: 500 })
+    
+    console.log('✅ POST contador Redis:', newCount)
+    return NextResponse.json({ count: newCount, success: true })
+  } catch (error: any) {
+    console.error('❌ Error Redis POST:', error.message)
+    return NextResponse.json({ 
+      count: 0, 
+      success: false, 
+      error: error.message 
+    }, { status: 500 })
   }
 }
 

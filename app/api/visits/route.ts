@@ -1,30 +1,30 @@
 import { NextResponse } from 'next/server'
 
-// Variable global para almacenar el contador (se reinicia con cada deploy)
-// Para producción, esto debería usar una base de datos o KV store
-let visitCount = 0
+// Variable global para almacenar el contador
+// Se inicializa en 1500 como base
+let visitCount = 1500
 
-// Obtener o inicializar el contador desde variable de entorno
-function getInitialCount(): number {
-  if (typeof process !== 'undefined' && process.env.VISIT_COUNT) {
-    return parseInt(process.env.VISIT_COUNT) || 0
+// Inicializar desde variable de entorno si existe
+if (typeof process !== 'undefined' && process.env.VISIT_COUNT) {
+  const envCount = parseInt(process.env.VISIT_COUNT)
+  if (envCount > visitCount) {
+    visitCount = envCount
   }
-  return 0
-}
-
-// Inicializar el contador
-if (visitCount === 0) {
-  visitCount = getInitialCount()
 }
 
 export async function GET() {
-  return NextResponse.json({ count: visitCount })
+  return NextResponse.json({ 
+    count: visitCount,
+    timestamp: Date.now() 
+  })
 }
 
 export async function POST() {
   visitCount += 1
-  return NextResponse.json({ count: visitCount })
+  console.log('Visita incrementada. Total:', visitCount)
+  return NextResponse.json({ 
+    count: visitCount,
+    timestamp: Date.now() 
+  })
 }
-
-export const runtime = 'edge'
 

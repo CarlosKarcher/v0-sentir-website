@@ -1,66 +1,66 @@
 import { NextResponse } from 'next/server'
-import Redis from 'ioredis'
+import { createClient } from '@supabase/supabase-js'
 
-const COUNTER_KEY = 'sentir:visit-count'
-
-// Configurar cliente Redis con reintentos
-function createRedisClient() {
-  if (!process.env.REDIS_URL) {
-    throw new Error('REDIS_URL no está configurada')
+function getSupabaseClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  
+  if (!supabaseUrl || !supabaseKey) {
+    throw new Error('Supabase no está configurado')
   }
   
-  return new Redis(process.env.REDIS_URL, {
-    maxRetriesPerRequest: 3,
-    retryStrategy(times) {
-      const delay = Math.min(times * 50, 2000)
-      return delay
-    },
-    enableReadyCheck: true,
-    lazyConnect: false,
-  })
-}
-
-let redis: Redis | null = null
-
-function getRedisClient() {
-  if (!redis || redis.status === 'end') {
-    redis = createRedisClient()
-  }
-  return redis
+  return createClient(supabaseUrl, supabaseKey)
 }
 
 export async function GET() {
   try {
-    const client = getRedisClient()
-    const count = await client.get(COUNTER_KEY)
-    const finalCount = count ? parseInt(count) : 0
+    const supabase = getSupabaseClient()
     
-    console.log('✅ GET contador Redis:', finalCount)
-    return NextResponse.json({ count: finalCount, success: true })
+    const { data, error } = await supabase
+      .from('visit_counter')
+      .select('count')
+      .eq('id', 1)
+      .single()
+    
+    if (error) throw error
+    
+    const count = data?.count || 0
+    console.log('✅ GET contador Supabase:', count)
+    return NextResponse.json({ count, success: true })
   } catch (error: any) {
-    console.error('❌ Error Redis GET:', error.message)
-    return NextResponse.json({ 
-      count: 0, 
-      success: false, 
-      error: error.message 
-    }, { status: 500 })
+    console.error('❌ Error Supabase GET:', error.message)
+    return NextResponse.json({ count: 0, success: false, error: error.message }, { status: 500 })
   }
 }
 
 export async function POST() {
   try {
-    const client = getRedisClient()
-    const newCount = await client.incr(COUNTER_KEY)
+    const supabase = getSupabaseClient()
     
-    console.log('✅ POST contador Redis:', newCount)
+    // Obtener el contador actual
+    const { data: currentData, error: selectError } = await supabase
+      .from('visit_counter')
+      .select('count')
+      .eq('id', 1)
+      .single()
+    
+    if (selectError) throw selectError
+    
+    const currentCount = currentData?.count || 0
+    const newCount = currentCount + 1
+    
+    // Actualizar el contador
+    const { error: updateError } = await supabase
+      .from('visit_counter')
+      .update({ count: newCount, updated_at: new Date().toISOString() })
+      .eq('id', 1)
+    
+    if (updateError) throw updateError
+    
+    console.log('✅ POST - Visita incrementada Supabase. Total:', newCount)
     return NextResponse.json({ count: newCount, success: true })
   } catch (error: any) {
-    console.error('❌ Error Redis POST:', error.message)
-    return NextResponse.json({ 
-      count: 0, 
-      success: false, 
-      error: error.message 
-    }, { status: 500 })
+    console.error('❌ Error Supabase POST:', error.message)
+    return NextResponse.json({ count: 0, success: false, error: error.message }, { status: 500 })
   }
 }
-

@@ -3,25 +3,23 @@
 import { useEffect, useState } from "react"
 
 export function VisitorCounter() {
-  const [count, setCount] = useState(0)
   const [displayCount, setDisplayCount] = useState(0)
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      // Verificar si ya se contó esta sesión
+      const sessionCounted = sessionStorage.getItem('sessionCounted')
+      
+      // Obtener el contador actual
       const storedCount = localStorage.getItem('visitorCount')
-      const lastVisit = localStorage.getItem('lastVisit')
-      const today = new Date().toDateString()
-
       let currentCount = storedCount ? parseInt(storedCount) : 1000
 
-      // Si es una nueva visita (diferente día o primera vez)
-      if (!lastVisit || lastVisit !== today) {
+      // Solo incrementar si es una nueva sesión (primera carga de la página en esta sesión del navegador)
+      if (!sessionCounted) {
         currentCount += 1
         localStorage.setItem('visitorCount', currentCount.toString())
-        localStorage.setItem('lastVisit', today)
+        sessionStorage.setItem('sessionCounted', 'true')
       }
-
-      setCount(currentCount)
 
       // Animación del contador
       let startCount = Math.max(0, currentCount - 50)

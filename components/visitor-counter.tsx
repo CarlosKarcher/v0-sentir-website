@@ -4,7 +4,6 @@ import { useEffect, useState } from "react"
 
 export function VisitorCounter() {
   const [displayCount, setDisplayCount] = useState(0)
-  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const fetchVisitorCount = async () => {
@@ -16,89 +15,75 @@ export function VisitorCounter() {
         
         // Solo incrementar si es una nueva sesión
         if (!sessionCounted) {
-          // Incrementar usando nuestra propia API
-          const response = await fetch('/api/visits', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          })
+          // Incrementar usando API alternativa más confiable
+          const response = await fetch('https://api.countapi.xyz/hit/sentir-website-v2/visits')
           
           if (response.ok) {
             const data = await response.json()
-            count = data.count || 1
-            
-            // Marcar esta sesión como contada
+            count = data.value || 1
             sessionStorage.setItem('sentirVisitCounted', 'true')
-            
-            console.log('Nueva visita registrada:', count)
           } else {
-            throw new Error('Error al incrementar contador')
+            // Si falla, usar nuestra API interna como fallback
+            const localResponse = await fetch('/api/visits', { method: 'POST' })
+            if (localResponse.ok) {
+              const localData = await localResponse.json()
+              count = localData.count || 1
+              sessionStorage.setItem('sentirVisitCounted', 'true')
+            }
           }
         } else {
-          // Solo obtener el contador actual sin incrementar
-          const response = await fetch('/api/visits', {
-            method: 'GET',
-          })
+          // Obtener el contador actual
+          const response = await fetch('https://api.countapi.xyz/get/sentir-website-v2/visits')
           
           if (response.ok) {
             const data = await response.json()
-            count = data.count || 0
-            
-            console.log('Visita existente, contador:', count)
+            count = data.value || 0
           } else {
-            throw new Error('Error al obtener contador')
+            // Fallback a API local
+            const localResponse = await fetch('/api/visits')
+            if (localResponse.ok) {
+              const localData = await localResponse.json()
+              count = localData.count || 0
+            }
           }
         }
         
-        // Animación del contador
+        // Mostrar el contador con animación
         if (count > 0) {
-          const animationDuration = 800
-          const steps = 25
           const startCount = Math.max(1, count - 30)
+          const duration = 800
+          const steps = 20
           const increment = (count - startCount) / steps
-          let currentStep = 0
+          let current = 0
           
           const timer = setInterval(() => {
-            currentStep++
-            const newCount = Math.floor(startCount + (increment * currentStep))
+            current++
+            const newValue = Math.floor(startCount + (increment * current))
             
-            if (currentStep >= steps || newCount >= count) {
+            if (current >= steps) {
               setDisplayCount(count)
               clearInterval(timer)
             } else {
-              setDisplayCount(newCount)
+              setDisplayCount(newValue)
             }
-          }, animationDuration / steps)
+          }, duration / steps)
           
           return () => clearInterval(timer)
         } else {
-          setDisplayCount(count)
+          setDisplayCount(1)
         }
-        
-        setIsLoading(false)
       } catch (error) {
-        console.error('Error al obtener contador de visitas:', error)
-        // En caso de error, mostrar un valor mínimo
+        console.error('Error contador:', error)
         setDisplayCount(1)
-        setIsLoading(false)
       }
     }
 
     fetchVisitorCount()
   }, [])
 
-  if (isLoading) {
-    return (
-      <span className="tabular-nums text-muted-foreground">
-        ...
-      </span>
-    )
-  }
-
   return (
     <span className="tabular-nums">
-      {displayCount.toLocaleString('es-ES')}
+      {displayCount > 0 ? displayCount.toLocaleString('es-ES') : '1'}
     </span>
   )
 }

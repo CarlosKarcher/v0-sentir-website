@@ -9,7 +9,9 @@ export function VisitorCounter() {
   useEffect(() => {
     const fetchCounter = async () => {
       try {
-        const response = await fetch('/api/visits', { 
+        // Forzar bypass de caché con timestamp
+        const timestamp = Date.now()
+        const response = await fetch(`/api/visits?t=${timestamp}`, { 
           method: 'GET',
           cache: 'no-store',
           headers: { 'Content-Type': 'application/json' }

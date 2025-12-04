@@ -56,7 +56,7 @@ const team = [
     name: "José Matulich",
     role: "Péndulo Hebreo y Reiki",
     specialties: ["Staff de Sentir"],
-    image: "/images/jose-20matulich.png",
+    image: "/Jose Matulich.jpg",
     phone: "5492966646975",
   },
   {

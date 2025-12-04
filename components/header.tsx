@@ -336,7 +336,7 @@ export function Header() {
         </nav>
 
         {/* Visitor Counter */}
-        <div className="hidden md:block">
+        <div className="hidden md:block ml-auto mr-2">
           <VisitorCounter />
         </div>
 

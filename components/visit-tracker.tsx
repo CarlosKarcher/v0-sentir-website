@@ -1,22 +1,18 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useEffect } from "react"
 
 export function VisitTracker() {
-  const trackedRef = useRef(false)
-
   useEffect(() => {
-    // Solo ejecutar una vez por carga de página
-    if (trackedRef.current) return
-    trackedRef.current = true
-
     const trackVisit = async () => {
       try {
-        await fetch('/api/visits', { 
+        console.log('Registrando visita...')
+        const response = await fetch('/api/visits', { 
           method: 'POST',
           headers: { 'Content-Type': 'application/json' }
         })
-        console.log('Visita registrada')
+        const data = await response.json()
+        console.log('Visita registrada. Contador actual:', data.count)
       } catch (error) {
         console.error('Error al registrar visita:', error)
       }

@@ -10,11 +10,11 @@ export function VisitorCounter() {
       // Verificar si ya se contó esta sesión
       const sessionCounted = sessionStorage.getItem('sessionCounted')
       
-      // Obtener el contador actual
+      // Obtener el contador actual (inicia desde 0)
       const storedCount = localStorage.getItem('visitorCount')
-      let currentCount = storedCount ? parseInt(storedCount) : 1000
+      let currentCount = storedCount ? parseInt(storedCount) : 0
 
-      // Solo incrementar si es una nueva sesión (primera carga de la página en esta sesión del navegador)
+      // Solo incrementar si es una nueva sesión
       if (!sessionCounted) {
         currentCount += 1
         localStorage.setItem('visitorCount', currentCount.toString())
@@ -22,24 +22,27 @@ export function VisitorCounter() {
       }
 
       // Animación del contador
-      let startCount = Math.max(0, currentCount - 50)
-      const increment = Math.ceil((currentCount - startCount) / 30)
+      const animationDuration = 1000 // 1 segundo
+      const steps = 30
+      const startCount = Math.max(0, currentCount - 50)
+      const increment = (currentCount - startCount) / steps
+      let currentStep = 0
       
       const timer = setInterval(() => {
-        startCount += increment
-        if (startCount >= currentCount) {
+        currentStep++
+        const newCount = Math.floor(startCount + (increment * currentStep))
+        
+        if (currentStep >= steps || newCount >= currentCount) {
           setDisplayCount(currentCount)
           clearInterval(timer)
         } else {
-          setDisplayCount(startCount)
+          setDisplayCount(newCount)
         }
-      }, 30)
+      }, animationDuration / steps)
 
       return () => clearInterval(timer)
     }
   }, [])
-
-  if (displayCount === 0) return null
 
   return (
     <span className="text-sm font-medium text-black tabular-nums">

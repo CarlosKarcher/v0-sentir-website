@@ -4,6 +4,7 @@ import { Facebook, Instagram, Mail, Phone, Copy, Check } from "lucide-react"
 import { useState } from "react"
 import { handleNavigationClick } from "@/lib/scroll"
 import { SECTION_IDS } from "@/lib/constants"
+import { VisitorCounter } from "@/components/visitor-counter"
 
 export function Footer() {
   const [copied, setCopied] = useState(false)
@@ -23,6 +24,11 @@ export function Footer() {
             <p className="text-xs sm:text-sm text-muted-foreground text-pretty">
               Comunidad para el liderazgo y desarrollo personal
             </p>
+            <div className="mt-2">
+              <span className="text-xs sm:text-sm text-muted-foreground">
+                <VisitorCounter />
+              </span>
+            </div>
           </div>
 
           <div>

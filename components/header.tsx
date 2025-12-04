@@ -15,7 +15,6 @@ import {
 import { cn } from "@/lib/utils"
 import { scrollToElement, handleNavigationClick } from "@/lib/scroll"
 import { SECTION_IDS, HEADER_OFFSET } from "@/lib/constants"
-import { VisitorCounter } from "@/components/visitor-counter"
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false)
@@ -334,11 +333,6 @@ export function Header() {
             </NavigationMenuList>
           </NavigationMenu>
         </nav>
-
-        {/* Visitor Counter */}
-        <div className="hidden md:block ml-auto mr-2">
-          <VisitorCounter />
-        </div>
 
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild className="md:hidden">

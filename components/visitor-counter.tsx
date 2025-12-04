@@ -45,7 +45,7 @@ export function VisitorCounter() {
   }, [])
 
   return (
-    <span className="text-sm font-medium text-black tabular-nums">
+    <span className="tabular-nums">
       {displayCount.toLocaleString('es-ES')}
     </span>
   )

@@ -73,7 +73,7 @@ function EventCard({ event }: { event: Event }) {
                       <img
                         key={imageSrc}
                         src={imageSrc}
-                        alt="Flyer Taller de Transformación Río Gallegos"
+                        alt={`Flyer ${event.title}`}
                         className="max-w-full h-auto rounded-lg shadow-lg mx-auto block"
                         style={{ maxHeight: '80vh', objectFit: 'contain', objectPosition: 'center' }}
                         onError={(e) => {
@@ -151,21 +151,6 @@ function EventCard({ event }: { event: Event }) {
 
 export function Events() {
   const events = [
-    {
-      title: "Taller de Transformación - Río Gallegos",
-      date: "11, 12, 13 y 14 de Diciembre, 2025",
-      time: "Inicio: Jueves 11, 18 Horas",
-      location: "Zapiola 1768 (pasando Balbín)",
-      type: "Taller de Liderazgo",
-      available: true,
-      availabilityText: "Cupos: quedan solo 10 Lugares disponibles",
-      hasFlyer: true,
-      flyerImage: "/flyer-transformacion-rio-gallegos.jpg",
-      // También intentar con diferentes rutas posibles
-      flyerImageAlt: "/images/flyer-transformacion-rio-gallegos.jpg",
-      level: "2do. Nivel",
-      contactPhone: "+54 9 2966 595803",
-    },
     {
       title: "Taller de MyL: Creativa",
       date: "19 de Diciembre, 2025",

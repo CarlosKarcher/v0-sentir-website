@@ -35,6 +35,11 @@ export function Header() {
             className="h-[2.4em] w-auto object-contain"
             style={{ height: '2.4em', width: 'auto' }}
           />
+          <span className="text-lg sm:text-xl font-bold text-blue-900 flex items-center gap-1">
+            <span className="ml-2">En</span>
+            <span className="text-lg sm:text-xl">🇦🇷</span>
+            <span className="text-lg sm:text-xl">🇨🇱</span>
+          </span>
         </div>
 
         {/* Desktop Navigation */}

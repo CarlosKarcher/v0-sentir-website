@@ -40,8 +40,8 @@ export function Header() {
             <img 
               src="/banderas_2.png" 
               alt="" 
-              className="h-[2.4em] w-auto object-contain"
-              style={{ height: '2.4em', width: 'auto' }}
+              className="h-[2em] w-auto object-contain"
+              style={{ height: '2em', width: 'auto' }}
             />
           </span>
         </div>

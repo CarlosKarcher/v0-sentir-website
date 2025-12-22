@@ -32,21 +32,25 @@ export function ChristmasBanner() {
   const handleWatchVideo = async () => {
     setShowBanner(false)
     setShowVideo(true)
-    
-    // Esperar a que el video se monte en el DOM
-    setTimeout(async () => {
+  }
+
+  useEffect(() => {
+    if (showVideo && videoRef.current) {
       const video = videoRef.current
-      if (video) {
-        try {
-          // Forzar carga del video
+      
+      // Configurar el video cuando se muestre
+      const setupVideo = () => {
+        if (video) {
+          // Establecer la fuente del video
+          video.src = "/cierre de myl 2025.mp4"
           video.load()
           
-          // Esperar a que el video esté listo
-          const playWhenReady = () => {
-            if (video.readyState >= 2) {
+          // Intentar reproducir cuando esté listo
+          const tryPlay = () => {
+            if (video.readyState >= 3) {
               video.play().then(() => {
-                console.log("Video reproduciéndose correctamente")
-                // Intentar pantalla completa
+                console.log("Video reproduciéndose")
+                // Intentar pantalla completa después de un momento
                 setTimeout(async () => {
                   try {
                     if (video.requestFullscreen) {
@@ -59,25 +63,25 @@ export function ChristmasBanner() {
                       await (video as any).msRequestFullscreen()
                     }
                   } catch (err) {
-                    console.log("Pantalla completa no disponible:", err)
+                    console.log("Pantalla completa requiere interacción:", err)
                   }
-                }, 500)
+                }, 1000)
               }).catch((err) => {
-                console.error("Error al reproducir video:", err)
-                // Si falla, mostrar mensaje al usuario
-                alert("Por favor, haz clic en el botón de reproducción del video")
+                console.error("Error al reproducir:", err)
               })
             } else {
-              setTimeout(playWhenReady, 100)
+              setTimeout(tryPlay, 100)
             }
           }
-          playWhenReady()
-        } catch (error) {
-          console.error("Error al inicializar video:", error)
+          
+          video.addEventListener('canplay', tryPlay, { once: true })
+          video.addEventListener('loadeddata', tryPlay, { once: true })
         }
       }
-    }, 200)
-  }
+      
+      setTimeout(setupVideo, 100)
+    }
+  }, [showVideo])
 
   if (!showBanner && !showVideo) {
     return null

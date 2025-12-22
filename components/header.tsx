@@ -38,10 +38,10 @@ export function Header() {
           <span className="text-lg sm:text-xl font-bold text-blue-900 flex items-center gap-1.5">
             <span className="ml-2">En</span>
             <img 
-              src="/banderas 2.png" 
+              src="/banderas%202.png" 
               alt="" 
-              className="inline-block"
-              style={{ height: '1em', width: 'auto', verticalAlign: 'middle', objectFit: 'contain' }}
+              className="inline-block align-middle"
+              style={{ height: '1.2em', width: 'auto', verticalAlign: 'middle', objectFit: 'contain', display: 'inline-block', maxHeight: '1.2em' }}
             />
           </span>
         </div>

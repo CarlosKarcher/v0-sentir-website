@@ -1,12 +1,10 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect } from "react"
 
 export function ChristmasBanner() {
   const [showBanner, setShowBanner] = useState(true)
-  const [showVideo, setShowVideo] = useState(false)
   const [isBlinking, setIsBlinking] = useState(true)
-  const videoRef = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
     // Parpadeo del cartel
@@ -14,10 +12,9 @@ export function ChristmasBanner() {
       setIsBlinking((prev) => !prev)
     }, 500) // Cambia cada 500ms (medio segundo)
 
-    // Después de 5 segundos, ocultar el cartel y mostrar el video
+    // Después de 5 segundos, ocultar el cartel
     const timer = setTimeout(() => {
       setShowBanner(false)
-      setShowVideo(true)
       clearInterval(blinkInterval)
     }, 5000) // 5 segundos
 
@@ -27,24 +24,7 @@ export function ChristmasBanner() {
     }
   }, [])
 
-  useEffect(() => {
-    if (showVideo && videoRef.current) {
-      // Intentar reproducir a pantalla completa
-      const playVideo = async () => {
-        try {
-          await videoRef.current?.play()
-          if (videoRef.current && videoRef.current.requestFullscreen) {
-            await videoRef.current.requestFullscreen()
-          }
-        } catch (error) {
-          console.log("No se pudo reproducir a pantalla completa automáticamente:", error)
-        }
-      }
-      playVideo()
-    }
-  }, [showVideo])
-
-  if (!showBanner && !showVideo) {
+  if (!showBanner) {
     return null
   }
 
@@ -111,21 +91,6 @@ export function ChristmasBanner() {
               <span className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl">Gracias a Todos.!!!</span>
             </div>
           </div>
-        </div>
-      )}
-
-      {showVideo && (
-        <div className="w-full h-full bg-black">
-          <video
-            ref={videoRef}
-            autoPlay
-            controls
-            className="w-full h-full object-contain"
-            onEnded={() => setShowVideo(false)}
-          >
-            <source src="/cierre de myl 2025.mp4" type="video/mp4" />
-            Tu navegador no soporta el elemento de video.
-          </video>
         </div>
       )}
     </div>

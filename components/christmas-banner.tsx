@@ -33,12 +33,35 @@ export function ChristmasBanner() {
       // Intentar reproducir a pantalla completa
       const playVideo = async () => {
         try {
-          await videoRef.current?.play()
-          if (videoRef.current && videoRef.current.requestFullscreen) {
-            await videoRef.current.requestFullscreen()
-          }
+          const video = videoRef.current
+          if (!video) return
+          
+          // Cargar el video primero
+          video.load()
+          
+          // Intentar reproducir
+          await video.play().catch((error) => {
+            console.error("Error al reproducir video:", error)
+          })
+          
+          // Intentar pantalla completa después de un pequeño delay
+          setTimeout(async () => {
+            try {
+              if (video.requestFullscreen) {
+                await video.requestFullscreen()
+              } else if ((video as any).webkitRequestFullscreen) {
+                await (video as any).webkitRequestFullscreen()
+              } else if ((video as any).mozRequestFullScreen) {
+                await (video as any).mozRequestFullScreen()
+              } else if ((video as any).msRequestFullscreen) {
+                await (video as any).msRequestFullscreen()
+              }
+            } catch (error) {
+              console.log("No se pudo reproducir a pantalla completa automáticamente:", error)
+            }
+          }, 500)
         } catch (error) {
-          console.log("No se pudo reproducir a pantalla completa automáticamente:", error)
+          console.error("Error al inicializar video:", error)
         }
       }
       playVideo()
@@ -55,11 +78,11 @@ export function ChristmasBanner() {
   }
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50">
       {showBanner && (
-        <div className="relative w-full h-full flex items-center justify-center bg-gradient-to-b from-red-900 via-green-900 to-red-900">
+        <div className="relative flex items-center justify-center bg-gradient-to-b from-red-900 via-green-900 to-red-900 rounded-lg shadow-2xl overflow-hidden" style={{ width: '20cm', height: '20cm', maxWidth: '90vw', maxHeight: '90vh' }}>
           {/* Decoraciones navideñas - Estrellas */}
-          <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute inset-0 overflow-hidden" style={{ width: '100%', height: '100%' }}>
             {[...Array(20)].map((_, i) => (
               <div
                 key={i}
@@ -153,10 +176,19 @@ export function ChristmasBanner() {
             ref={videoRef}
             autoPlay
             controls
+            playsInline
             className="w-full h-full object-contain"
             onEnded={() => setShowVideo(false)}
+            onError={(e) => {
+              console.error("Error al cargar video:", e)
+              console.error("Ruta del video: /cierre de myl 2025.mp4")
+            }}
+            onLoadedData={() => {
+              console.log("Video cargado correctamente")
+            }}
           >
             <source src="/cierre de myl 2025.mp4" type="video/mp4" />
+            <source src="/cierre%20de%20myl%202025.mp4" type="video/mp4" />
             Tu navegador no soporta el elemento de video.
           </video>
         </div>

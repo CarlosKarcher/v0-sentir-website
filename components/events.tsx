@@ -152,26 +152,6 @@ function EventCard({ event }: { event: Event }) {
 export function Events() {
   const events = [
     {
-      title: "Taller de MyL: Creativa",
-      date: "19 de Diciembre, 2025",
-      time: "12:00 Horas",
-      location: "Teatro Municipal de Río Gallegos",
-      type: "Taller de Liderazgo",
-      available: false,
-      availabilityText: "Cupos Agotados",
-      level: "3er Nivel",
-    },
-    {
-      title: "Taller de MyL - Cierre y Campamento",
-      date: "20 y 21 de Diciembre, 2025",
-      time: "Inicio: 10:00 AM del 20 de Diciembre",
-      location: "Incógnito",
-      type: "Taller de Liderazgo",
-      available: false,
-      availabilityText: "Cupos Agotados",
-      level: "3er Nivel",
-    },
-    {
       title: "Taller de Autoconocimiento - Río Gallegos",
       date: "23, 24 y 25 de Enero, 2026",
       time: "Inicio: Viernes 23, 17 Horas",

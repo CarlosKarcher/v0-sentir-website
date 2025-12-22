@@ -40,8 +40,8 @@ export function Header() {
             <img 
               src="/banderas%202.png" 
               alt="" 
-              className="inline-block align-middle"
-              style={{ height: '1.2em', width: 'auto', verticalAlign: 'middle', objectFit: 'contain', display: 'inline-block', maxHeight: '1.2em' }}
+              className="h-[2.4em] w-auto object-contain"
+              style={{ height: '2.4em', width: 'auto' }}
             />
           </span>
         </div>

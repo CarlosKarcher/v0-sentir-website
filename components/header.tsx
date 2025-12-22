@@ -38,17 +38,10 @@ export function Header() {
           <span className="text-lg sm:text-xl font-bold text-blue-900 flex items-center gap-1.5">
             <span className="ml-2">En</span>
             <img 
-              src="/banderas 2.png" 
+              src="/banderas_2.png" 
               alt="" 
               className="h-[2.4em] w-auto object-contain"
               style={{ height: '2.4em', width: 'auto' }}
-              onError={(e) => {
-                console.error('Error al cargar banderas 2.png:', e);
-                console.error('Ruta intentada: /banderas 2.png');
-              }}
-              onLoad={() => {
-                console.log('Banderas 2.png cargado correctamente');
-              }}
             />
           </span>
         </div>

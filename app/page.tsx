@@ -12,6 +12,7 @@ import { Team } from "@/components/team"
 import { SentirDesdeAdentro } from "@/components/sentir-desde-adentro"
 import { Footer } from "@/components/footer"
 import { VisitTracker } from "@/components/visit-tracker"
+import { ChristmasBanner } from "@/components/christmas-banner"
 
 export default function Page() {
   useEffect(() => {
@@ -85,6 +86,7 @@ export default function Page() {
   return (
     <main className="min-h-screen w-full">
       <VisitTracker />
+      <ChristmasBanner />
       <Header />
       <Hero />
       <About />

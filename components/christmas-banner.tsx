@@ -28,58 +28,55 @@ export function ChristmasBanner() {
     }
   }, [showVideo])
 
-  useEffect(() => {
-    if (showVideo && videoRef.current) {
-      const video = videoRef.current
-      
-      // Función para reproducir el video
-      const playVideo = async () => {
-        try {
-          // Asegurarse de que el video esté listo
-          if (video.readyState >= 2) {
-            await video.play()
-          } else {
-            video.addEventListener('loadeddata', async () => {
-              try {
-                await video.play()
-              } catch (error) {
-                console.error("Error al reproducir después de cargar:", error)
-              }
-            }, { once: true })
-            video.load()
-          }
-          
-          // Intentar pantalla completa después de que el video comience a reproducir
-          video.addEventListener('playing', async () => {
-            try {
-              if (video.requestFullscreen) {
-                await video.requestFullscreen()
-              } else if ((video as any).webkitRequestFullscreen) {
-                await (video as any).webkitRequestFullscreen()
-              } else if ((video as any).mozRequestFullScreen) {
-                await (video as any).mozRequestFullScreen()
-              } else if ((video as any).msRequestFullscreen) {
-                await (video as any).msRequestFullscreen()
-              }
-            } catch (error) {
-              console.log("Pantalla completa requiere interacción del usuario:", error)
-            }
-          }, { once: true })
-        } catch (error) {
-          console.error("Error al reproducir video:", error)
-        }
-      }
-      
-      // Pequeño delay para asegurar que el DOM esté listo
-      setTimeout(() => {
-        playVideo()
-      }, 100)
-    }
-  }, [showVideo])
 
-  const handleWatchVideo = () => {
+  const handleWatchVideo = async () => {
     setShowBanner(false)
     setShowVideo(true)
+    
+    // Esperar a que el video se monte en el DOM
+    setTimeout(async () => {
+      const video = videoRef.current
+      if (video) {
+        try {
+          // Forzar carga del video
+          video.load()
+          
+          // Esperar a que el video esté listo
+          const playWhenReady = () => {
+            if (video.readyState >= 2) {
+              video.play().then(() => {
+                console.log("Video reproduciéndose correctamente")
+                // Intentar pantalla completa
+                setTimeout(async () => {
+                  try {
+                    if (video.requestFullscreen) {
+                      await video.requestFullscreen()
+                    } else if ((video as any).webkitRequestFullscreen) {
+                      await (video as any).webkitRequestFullscreen()
+                    } else if ((video as any).mozRequestFullScreen) {
+                      await (video as any).mozRequestFullScreen()
+                    } else if ((video as any).msRequestFullscreen) {
+                      await (video as any).msRequestFullscreen()
+                    }
+                  } catch (err) {
+                    console.log("Pantalla completa no disponible:", err)
+                  }
+                }, 500)
+              }).catch((err) => {
+                console.error("Error al reproducir video:", err)
+                // Si falla, mostrar mensaje al usuario
+                alert("Por favor, haz clic en el botón de reproducción del video")
+              })
+            } else {
+              setTimeout(playWhenReady, 100)
+            }
+          }
+          playWhenReady()
+        } catch (error) {
+          console.error("Error al inicializar video:", error)
+        }
+      }
+    }, 200)
   }
 
   if (!showBanner && !showVideo) {
@@ -186,7 +183,6 @@ export function ChristmasBanner() {
             autoPlay
             controls
             playsInline
-            muted={false}
             preload="auto"
             className="w-full h-full object-contain"
             onEnded={() => setShowVideo(false)}
@@ -200,20 +196,19 @@ export function ChristmasBanner() {
                 networkState: video.networkState,
                 readyState: video.readyState
               })
+              alert(`Error al cargar el video: ${video.error?.message || 'Error desconocido'}`)
             }}
             onLoadedData={() => {
-              console.log("Video cargado correctamente, intentando reproducir...")
-              videoRef.current?.play().catch(err => {
-                console.error("Error al reproducir:", err)
-              })
+              console.log("Video cargado correctamente")
             }}
             onCanPlay={() => {
               console.log("Video puede reproducirse")
-              videoRef.current?.play().catch(err => {
-                console.error("Error al reproducir en canPlay:", err)
-              })
+            }}
+            onPlaying={() => {
+              console.log("Video está reproduciéndose")
             }}
           >
+            <source src="/cierre%20de%20myl%202025.mp4" type="video/mp4" />
             <source src="/cierre de myl 2025.mp4" type="video/mp4" />
             Tu navegador no soporta el elemento de video.
           </video>

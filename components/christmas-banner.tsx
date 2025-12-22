@@ -42,7 +42,7 @@ export function ChristmasBanner() {
       const setupVideo = () => {
         if (video) {
           // Establecer la fuente del video
-          video.src = "/cierre de myl 2025.mp4"
+          video.src = "/cierre_myl_2025.mp4"
           video.load()
           
           // Intentar reproducir cuando esté listo
@@ -211,7 +211,7 @@ export function ChristmasBanner() {
               console.log("Video está reproduciéndose")
             }}
           >
-            <source src="/cierre de myl 2025.mp4" type="video/mp4" />
+            <source src="/cierre_myl_2025.mp4" type="video/mp4" />
             Tu navegador no soporta el elemento de video.
           </video>
         </div>

@@ -1,10 +1,12 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 
 export function ChristmasBanner() {
   const [showBanner, setShowBanner] = useState(true)
+  const [showVideo, setShowVideo] = useState(false)
   const [isBlinking, setIsBlinking] = useState(true)
+  const videoRef = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
     // Parpadeo del cartel
@@ -12,9 +14,11 @@ export function ChristmasBanner() {
       setIsBlinking((prev) => !prev)
     }, 500) // Cambia cada 500ms (medio segundo)
 
-    // Después de 5 segundos, ocultar el cartel
+    // Después de 5 segundos, ocultar el cartel (solo si no se ha presionado el botón)
     const timer = setTimeout(() => {
-      setShowBanner(false)
+      if (!showVideo) {
+        setShowBanner(false)
+      }
       clearInterval(blinkInterval)
     }, 5000) // 5 segundos
 
@@ -22,9 +26,31 @@ export function ChristmasBanner() {
       clearTimeout(timer)
       clearInterval(blinkInterval)
     }
-  }, [])
+  }, [showVideo])
 
-  if (!showBanner) {
+  useEffect(() => {
+    if (showVideo && videoRef.current) {
+      // Intentar reproducir a pantalla completa
+      const playVideo = async () => {
+        try {
+          await videoRef.current?.play()
+          if (videoRef.current && videoRef.current.requestFullscreen) {
+            await videoRef.current.requestFullscreen()
+          }
+        } catch (error) {
+          console.log("No se pudo reproducir a pantalla completa automáticamente:", error)
+        }
+      }
+      playVideo()
+    }
+  }, [showVideo])
+
+  const handleWatchVideo = () => {
+    setShowBanner(false)
+    setShowVideo(true)
+  }
+
+  if (!showBanner && !showVideo) {
     return null
   }
 
@@ -90,7 +116,49 @@ export function ChristmasBanner() {
               y Así cerramos este Maravilloso año 2025....<br />
               <span className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl">Gracias a Todos.!!!</span>
             </div>
+            
+            {/* Botón Ver Video */}
+            <button
+              onClick={handleWatchVideo}
+              className="mt-8 px-8 py-4 bg-gradient-to-r from-red-600 to-green-600 hover:from-red-700 hover:to-green-700 text-white font-bold text-xl sm:text-2xl rounded-full shadow-2xl transform transition-all duration-300 hover:scale-110 active:scale-95"
+              style={{
+                textShadow: "0 2px 4px rgba(0, 0, 0, 0.5)",
+                boxShadow: "0 4px 20px rgba(255, 215, 0, 0.5), 0 0 40px rgba(255, 215, 0, 0.3)",
+              }}
+            >
+              Ver Video
+            </button>
           </div>
+        </div>
+      )}
+
+      {showVideo && (
+        <div className="w-full h-full bg-black">
+          <button
+            onClick={() => setShowVideo(false)}
+            className="absolute top-4 right-4 z-10 bg-white/20 hover:bg-white/40 text-white rounded-full p-2 transition-colors"
+            aria-label="Cerrar video"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+          <video
+            ref={videoRef}
+            autoPlay
+            controls
+            className="w-full h-full object-contain"
+            onEnded={() => setShowVideo(false)}
+          >
+            <source src="/cierre de myl 2025.mp4" type="video/mp4" />
+            Tu navegador no soporta el elemento de video.
+          </video>
         </div>
       )}
     </div>

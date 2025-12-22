@@ -183,23 +183,22 @@ export function ChristmasBanner() {
             autoPlay
             controls
             playsInline
-            preload="auto"
+            preload="metadata"
             className="w-full h-full object-contain"
             onEnded={() => setShowVideo(false)}
             onError={(e) => {
               const video = e.currentTarget
               console.error("Error al cargar video:", {
-                error: video.error,
                 code: video.error?.code,
                 message: video.error?.message,
                 src: video.src,
+                currentSrc: video.currentSrc,
                 networkState: video.networkState,
                 readyState: video.readyState
               })
-              alert(`Error al cargar el video: ${video.error?.message || 'Error desconocido'}`)
             }}
-            onLoadedData={() => {
-              console.log("Video cargado correctamente")
+            onLoadedMetadata={() => {
+              console.log("Metadata del video cargado")
             }}
             onCanPlay={() => {
               console.log("Video puede reproducirse")
@@ -208,7 +207,6 @@ export function ChristmasBanner() {
               console.log("Video está reproduciéndose")
             }}
           >
-            <source src="/cierre%20de%20myl%202025.mp4" type="video/mp4" />
             <source src="/cierre de myl 2025.mp4" type="video/mp4" />
             Tu navegador no soporta el elemento de video.
           </video>

@@ -37,18 +37,12 @@ export function Header() {
           />
           <span className="text-lg sm:text-xl font-bold text-blue-900 flex items-center gap-1.5">
             <span className="ml-2">En</span>
-            <svg width="1.5em" height="1em" viewBox="0 0 27 18" xmlns="http://www.w3.org/2000/svg" className="inline-block" style={{ verticalAlign: 'middle' }}>
-              <rect width="27" height="6" fill="#74ACDF"/>
-              <rect width="27" height="6" y="6" fill="#FFF"/>
-              <rect width="27" height="6" y="12" fill="#74ACDF"/>
-              <circle cx="13.5" cy="9" r="2.5" fill="#F6B40E"/>
-            </svg>
-            <svg width="1.5em" height="1em" viewBox="0 0 27 18" xmlns="http://www.w3.org/2000/svg" className="inline-block" style={{ verticalAlign: 'middle' }}>
-              <rect width="9" height="9" fill="#0039A6"/>
-              <rect width="27" height="9" y="0" fill="#FFF"/>
-              <rect width="27" height="9" y="9" fill="#D52B1E"/>
-              <polygon points="4.5,4.5 5.2,6 3.8,6" fill="#FFF"/>
-            </svg>
+            <img 
+              src="/bandera arg chi.png" 
+              alt="Banderas de Argentina y Chile" 
+              className="inline-block"
+              style={{ height: '1em', width: 'auto', verticalAlign: 'middle' }}
+            />
           </span>
         </div>
 

@@ -39,7 +39,7 @@ export function Header() {
             <span className="ml-2">En</span>
             <img 
               src="/bandera arg chi.jpg" 
-              alt="Banderas de Argentina y Chile" 
+              alt="" 
               className="inline-block"
               style={{ height: '1em', width: 'auto', verticalAlign: 'middle', objectFit: 'contain' }}
             />

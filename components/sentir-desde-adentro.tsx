@@ -53,6 +53,31 @@ export function SentirDesdeAdentro() {
           </p>
         </div>
 
+        {/* Video de cierre del año */}
+        <div className="max-w-4xl mx-auto mb-10 sm:mb-12 md:mb-16">
+          <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-6 text-center text-balance">
+            Cierre de este GRAN AÑO...
+          </h3>
+          <Card className="overflow-hidden">
+            <CardContent className="p-0">
+              <div className="relative flex justify-center items-center">
+                <video
+                  src="/cierre_de_myl_2025_2.mp4"
+                  controls
+                  className="w-full h-auto mx-auto block"
+                  preload="metadata"
+                  playsInline
+                  onError={(e) => {
+                    console.error("Error al cargar el video: /cierre_de_myl_2025_2.mp4", e)
+                  }}
+                >
+                  Tu navegador no soporta el elemento de video.
+                </video>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
         <Tabs value={activeTab} onValueChange={setActiveTab} className="max-w-6xl mx-auto">
           <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-8 sm:mb-12">
             <TabsTrigger value="institucional" className="flex items-center gap-2">

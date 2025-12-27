@@ -64,7 +64,7 @@ export function ChristmasBanner() {
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80">
-      <div className="relative flex flex-col items-center justify-center" style={{ width: '10cm', height: '10cm', maxWidth: '90vw', maxHeight: '90vh' }}>
+      <div className="relative flex flex-col items-center justify-center" style={{ width: '12cm', height: '12cm', maxWidth: '90vw', maxHeight: '90vh' }}>
         {/* Botón X para cerrar - siempre visible en el margen superior derecho */}
         <button
           onClick={handleClose}
@@ -101,7 +101,7 @@ export function ChristmasBanner() {
 
         {/* Texto "Esto Tambien Pasara..." en el renglón de abajo */}
         <div className="absolute top-16 left-0 right-0 text-center z-10 px-4">
-          <p className="text-white font-bold text-base sm:text-lg md:text-xl" style={{ textShadow: "0 2px 4px rgba(0, 0, 0, 0.8), 0 0 10px rgba(0, 0, 0, 0.5)" }}>
+          <p className="text-white font-bold text-xl sm:text-2xl md:text-3xl lg:text-4xl" style={{ textShadow: "0 2px 4px rgba(0, 0, 0, 0.8), 0 0 10px rgba(0, 0, 0, 0.5)" }}>
             Esto Tambien Pasara...
           </p>
         </div>

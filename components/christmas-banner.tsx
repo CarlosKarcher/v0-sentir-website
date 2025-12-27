@@ -12,8 +12,11 @@ export function ChristmasBanner() {
     if (audio) {
       try {
         if (isPlaying) {
+          // Terminar: detener audio y cerrar cartel
           audio.pause()
+          audio.currentTime = 0
           setIsPlaying(false)
+          setShowBanner(false)
         } else {
           await audio.play()
           setIsPlaying(true)
@@ -76,7 +79,7 @@ export function ChristmasBanner() {
             boxShadow: "0 4px 20px rgba(255, 140, 0, 0.6), 0 0 40px rgba(255, 69, 0, 0.4)",
           }}
         >
-          {isPlaying ? "Pausar" : "Escuchar"}
+          {isPlaying ? "Terminar" : "Escuchar"}
         </button>
 
         {/* Audio oculto */}

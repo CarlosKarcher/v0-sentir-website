@@ -99,10 +99,10 @@ export function ChristmasBanner() {
           </p>
         </div>
 
-        {/* Texto "Esto Tambien Pasara..." en el renglón de abajo */}
+        {/* Texto "Esto también pasará..." en el renglón de abajo */}
         <div className="absolute top-16 left-0 right-0 text-center z-10 px-4">
           <p className="text-white font-bold text-xl sm:text-2xl md:text-3xl lg:text-4xl" style={{ textShadow: "0 2px 4px rgba(0, 0, 0, 0.8), 0 0 10px rgba(0, 0, 0, 0.5)" }}>
-            Esto Tambien Pasara...
+            Esto también pasará...
           </p>
         </div>
 

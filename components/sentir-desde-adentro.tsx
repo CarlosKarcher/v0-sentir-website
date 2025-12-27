@@ -55,8 +55,8 @@ export function SentirDesdeAdentro() {
 
         {/* Video de cierre del año */}
         <div className="max-w-4xl mx-auto mb-10 sm:mb-12 md:mb-16">
-          <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-6 text-center text-balance">
-            Cierre de este GRAN AÑO...
+          <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-6 text-center text-balance" style={{ color: '#001f3f' }}>
+            CIERRE DE ESTE GRAN AÑO 2025...
           </h3>
           <Card className="overflow-hidden">
             <CardContent className="p-0">

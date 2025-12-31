@@ -8,37 +8,42 @@ export function ChristmasBanner() {
 
   useEffect(() => {
     const video = videoRef.current
-    if (video && showVideo) {
-      // Intentar reproducir cuando el video esté listo
-      const tryPlay = async () => {
-        try {
-          video.muted = true // Necesario para autoplay en la mayoría de navegadores
-          await video.play()
-          // Activar sonido después de que empiece
-          setTimeout(() => {
+    if (!video || !showVideo) return
+
+    // Intentar reproducir cuando el video esté listo
+    const tryPlay = async () => {
+      try {
+        if (!video) return
+        video.muted = true // Necesario para autoplay en la mayoría de navegadores
+        await video.play()
+        // Activar sonido después de que empiece
+        setTimeout(() => {
+          if (video) {
             video.muted = false
-          }, 500)
-        } catch (error) {
-          console.error("Error al reproducir video automáticamente:", error)
-        }
+          }
+        }, 500)
+      } catch (error) {
+        console.error("Error al reproducir video automáticamente:", error)
       }
+    }
 
-      const handleCanPlay = () => {
-        tryPlay()
-      }
+    const handleCanPlay = () => {
+      tryPlay()
+    }
 
-      const handleLoadedMetadata = () => {
-        tryPlay()
-      }
+    const handleLoadedMetadata = () => {
+      tryPlay()
+    }
 
-      const handleEnded = () => {
-        setShowVideo(false)
-      }
+    const handleEnded = () => {
+      setShowVideo(false)
+    }
 
-      const handleError = (e: Event) => {
-        console.error("Error en video:", e)
-      }
+    const handleError = (e: Event) => {
+      console.error("Error en video:", e)
+    }
 
+    try {
       video.addEventListener('canplay', handleCanPlay)
       video.addEventListener('loadedmetadata', handleLoadedMetadata)
       video.addEventListener('ended', handleEnded)
@@ -48,12 +53,18 @@ export function ChristmasBanner() {
       if (video.readyState >= 2) {
         tryPlay()
       }
+    } catch (error) {
+      console.error("Error al configurar eventos del video:", error)
+    }
 
-      return () => {
+    return () => {
+      try {
         video.removeEventListener('canplay', handleCanPlay)
         video.removeEventListener('loadedmetadata', handleLoadedMetadata)
         video.removeEventListener('ended', handleEnded)
         video.removeEventListener('error', handleError)
+      } catch (error) {
+        // Ignorar errores en cleanup
       }
     }
   }, [showVideo])
@@ -63,12 +74,17 @@ export function ChristmasBanner() {
   }
 
   const handleClose = () => {
-    const video = videoRef.current
-    if (video) {
-      video.pause()
-      video.currentTime = 0
+    try {
+      const video = videoRef.current
+      if (video) {
+        video.pause()
+        video.currentTime = 0
+      }
+      setShowVideo(false)
+    } catch (error) {
+      console.error("Error al cerrar video:", error)
+      setShowVideo(false)
     }
-    setShowVideo(false)
   }
 
   return (
@@ -104,21 +120,35 @@ export function ChristmasBanner() {
           preload="auto"
           muted={true}
           controls={false}
-          onEnded={() => setShowVideo(false)}
+          onEnded={() => {
+            try {
+              setShowVideo(false)
+            } catch (error) {
+              console.error("Error al finalizar video:", error)
+            }
+          }}
           onError={(e) => {
             console.error("Error al cargar el video:", e)
-            const video = e.currentTarget as HTMLVideoElement
-            console.error("Video error details:", {
-              error: video.error,
-              networkState: video.networkState,
-              readyState: video.readyState,
-              src: video.src
-            })
+            try {
+              const video = e.currentTarget as HTMLVideoElement
+              console.error("Video error details:", {
+                error: video.error,
+                networkState: video.networkState,
+                readyState: video.readyState,
+                src: video.src
+              })
+            } catch (error) {
+              console.error("Error al obtener detalles del error:", error)
+            }
           }}
           onPlaying={() => {
-            const video = videoRef.current
-            if (video) {
-              video.muted = false
+            try {
+              const video = videoRef.current
+              if (video) {
+                video.muted = false
+              }
+            } catch (error) {
+              console.error("Error al activar sonido:", error)
             }
           }}
         >

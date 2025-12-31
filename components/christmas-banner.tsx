@@ -18,17 +18,31 @@ export function ChristmasBanner() {
       const tryPlay = async () => {
         try {
           if (!video) return
-          // Necesario para autoplay en la mayoría de navegadores
+          
+          // Primero intentar con muted (más compatible con autoplay)
           video.muted = true
           await video.play()
-          // Activar sonido después de que empiece
-          setTimeout(() => {
-            if (video) {
-              video.muted = false
-            }
-          }, 500)
+          
+          // Una vez que esté reproduciendo, activar el audio inmediatamente
+          if (video.playing) {
+            video.muted = false
+          } else {
+            // Si no está playing aún, esperar un poco y luego activar audio
+            setTimeout(() => {
+              if (video) {
+                video.muted = false
+              }
+            }, 100)
+          }
         } catch (error) {
-          console.error("Error al reproducir video automáticamente:", error)
+          console.error("Error al reproducir video con muted:", error)
+          // Si falla con muted, intentar sin muted (menos probable que funcione)
+          try {
+            video.muted = false
+            await video.play()
+          } catch (error2) {
+            console.error("Error al reproducir video sin muted:", error2)
+          }
         }
       }
 
@@ -129,7 +143,7 @@ export function ChristmasBanner() {
             </svg>
           </button>
 
-          {/* Video con controls para permitir reproducción manual */}
+          {/* Video - sin controls, reproducción automática */}
           <video
             ref={videoRef}
             src="/Saludo-fin-de-año.mp4"
@@ -138,7 +152,7 @@ export function ChristmasBanner() {
             playsInline
             preload="auto"
             muted={true}
-            controls={true}
+            controls={false}
             onEnded={() => {
               try {
                 setShowVideo(false)
@@ -167,6 +181,7 @@ export function ChristmasBanner() {
               try {
                 const video = videoRef.current
                 if (video) {
+                  // Activar audio cuando el video empiece a reproducirse
                   video.muted = false
                 }
               } catch (error) {

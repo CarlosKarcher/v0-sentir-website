@@ -14,35 +14,37 @@ export function ChristmasBanner() {
       const video = videoRef.current
       if (!video || !showVideo) return
 
+      // Función para activar el audio de forma segura
+      const enableAudio = () => {
+        try {
+          if (video && !video.muted) return // Ya está activado
+          if (video) {
+            video.muted = false
+          }
+        } catch (error) {
+          console.error("Error al activar audio:", error)
+        }
+      }
+
       // Intentar reproducir cuando el video esté listo
       const tryPlay = async () => {
         try {
           if (!video) return
           
-          // Primero intentar con muted (más compatible con autoplay)
-          video.muted = true
+          // Asegurar que está muted para autoplay
+          if (!video.muted) {
+            video.muted = true
+          }
+          
+          // Reproducir
           await video.play()
           
-          // Una vez que esté reproduciendo, activar el audio inmediatamente
-          if (video.playing) {
-            video.muted = false
-          } else {
-            // Si no está playing aún, esperar un poco y luego activar audio
-            setTimeout(() => {
-              if (video) {
-                video.muted = false
-              }
-            }, 100)
-          }
+          // Activar audio después de que empiece (más rápido)
+          setTimeout(() => {
+            enableAudio()
+          }, 200)
         } catch (error) {
-          console.error("Error al reproducir video con muted:", error)
-          // Si falla con muted, intentar sin muted (menos probable que funcione)
-          try {
-            video.muted = false
-            await video.play()
-          } catch (error2) {
-            console.error("Error al reproducir video sin muted:", error2)
-          }
+          console.error("Error al reproducir video:", error)
         }
       }
 
@@ -58,19 +60,74 @@ export function ChristmasBanner() {
         tryPlay()
       }
 
+      const handlePlay = () => {
+        // Cuando el video empiece a reproducirse, activar audio
+        enableAudio()
+      }
+
+      const handlePlaying = () => {
+        // Asegurar que el audio esté activo mientras se reproduce
+        enableAudio()
+      }
+
+      const handlePause = () => {
+        // Si se pausa, intentar reproducir de nuevo
+        try {
+          if (video && !video.ended) {
+            video.play().catch(console.error)
+          }
+        } catch (error) {
+          console.error("Error al reanudar video:", error)
+        }
+      }
+
+      const handleWaiting = () => {
+        // Si el video está esperando (buffering), asegurar que siga reproduciendo
+        console.log("Video esperando datos (buffering)...")
+      }
+
+      const handleStalled = () => {
+        // Si el video se estanca, intentar continuar
+        console.log("Video estancado, intentando continuar...")
+        try {
+          if (video && !video.ended) {
+            video.play().catch(console.error)
+          }
+        } catch (error) {
+          console.error("Error al continuar video estancado:", error)
+        }
+      }
+
       const handleEnded = () => {
         setShowVideo(false)
       }
 
       const handleError = (e: Event) => {
         console.error("Error en video:", e)
+        try {
+          const video = e.currentTarget as HTMLVideoElement
+          console.error("Video error details:", {
+            error: video.error,
+            networkState: video.networkState,
+            readyState: video.readyState,
+            src: video.src
+          })
+        } catch (error) {
+          console.error("Error al obtener detalles del error:", error)
+        }
         setHasError(true)
         setShowVideo(false)
       }
 
+      // Agregar todos los listeners
       video.addEventListener('canplay', handleCanPlay)
       video.addEventListener('loadedmetadata', handleLoadedMetadata)
       video.addEventListener('loadeddata', handleLoadedData)
+      video.addEventListener('play', handlePlay)
+      video.addEventListener('playing', handlePlaying)
+      video.addEventListener('pause', handlePause)
+      video.addEventListener('waiting', handleWaiting)
+      video.addEventListener('stalled', handleStalled)
       video.addEventListener('ended', handleEnded)
       video.addEventListener('error', handleError)
 
@@ -87,6 +144,11 @@ export function ChristmasBanner() {
           video.removeEventListener('canplay', handleCanPlay)
           video.removeEventListener('loadedmetadata', handleLoadedMetadata)
           video.removeEventListener('loadeddata', handleLoadedData)
+          video.removeEventListener('play', handlePlay)
+          video.removeEventListener('playing', handlePlaying)
+          video.removeEventListener('pause', handlePause)
+          video.removeEventListener('waiting', handleWaiting)
+          video.removeEventListener('stalled', handleStalled)
           video.removeEventListener('ended', handleEnded)
           video.removeEventListener('error', handleError)
         } catch (error) {
@@ -177,15 +239,26 @@ export function ChristmasBanner() {
                 console.error("Error al obtener detalles del error:", error)
               }
             }}
-            onPlaying={() => {
+            onPlay={() => {
               try {
                 const video = videoRef.current
                 if (video) {
-                  // Activar audio cuando el video empiece a reproducirse
+                  // Activar audio cuando empiece a reproducirse
                   video.muted = false
                 }
               } catch (error) {
                 console.error("Error al activar sonido:", error)
+              }
+            }}
+            onPlaying={() => {
+              try {
+                const video = videoRef.current
+                if (video) {
+                  // Asegurar que el audio esté activo
+                  video.muted = false
+                }
+              } catch (error) {
+                console.error("Error al mantener audio activo:", error)
               }
             }}
           >

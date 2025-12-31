@@ -18,7 +18,8 @@ export function ChristmasBanner() {
       const tryPlay = async () => {
         try {
           if (!video) return
-          video.muted = true // Necesario para autoplay en la mayoría de navegadores
+          // Necesario para autoplay en la mayoría de navegadores
+          video.muted = true
           await video.play()
           // Activar sonido después de que empiece
           setTimeout(() => {
@@ -39,6 +40,10 @@ export function ChristmasBanner() {
         tryPlay()
       }
 
+      const handleLoadedData = () => {
+        tryPlay()
+      }
+
       const handleEnded = () => {
         setShowVideo(false)
       }
@@ -51,10 +56,14 @@ export function ChristmasBanner() {
 
       video.addEventListener('canplay', handleCanPlay)
       video.addEventListener('loadedmetadata', handleLoadedMetadata)
+      video.addEventListener('loadeddata', handleLoadedData)
       video.addEventListener('ended', handleEnded)
       video.addEventListener('error', handleError)
 
-      // Intentar reproducir inmediatamente si el video ya está cargado
+      // Cargar el video explícitamente
+      video.load()
+
+      // Intentar reproducir si el video ya está listo
       if (video.readyState >= 2) {
         tryPlay()
       }
@@ -63,6 +72,7 @@ export function ChristmasBanner() {
         try {
           video.removeEventListener('canplay', handleCanPlay)
           video.removeEventListener('loadedmetadata', handleLoadedMetadata)
+          video.removeEventListener('loadeddata', handleLoadedData)
           video.removeEventListener('ended', handleEnded)
           video.removeEventListener('error', handleError)
         } catch (error) {
@@ -119,7 +129,7 @@ export function ChristmasBanner() {
             </svg>
           </button>
 
-          {/* Video */}
+          {/* Video con controls para permitir reproducción manual */}
           <video
             ref={videoRef}
             src="/Saludo-fin-de-año.mp4"
@@ -128,7 +138,7 @@ export function ChristmasBanner() {
             playsInline
             preload="auto"
             muted={true}
-            controls={false}
+            controls={true}
             onEnded={() => {
               try {
                 setShowVideo(false)

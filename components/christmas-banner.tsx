@@ -105,18 +105,16 @@ export function ChristmasBanner() {
           autoPlay
           playsInline
           preload="auto"
-          muted
-          onLoadedData={() => {
-            const video = videoRef.current
-            if (video) {
-              video.play().then(() => {
-                video.muted = false
-              }).catch(console.error)
-            }
-          }}
+          muted={true}
           onEnded={() => setShowVideo(false)}
           onError={(e) => {
             console.error("Error al cargar el video:", e)
+          }}
+          onPlay={() => {
+            const video = videoRef.current
+            if (video) {
+              video.muted = false
+            }
           }}
         >
           Tu navegador no soporta el elemento de video.

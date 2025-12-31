@@ -36,6 +36,7 @@ export function ChristmasBanner() {
             }, 300)
           } catch (error2) {
             console.error("Error al reproducir video con muted:", error2)
+            // Si también falla, al menos el usuario podrá hacer clic en play
           }
         }
       }
@@ -75,18 +76,11 @@ export function ChristmasBanner() {
       }
 
       const handlePause = () => {
-        // Si se pausa, intentar reproducir de nuevo
-        try {
-          if (video && !video.ended) {
-            video.play().catch(console.error)
-          }
-        } catch (error) {
-          console.error("Error al reanudar video:", error)
-        }
+        // Si se pausa, no hacer nada automáticamente (dejar que el usuario controle)
       }
 
       const handleWaiting = () => {
-        // Si el video está esperando (buffering), asegurar que siga reproduciendo
+        // Si el video está esperando (buffering)
         console.log("Video esperando datos (buffering)...")
       }
 
@@ -209,7 +203,7 @@ export function ChristmasBanner() {
             </svg>
           </button>
 
-          {/* Video - SIN MUTED, reproducción automática con audio */}
+          {/* Video - CON CONTROLES para que el usuario pueda reproducirlo manualmente */}
           <video
             ref={videoRef}
             src="/Saludo-fin-de-año.mp4"
@@ -218,7 +212,7 @@ export function ChristmasBanner() {
             playsInline
             preload="auto"
             muted={false}
-            controls={false}
+            controls={true}
             onEnded={() => {
               try {
                 setShowVideo(false)

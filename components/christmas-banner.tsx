@@ -32,7 +32,8 @@ export function ChristmasBanner() {
             }
           })
         } catch (error) {
-          console.error("Error al reproducir video:", error)
+          console.error("Error al reproducir video automáticamente:", error)
+          // Si falla el autoplay, no hacer nada - el usuario podrá usar los controles
         }
       }
 
@@ -112,8 +113,7 @@ export function ChristmasBanner() {
         } catch (error) {
           console.error("Error al obtener detalles del error:", error)
         }
-        setHasError(true)
-        setShowVideo(false)
+        // No cerrar el video si hay error - dejar que el usuario intente reproducirlo
       }
 
       // Agregar todos los listeners
@@ -156,12 +156,11 @@ export function ChristmasBanner() {
       }
     } catch (error) {
       console.error("Error en useEffect del video:", error)
-      setHasError(true)
-      setShowVideo(false)
+      // No cerrar el video si hay error - dejar que el usuario intente reproducirlo
     }
   }, [showVideo, hasError])
 
-  if (!showVideo || hasError) {
+  if (!showVideo) {
     return null
   }
 
@@ -176,7 +175,6 @@ export function ChristmasBanner() {
     } catch (error) {
       console.error("Error al cerrar video:", error)
       setShowVideo(false)
-      setHasError(true)
     }
   }
 
@@ -204,7 +202,7 @@ export function ChristmasBanner() {
             </svg>
           </button>
 
-          {/* Video - autoplay con muted inicial, luego audio activado */}
+          {/* Video - CON CONTROLES para permitir reproducción manual si autoplay falla */}
           <video
             ref={videoRef}
             src="/Saludo-fin-de-año.mp4"
@@ -213,19 +211,16 @@ export function ChristmasBanner() {
             playsInline
             preload="auto"
             muted={true}
-            controls={false}
+            controls={true}
             onEnded={() => {
               try {
                 setShowVideo(false)
               } catch (error) {
                 console.error("Error al finalizar video:", error)
-                setHasError(true)
               }
             }}
             onError={(e) => {
               console.error("Error al cargar el video:", e)
-              setHasError(true)
-              setShowVideo(false)
               try {
                 const video = e.currentTarget as HTMLVideoElement
                 console.error("Video error details:", {
@@ -237,6 +232,7 @@ export function ChristmasBanner() {
               } catch (error) {
                 console.error("Error al obtener detalles del error:", error)
               }
+              // No cerrar el video si hay error - dejar que el usuario intente reproducirlo
             }}
             onPlay={() => {
               try {

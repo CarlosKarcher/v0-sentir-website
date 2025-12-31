@@ -9,6 +9,28 @@ export function ChristmasBanner() {
   useEffect(() => {
     const video = videoRef.current
     if (video && showVideo) {
+      // Intentar reproducir cuando el video esté listo
+      const tryPlay = async () => {
+        try {
+          video.muted = true // Necesario para autoplay en la mayoría de navegadores
+          await video.play()
+          // Activar sonido después de que empiece
+          setTimeout(() => {
+            video.muted = false
+          }, 500)
+        } catch (error) {
+          console.error("Error al reproducir video automáticamente:", error)
+        }
+      }
+
+      const handleCanPlay = () => {
+        tryPlay()
+      }
+
+      const handleLoadedMetadata = () => {
+        tryPlay()
+      }
+
       const handleEnded = () => {
         setShowVideo(false)
       }
@@ -17,25 +39,21 @@ export function ChristmasBanner() {
         console.error("Error en video:", e)
       }
 
-      const handleCanPlay = async () => {
-        try {
-          await video.play()
-        } catch (error) {
-          console.error("Error al reproducir video:", error)
-        }
-      }
-
+      video.addEventListener('canplay', handleCanPlay)
+      video.addEventListener('loadedmetadata', handleLoadedMetadata)
       video.addEventListener('ended', handleEnded)
       video.addEventListener('error', handleError)
-      video.addEventListener('canplay', handleCanPlay)
 
-      // Cargar el video
-      video.load()
+      // Intentar reproducir inmediatamente si el video ya está cargado
+      if (video.readyState >= 2) {
+        tryPlay()
+      }
 
       return () => {
+        video.removeEventListener('canplay', handleCanPlay)
+        video.removeEventListener('loadedmetadata', handleLoadedMetadata)
         video.removeEventListener('ended', handleEnded)
         video.removeEventListener('error', handleError)
-        video.removeEventListener('canplay', handleCanPlay)
       }
     }
   }, [showVideo])
@@ -56,7 +74,7 @@ export function ChristmasBanner() {
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80">
       {/* Contenedor del video de 15cm x 15cm con botón X dentro */}
-      <div className="relative bg-black rounded-lg overflow-hidden" style={{ width: '15cm', height: '15cm', maxWidth: '90vw', maxHeight: '90vh' }}>
+      <div className="relative bg-black rounded-lg overflow-hidden shadow-2xl" style={{ width: '15cm', height: '15cm', maxWidth: '90vw', maxHeight: '90vh' }}>
         {/* Botón X para cerrar - dentro del contenedor del video */}
         <button
           onClick={handleClose}
@@ -85,11 +103,19 @@ export function ChristmasBanner() {
           playsInline
           preload="auto"
           muted={true}
+          controls={false}
           onEnded={() => setShowVideo(false)}
           onError={(e) => {
             console.error("Error al cargar el video:", e)
+            const video = e.currentTarget as HTMLVideoElement
+            console.error("Video error details:", {
+              error: video.error,
+              networkState: video.networkState,
+              readyState: video.readyState,
+              src: video.src
+            })
           }}
-          onPlay={() => {
+          onPlaying={() => {
             const video = videoRef.current
             if (video) {
               video.muted = false

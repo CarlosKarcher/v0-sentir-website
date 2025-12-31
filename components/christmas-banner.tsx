@@ -9,20 +9,6 @@ export function ChristmasBanner() {
   useEffect(() => {
     const video = videoRef.current
     if (video && showVideo) {
-      const playVideo = async () => {
-        try {
-          // Intentar reproducir con muted primero (más compatible con autoplay)
-          video.muted = true
-          await video.play()
-          // Después de que empiece, activar el sonido
-          setTimeout(() => {
-            video.muted = false
-          }, 100)
-        } catch (error) {
-          console.error("Error al reproducir video:", error)
-        }
-      }
-
       const handleEnded = () => {
         setShowVideo(false)
       }
@@ -31,32 +17,25 @@ export function ChristmasBanner() {
         console.error("Error en video:", e)
       }
 
-      const handleLoadedData = () => {
-        playVideo()
-      }
-
-      const handleCanPlayThrough = () => {
-        playVideo()
+      const handleCanPlay = async () => {
+        try {
+          await video.play()
+        } catch (error) {
+          console.error("Error al reproducir video:", error)
+        }
       }
 
       video.addEventListener('ended', handleEnded)
       video.addEventListener('error', handleError)
-      video.addEventListener('loadeddata', handleLoadedData)
-      video.addEventListener('canplaythrough', handleCanPlayThrough)
+      video.addEventListener('canplay', handleCanPlay)
 
       // Cargar el video
       video.load()
 
-      // Intentar reproducir si el video ya está listo
-      if (video.readyState >= 3) {
-        playVideo()
-      }
-
       return () => {
         video.removeEventListener('ended', handleEnded)
         video.removeEventListener('error', handleError)
-        video.removeEventListener('loadeddata', handleLoadedData)
-        video.removeEventListener('canplaythrough', handleCanPlayThrough)
+        video.removeEventListener('canplay', handleCanPlay)
       }
     }
   }, [showVideo])

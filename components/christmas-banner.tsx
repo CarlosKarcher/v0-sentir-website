@@ -14,30 +14,25 @@ export function ChristmasBanner() {
       const video = videoRef.current
       if (!video || !showVideo) return
 
-      // Intentar reproducir cuando el video esté listo - SIN MUTED
+      // Intentar reproducir cuando el video esté listo
       const tryPlay = async () => {
         try {
           if (!video) return
           
-          // Intentar reproducir sin muted primero (con audio)
-          video.muted = false
+          // Estrategia: empezar con muted para que el autoplay funcione
+          // Luego activar audio inmediatamente
+          video.muted = true
           await video.play()
+          
+          // Activar audio inmediatamente después de que empiece
+          // Usar requestAnimationFrame para hacerlo lo más rápido posible
+          requestAnimationFrame(() => {
+            if (video) {
+              video.muted = false
+            }
+          })
         } catch (error) {
-          console.error("Error al reproducir video con audio:", error)
-          // Si falla sin muted, intentar con muted como fallback
-          try {
-            video.muted = true
-            await video.play()
-            // Una vez que empiece, intentar activar audio
-            setTimeout(() => {
-              if (video) {
-                video.muted = false
-              }
-            }, 300)
-          } catch (error2) {
-            console.error("Error al reproducir video con muted:", error2)
-            // Si también falla, al menos el usuario podrá hacer clic en play
-          }
+          console.error("Error al reproducir video:", error)
         }
       }
 
@@ -53,8 +48,12 @@ export function ChristmasBanner() {
         tryPlay()
       }
 
+      const handleCanPlayThrough = () => {
+        tryPlay()
+      }
+
       const handlePlay = () => {
-        // Asegurar que el audio esté activo cuando empiece
+        // Cuando el video empiece a reproducirse, activar audio inmediatamente
         try {
           if (video) {
             video.muted = false
@@ -119,6 +118,7 @@ export function ChristmasBanner() {
 
       // Agregar todos los listeners
       video.addEventListener('canplay', handleCanPlay)
+      video.addEventListener('canplaythrough', handleCanPlayThrough)
       video.addEventListener('loadedmetadata', handleLoadedMetadata)
       video.addEventListener('loadeddata', handleLoadedData)
       video.addEventListener('play', handlePlay)
@@ -140,6 +140,7 @@ export function ChristmasBanner() {
       return () => {
         try {
           video.removeEventListener('canplay', handleCanPlay)
+          video.removeEventListener('canplaythrough', handleCanPlayThrough)
           video.removeEventListener('loadedmetadata', handleLoadedMetadata)
           video.removeEventListener('loadeddata', handleLoadedData)
           video.removeEventListener('play', handlePlay)
@@ -203,7 +204,7 @@ export function ChristmasBanner() {
             </svg>
           </button>
 
-          {/* Video - CON CONTROLES para que el usuario pueda reproducirlo manualmente */}
+          {/* Video - autoplay con muted inicial, luego audio activado */}
           <video
             ref={videoRef}
             src="/Saludo-fin-de-año.mp4"
@@ -211,8 +212,8 @@ export function ChristmasBanner() {
             autoPlay
             playsInline
             preload="auto"
-            muted={false}
-            controls={true}
+            muted={true}
+            controls={false}
             onEnded={() => {
               try {
                 setShowVideo(false)
@@ -241,7 +242,7 @@ export function ChristmasBanner() {
               try {
                 const video = videoRef.current
                 if (video) {
-                  // Asegurar que el audio esté activo
+                  // Activar audio inmediatamente cuando empiece a reproducirse
                   video.muted = false
                 }
               } catch (error) {

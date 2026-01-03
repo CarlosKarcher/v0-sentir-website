@@ -8,215 +8,198 @@ export function ChristmasBanner() {
   const [shouldPlayVideo, setShouldPlayVideo] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
 
+  // Ocultar texto después de 3 segundos
   useEffect(() => {
     if (!showBanner) return
 
-    // Esperar a que el DOM esté listo
-    const initVideo = () => {
+    const textTimer = setTimeout(() => {
+      setShowText(false)
+      setShouldPlayVideo(true)
+      console.log("⏱️ 3 segundos transcurridos, activando reproducción del video...")
+    }, 3000)
+
+    return () => {
+      clearTimeout(textTimer)
+    }
+  }, [showBanner])
+
+  // Reproducir video cuando shouldPlayVideo sea true
+  useEffect(() => {
+    if (!shouldPlayVideo || !showBanner) return
+
+    const video = videoRef.current
+    if (!video) {
+      console.log("⚠️ Video ref no disponible")
+      return
+    }
+
+    console.log("▶️ Intentando reproducir video...")
+    console.log("Video estado:", {
+      readyState: video.readyState,
+      paused: video.paused,
+      muted: video.muted,
+      volume: video.volume,
+      src: video.src
+    })
+
+    // Función para reproducir video
+    const playVideo = async () => {
+      if (!video) return
+
       try {
-        const video = videoRef.current
-        if (!video) {
-          console.log("⚠️ Video ref no disponible, reintentando...")
-          // Reintentar después de un breve delay
-          setTimeout(initVideo, 100)
-          return
-        }
-
-        console.log("📹 Inicializando video:", video.src)
-
-        // Función para reproducir video automáticamente SIN muted
-        const playVideo = async () => {
-          if (!video || !shouldPlayVideo) return
-          
-          try {
-            console.log("▶️ Intentando reproducir video SIN muted...")
-            // Intentar reproducir directamente sin muted
-            video.muted = false
-            video.volume = 1.0
-            await video.play()
-            console.log("✅ Video play() exitoso SIN muted")
-            
-          } catch (error) {
-            console.log("⚠️ Error al reproducir sin muted, intentando con muted...", error)
-            // Si falla sin muted, intentar con muted como respaldo
-            try {
-              video.muted = true
-              await video.play()
-              console.log("✅ Video play() exitoso con muted")
-              
-              // Activar audio inmediatamente después
-              requestAnimationFrame(() => {
-                if (video) {
-                  video.muted = false
-                  console.log("🔊 Audio activado (requestAnimationFrame)")
-                }
-              })
-              
-              setTimeout(() => {
-                if (video) {
-                  video.muted = false
-                  video.volume = 1.0
-                  console.log("🔊 Audio activado (setTimeout)")
-                }
-              }, 100)
-            } catch (error2) {
-              console.error("❌ Error al reproducir video:", error2)
-            }
-          }
-        }
-
-        // Múltiples eventos para intentar reproducir cuando esté listo (solo si shouldPlayVideo es true)
-        const handleCanPlay = () => {
-          console.log("🎬 Video puede reproducirse (canplay)")
-          if (shouldPlayVideo) {
-            playVideo()
-          }
-        }
-
-        const handleCanPlayThrough = () => {
-          console.log("🎬 Video puede reproducirse completamente (canplaythrough)")
-          if (shouldPlayVideo) {
-            playVideo()
-          }
-        }
-
-        const handleLoadedData = () => {
-          console.log("📥 Datos del video cargados (loadeddata)")
-          if (shouldPlayVideo) {
-            playVideo()
-          }
-        }
-
-        const handleLoadedMetadata = () => {
-          console.log("📋 Metadata del video cargado (loadedmetadata)")
-          // No reproducir aquí, esperar a que se oculte el texto
-        }
-
-        const handlePlay = () => {
-          console.log("▶️ Video empezó a reproducirse (play)")
-          if (video) {
-            video.muted = false
-            video.volume = 1.0
-          }
-        }
-
-        const handlePlaying = () => {
-          console.log("▶️ Video reproduciéndose (playing)")
-          if (video) {
-            video.muted = false
-            video.volume = 1.0
-          }
-        }
-
-        const handleError = (e: Event) => {
-          console.error("❌ Error en video:", e)
-          const videoTarget = e.currentTarget as HTMLVideoElement
-          console.error("Detalles del error:", {
-            error: videoTarget.error,
-            errorCode: videoTarget.error?.code,
-            errorMessage: videoTarget.error?.message,
-            networkState: videoTarget.networkState,
-            readyState: videoTarget.readyState,
-            src: videoTarget.src,
-            currentSrc: videoTarget.currentSrc
-          })
-        }
-
-        video.addEventListener('canplay', handleCanPlay)
-        video.addEventListener('canplaythrough', handleCanPlayThrough)
-        video.addEventListener('loadeddata', handleLoadedData)
-        video.addEventListener('loadedmetadata', handleLoadedMetadata)
-        video.addEventListener('play', handlePlay)
-        video.addEventListener('playing', handlePlaying)
-        video.addEventListener('error', handleError)
-
-        // Configurar video
+        // Intentar reproducir sin muted primero
+        video.muted = false
         video.volume = 1.0
-        video.preload = "auto"
-        video.playsInline = true
-        video.muted = false // Intentar sin muted desde el inicio
-
-        // Cargar el video
-        video.load()
-        console.log("📥 Video.load() llamado")
-
-        // Ocultar texto después de 3 segundos y activar reproducción del video
-        const textTimer = setTimeout(() => {
-          setShowText(false)
-          setShouldPlayVideo(true)
-          console.log("⏱️ 3 segundos transcurridos, iniciando reproducción del video...")
+        await video.play()
+        console.log("✅ Video reproduciéndose SIN muted")
+      } catch (error1) {
+        console.log("⚠️ Error sin muted, intentando con muted...", error1)
+        try {
+          // Si falla, intentar con muted
+          video.muted = true
+          await video.play()
+          console.log("✅ Video reproduciéndose con muted")
           
-          // Intentar reproducir cuando el texto se oculte
-          if (video.readyState >= 2) {
-            console.log("✅ Video ya está listo, reproduciendo...")
-            playVideo()
-          }
-        }, 3000) // 3 segundos
-
-        // Reintentos adicionales después de que shouldPlayVideo sea true
-        setTimeout(() => {
-          if (video && video.paused && shouldPlayVideo) {
-            console.log("🔄 Reintento 1 (3500ms)")
-            playVideo()
-          }
-        }, 3500)
-
-        setTimeout(() => {
-          if (video && video.paused && shouldPlayVideo) {
-            console.log("🔄 Reintento 2 (4000ms)")
-            playVideo()
-          }
-        }, 4000)
-
-        setTimeout(() => {
-          if (video && video.paused && shouldPlayVideo) {
-            console.log("🔄 Reintento 3 (5000ms)")
-            playVideo()
-          }
-        }, 5000)
-
-        // Después de 20 segundos, cerrar todo el banner y detener video
-        const timer = setTimeout(() => {
-          if (video) {
-            video.pause()
-            video.currentTime = 0
-          }
-          setShowBanner(false)
-        }, 20000) // 20 segundos
-
-        return () => {
-          clearTimeout(timer)
-          clearTimeout(textTimer)
-          if (video) {
-            video.removeEventListener('canplay', handleCanPlay)
-            video.removeEventListener('canplaythrough', handleCanPlayThrough)
-            video.removeEventListener('loadeddata', handleLoadedData)
-            video.removeEventListener('loadedmetadata', handleLoadedMetadata)
-            video.removeEventListener('play', handlePlay)
-            video.removeEventListener('playing', handlePlaying)
-            video.removeEventListener('error', handleError)
-            try {
-              video.pause()
-              video.currentTime = 0
-            } catch (e) {
-              console.error("Error al limpiar video:", e)
+          // Activar audio inmediatamente
+          requestAnimationFrame(() => {
+            if (video) {
+              video.muted = false
+              video.volume = 1.0
+              console.log("🔊 Audio activado")
             }
-          }
+          })
+          
+          setTimeout(() => {
+            if (video) {
+              video.muted = false
+              video.volume = 1.0
+              console.log("🔊 Audio activado (setTimeout)")
+            }
+          }, 100)
+        } catch (error2) {
+          console.error("❌ Error al reproducir video:", error2)
         }
-      } catch (error) {
-        console.error("❌ Error en useEffect del video:", error)
-        // Si hay un error, ocultar el banner para no bloquear la aplicación
-        setShowBanner(false)
       }
     }
 
-    // Inicializar después de que el componente se monte
-    const timeoutId = setTimeout(initVideo, 0)
+    // Intentar reproducir inmediatamente
+    if (video.readyState >= 2) {
+      playVideo()
+    } else {
+      // Si no está listo, esperar a que esté listo
+      const handleCanPlay = () => {
+        console.log("🎬 Video puede reproducirse")
+        playVideo()
+      }
+
+      const handleCanPlayThrough = () => {
+        console.log("🎬 Video puede reproducirse completamente")
+        playVideo()
+      }
+
+      const handleLoadedData = () => {
+        console.log("📥 Datos del video cargados")
+        playVideo()
+      }
+
+      video.addEventListener('canplay', handleCanPlay)
+      video.addEventListener('canplaythrough', handleCanPlayThrough)
+      video.addEventListener('loadeddata', handleLoadedData)
+
+      // También intentar después de un delay
+      setTimeout(() => {
+        if (video && video.paused) {
+          console.log("🔄 Reintento después de delay")
+          playVideo()
+        }
+      }, 500)
+
+      return () => {
+        video.removeEventListener('canplay', handleCanPlay)
+        video.removeEventListener('canplaythrough', handleCanPlayThrough)
+        video.removeEventListener('loadeddata', handleLoadedData)
+      }
+    }
+  }, [shouldPlayVideo, showBanner])
+
+  // Inicializar video cuando el componente se monte
+  useEffect(() => {
+    if (!showBanner) return
+
+    const video = videoRef.current
+    if (!video) {
+      console.log("⚠️ Video ref no disponible en inicialización")
+      return
+    }
+
+    console.log("📹 Inicializando video:", video.src)
+
+    // Configurar video
+    video.volume = 1.0
+    video.preload = "auto"
+    video.playsInline = true
+    video.muted = false
+
+    // Cargar el video
+    video.load()
+    console.log("📥 Video.load() llamado")
+
+    const handleError = (e: Event) => {
+      console.error("❌ Error en video:", e)
+      const videoTarget = e.currentTarget as HTMLVideoElement
+      console.error("Detalles del error:", {
+        error: videoTarget.error,
+        errorCode: videoTarget.error?.code,
+        errorMessage: videoTarget.error?.message,
+        networkState: videoTarget.networkState,
+        readyState: videoTarget.readyState,
+        src: videoTarget.src,
+        currentSrc: videoTarget.currentSrc
+      })
+    }
+
+    const handlePlay = () => {
+      console.log("▶️ Video empezó a reproducirse")
+      if (video) {
+        video.muted = false
+        video.volume = 1.0
+      }
+    }
+
+    const handlePlaying = () => {
+      console.log("▶️ Video reproduciéndose")
+      if (video) {
+        video.muted = false
+        video.volume = 1.0
+      }
+    }
+
+    video.addEventListener('error', handleError)
+    video.addEventListener('play', handlePlay)
+    video.addEventListener('playing', handlePlaying)
+
+    // Cerrar banner después de 20 segundos
+    const timer = setTimeout(() => {
+      if (video) {
+        video.pause()
+        video.currentTime = 0
+      }
+      setShowBanner(false)
+    }, 20000)
 
     return () => {
-      clearTimeout(timeoutId)
+      clearTimeout(timer)
+      video.removeEventListener('error', handleError)
+      video.removeEventListener('play', handlePlay)
+      video.removeEventListener('playing', handlePlaying)
+      try {
+        video.pause()
+        video.currentTime = 0
+      } catch (e) {
+        console.error("Error al limpiar video:", e)
+      }
     }
-  }, [showBanner, shouldPlayVideo])
+  }, [showBanner])
 
   if (!showBanner) {
     return null
@@ -341,9 +324,12 @@ export function ChristmasBanner() {
             onCanPlay={() => {
               console.log("🎬 Video canplay")
             }}
+            onCanPlayThrough={() => {
+              console.log("🎬 Video canplaythrough")
+            }}
           />
 
-          {/* Texto superpuesto - se oculta después de 5 segundos */}
+          {/* Texto superpuesto - se oculta después de 3 segundos */}
           {showText && (
             <div 
               className="absolute inset-0 flex items-center justify-center z-10 transition-opacity duration-500"

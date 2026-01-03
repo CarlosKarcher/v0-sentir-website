@@ -69,12 +69,12 @@ export function ChristmasBanner() {
       `}</style>
       
       <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80">
-        {/* Contenedor del cartel de 20cm x 20cm con animación */}
+        {/* Contenedor del cartel de 25cm alto x 15cm ancho con animación */}
         <div 
           className="relative bg-black rounded-lg overflow-hidden shadow-2xl banner-pulse"
           style={{ 
-            width: '20cm', 
-            height: '20cm', 
+            width: '15cm', 
+            height: '25cm', 
             maxWidth: '90vw', 
             maxHeight: '90vh'
           }}
@@ -98,11 +98,11 @@ export function ChristmasBanner() {
             </svg>
           </button>
 
-          {/* Flyer de fondo */}
+          {/* Flyer de fondo - object-contain para que se vea completo */}
           <img
             src="/Autoconocimiento Rio Gallegos Enero 2026.jpg"
             alt="Autoconocimiento Rio Gallegos Enero 2026"
-            className="absolute inset-0 w-full h-full object-cover"
+            className="absolute inset-0 w-full h-full object-contain bg-black"
           />
 
           {/* Texto superpuesto - visible solo durante los primeros 10 segundos */}
@@ -113,7 +113,7 @@ export function ChristmasBanner() {
               <h2 
                 className="text-white font-bold text-center px-4 text-pulse"
                 style={{
-                  fontSize: 'clamp(1.5rem, 4vw, 3rem)',
+                  fontSize: 'clamp(1.2rem, 3vw, 2.5rem)',
                   textShadow: '0 4px 8px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.6)'
                 }}
               >

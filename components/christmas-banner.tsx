@@ -7,27 +7,52 @@ export function ChristmasBanner() {
   const audioRef = useRef<HTMLAudioElement>(null)
 
   useEffect(() => {
-    // Reproducir audio automáticamente cuando se muestre el banner
+    if (!showBanner) return
+
     const audio = audioRef.current
-    if (audio && showBanner) {
-      const playAudio = async () => {
-        try {
-          // Intentar reproducir con muted primero para autoplay
-          audio.muted = true
-          await audio.play()
-          // Activar audio inmediatamente
-          audio.muted = false
-        } catch (error) {
-          console.error("Error al reproducir audio:", error)
-          // Si falla, intentar sin muted
-          try {
+    if (!audio) return
+
+    // Función para reproducir audio
+    const playAudio = async () => {
+      try {
+        // Intentar reproducir con muted primero (más compatible con autoplay)
+        audio.muted = true
+        await audio.play()
+        // Activar audio inmediatamente después
+        requestAnimationFrame(() => {
+          if (audio) {
             audio.muted = false
-            await audio.play()
-          } catch (error2) {
-            console.error("Error al reproducir audio sin muted:", error2)
           }
+        })
+      } catch (error) {
+        console.error("Error al reproducir audio con muted:", error)
+        // Si falla, intentar sin muted
+        try {
+          audio.muted = false
+          await audio.play()
+        } catch (error2) {
+          console.error("Error al reproducir audio sin muted:", error2)
         }
       }
+    }
+
+    // Intentar reproducir cuando el audio esté listo
+    const handleCanPlay = () => {
+      playAudio()
+    }
+
+    const handleLoadedData = () => {
+      playAudio()
+    }
+
+    audio.addEventListener('canplay', handleCanPlay)
+    audio.addEventListener('loadeddata', handleLoadedData)
+
+    // Cargar el audio
+    audio.load()
+
+    // Intentar reproducir si el audio ya está listo
+    if (audio.readyState >= 2) {
       playAudio()
     }
 
@@ -43,6 +68,8 @@ export function ChristmasBanner() {
     return () => {
       clearTimeout(timer)
       if (audio) {
+        audio.removeEventListener('canplay', handleCanPlay)
+        audio.removeEventListener('loadeddata', handleLoadedData)
         audio.pause()
         audio.currentTime = 0
       }
@@ -153,6 +180,22 @@ export function ChristmasBanner() {
         src="/campanas-en-la-noche.mp3"
         preload="auto"
         loop={false}
+        onError={(e) => {
+          console.error("Error al cargar el audio:", e)
+          const audio = e.currentTarget as HTMLAudioElement
+          console.error("Audio error details:", {
+            error: audio.error,
+            networkState: audio.networkState,
+            readyState: audio.readyState,
+            src: audio.src
+          })
+        }}
+        onPlay={() => {
+          const audio = audioRef.current
+          if (audio) {
+            audio.muted = false
+          }
+        }}
       >
         Tu navegador no soporta el elemento de audio.
       </audio>

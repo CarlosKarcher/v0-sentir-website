@@ -339,7 +339,7 @@ export function ChristmasBanner() {
           {/* Video - object-contain para que se vea completo */}
           <video
             ref={videoRef}
-            src="/video-campanas-vilma.mp4"
+            src="/video-campanas-vilma-2.mp4"
             className="absolute inset-0 w-full h-full bg-black"
             style={{ 
               objectFit: 'contain',

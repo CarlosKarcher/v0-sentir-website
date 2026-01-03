@@ -12,26 +12,26 @@ export function ChristmasBanner() {
     const audio = audioRef.current
     if (!audio) return
 
-    // Función para reproducir audio
+    // Función para reproducir audio - SIN MUTED desde el inicio
     const playAudio = async () => {
       try {
-        // Intentar reproducir con muted primero (más compatible con autoplay)
-        audio.muted = true
+        // Intentar reproducir directamente sin muted (con audio)
+        audio.muted = false
         await audio.play()
-        // Activar audio inmediatamente después
-        requestAnimationFrame(() => {
-          if (audio) {
-            audio.muted = false
-          }
-        })
       } catch (error) {
-        console.error("Error al reproducir audio con muted:", error)
-        // Si falla, intentar sin muted
+        console.error("Error al reproducir audio sin muted:", error)
+        // Si falla sin muted, intentar con muted como último recurso
         try {
-          audio.muted = false
+          audio.muted = true
           await audio.play()
+          // Activar audio inmediatamente después
+          requestAnimationFrame(() => {
+            if (audio) {
+              audio.muted = false
+            }
+          })
         } catch (error2) {
-          console.error("Error al reproducir audio sin muted:", error2)
+          console.error("Error al reproducir audio con muted:", error2)
         }
       }
     }

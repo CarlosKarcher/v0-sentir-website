@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react"
 
 export function ChristmasBanner() {
   const [showBanner, setShowBanner] = useState(true)
+  const [audioPlaying, setAudioPlaying] = useState(false)
   const audioRef = useRef<HTMLAudioElement>(null)
 
   useEffect(() => {
@@ -12,70 +13,111 @@ export function ChristmasBanner() {
     const audio = audioRef.current
     if (!audio) return
 
-    // Función para reproducir audio - SIN MUTED desde el inicio
+    // Función para reproducir audio - múltiples intentos
     const playAudio = async () => {
+      if (!audio) return
+      
       try {
-        // Intentar reproducir directamente sin muted (con audio)
+        // Estrategia 1: Intentar reproducir directamente sin muted
         audio.muted = false
+        audio.volume = 1.0
         await audio.play()
-        console.log("Audio reproduciéndose con sonido")
-      } catch (error) {
-        console.error("Error al reproducir audio sin muted:", error)
-        // Si falla sin muted, intentar con muted como último recurso
+        setAudioPlaying(true)
+        console.log("✅ Audio reproduciéndose sin muted")
+        return
+      } catch (error1) {
+        console.log("⚠️ Intento 1 falló, intentando con muted...")
+        
         try {
+          // Estrategia 2: Reproducir con muted y luego activar
           audio.muted = true
           await audio.play()
-          console.log("Audio reproduciéndose con muted, activando sonido...")
-          // Activar audio inmediatamente después
+          setAudioPlaying(true)
+          
+          // Activar audio inmediatamente
           setTimeout(() => {
             if (audio) {
               audio.muted = false
-              console.log("Audio activado")
+              audio.volume = 1.0
+              console.log("✅ Audio activado después de muted")
             }
-          }, 100)
+          }, 50)
+          return
         } catch (error2) {
-          console.error("Error al reproducir audio con muted:", error2)
+          console.error("❌ Error al reproducir audio:", error2)
         }
       }
     }
 
-    // Intentar reproducir cuando el audio esté listo
+    // Múltiples eventos para intentar reproducir
     const handleCanPlay = () => {
-      console.log("Audio listo para reproducir (canplay)")
-      playAudio()
-    }
-
-    const handleLoadedData = () => {
-      console.log("Audio cargado (loadeddata)")
-      playAudio()
-    }
-
-    const handleLoadedMetadata = () => {
-      console.log("Metadata del audio cargado")
+      console.log("🎵 Audio puede reproducirse (canplay)")
       playAudio()
     }
 
     const handleCanPlayThrough = () => {
-      console.log("Audio puede reproducirse completamente")
+      console.log("🎵 Audio puede reproducirse completamente (canplaythrough)")
       playAudio()
+    }
+
+    const handleLoadedData = () => {
+      console.log("🎵 Audio cargado (loadeddata)")
+      playAudio()
+    }
+
+    const handleLoadedMetadata = () => {
+      console.log("🎵 Metadata cargado (loadedmetadata)")
+      playAudio()
+    }
+
+    const handlePlay = () => {
+      console.log("▶️ Audio empezó a reproducirse")
+      if (audio) {
+        audio.muted = false
+        audio.volume = 1.0
+        setAudioPlaying(true)
+      }
+    }
+
+    const handlePlaying = () => {
+      console.log("▶️ Audio reproduciéndose")
+      if (audio) {
+        audio.muted = false
+        audio.volume = 1.0
+      }
     }
 
     audio.addEventListener('canplay', handleCanPlay)
     audio.addEventListener('canplaythrough', handleCanPlayThrough)
     audio.addEventListener('loadeddata', handleLoadedData)
     audio.addEventListener('loadedmetadata', handleLoadedMetadata)
+    audio.addEventListener('play', handlePlay)
+    audio.addEventListener('playing', handlePlaying)
 
-    // Cargar el audio explícitamente
+    // Configurar audio
+    audio.volume = 1.0
+    audio.muted = false
+    audio.preload = "auto"
+
+    // Cargar el audio
     audio.load()
-    console.log("Audio cargando desde:", audio.src)
+    console.log("📥 Cargando audio desde:", audio.src)
 
-    // Intentar reproducir si el audio ya está listo
+    // Intentar reproducir inmediatamente si está listo
     if (audio.readyState >= 2) {
-      console.log("Audio ya está listo, intentando reproducir")
+      console.log("✅ Audio ya está listo, reproduciendo...")
       playAudio()
     }
 
-    // Después de 20 segundos, cerrar todo el banner (texto + flyer) y detener audio
+    // También intentar después de un pequeño delay
+    setTimeout(() => {
+      if (audio && !audioPlaying) {
+        console.log("🔄 Reintentando reproducción después de delay...")
+        playAudio()
+      }
+    }, 500)
+
+    // Después de 20 segundos, cerrar todo el banner y detener audio
     const timer = setTimeout(() => {
       if (audio) {
         audio.pause()
@@ -91,11 +133,13 @@ export function ChristmasBanner() {
         audio.removeEventListener('canplaythrough', handleCanPlayThrough)
         audio.removeEventListener('loadeddata', handleLoadedData)
         audio.removeEventListener('loadedmetadata', handleLoadedMetadata)
+        audio.removeEventListener('play', handlePlay)
+        audio.removeEventListener('playing', handlePlaying)
         audio.pause()
         audio.currentTime = 0
       }
     }
-  }, [showBanner])
+  }, [showBanner, audioPlaying])
 
   if (!showBanner) {
     return null
@@ -108,6 +152,21 @@ export function ChristmasBanner() {
       audio.currentTime = 0
     }
     setShowBanner(false)
+  }
+
+  const handlePlayAudio = async () => {
+    const audio = audioRef.current
+    if (audio) {
+      try {
+        audio.muted = false
+        audio.volume = 1.0
+        await audio.play()
+        setAudioPlaying(true)
+        console.log("▶️ Audio reproducido manualmente")
+      } catch (error) {
+        console.error("Error al reproducir audio manualmente:", error)
+      }
+    }
   }
 
   return (
@@ -170,6 +229,17 @@ export function ChristmasBanner() {
             </svg>
           </button>
 
+          {/* Botón de reproducción manual si el audio no se reproduce automáticamente */}
+          {!audioPlaying && (
+            <button
+              onClick={handlePlayAudio}
+              className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-20 bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-3 rounded-full shadow-lg transition-colors"
+              style={{ fontSize: '14px' }}
+            >
+              ▶ Reproducir Audio
+            </button>
+          )}
+
           {/* Flyer de fondo - object-contain para que se vea completo */}
           <img
             src="/Autoconocimiento Rio Gallegos Enero 2026.jpg"
@@ -201,11 +271,14 @@ export function ChristmasBanner() {
         src="/Los_Tipitos_-_Campanas_en_la_noche_(mp3.pm).mp3"
         preload="auto"
         loop={false}
+        volume={1.0}
         onError={(e) => {
-          console.error("Error al cargar el audio:", e)
+          console.error("❌ Error al cargar el audio:", e)
           const audio = e.currentTarget as HTMLAudioElement
-          console.error("Audio error details:", {
+          console.error("Detalles del error:", {
             error: audio.error,
+            errorCode: audio.error?.code,
+            errorMessage: audio.error?.message,
             networkState: audio.networkState,
             readyState: audio.readyState,
             src: audio.src,
@@ -216,15 +289,26 @@ export function ChristmasBanner() {
           const audio = audioRef.current
           if (audio) {
             audio.muted = false
-            console.log("Audio reproduciéndose, muted =", audio.muted)
+            audio.volume = 1.0
+            setAudioPlaying(true)
+            console.log("▶️ Audio en reproducción, muted =", audio.muted, "volume =", audio.volume)
           }
         }}
         onPlaying={() => {
           const audio = audioRef.current
           if (audio) {
             audio.muted = false
-            console.log("Audio playing, muted =", audio.muted, "volume =", audio.volume)
+            audio.volume = 1.0
+            console.log("▶️ Audio playing, muted =", audio.muted, "volume =", audio.volume)
           }
+        }}
+        onPause={() => {
+          console.log("⏸️ Audio pausado")
+          setAudioPlaying(false)
+        }}
+        onEnded={() => {
+          console.log("⏹️ Audio terminado")
+          setAudioPlaying(false)
         }}
       >
         Tu navegador no soporta el elemento de audio.

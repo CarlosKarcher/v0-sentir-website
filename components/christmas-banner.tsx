@@ -1,9 +1,21 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 export function ChristmasBanner() {
   const [showBanner, setShowBanner] = useState(true)
+  const [showText, setShowText] = useState(true)
+
+  useEffect(() => {
+    // Después de 20 segundos, ocultar el texto y mostrar solo el flyer
+    const timer = setTimeout(() => {
+      setShowText(false)
+    }, 20000) // 20 segundos
+
+    return () => {
+      clearTimeout(timer)
+    }
+  }, [])
 
   if (!showBanner) {
     return null
@@ -34,6 +46,15 @@ export function ChristmasBanner() {
           }
         }
         
+        @keyframes fadeOut {
+          from {
+            opacity: 1;
+          }
+          to {
+            opacity: 0;
+          }
+        }
+        
         .banner-pulse {
           animation: pulseScale 2s ease-in-out infinite;
         }
@@ -41,14 +62,18 @@ export function ChristmasBanner() {
         .text-pulse {
           animation: textScale 2s ease-in-out infinite;
         }
+        
+        .fade-out {
+          animation: fadeOut 1s ease-in-out 19s forwards;
+        }
       `}</style>
       
       <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80">
-        {/* Contenedor del cartel de 25cm alto x 15cm ancho con animación */}
+        {/* Contenedor del cartel de 25cm alto x 12cm ancho con animación */}
         <div 
           className="relative bg-black rounded-lg overflow-hidden shadow-2xl banner-pulse"
           style={{ 
-            width: '15cm', 
+            width: '12cm', 
             height: '25cm', 
             maxWidth: '90vw', 
             maxHeight: '90vh'
@@ -73,27 +98,29 @@ export function ChristmasBanner() {
             </svg>
           </button>
 
-          {/* Flyer de fondo - object-cover para que ocupe toda la ventana */}
+          {/* Flyer de fondo - object-contain para que se vea completo */}
           <img
             src="/Autoconocimiento Rio Gallegos Enero 2026.jpg"
             alt="Autoconocimiento Rio Gallegos Enero 2026"
-            className="absolute inset-0 w-full h-full object-cover"
+            className="absolute inset-0 w-full h-full object-contain bg-black"
           />
 
-          {/* Texto superpuesto - visible hasta que se presione la X */}
-          <div 
-            className="absolute inset-0 flex items-center justify-center z-10 bg-black/40"
-          >
-            <h2 
-              className="text-white font-bold text-center px-4 text-pulse"
-              style={{
-                fontSize: 'clamp(1.2rem, 3vw, 2.5rem)',
-                textShadow: '0 4px 8px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.6)'
-              }}
+          {/* Texto superpuesto - visible durante los primeros 20 segundos */}
+          {showText && (
+            <div 
+              className="absolute inset-0 flex items-center justify-center z-10 bg-black/40 fade-out"
             >
-              próximo gran Evento En Sentir...
-            </h2>
-          </div>
+              <h2 
+                className="text-white font-bold text-center px-4 text-pulse"
+                style={{
+                  fontSize: 'clamp(1.2rem, 3vw, 2.5rem)',
+                  textShadow: '0 4px 8px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.6)'
+                }}
+              >
+                próximo gran Evento En Sentir...
+              </h2>
+            </div>
+          )}
         </div>
       </div>
     </>

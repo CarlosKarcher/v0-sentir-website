@@ -177,7 +177,7 @@ export function ChristmasBanner() {
       {/* Audio oculto */}
       <audio
         ref={audioRef}
-        src="/campanas-en-la-noche.mp3"
+        src="/Los_Tipitos_-_Campanas_en_la_noche_(mp3.pm).mp3"
         preload="auto"
         loop={false}
         onError={(e) => {

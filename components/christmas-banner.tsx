@@ -4,129 +4,129 @@ import { useState, useEffect, useRef } from "react"
 
 export function ChristmasBanner() {
   const [showBanner, setShowBanner] = useState(true)
-  const audioRef = useRef<HTMLAudioElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
     if (!showBanner) return
 
-    const audio = audioRef.current
-    if (!audio) return
+    const video = videoRef.current
+    if (!video) return
 
-    // Función para reproducir audio automáticamente
-    const playAudio = async () => {
-      if (!audio) return
+    // Función para reproducir video automáticamente
+    const playVideo = async () => {
+      if (!video) return
       
       try {
         // Estrategia: empezar con muted para que el autoplay funcione (política de navegadores)
-        audio.muted = true
-        audio.volume = 1.0
-        await audio.play()
+        video.muted = true
+        video.volume = 1.0
+        await video.play()
         
         // Activar audio inmediatamente después de que empiece
-        // Usar múltiples métodos para asegurar que funcione
         requestAnimationFrame(() => {
-          if (audio) {
-            audio.muted = false
+          if (video) {
+            video.muted = false
           }
         })
         
         // También usar setTimeout como respaldo
         setTimeout(() => {
-          if (audio) {
-            audio.muted = false
-            audio.volume = 1.0
+          if (video) {
+            video.muted = false
+            video.volume = 1.0
           }
         }, 50)
         
-        console.log("✅ Audio reproduciéndose automáticamente")
+        console.log("✅ Video reproduciéndose automáticamente")
       } catch (error) {
-        console.error("❌ Error al reproducir audio:", error)
+        console.error("❌ Error al reproducir video:", error)
       }
     }
 
     // Múltiples eventos para intentar reproducir cuando esté listo
     const handleCanPlay = () => {
-      playAudio()
+      playVideo()
     }
 
     const handleCanPlayThrough = () => {
-      playAudio()
+      playVideo()
     }
 
     const handleLoadedData = () => {
-      playAudio()
+      playVideo()
     }
 
     const handleLoadedMetadata = () => {
-      playAudio()
+      playVideo()
     }
 
     const handlePlay = () => {
-      if (audio) {
-        audio.muted = false
-        audio.volume = 1.0
+      if (video) {
+        video.muted = false
+        video.volume = 1.0
       }
     }
 
     const handlePlaying = () => {
-      if (audio) {
-        audio.muted = false
-        audio.volume = 1.0
+      if (video) {
+        video.muted = false
+        video.volume = 1.0
       }
     }
 
-    audio.addEventListener('canplay', handleCanPlay)
-    audio.addEventListener('canplaythrough', handleCanPlayThrough)
-    audio.addEventListener('loadeddata', handleLoadedData)
-    audio.addEventListener('loadedmetadata', handleLoadedMetadata)
-    audio.addEventListener('play', handlePlay)
-    audio.addEventListener('playing', handlePlaying)
+    video.addEventListener('canplay', handleCanPlay)
+    video.addEventListener('canplaythrough', handleCanPlayThrough)
+    video.addEventListener('loadeddata', handleLoadedData)
+    video.addEventListener('loadedmetadata', handleLoadedMetadata)
+    video.addEventListener('play', handlePlay)
+    video.addEventListener('playing', handlePlaying)
 
-    // Configurar audio
-    audio.volume = 1.0
-    audio.preload = "auto"
+    // Configurar video
+    video.volume = 1.0
+    video.preload = "auto"
+    video.playsInline = true
 
-    // Cargar el audio
-    audio.load()
+    // Cargar el video
+    video.load()
 
     // Intentar reproducir inmediatamente si está listo
-    if (audio.readyState >= 2) {
-      playAudio()
+    if (video.readyState >= 2) {
+      playVideo()
     }
 
     // Reintentos adicionales
     setTimeout(() => {
-      if (audio && audio.paused) {
-        playAudio()
+      if (video && video.paused) {
+        playVideo()
       }
     }, 300)
 
     setTimeout(() => {
-      if (audio && audio.paused) {
-        playAudio()
+      if (video && video.paused) {
+        playVideo()
       }
     }, 1000)
 
-    // Después de 20 segundos, cerrar todo el banner y detener audio
+    // Después de 20 segundos, cerrar todo el banner y detener video
     const timer = setTimeout(() => {
-      if (audio) {
-        audio.pause()
-        audio.currentTime = 0
+      if (video) {
+        video.pause()
+        video.currentTime = 0
       }
       setShowBanner(false)
     }, 20000) // 20 segundos
 
     return () => {
       clearTimeout(timer)
-      if (audio) {
-        audio.removeEventListener('canplay', handleCanPlay)
-        audio.removeEventListener('canplaythrough', handleCanPlayThrough)
-        audio.removeEventListener('loadeddata', handleLoadedData)
-        audio.removeEventListener('loadedmetadata', handleLoadedMetadata)
-        audio.removeEventListener('play', handlePlay)
-        audio.removeEventListener('playing', handlePlaying)
-        audio.pause()
-        audio.currentTime = 0
+      if (video) {
+        video.removeEventListener('canplay', handleCanPlay)
+        video.removeEventListener('canplaythrough', handleCanPlayThrough)
+        video.removeEventListener('loadeddata', handleLoadedData)
+        video.removeEventListener('loadedmetadata', handleLoadedMetadata)
+        video.removeEventListener('play', handlePlay)
+        video.removeEventListener('playing', handlePlaying)
+        video.pause()
+        video.currentTime = 0
       }
     }
   }, [showBanner])
@@ -136,10 +136,10 @@ export function ChristmasBanner() {
   }
 
   const handleClose = () => {
-    const audio = audioRef.current
-    if (audio) {
-      audio.pause()
-      audio.currentTime = 0
+    const video = videoRef.current
+    if (video) {
+      video.pause()
+      video.currentTime = 0
     }
     setShowBanner(false)
   }
@@ -204,12 +204,40 @@ export function ChristmasBanner() {
             </svg>
           </button>
 
-          {/* Flyer de fondo - object-contain para que se vea completo */}
-          <img
-            src="/Autoconocimiento Rio Gallegos Enero 2026.jpg"
-            alt="Autoconocimiento Rio Gallegos Enero 2026"
+          {/* Video de fondo - object-contain para que se vea completo */}
+          <video
+            ref={videoRef}
+            src="/video-campanas-vilma.mp4"
             className="absolute inset-0 w-full h-full object-contain bg-black"
             style={{ objectFit: 'contain' }}
+            playsInline
+            preload="auto"
+            autoPlay
+            loop={false}
+            onError={(e) => {
+              console.error("❌ Error al cargar el video:", e)
+              const video = e.currentTarget as HTMLVideoElement
+              console.error("Detalles:", {
+                error: video.error,
+                networkState: video.networkState,
+                readyState: video.readyState,
+                src: video.src
+              })
+            }}
+            onPlay={() => {
+              const video = videoRef.current
+              if (video) {
+                video.muted = false
+                video.volume = 1.0
+              }
+            }}
+            onPlaying={() => {
+              const video = videoRef.current
+              if (video) {
+                video.muted = false
+                video.volume = 1.0
+              }
+            }}
           />
 
           {/* Texto superpuesto - visible durante toda la presentación */}
@@ -229,40 +257,6 @@ export function ChristmasBanner() {
         </div>
       </div>
 
-      {/* Audio oculto - reproducción automática */}
-      <audio
-        ref={audioRef}
-        src="/Los_Tipitos_-_Campanas_en_la_noche_(mp3.pm).mp3"
-        preload="auto"
-        loop={false}
-        autoPlay
-        onError={(e) => {
-          console.error("❌ Error al cargar el audio:", e)
-          const audio = e.currentTarget as HTMLAudioElement
-          console.error("Detalles:", {
-            error: audio.error,
-            networkState: audio.networkState,
-            readyState: audio.readyState,
-            src: audio.src
-          })
-        }}
-        onPlay={() => {
-          const audio = audioRef.current
-          if (audio) {
-            audio.muted = false
-            audio.volume = 1.0
-          }
-        }}
-        onPlaying={() => {
-          const audio = audioRef.current
-          if (audio) {
-            audio.muted = false
-            audio.volume = 1.0
-          }
-        }}
-      >
-        Tu navegador no soporta el elemento de audio.
-      </audio>
     </>
   )
 }

@@ -18,18 +18,21 @@ export function ChristmasBanner() {
         // Intentar reproducir directamente sin muted (con audio)
         audio.muted = false
         await audio.play()
+        console.log("Audio reproduciéndose con sonido")
       } catch (error) {
         console.error("Error al reproducir audio sin muted:", error)
         // Si falla sin muted, intentar con muted como último recurso
         try {
           audio.muted = true
           await audio.play()
+          console.log("Audio reproduciéndose con muted, activando sonido...")
           // Activar audio inmediatamente después
-          requestAnimationFrame(() => {
+          setTimeout(() => {
             if (audio) {
               audio.muted = false
+              console.log("Audio activado")
             }
-          })
+          }, 100)
         } catch (error2) {
           console.error("Error al reproducir audio con muted:", error2)
         }
@@ -38,21 +41,37 @@ export function ChristmasBanner() {
 
     // Intentar reproducir cuando el audio esté listo
     const handleCanPlay = () => {
+      console.log("Audio listo para reproducir (canplay)")
       playAudio()
     }
 
     const handleLoadedData = () => {
+      console.log("Audio cargado (loadeddata)")
+      playAudio()
+    }
+
+    const handleLoadedMetadata = () => {
+      console.log("Metadata del audio cargado")
+      playAudio()
+    }
+
+    const handleCanPlayThrough = () => {
+      console.log("Audio puede reproducirse completamente")
       playAudio()
     }
 
     audio.addEventListener('canplay', handleCanPlay)
+    audio.addEventListener('canplaythrough', handleCanPlayThrough)
     audio.addEventListener('loadeddata', handleLoadedData)
+    audio.addEventListener('loadedmetadata', handleLoadedMetadata)
 
-    // Cargar el audio
+    // Cargar el audio explícitamente
     audio.load()
+    console.log("Audio cargando desde:", audio.src)
 
     // Intentar reproducir si el audio ya está listo
     if (audio.readyState >= 2) {
+      console.log("Audio ya está listo, intentando reproducir")
       playAudio()
     }
 
@@ -69,7 +88,9 @@ export function ChristmasBanner() {
       clearTimeout(timer)
       if (audio) {
         audio.removeEventListener('canplay', handleCanPlay)
+        audio.removeEventListener('canplaythrough', handleCanPlayThrough)
         audio.removeEventListener('loadeddata', handleLoadedData)
+        audio.removeEventListener('loadedmetadata', handleLoadedMetadata)
         audio.pause()
         audio.currentTime = 0
       }
@@ -187,13 +208,22 @@ export function ChristmasBanner() {
             error: audio.error,
             networkState: audio.networkState,
             readyState: audio.readyState,
-            src: audio.src
+            src: audio.src,
+            currentSrc: audio.currentSrc
           })
         }}
         onPlay={() => {
           const audio = audioRef.current
           if (audio) {
             audio.muted = false
+            console.log("Audio reproduciéndose, muted =", audio.muted)
+          }
+        }}
+        onPlaying={() => {
+          const audio = audioRef.current
+          if (audio) {
+            audio.muted = false
+            console.log("Audio playing, muted =", audio.muted, "volume =", audio.volume)
           }
         }}
       >

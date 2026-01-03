@@ -4,13 +4,12 @@ import { useState, useEffect } from "react"
 
 export function ChristmasBanner() {
   const [showBanner, setShowBanner] = useState(true)
-  const [showText, setShowText] = useState(true)
 
   useEffect(() => {
-    // Después de 20 segundos, ocultar el texto y mostrar solo el flyer
+    // Después de 15 segundos, cerrar todo el banner (texto + flyer)
     const timer = setTimeout(() => {
-      setShowText(false)
-    }, 20000) // 20 segundos
+      setShowBanner(false)
+    }, 15000) // 15 segundos
 
     return () => {
       clearTimeout(timer)
@@ -46,25 +45,12 @@ export function ChristmasBanner() {
           }
         }
         
-        @keyframes fadeOut {
-          from {
-            opacity: 1;
-          }
-          to {
-            opacity: 0;
-          }
-        }
-        
         .banner-pulse {
           animation: pulseScale 2s ease-in-out infinite;
         }
         
         .text-pulse {
           animation: textScale 2s ease-in-out infinite;
-        }
-        
-        .fade-out {
-          animation: fadeOut 1s ease-in-out 19s forwards;
         }
       `}</style>
       
@@ -103,24 +89,23 @@ export function ChristmasBanner() {
             src="/Autoconocimiento Rio Gallegos Enero 2026.jpg"
             alt="Autoconocimiento Rio Gallegos Enero 2026"
             className="absolute inset-0 w-full h-full object-contain bg-black"
+            style={{ objectFit: 'contain' }}
           />
 
-          {/* Texto superpuesto - visible durante los primeros 20 segundos */}
-          {showText && (
-            <div 
-              className="absolute inset-0 flex items-center justify-center z-10 bg-black/40 fade-out"
+          {/* Texto superpuesto - visible durante toda la presentación */}
+          <div 
+            className="absolute inset-0 flex items-center justify-center z-10 bg-black/40"
+          >
+            <h2 
+              className="text-white font-bold text-center px-4 text-pulse"
+              style={{
+                fontSize: 'clamp(1.2rem, 3vw, 2.5rem)',
+                textShadow: '0 4px 8px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.6)'
+              }}
             >
-              <h2 
-                className="text-white font-bold text-center px-4 text-pulse"
-                style={{
-                  fontSize: 'clamp(1.2rem, 3vw, 2.5rem)',
-                  textShadow: '0 4px 8px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.6)'
-                }}
-              >
-                próximo gran Evento En Sentir...
-              </h2>
-            </div>
-          )}
+              próximo gran Evento En Sentir...
+            </h2>
+          </div>
         </div>
       </div>
     </>

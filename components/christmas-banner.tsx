@@ -1,26 +1,64 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 
 export function ChristmasBanner() {
   const [showBanner, setShowBanner] = useState(true)
+  const audioRef = useRef<HTMLAudioElement>(null)
 
   useEffect(() => {
-    // Después de 15 segundos, cerrar todo el banner (texto + flyer)
+    // Reproducir audio automáticamente cuando se muestre el banner
+    const audio = audioRef.current
+    if (audio && showBanner) {
+      const playAudio = async () => {
+        try {
+          // Intentar reproducir con muted primero para autoplay
+          audio.muted = true
+          await audio.play()
+          // Activar audio inmediatamente
+          audio.muted = false
+        } catch (error) {
+          console.error("Error al reproducir audio:", error)
+          // Si falla, intentar sin muted
+          try {
+            audio.muted = false
+            await audio.play()
+          } catch (error2) {
+            console.error("Error al reproducir audio sin muted:", error2)
+          }
+        }
+      }
+      playAudio()
+    }
+
+    // Después de 20 segundos, cerrar todo el banner (texto + flyer) y detener audio
     const timer = setTimeout(() => {
+      if (audio) {
+        audio.pause()
+        audio.currentTime = 0
+      }
       setShowBanner(false)
-    }, 15000) // 15 segundos
+    }, 20000) // 20 segundos
 
     return () => {
       clearTimeout(timer)
+      if (audio) {
+        audio.pause()
+        audio.currentTime = 0
+      }
     }
-  }, [])
+  }, [showBanner])
 
   if (!showBanner) {
     return null
   }
 
   const handleClose = () => {
+    const audio = audioRef.current
+    if (audio) {
+      audio.pause()
+      audio.currentTime = 0
+    }
     setShowBanner(false)
   }
 
@@ -108,6 +146,16 @@ export function ChristmasBanner() {
           </div>
         </div>
       </div>
+
+      {/* Audio oculto */}
+      <audio
+        ref={audioRef}
+        src="/campanas-en-la-noche.mp3"
+        preload="auto"
+        loop={false}
+      >
+        Tu navegador no soporta el elemento de audio.
+      </audio>
     </>
   )
 }

@@ -10,173 +10,195 @@ export function ChristmasBanner() {
   useEffect(() => {
     if (!showBanner) return
 
-    const video = videoRef.current
-    if (!video) {
-      console.log("⚠️ Video ref no disponible")
-      return
-    }
-
-    console.log("📹 Inicializando video:", video.src)
-
-    // Función para reproducir video automáticamente
-    const playVideo = async () => {
-      if (!video) return
-      
+    // Esperar a que el DOM esté listo
+    const initVideo = () => {
       try {
-        console.log("▶️ Intentando reproducir video...")
-        // Estrategia: empezar con muted para que el autoplay funcione (política de navegadores)
-        video.muted = true
-        video.volume = 1.0
-        await video.play()
-        console.log("✅ Video play() exitoso")
-        
-        // Activar audio inmediatamente después de que empiece
-        requestAnimationFrame(() => {
-          if (video) {
-            video.muted = false
-            console.log("🔊 Audio activado (requestAnimationFrame)")
+        const video = videoRef.current
+        if (!video) {
+          console.log("⚠️ Video ref no disponible, reintentando...")
+          // Reintentar después de un breve delay
+          setTimeout(initVideo, 100)
+          return
+        }
+
+        console.log("📹 Inicializando video:", video.src)
+
+        // Función para reproducir video automáticamente
+        const playVideo = async () => {
+          if (!video) return
+          
+          try {
+            console.log("▶️ Intentando reproducir video...")
+            // Estrategia: empezar con muted para que el autoplay funcione (política de navegadores)
+            video.muted = true
+            video.volume = 1.0
+            await video.play()
+            console.log("✅ Video play() exitoso")
+            
+            // Activar audio inmediatamente después de que empiece
+            requestAnimationFrame(() => {
+              if (video) {
+                video.muted = false
+                console.log("🔊 Audio activado (requestAnimationFrame)")
+              }
+            })
+            
+            // También usar setTimeout como respaldo
+            setTimeout(() => {
+              if (video) {
+                video.muted = false
+                video.volume = 1.0
+                console.log("🔊 Audio activado (setTimeout)")
+              }
+            }, 100)
+            
+          } catch (error) {
+            console.error("❌ Error al reproducir video:", error)
           }
-        })
-        
-        // También usar setTimeout como respaldo
-        setTimeout(() => {
+        }
+
+        // Múltiples eventos para intentar reproducir cuando esté listo
+        const handleCanPlay = () => {
+          console.log("🎬 Video puede reproducirse (canplay)")
+          playVideo()
+        }
+
+        const handleCanPlayThrough = () => {
+          console.log("🎬 Video puede reproducirse completamente (canplaythrough)")
+          playVideo()
+        }
+
+        const handleLoadedData = () => {
+          console.log("📥 Datos del video cargados (loadeddata)")
+          playVideo()
+        }
+
+        const handleLoadedMetadata = () => {
+          console.log("📋 Metadata del video cargado (loadedmetadata)")
+          playVideo()
+        }
+
+        const handlePlay = () => {
+          console.log("▶️ Video empezó a reproducirse (play)")
           if (video) {
             video.muted = false
             video.volume = 1.0
-            console.log("🔊 Audio activado (setTimeout)")
           }
-        }, 100)
-        
+        }
+
+        const handlePlaying = () => {
+          console.log("▶️ Video reproduciéndose (playing)")
+          if (video) {
+            video.muted = false
+            video.volume = 1.0
+          }
+        }
+
+        const handleError = (e: Event) => {
+          console.error("❌ Error en video:", e)
+          const videoTarget = e.currentTarget as HTMLVideoElement
+          console.error("Detalles del error:", {
+            error: videoTarget.error,
+            errorCode: videoTarget.error?.code,
+            errorMessage: videoTarget.error?.message,
+            networkState: videoTarget.networkState,
+            readyState: videoTarget.readyState,
+            src: videoTarget.src,
+            currentSrc: videoTarget.currentSrc
+          })
+        }
+
+        video.addEventListener('canplay', handleCanPlay)
+        video.addEventListener('canplaythrough', handleCanPlayThrough)
+        video.addEventListener('loadeddata', handleLoadedData)
+        video.addEventListener('loadedmetadata', handleLoadedMetadata)
+        video.addEventListener('play', handlePlay)
+        video.addEventListener('playing', handlePlaying)
+        video.addEventListener('error', handleError)
+
+        // Configurar video
+        video.volume = 1.0
+        video.preload = "auto"
+        video.playsInline = true
+        video.muted = true // Empezar muted para autoplay
+
+        // Cargar el video
+        video.load()
+        console.log("📥 Video.load() llamado")
+
+        // Intentar reproducir inmediatamente si está listo
+        if (video.readyState >= 2) {
+          console.log("✅ Video ya está listo, reproduciendo...")
+          playVideo()
+        }
+
+        // Reintentos adicionales
+        setTimeout(() => {
+          if (video && video.paused) {
+            console.log("🔄 Reintento 1 (300ms)")
+            playVideo()
+          }
+        }, 300)
+
+        setTimeout(() => {
+          if (video && video.paused) {
+            console.log("🔄 Reintento 2 (1000ms)")
+            playVideo()
+          }
+        }, 1000)
+
+        setTimeout(() => {
+          if (video && video.paused) {
+            console.log("🔄 Reintento 3 (2000ms)")
+            playVideo()
+          }
+        }, 2000)
+
+        // Ocultar texto después de 5 segundos para que el video sea más visible
+        const textTimer = setTimeout(() => {
+          setShowText(false)
+        }, 5000)
+
+        // Después de 20 segundos, cerrar todo el banner y detener video
+        const timer = setTimeout(() => {
+          if (video) {
+            video.pause()
+            video.currentTime = 0
+          }
+          setShowBanner(false)
+        }, 20000) // 20 segundos
+
+        return () => {
+          clearTimeout(timer)
+          clearTimeout(textTimer)
+          if (video) {
+            video.removeEventListener('canplay', handleCanPlay)
+            video.removeEventListener('canplaythrough', handleCanPlayThrough)
+            video.removeEventListener('loadeddata', handleLoadedData)
+            video.removeEventListener('loadedmetadata', handleLoadedMetadata)
+            video.removeEventListener('play', handlePlay)
+            video.removeEventListener('playing', handlePlaying)
+            video.removeEventListener('error', handleError)
+            try {
+              video.pause()
+              video.currentTime = 0
+            } catch (e) {
+              console.error("Error al limpiar video:", e)
+            }
+          }
+        }
       } catch (error) {
-        console.error("❌ Error al reproducir video:", error)
+        console.error("❌ Error en useEffect del video:", error)
+        // Si hay un error, ocultar el banner para no bloquear la aplicación
+        setShowBanner(false)
       }
     }
 
-    // Múltiples eventos para intentar reproducir cuando esté listo
-    const handleCanPlay = () => {
-      console.log("🎬 Video puede reproducirse (canplay)")
-      playVideo()
-    }
-
-    const handleCanPlayThrough = () => {
-      console.log("🎬 Video puede reproducirse completamente (canplaythrough)")
-      playVideo()
-    }
-
-    const handleLoadedData = () => {
-      console.log("📥 Datos del video cargados (loadeddata)")
-      playVideo()
-    }
-
-    const handleLoadedMetadata = () => {
-      console.log("📋 Metadata del video cargado (loadedmetadata)")
-      playVideo()
-    }
-
-    const handlePlay = () => {
-      console.log("▶️ Video empezó a reproducirse (play)")
-      if (video) {
-        video.muted = false
-        video.volume = 1.0
-      }
-    }
-
-    const handlePlaying = () => {
-      console.log("▶️ Video reproduciéndose (playing)")
-      if (video) {
-        video.muted = false
-        video.volume = 1.0
-      }
-    }
-
-    const handleError = (e: Event) => {
-      console.error("❌ Error en video:", e)
-      const videoTarget = e.currentTarget as HTMLVideoElement
-      console.error("Detalles del error:", {
-        error: videoTarget.error,
-        errorCode: videoTarget.error?.code,
-        errorMessage: videoTarget.error?.message,
-        networkState: videoTarget.networkState,
-        readyState: videoTarget.readyState,
-        src: videoTarget.src,
-        currentSrc: videoTarget.currentSrc
-      })
-    }
-
-    video.addEventListener('canplay', handleCanPlay)
-    video.addEventListener('canplaythrough', handleCanPlayThrough)
-    video.addEventListener('loadeddata', handleLoadedData)
-    video.addEventListener('loadedmetadata', handleLoadedMetadata)
-    video.addEventListener('play', handlePlay)
-    video.addEventListener('playing', handlePlaying)
-    video.addEventListener('error', handleError)
-
-    // Configurar video
-    video.volume = 1.0
-    video.preload = "auto"
-    video.playsInline = true
-    video.muted = true // Empezar muted para autoplay
-
-    // Cargar el video
-    video.load()
-    console.log("📥 Video.load() llamado")
-
-    // Intentar reproducir inmediatamente si está listo
-    if (video.readyState >= 2) {
-      console.log("✅ Video ya está listo, reproduciendo...")
-      playVideo()
-    }
-
-    // Reintentos adicionales
-    setTimeout(() => {
-      if (video && video.paused) {
-        console.log("🔄 Reintento 1 (300ms)")
-        playVideo()
-      }
-    }, 300)
-
-    setTimeout(() => {
-      if (video && video.paused) {
-        console.log("🔄 Reintento 2 (1000ms)")
-        playVideo()
-      }
-    }, 1000)
-
-    setTimeout(() => {
-      if (video && video.paused) {
-        console.log("🔄 Reintento 3 (2000ms)")
-        playVideo()
-      }
-    }, 2000)
-
-    // Ocultar texto después de 5 segundos para que el video sea más visible
-    const textTimer = setTimeout(() => {
-      setShowText(false)
-    }, 5000)
-
-    // Después de 20 segundos, cerrar todo el banner y detener video
-    const timer = setTimeout(() => {
-      if (video) {
-        video.pause()
-        video.currentTime = 0
-      }
-      setShowBanner(false)
-    }, 20000) // 20 segundos
+    // Inicializar después de que el componente se monte
+    const timeoutId = setTimeout(initVideo, 0)
 
     return () => {
-      clearTimeout(timer)
-      clearTimeout(textTimer)
-      if (video) {
-        video.removeEventListener('canplay', handleCanPlay)
-        video.removeEventListener('canplaythrough', handleCanPlayThrough)
-        video.removeEventListener('loadeddata', handleLoadedData)
-        video.removeEventListener('loadedmetadata', handleLoadedMetadata)
-        video.removeEventListener('play', handlePlay)
-        video.removeEventListener('playing', handlePlaying)
-        video.removeEventListener('error', handleError)
-        video.pause()
-        video.currentTime = 0
-      }
+      clearTimeout(timeoutId)
     }
   }, [showBanner])
 
@@ -185,12 +207,17 @@ export function ChristmasBanner() {
   }
 
   const handleClose = () => {
-    const video = videoRef.current
-    if (video) {
-      video.pause()
-      video.currentTime = 0
+    try {
+      const video = videoRef.current
+      if (video) {
+        video.pause()
+        video.currentTime = 0
+      }
+    } catch (error) {
+      console.error("Error al cerrar banner:", error)
+    } finally {
+      setShowBanner(false)
     }
-    setShowBanner(false)
   }
 
   return (
@@ -323,7 +350,6 @@ export function ChristmasBanner() {
           )}
         </div>
       </div>
-
     </>
   )
 }

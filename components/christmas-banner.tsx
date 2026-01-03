@@ -25,13 +25,13 @@ export function ChristmasBanner() {
       video.volume = 1.0
       video.preload = "auto"
       video.playsInline = true
-      video.muted = false
+      video.muted = true // Empezar con muted para que el autoplay funcione
 
       // Cargar el video
       video.load()
       console.log("📥 Video.load() llamado")
 
-      // Función para reproducir video
+      // Función para reproducir video (siempre empezar con muted)
       const tryPlay = async () => {
         if (!video) return
 
@@ -46,30 +46,30 @@ export function ChristmasBanner() {
             networkState: video.networkState
           })
 
-          // Intentar sin muted primero
-          video.muted = false
+          // Empezar con muted para que el autoplay funcione
+          video.muted = true
           video.volume = 1.0
           await video.play()
-          console.log("✅ Video reproduciéndose SIN muted")
-        } catch (error1) {
-          console.log("⚠️ Error sin muted, intentando con muted...", error1)
-          try {
-            // Si falla, intentar con muted
-            video.muted = true
-            await video.play()
-            console.log("✅ Video reproduciéndose con muted")
-            
-            // Activar audio inmediatamente
-            setTimeout(() => {
-              if (video) {
-                video.muted = false
-                video.volume = 1.0
-                console.log("🔊 Audio activado")
-              }
-            }, 100)
-          } catch (error2) {
-            console.error("❌ Error al reproducir video:", error2)
-          }
+          console.log("✅ Video reproduciéndose con muted")
+          
+          // Activar audio inmediatamente después de que empiece
+          requestAnimationFrame(() => {
+            if (video) {
+              video.muted = false
+              console.log("🔊 Audio activado (requestAnimationFrame)")
+            }
+          })
+          
+          // También usar setTimeout como respaldo
+          setTimeout(() => {
+            if (video) {
+              video.muted = false
+              video.volume = 1.0
+              console.log("🔊 Audio activado (setTimeout)")
+            }
+          }, 100)
+        } catch (error) {
+          console.error("❌ Error al reproducir video:", error)
         }
       }
 
@@ -259,6 +259,8 @@ export function ChristmasBanner() {
             }}
             playsInline
             preload="auto"
+            muted
+            autoPlay
             loop={false}
             onError={(e) => {
               console.error("❌ Error al cargar el video:", e)

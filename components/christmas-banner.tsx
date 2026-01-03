@@ -1,269 +1,120 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect } from "react"
 
 export function ChristmasBanner() {
-  const [showVideo, setShowVideo] = useState(true)
-  const [hasError, setHasError] = useState(false)
-  const videoRef = useRef<HTMLVideoElement>(null)
+  const [showBanner, setShowBanner] = useState(true)
+  const [showText, setShowText] = useState(true)
 
   useEffect(() => {
-    if (hasError) return
+    // Después de 10 segundos, ocultar el texto y mostrar solo el flyer
+    const timer = setTimeout(() => {
+      setShowText(false)
+    }, 10000) // 10 segundos
 
-    try {
-      const video = videoRef.current
-      if (!video || !showVideo) return
-
-      // Intentar reproducir cuando el video esté listo
-      const tryPlay = async () => {
-        try {
-          if (!video) return
-          
-          // Estrategia: empezar con muted para que el autoplay funcione
-          // Luego activar audio inmediatamente
-          video.muted = true
-          await video.play()
-          
-          // Activar audio inmediatamente después de que empiece
-          // Usar requestAnimationFrame para hacerlo lo más rápido posible
-          requestAnimationFrame(() => {
-            if (video) {
-              video.muted = false
-            }
-          })
-        } catch (error) {
-          console.error("Error al reproducir video automáticamente:", error)
-          // Si falla el autoplay, no hacer nada - el usuario podrá usar los controles
-        }
-      }
-
-      const handleCanPlay = () => {
-        tryPlay()
-      }
-
-      const handleLoadedMetadata = () => {
-        tryPlay()
-      }
-
-      const handleLoadedData = () => {
-        tryPlay()
-      }
-
-      const handleCanPlayThrough = () => {
-        tryPlay()
-      }
-
-      const handlePlay = () => {
-        // Cuando el video empiece a reproducirse, activar audio inmediatamente
-        try {
-          if (video) {
-            video.muted = false
-          }
-        } catch (error) {
-          console.error("Error al activar audio:", error)
-        }
-      }
-
-      const handlePlaying = () => {
-        // Asegurar que el audio esté activo mientras se reproduce
-        try {
-          if (video) {
-            video.muted = false
-          }
-        } catch (error) {
-          console.error("Error al mantener audio activo:", error)
-        }
-      }
-
-      const handlePause = () => {
-        // Si se pausa, no hacer nada automáticamente (dejar que el usuario controle)
-      }
-
-      const handleWaiting = () => {
-        // Si el video está esperando (buffering)
-        console.log("Video esperando datos (buffering)...")
-      }
-
-      const handleStalled = () => {
-        // Si el video se estanca, intentar continuar
-        console.log("Video estancado, intentando continuar...")
-        try {
-          if (video && !video.ended) {
-            video.play().catch(console.error)
-          }
-        } catch (error) {
-          console.error("Error al continuar video estancado:", error)
-        }
-      }
-
-      const handleEnded = () => {
-        setShowVideo(false)
-      }
-
-      const handleError = (e: Event) => {
-        console.error("Error en video:", e)
-        try {
-          const video = e.currentTarget as HTMLVideoElement
-          console.error("Video error details:", {
-            error: video.error,
-            networkState: video.networkState,
-            readyState: video.readyState,
-            src: video.src
-          })
-        } catch (error) {
-          console.error("Error al obtener detalles del error:", error)
-        }
-        // No cerrar el video si hay error - dejar que el usuario intente reproducirlo
-      }
-
-      // Agregar todos los listeners
-      video.addEventListener('canplay', handleCanPlay)
-      video.addEventListener('canplaythrough', handleCanPlayThrough)
-      video.addEventListener('loadedmetadata', handleLoadedMetadata)
-      video.addEventListener('loadeddata', handleLoadedData)
-      video.addEventListener('play', handlePlay)
-      video.addEventListener('playing', handlePlaying)
-      video.addEventListener('pause', handlePause)
-      video.addEventListener('waiting', handleWaiting)
-      video.addEventListener('stalled', handleStalled)
-      video.addEventListener('ended', handleEnded)
-      video.addEventListener('error', handleError)
-
-      // Cargar el video explícitamente
-      video.load()
-
-      // Intentar reproducir si el video ya está listo
-      if (video.readyState >= 2) {
-        tryPlay()
-      }
-
-      return () => {
-        try {
-          video.removeEventListener('canplay', handleCanPlay)
-          video.removeEventListener('canplaythrough', handleCanPlayThrough)
-          video.removeEventListener('loadedmetadata', handleLoadedMetadata)
-          video.removeEventListener('loadeddata', handleLoadedData)
-          video.removeEventListener('play', handlePlay)
-          video.removeEventListener('playing', handlePlaying)
-          video.removeEventListener('pause', handlePause)
-          video.removeEventListener('waiting', handleWaiting)
-          video.removeEventListener('stalled', handleStalled)
-          video.removeEventListener('ended', handleEnded)
-          video.removeEventListener('error', handleError)
-        } catch (error) {
-          // Ignorar errores en cleanup
-        }
-      }
-    } catch (error) {
-      console.error("Error en useEffect del video:", error)
-      // No cerrar el video si hay error - dejar que el usuario intente reproducirlo
+    return () => {
+      clearTimeout(timer)
     }
-  }, [showVideo, hasError])
+  }, [])
 
-  if (!showVideo) {
+  if (!showBanner) {
     return null
   }
 
   const handleClose = () => {
-    try {
-      const video = videoRef.current
-      if (video) {
-        video.pause()
-        video.currentTime = 0
-      }
-      setShowVideo(false)
-    } catch (error) {
-      console.error("Error al cerrar video:", error)
-      setShowVideo(false)
-    }
+    setShowBanner(false)
   }
 
-  try {
-    return (
-      <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80">
-        {/* Contenedor del video de 15cm x 15cm con botón X dentro */}
-        <div className="relative bg-black rounded-lg overflow-hidden shadow-2xl" style={{ width: '15cm', height: '15cm', maxWidth: '90vw', maxHeight: '90vh' }}>
-          {/* Botón X para cerrar - dentro del contenedor del video */}
-          <button
-            onClick={handleClose}
-            className="absolute top-2 right-2 z-20 bg-white/90 hover:bg-white text-black rounded-full p-2 transition-colors shadow-lg"
-            aria-label="Cerrar"
-            style={{ width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80">
+      {/* Contenedor del cartel de 20cm x 20cm con animación */}
+      <div 
+        className="relative bg-black rounded-lg overflow-hidden shadow-2xl"
+        style={{ 
+          width: '20cm', 
+          height: '20cm', 
+          maxWidth: '90vw', 
+          maxHeight: '90vh',
+          animation: 'pulse 2s ease-in-out infinite'
+        }}
+      >
+        {/* Botón X para cerrar - dentro del contenedor */}
+        <button
+          onClick={handleClose}
+          className="absolute top-2 right-2 z-20 bg-white/90 hover:bg-white text-black rounded-full p-2 transition-colors shadow-lg"
+          aria-label="Cerrar"
+          style={{ width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={3}
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={3}
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+
+        {/* Flyer de fondo */}
+        <img
+          src="/Autoconocimiento Rio Gallegos Enero 2026.jpg"
+          alt="Autoconocimiento Rio Gallegos Enero 2026"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+
+        {/* Texto superpuesto - visible solo durante los primeros 10 segundos */}
+        {showText && (
+          <div 
+            className="absolute inset-0 flex items-center justify-center z-10 bg-black/40"
+            style={{
+              animation: 'fadeOut 1s ease-in-out 9s forwards'
+            }}
+          >
+            <h2 
+              className="text-white font-bold text-center px-4"
+              style={{
+                fontSize: 'clamp(1.5rem, 4vw, 3rem)',
+                textShadow: '0 4px 8px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.6)',
+                animation: 'scaleInOut 2s ease-in-out infinite'
+              }}
             >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
+              próximo gran Evento En Sentir...
+            </h2>
+          </div>
+        )}
 
-          {/* Video - CON CONTROLES para permitir reproducción manual si autoplay falla */}
-          <video
-            ref={videoRef}
-            src="/Saludo-fin-de-año.mp4"
-            className="w-full h-full object-contain"
-            autoPlay
-            playsInline
-            preload="auto"
-            muted={true}
-            controls={true}
-            onEnded={() => {
-              try {
-                setShowVideo(false)
-              } catch (error) {
-                console.error("Error al finalizar video:", error)
-              }
-            }}
-            onError={(e) => {
-              console.error("Error al cargar el video:", e)
-              try {
-                const video = e.currentTarget as HTMLVideoElement
-                console.error("Video error details:", {
-                  error: video.error,
-                  networkState: video.networkState,
-                  readyState: video.readyState,
-                  src: video.src
-                })
-              } catch (error) {
-                console.error("Error al obtener detalles del error:", error)
-              }
-              // No cerrar el video si hay error - dejar que el usuario intente reproducirlo
-            }}
-            onPlay={() => {
-              try {
-                const video = videoRef.current
-                if (video) {
-                  // Activar audio inmediatamente cuando empiece a reproducirse
-                  video.muted = false
-                }
-              } catch (error) {
-                console.error("Error al activar sonido:", error)
-              }
-            }}
-            onPlaying={() => {
-              try {
-                const video = videoRef.current
-                if (video) {
-                  // Asegurar que el audio permanezca activo
-                  video.muted = false
-                }
-              } catch (error) {
-                console.error("Error al mantener audio activo:", error)
-              }
-            }}
-          >
-            Tu navegador no soporta el elemento de video.
-          </video>
-        </div>
+        {/* Estilos CSS para las animaciones */}
+        <style jsx>{`
+          @keyframes pulse {
+            0%, 100% {
+              transform: scale(1);
+            }
+            50% {
+              transform: scale(1.05);
+            }
+          }
+          
+          @keyframes scaleInOut {
+            0%, 100% {
+              transform: scale(1);
+            }
+            50% {
+              transform: scale(1.1);
+            }
+          }
+          
+          @keyframes fadeOut {
+            from {
+              opacity: 1;
+            }
+            to {
+              opacity: 0;
+            }
+          }
+        `}</style>
       </div>
-    )
-  } catch (error) {
-    console.error("Error al renderizar ChristmasBanner:", error)
-    return null
-  }
+    </div>
+  )
 }

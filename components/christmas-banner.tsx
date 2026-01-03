@@ -4,9 +4,11 @@ import { useState, useEffect, useRef } from "react"
 
 export function ChristmasBanner() {
   const [showBanner, setShowBanner] = useState(true)
+  const [videoPlaying, setVideoPlaying] = useState(false)
+  const [showPlayButton, setShowPlayButton] = useState(true)
   const videoRef = useRef<HTMLVideoElement>(null)
 
-  // Reproducir video automáticamente cuando el componente se monte
+  // Intentar reproducir automáticamente cuando el componente se monte
   useEffect(() => {
     if (!showBanner) return
 
@@ -27,11 +29,7 @@ export function ChristmasBanner() {
       video.playsInline = true
       video.muted = true // Empezar con muted para que el autoplay funcione
 
-      // Cargar el video
-      video.load()
-      console.log("📥 Video.load() llamado")
-
-      // Función para reproducir video (siempre empezar con muted)
+      // Función para reproducir video
       const tryPlay = async () => {
         if (!video) return
 
@@ -51,6 +49,8 @@ export function ChristmasBanner() {
           video.volume = 1.0
           await video.play()
           console.log("✅ Video reproduciéndose con muted")
+          setVideoPlaying(true)
+          setShowPlayButton(false)
           
           // Activar audio inmediatamente después de que empiece
           requestAnimationFrame(() => {
@@ -70,13 +70,16 @@ export function ChristmasBanner() {
           }, 100)
         } catch (error) {
           console.error("❌ Error al reproducir video:", error)
+          setShowPlayButton(true) // Mostrar botón si falla el autoplay
         }
       }
 
       // Intentar reproducir cuando el video esté listo
       const handleReady = () => {
         console.log("🎬 Video listo para reproducir")
-        tryPlay()
+        if (!videoPlaying) {
+          tryPlay()
+        }
       }
 
       video.addEventListener('canplay', handleReady, { once: true })
@@ -84,33 +87,33 @@ export function ChristmasBanner() {
       video.addEventListener('loadeddata', handleReady, { once: true })
       video.addEventListener('loadedmetadata', () => {
         console.log("📋 Metadata cargado")
-        if (video.readyState >= 2) {
+        if (video.readyState >= 2 && !videoPlaying) {
           tryPlay()
         }
       }, { once: true })
 
       // Intentar reproducir inmediatamente si ya está listo
-      if (video.readyState >= 2) {
+      if (video.readyState >= 2 && !videoPlaying) {
         tryPlay()
       }
 
       // Reintentos agresivos
       setTimeout(() => {
-        if (video && video.paused) {
+        if (video && video.paused && !videoPlaying) {
           console.log("🔄 Reintento 1 (500ms)")
           tryPlay()
         }
       }, 500)
 
       setTimeout(() => {
-        if (video && video.paused) {
+        if (video && video.paused && !videoPlaying) {
           console.log("🔄 Reintento 2 (1000ms)")
           tryPlay()
         }
       }, 1000)
 
       setTimeout(() => {
-        if (video && video.paused) {
+        if (video && video.paused && !videoPlaying) {
           console.log("🔄 Reintento 3 (2000ms)")
           tryPlay()
         }
@@ -128,10 +131,13 @@ export function ChristmasBanner() {
           src: videoTarget.src,
           currentSrc: videoTarget.currentSrc
         })
+        setShowPlayButton(true) // Mostrar botón si hay error
       }
 
       const handlePlay = () => {
         console.log("▶️ Video empezó a reproducirse")
+        setVideoPlaying(true)
+        setShowPlayButton(false)
         if (video) {
           video.muted = false
           video.volume = 1.0
@@ -140,6 +146,8 @@ export function ChristmasBanner() {
 
       const handlePlaying = () => {
         console.log("▶️ Video reproduciéndose")
+        setVideoPlaying(true)
+        setShowPlayButton(false)
         if (video) {
           video.muted = false
           video.volume = 1.0
@@ -181,7 +189,7 @@ export function ChristmasBanner() {
     return () => {
       clearTimeout(timeoutId)
     }
-  }, [showBanner])
+  }, [showBanner, videoPlaying])
 
   if (!showBanner) {
     return null
@@ -198,6 +206,35 @@ export function ChristmasBanner() {
       console.error("Error al cerrar banner:", error)
     } finally {
       setShowBanner(false)
+    }
+  }
+
+  const handleManualPlay = async () => {
+    const video = videoRef.current
+    if (!video) return
+
+    try {
+      video.muted = true
+      video.volume = 1.0
+      await video.play()
+      setVideoPlaying(true)
+      setShowPlayButton(false)
+      
+      // Activar audio inmediatamente
+      requestAnimationFrame(() => {
+        if (video) {
+          video.muted = false
+        }
+      })
+      
+      setTimeout(() => {
+        if (video) {
+          video.muted = false
+          video.volume = 1.0
+        }
+      }, 100)
+    } catch (error) {
+      console.error("Error al reproducir video manualmente:", error)
     }
   }
 
@@ -248,6 +285,26 @@ export function ChristmasBanner() {
             </svg>
           </button>
 
+          {/* Botón de reproducción manual (solo si el autoplay falla) */}
+          {showPlayButton && (
+            <button
+              onClick={handleManualPlay}
+              className="absolute inset-0 z-30 flex items-center justify-center bg-black/50 hover:bg-black/70 transition-colors"
+              style={{ zIndex: 30 }}
+            >
+              <div className="bg-white/90 hover:bg-white rounded-full p-6 shadow-2xl transition-transform hover:scale-110">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-16 w-16 text-black"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </div>
+            </button>
+          )}
+
           {/* Video - object-contain para que se vea completo */}
           <video
             ref={videoRef}
@@ -272,12 +329,15 @@ export function ChristmasBanner() {
                 src: video.src,
                 currentSrc: video.currentSrc
               })
+              setShowPlayButton(true)
             }}
             onPlay={() => {
               const video = videoRef.current
               if (video) {
                 video.muted = false
                 video.volume = 1.0
+                setVideoPlaying(true)
+                setShowPlayButton(false)
                 console.log("▶️ Video en reproducción, audio activado")
               }
             }}
@@ -286,6 +346,8 @@ export function ChristmasBanner() {
               if (video) {
                 video.muted = false
                 video.volume = 1.0
+                setVideoPlaying(true)
+                setShowPlayButton(false)
                 console.log("▶️ Video playing, audio activado")
               }
             }}

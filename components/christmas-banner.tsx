@@ -211,12 +211,32 @@ export function ChristmasBanner() {
 
   const handleManualPlay = async () => {
     const video = videoRef.current
-    if (!video) return
+    if (!video) {
+      console.error("❌ Video ref no disponible para reproducción manual")
+      return
+    }
+
+    console.log("▶️ Reproducción manual iniciada")
+    console.log("Estado del video antes de reproducir:", {
+      readyState: video.readyState,
+      paused: video.paused,
+      muted: video.muted,
+      volume: video.volume,
+      src: video.src,
+      networkState: video.networkState,
+      error: video.error
+    })
 
     try {
+      // Asegurar que el video esté configurado correctamente
       video.muted = true
       video.volume = 1.0
+      video.playsInline = true
+      
+      // Intentar reproducir
       await video.play()
+      console.log("✅ Video.play() exitoso")
+      
       setVideoPlaying(true)
       setShowPlayButton(false)
       
@@ -224,6 +244,7 @@ export function ChristmasBanner() {
       requestAnimationFrame(() => {
         if (video) {
           video.muted = false
+          console.log("🔊 Audio activado (requestAnimationFrame)")
         }
       })
       
@@ -231,10 +252,20 @@ export function ChristmasBanner() {
         if (video) {
           video.muted = false
           video.volume = 1.0
+          console.log("🔊 Audio activado (setTimeout)")
         }
       }, 100)
     } catch (error) {
-      console.error("Error al reproducir video manualmente:", error)
+      console.error("❌ Error al reproducir video manualmente:", error)
+      console.error("Detalles del error:", {
+        name: (error as Error).name,
+        message: (error as Error).message,
+        videoReadyState: video.readyState,
+        videoNetworkState: video.networkState,
+        videoError: video.error
+      })
+      // Mantener el botón visible si falla
+      setShowPlayButton(true)
     }
   }
 

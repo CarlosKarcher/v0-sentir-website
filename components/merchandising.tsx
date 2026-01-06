@@ -16,11 +16,12 @@ export function Merchandising() {
           <Card className="max-w-4xl w-full overflow-hidden hover:shadow-lg transition-shadow">
             <CardContent className="p-6 sm:p-8 md:p-10">
               <div className="flex flex-col items-center gap-6 sm:gap-8">
-                <div className="w-full">
+                <div className="flex justify-center">
                   <img
                     src="/logo-tienda.jpeg"
                     alt="Flyer Tienda Sentir Oficial"
-                    className="w-full h-auto object-contain rounded-lg"
+                    className="object-contain rounded-lg"
+                    style={{ width: "10cm", height: "10cm" }}
                   />
                 </div>
                 <Button
@@ -31,7 +32,7 @@ export function Merchandising() {
                     window.open("https://tienda-sentir.com", "_blank")
                   }}
                 >
-                  Ingresar a la Tienda Sentir Oficial
+                  Ingresar a la Tienda oficial de Sentir
                 </Button>
               </div>
             </CardContent>

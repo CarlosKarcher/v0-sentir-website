@@ -21,6 +21,8 @@ const nextConfig = {
       },
     ]
   },
+  // Configuración para asegurar compatibilidad con dominios personalizados
+  output: 'standalone',
 }
 
 export default nextConfig

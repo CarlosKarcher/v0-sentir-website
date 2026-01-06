@@ -9,9 +9,11 @@ export function Merchandising() {
   const handleButtonClick = () => {
     setShowMessage(true)
     // Ocultar el mensaje después de 3 segundos
-    setTimeout(() => {
-      setShowMessage(false)
-    }, 3000)
+    if (typeof window !== "undefined") {
+      setTimeout(() => {
+        setShowMessage(false)
+      }, 3000)
+    }
   }
 
   return (
@@ -34,7 +36,7 @@ export function Merchandising() {
           </Button>
           
           {showMessage && (
-            <div className="mt-2 px-4 py-2 bg-muted border border-border rounded-md text-sm text-muted-foreground animate-in fade-in slide-in-from-top-2">
+            <div className="mt-2 px-4 py-2 bg-muted border border-border rounded-md text-sm text-muted-foreground transition-opacity duration-300">
               En desarrollo...
             </div>
           )}

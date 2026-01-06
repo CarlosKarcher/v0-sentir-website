@@ -19,13 +19,28 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between">
-        <div className="flex items-center gap-2">
-          <span className="text-xl font-bold text-primary">SENTIR</span>
+      <div className="w-full max-w-7xl mx-auto flex h-14 sm:h-16 items-center justify-between px-4">
+        <div className="flex items-center gap-3">
+          <span className="text-lg sm:text-xl font-bold text-blue-900">SENTIR</span>
+          <img 
+            src="/fuego-de-sentir.png" 
+            alt="Fuego de Sentir" 
+            className="h-[2.4em] w-auto object-contain"
+            style={{ height: '2.4em', width: 'auto' }}
+          />
+          <span className="text-lg sm:text-xl font-bold text-blue-900 flex items-center gap-1.5">
+            <span className="ml-2">En</span>
+            <img 
+              src="/banderas_2.png" 
+              alt="" 
+              className="h-[2em] w-auto object-contain"
+              style={{ height: '2em', width: 'auto' }}
+            />
+          </span>
         </div>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-6">
+        <nav className="hidden md:flex items-center justify-center flex-1 gap-4 lg:gap-6">
           <NavigationMenu>
             <NavigationMenuList>
               <NavigationMenuItem>
@@ -97,6 +112,34 @@ export function Header() {
                 >
                   Próximos Eventos
                 </NavigationMenuLink>
+              </NavigationMenuItem>
+
+              <NavigationMenuItem>
+                <NavigationMenuTrigger>Testimonios</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul className="grid w-[300px] gap-3 p-4">
+                    <li>
+                      <NavigationMenuLink asChild>
+                        <a
+                          href="#testimonios-escritos"
+                          className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                        >
+                          <div className="text-sm font-medium leading-none">Testimonios Escritos</div>
+                        </a>
+                      </NavigationMenuLink>
+                    </li>
+                    <li>
+                      <NavigationMenuLink asChild>
+                        <a
+                          href="#testimonios-video"
+                          className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                        >
+                          <div className="text-sm font-medium leading-none">Testimonios en Video</div>
+                        </a>
+                      </NavigationMenuLink>
+                    </li>
+                  </ul>
+                </NavigationMenuContent>
               </NavigationMenuItem>
 
               <NavigationMenuItem>
@@ -187,34 +230,6 @@ export function Header() {
               </NavigationMenuItem>
 
               <NavigationMenuItem>
-                <NavigationMenuTrigger>Testimonios</NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <ul className="grid w-[300px] gap-3 p-4">
-                    <li>
-                      <NavigationMenuLink asChild>
-                        <a
-                          href="#testimonios-escritos"
-                          className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                        >
-                          <div className="text-sm font-medium leading-none">Testimonios Escritos</div>
-                        </a>
-                      </NavigationMenuLink>
-                    </li>
-                    <li>
-                      <NavigationMenuLink asChild>
-                        <a
-                          href="#testimonios-video"
-                          className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                        >
-                          <div className="text-sm font-medium leading-none">Testimonios en Video</div>
-                        </a>
-                      </NavigationMenuLink>
-                    </li>
-                  </ul>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-
-              <NavigationMenuItem>
                 <NavigationMenuLink
                   href="#equipo"
                   className={cn(
@@ -273,18 +288,18 @@ export function Header() {
                 Próximos Eventos
               </a>
               <a
-                href="#talleres"
-                className="text-lg font-medium hover:text-primary transition-colors"
-                onClick={() => setIsOpen(false)}
-              >
-                Talleres y Sesiones
-              </a>
-              <a
                 href="#testimonios"
                 className="text-lg font-medium hover:text-primary transition-colors"
                 onClick={() => setIsOpen(false)}
               >
                 Testimonios
+              </a>
+              <a
+                href="#talleres"
+                className="text-lg font-medium hover:text-primary transition-colors"
+                onClick={() => setIsOpen(false)}
+              >
+                Talleres y Sesiones
               </a>
               <a
                 href="#equipo"

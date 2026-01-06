@@ -1,3 +1,5 @@
+'use client'
+
 import * as React from 'react'
 import * as NavigationMenuPrimitive from '@radix-ui/react-navigation-menu'
 import { cva } from 'class-variance-authority'
@@ -89,8 +91,17 @@ function NavigationMenuContent({
   ...props
 }: React.ComponentProps<typeof NavigationMenuPrimitive.Content>) {
   React.useEffect(() => {
+    // Verificar que estamos en el cliente
+    if (typeof document === "undefined") {
+      return
+    }
+
     // Force viewport recalculation when content is mounted
     const updateViewport = () => {
+      if (typeof requestAnimationFrame === "undefined" || typeof document === "undefined") {
+        return
+      }
+      
       requestAnimationFrame(() => {
         const viewport = document.querySelector('[data-radix-navigation-menu-viewport]') as HTMLElement
         const contents = document.querySelectorAll('[data-radix-navigation-menu-content]')
@@ -126,20 +137,25 @@ function NavigationMenuContent({
     ]
     
     // Also listen for when content becomes visible
-    const observer = new MutationObserver(updateViewport)
-    const viewport = document.querySelector('[data-radix-navigation-menu-viewport]')
-    if (viewport) {
-      observer.observe(viewport, {
-        attributes: true,
-        attributeFilter: ['data-state'],
-        childList: true,
-        subtree: true,
-      })
+    let observer: MutationObserver | null = null
+    if (typeof MutationObserver !== "undefined") {
+      observer = new MutationObserver(updateViewport)
+      const viewport = document.querySelector('[data-radix-navigation-menu-viewport]')
+      if (viewport) {
+        observer.observe(viewport, {
+          attributes: true,
+          attributeFilter: ['data-state'],
+          childList: true,
+          subtree: true,
+        })
+      }
     }
     
     return () => {
       timers.forEach(timer => clearTimeout(timer))
-      observer.disconnect()
+      if (observer) {
+        observer.disconnect()
+      }
     }
   }, [])
   

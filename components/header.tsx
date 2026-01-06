@@ -239,6 +239,17 @@ export function Header() {
                   Equipo
                 </NavigationMenuLink>
               </NavigationMenuItem>
+
+              <NavigationMenuItem>
+                <NavigationMenuLink
+                  href="#merchandising"
+                  className={cn(
+                    "group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50",
+                  )}
+                >
+                  Merchandising
+                </NavigationMenuLink>
+              </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
         </nav>
@@ -307,6 +318,13 @@ export function Header() {
                 onClick={() => setIsOpen(false)}
               >
                 Equipo
+              </a>
+              <a
+                href="#merchandising"
+                className="text-lg font-medium hover:text-primary transition-colors"
+                onClick={() => setIsOpen(false)}
+              >
+                Merchandising
               </a>
             </nav>
           </SheetContent>

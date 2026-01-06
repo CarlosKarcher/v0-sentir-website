@@ -13,9 +13,9 @@ export function Merchandising() {
         </div>
 
         <div className="flex justify-center items-center">
-          <Card className="max-w-4xl w-full overflow-hidden hover:shadow-lg transition-shadow">
-            <CardContent className="p-6 sm:p-8 md:p-10">
-              <div className="flex flex-col items-center gap-6 sm:gap-8">
+          <Card className="overflow-hidden hover:shadow-lg transition-shadow inline-block" style={{ width: "10cm" }}>
+            <CardContent className="p-4">
+              <div className="flex flex-col items-center gap-3">
                 <div className="flex justify-center">
                   <img
                     src="/logo-tienda.jpeg"
@@ -26,7 +26,7 @@ export function Merchandising() {
                 </div>
                 <Button
                   size="lg"
-                  className="w-full sm:w-auto px-8 py-6 text-base sm:text-lg font-semibold"
+                  className="w-full px-6 py-4 text-sm sm:text-base font-semibold"
                   onClick={() => {
                     // Aquí puedes agregar el enlace a la tienda cuando lo tengas
                     window.open("https://tienda-sentir.com", "_blank")

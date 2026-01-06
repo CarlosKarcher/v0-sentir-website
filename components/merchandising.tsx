@@ -13,13 +13,13 @@ export function Merchandising() {
         </div>
 
         <div className="flex justify-center items-center">
-          <Card className="max-w-2xl w-full overflow-hidden hover:shadow-lg transition-shadow">
+          <Card className="max-w-4xl w-full overflow-hidden hover:shadow-lg transition-shadow">
             <CardContent className="p-6 sm:p-8 md:p-10">
               <div className="flex flex-col items-center gap-6 sm:gap-8">
-                <div className="w-full max-w-md">
+                <div className="w-full">
                   <img
-                    src="/logo Merchandising.jpeg"
-                    alt="Logo Merchandising Sentir"
+                    src="/logo-tienda.jpeg"
+                    alt="Flyer Tienda Sentir Oficial"
                     className="w-full h-auto object-contain rounded-lg"
                   />
                 </div>

@@ -14,14 +14,17 @@ import { Footer } from "@/components/footer"
 
 export default function Page() {
   useEffect(() => {
-    // Asegurar que la página comience en el inicio cuando no hay hash
-    if (!window.location.hash) {
-      window.scrollTo({ top: 0, behavior: "instant" })
-    }
-    
-    // También prevenir el scroll automático del navegador al recargar
-    if (window.history.scrollRestoration) {
-      window.history.scrollRestoration = "manual"
+    // Verificar que estamos en el cliente
+    if (typeof window !== "undefined") {
+      // Asegurar que la página comience en el inicio cuando no hay hash
+      if (!window.location.hash) {
+        window.scrollTo({ top: 0, behavior: "instant" })
+      }
+      
+      // También prevenir el scroll automático del navegador al recargar
+      if (window.history.scrollRestoration) {
+        window.history.scrollRestoration = "manual"
+      }
     }
   }, [])
 

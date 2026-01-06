@@ -18,8 +18,9 @@ export function Merchandising() {
             size="lg"
             className="px-8 py-6 text-base sm:text-lg font-semibold"
             onClick={() => {
-              // Aquí puedes agregar el enlace a la tienda cuando lo tengas
-              window.open("https://tienda-sentir.com", "_blank")
+              if (typeof window !== "undefined") {
+                window.open("https://tienda-sentir.com", "_blank")
+              }
             }}
           >
             Ingresar a la Tienda oficial de Sentir

@@ -4,6 +4,11 @@
  * @param headerOffset - Offset del header sticky (por defecto 80px)
  */
 export function scrollToElement(elementId: string, headerOffset: number = 80): void {
+  // Verificar que estamos en el cliente
+  if (typeof window === "undefined" || typeof document === "undefined") {
+    return
+  }
+
   const performScroll = (): boolean => {
     // Buscar el elemento de múltiples formas
     let element = document.getElementById(elementId)

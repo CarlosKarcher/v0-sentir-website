@@ -13,6 +13,7 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu"
 import { cn } from "@/lib/utils"
+import { scrollToElement } from "@/lib/scroll"
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false)
@@ -243,8 +244,12 @@ export function Header() {
               <NavigationMenuItem>
                 <NavigationMenuLink
                   href="#merchandising"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    scrollToElement("merchandising", 80)
+                  }}
                   className={cn(
-                    "group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50",
+                    "group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 cursor-pointer",
                   )}
                 >
                   Merchandising
@@ -322,7 +327,13 @@ export function Header() {
               <a
                 href="#merchandising"
                 className="text-lg font-medium hover:text-primary transition-colors"
-                onClick={() => setIsOpen(false)}
+                onClick={(e) => {
+                  e.preventDefault()
+                  setIsOpen(false)
+                  setTimeout(() => {
+                    scrollToElement("merchandising", 80)
+                  }, 100)
+                }}
               >
                 Merchandising
               </a>

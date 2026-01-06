@@ -73,7 +73,7 @@ function EventCard({ event }: { event: Event }) {
                       <img
                         key={imageSrc}
                         src={imageSrc}
-                        alt={`Flyer ${event.title}`}
+                        alt="Flyer Taller de Transformación Río Gallegos"
                         className="max-w-full h-auto rounded-lg shadow-lg mx-auto block"
                         style={{ maxHeight: '80vh', objectFit: 'contain', objectPosition: 'center' }}
                         onError={(e) => {
@@ -152,6 +152,26 @@ function EventCard({ event }: { event: Event }) {
 export function Events() {
   const events = [
     {
+      title: "Taller de MyL: Creativa",
+      date: "19 de Diciembre, 2025",
+      time: "12:00 Horas",
+      location: "Teatro Municipal de Río Gallegos",
+      type: "Taller de Liderazgo",
+      available: false,
+      availabilityText: "Cupos Agotados",
+      level: "3er Nivel",
+    },
+    {
+      title: "Taller de MyL - Cierre y Campamento",
+      date: "20 y 21 de Diciembre, 2025",
+      time: "Inicio: 10:00 AM del 20 de Diciembre",
+      location: "Incógnito",
+      type: "Taller de Liderazgo",
+      available: false,
+      availabilityText: "Cupos Agotados",
+      level: "3er Nivel",
+    },
+    {
       title: "Taller de Autoconocimiento - Río Gallegos",
       date: "23, 24 y 25 de Enero, 2026",
       time: "Inicio: Viernes 23, 17 Horas",
@@ -181,7 +201,7 @@ export function Events() {
     },
     {
       title: "El Camino del Guerrero - Río Gallegos",
-      date: "14 y 15 de Febrero, 2026",
+      date: "Febrero, 2026",
       time: "Por confirmar",
       location: "Río Gallegos",
       type: "Otro Taller",
@@ -190,20 +210,6 @@ export function Events() {
       hasFlyer: true,
       flyerImage: "/El Camino de Guerrero febrero 2026.jpg",
       flyerImageAlt: "/images/El Camino de Guerrero febrero 2026.jpg",
-      contactPhone: "+54 9 2966 595803",
-    },
-    {
-      title: "Taller de Transformación - Río Gallegos",
-      date: "2, 3, 4 y 5 de Abril, 2026 (Semana Santa)",
-      time: "Inicio: Jueves 2/04 a las 17 Hs",
-      location: "Zapiola 1768 (Club Barrio Mataderos)",
-      type: "Taller de Liderazgo",
-      available: true,
-      availabilityText: "Cupos disponibles",
-      hasFlyer: true,
-      flyerImage: "/transformacion abril 2026.jpg",
-      flyerImageAlt: "/images/transformacion abril 2026.jpg",
-      level: "2do. Nivel",
       contactPhone: "+54 9 2966 595803",
     },
     {
@@ -240,7 +246,7 @@ export function Events() {
     <section className="py-12 sm:py-16 bg-muted/30 w-full" id="proximos-eventos">
       <div className="w-full max-w-7xl mx-auto px-4">
         <div className="max-w-3xl mx-auto text-center mb-8 sm:mb-12">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 text-balance">Próximos Eventos - 2026</h2>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 text-balance">Próximos Eventos</h2>
           <p className="text-base sm:text-lg text-muted-foreground text-pretty">
             Únete a nuestros próximos talleres y sesiones de transformación personal
           </p>

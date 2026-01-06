@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
 
 export function Merchandising() {
   return (
@@ -13,30 +12,16 @@ export function Merchandising() {
         </div>
 
         <div className="flex justify-center items-center">
-          <Card className="overflow-hidden hover:shadow-lg transition-shadow inline-block" style={{ width: "10cm" }}>
-            <CardContent className="p-4">
-              <div className="flex flex-col items-center gap-3">
-                <div className="flex justify-center">
-                  <img
-                    src="/logo-tienda.jpeg"
-                    alt="Flyer Tienda Sentir Oficial"
-                    className="object-contain rounded-lg"
-                    style={{ width: "10cm", height: "10cm" }}
-                  />
-                </div>
-                <Button
-                  size="lg"
-                  className="w-full px-6 py-4 text-sm sm:text-base font-semibold"
-                  onClick={() => {
-                    // Aquí puedes agregar el enlace a la tienda cuando lo tengas
-                    window.open("https://tienda-sentir.com", "_blank")
-                  }}
-                >
-                  Ingresar a la Tienda oficial de Sentir
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+          <Button
+            size="lg"
+            className="px-8 py-6 text-base sm:text-lg font-semibold"
+            onClick={() => {
+              // Aquí puedes agregar el enlace a la tienda cuando lo tengas
+              window.open("https://tienda-sentir.com", "_blank")
+            }}
+          >
+            Ingresar a la Tienda oficial de Sentir
+          </Button>
         </div>
       </div>
     </section>

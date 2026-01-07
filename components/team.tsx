@@ -82,7 +82,7 @@ const team = [
       { name: "Faby", phone: "542966540082" },
       { name: "Sandro", phone: "542966489050" },
     ],
-    facebook: "https://www.facebook.com/Faby & brown",
+    facebook: "https://www.facebook.com/share/1C1sBzAUB7/",
     instagram: "https://www.instagram.com/fabyBrown",
   },
 ]

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
+import { ArrowRight } from "lucide-react"
 
 export function Merchandising() {
   const [showMessage, setShowMessage] = useState(false)
@@ -27,22 +27,31 @@ export function Merchandising() {
         </div>
 
         <div className="flex flex-col justify-center items-center gap-4">
-          <div className="relative inline-block">
+          <div 
+            className="relative inline-block cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-lg rounded-lg overflow-hidden group"
+            onClick={handleButtonClick}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault()
+                handleButtonClick()
+              }
+            }}
+            aria-label="Ingresar a la Tienda"
+          >
             <img
               src="/logo-tienda-Sentir.jpeg"
-              alt="Logo Tienda Sentir"
-              className="object-contain"
+              alt="Logo Tienda Sentir - Click para ingresar"
+              className="object-contain transition-opacity duration-300 group-hover:opacity-90"
               style={{ width: "8cm", height: "10cm" }}
             />
-            <div className="absolute bottom-0 left-0 right-0 flex justify-center pb-2">
-              <Button
-                size="lg"
-                className="px-8 py-6 text-base sm:text-lg font-semibold"
-                onClick={handleButtonClick}
-              >
-                Ingresar a la Tienda
-              </Button>
+            {/* Indicador visual de que es clickeable */}
+            <div className="absolute bottom-2 right-2 bg-primary text-primary-foreground rounded-full p-2 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <ArrowRight className="h-5 w-5" />
             </div>
+            {/* Borde sutil al hover */}
+            <div className="absolute inset-0 border-2 border-primary opacity-0 group-hover:opacity-50 transition-opacity duration-300 rounded-lg pointer-events-none"></div>
           </div>
           
           {showMessage && (

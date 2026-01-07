@@ -57,7 +57,7 @@ export function VideoPresentation() {
               loop
               playsInline
               className="rounded-lg shadow-lg"
-              style={{ width: "20cm", height: "20cm", maxWidth: "90vw", maxHeight: "90vh" }}
+              style={{ width: "10cm", height: "18cm", maxWidth: "90vw", maxHeight: "90vh" }}
             >
               Tu navegador no soporta la reproducción de video.
             </video>

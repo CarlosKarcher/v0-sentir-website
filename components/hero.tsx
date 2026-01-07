@@ -1,5 +1,6 @@
 "use client"
 
+import * as React from "react"
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
 import { useState, useEffect } from "react"
@@ -39,6 +40,7 @@ const heroImages = [
 
 export function Hero() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const videoRef = React.useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -46,6 +48,16 @@ export function Hero() {
     }, 5000) // 5 seconds
 
     return () => clearInterval(interval)
+  }, [])
+
+  useEffect(() => {
+    // Intentar reproducir el video con audio cuando se carga
+    if (videoRef.current) {
+      videoRef.current.play().catch(() => {
+        // Si falla el autoplay con audio, el navegador puede requerir interacción del usuario
+        // El video intentará reproducirse automáticamente
+      })
+    }
   }, [])
 
   return (
@@ -102,10 +114,12 @@ export function Hero() {
       <div className="w-full max-w-7xl mx-auto relative z-10 text-center px-4 pt-8 sm:pt-12 md:pt-16 pb-12 sm:pb-16 md:pb-20">
         <div className="flex justify-center mb-6 sm:mb-8">
           <video
+            ref={videoRef}
             src="/Tandil-2026.mp4"
             autoPlay
             loop
             playsInline
+            muted={false}
             className="rounded-lg shadow-lg"
             style={{ width: "10cm", height: "10cm" }}
           >

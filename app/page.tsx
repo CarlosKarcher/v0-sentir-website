@@ -11,6 +11,7 @@ import { Workshops } from "@/components/workshops"
 import { Team } from "@/components/team"
 import { Merchandising } from "@/components/merchandising"
 import { Footer } from "@/components/footer"
+import { VideoPresentation } from "@/components/video-presentation"
 
 export default function Page() {
   useEffect(() => {
@@ -30,6 +31,7 @@ export default function Page() {
 
   return (
     <main className="min-h-screen">
+      <VideoPresentation />
       <Header />
       <Hero />
       <About />

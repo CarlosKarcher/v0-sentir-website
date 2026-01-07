@@ -10,11 +10,8 @@ const productos = [
   { nombre: "Agendas Sentir", imagen: "/Tienda/Agendas Sentir.jpeg" },
   { nombre: "Bitácoras", imagen: "/Tienda/Bitacoras.jpeg" },
   { nombre: "Dije Pines Lápices", imagen: "/Tienda/dije pines lapices.jpeg" },
-  { nombre: "Fabi & Sandro", imagen: "/Tienda/Fabi & Sandro.jpeg" },
   { nombre: "Lápices Ecológicos", imagen: "/Tienda/lapices ecologicos.jpeg" },
-  { nombre: "Logo Merchandising", imagen: "/Tienda/logo Merchandising.jpeg" },
   { nombre: "Pines", imagen: "/Tienda/Pines.jpeg" },
-  { nombre: "Producto", imagen: "/Tienda/WhatsApp Image 2026-01-06 at 12.11.45 PM.jpeg" },
 ]
 
 interface TiendaProductosProps {

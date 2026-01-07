@@ -1,6 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Phone } from "lucide-react"
+import { Phone, Facebook, Instagram } from "lucide-react"
 
 const team = [
   {
@@ -82,6 +82,8 @@ const team = [
       { name: "Faby", phone: "542966540082" },
       { name: "Sandro", phone: "542966489050" },
     ],
+    facebook: "https://www.facebook.com/Faby & brown",
+    instagram: "https://www.instagram.com/fabyBrown",
   },
 ]
 
@@ -119,19 +121,43 @@ export function Team() {
                   </div>
                 )}
                 {member.phones ? (
-                  <div className="flex flex-col gap-2">
-                    {member.phones.map((phoneItem, idx) => (
-                      <a
-                        key={idx}
-                        href={`https://wa.me/${phoneItem.phone}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 text-sm text-primary hover:underline"
-                      >
-                        <Phone className="h-4 w-4" />
-                        {phoneItem.name}: {phoneItem.phone.replace(/^54/, "")}
-                      </a>
-                    ))}
+                  <div className="flex flex-col gap-3">
+                    <div className="flex items-center gap-3">
+                      {member.phones.map((phoneItem, idx) => (
+                        <a
+                          key={idx}
+                          href={`https://wa.me/${phoneItem.phone}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+                          aria-label={`WhatsApp ${phoneItem.name}`}
+                        >
+                          <Phone className="h-5 w-5" />
+                        </a>
+                      ))}
+                      {member.facebook && (
+                        <a
+                          href={member.facebook}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+                          aria-label="Facebook"
+                        >
+                          <Facebook className="h-5 w-5" />
+                        </a>
+                      )}
+                      {member.instagram && (
+                        <a
+                          href={member.instagram}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+                          aria-label="Instagram"
+                        >
+                          <Instagram className="h-5 w-5" />
+                        </a>
+                      )}
+                    </div>
                   </div>
                 ) : member.phone ? (
                   <a

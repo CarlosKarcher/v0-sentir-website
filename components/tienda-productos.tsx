@@ -37,7 +37,7 @@ export function TiendaProductos({ onClose }: TiendaProductosProps) {
                 className="inline-flex items-center gap-1 text-primary hover:text-primary/80 transition-colors underline"
               >
                 <Phone className="h-4 w-4" />
-                <span>Fabi: 2966 540082</span>
+                <span>Faby: 2966 540082</span>
               </a>
               <span>-</span>
               <a

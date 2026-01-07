@@ -77,7 +77,7 @@ const team = [
     name: "Fabiola Mancilla Gallego / Sandro Brown",
     role: "Creadores de Papeleria Artesanal y Objetos con intención.",
     specialties: [],
-    image: "/foto-Faby-sandro.jpeg",
+    image: "/foto-faby-sandro.jpeg",
     phones: [
       { name: "Faby", phone: "542966540082" },
       { name: "Sandro", phone: "542966489050" },

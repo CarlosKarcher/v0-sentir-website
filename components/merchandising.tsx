@@ -27,19 +27,23 @@ export function Merchandising() {
         </div>
 
         <div className="flex flex-col justify-center items-center gap-4">
-          <img
-            src="/logo-tienda-Sentir.jpeg"
-            alt="Logo Tienda Sentir"
-            className="max-w-full h-auto object-contain"
-            style={{ maxWidth: "400px" }}
-          />
-          <Button
-            size="lg"
-            className="px-8 py-6 text-base sm:text-lg font-semibold"
-            onClick={handleButtonClick}
-          >
-            Ingresar a la Tienda Oficial Sentir
-          </Button>
+          <div className="relative inline-block">
+            <img
+              src="/logo-tienda-Sentir.jpeg"
+              alt="Logo Tienda Sentir"
+              className="object-contain"
+              style={{ width: "8cm", height: "10cm" }}
+            />
+            <div className="absolute bottom-0 left-0 right-0 flex justify-center pb-2">
+              <Button
+                size="lg"
+                className="px-8 py-6 text-base sm:text-lg font-semibold"
+                onClick={handleButtonClick}
+              >
+                Ingresar a la Tienda Oficial Sentir
+              </Button>
+            </div>
+          </div>
           
           {showMessage && (
             <div className="mt-2 px-4 py-2 bg-muted border border-border rounded-md text-sm text-muted-foreground transition-opacity duration-300">

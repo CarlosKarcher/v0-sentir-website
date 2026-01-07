@@ -73,6 +73,16 @@ const team = [
     image: "/natali maresca tandil.jpg",
     phone: "5492494622736",
   },
+  {
+    name: "Fabiola Mancilla Gallego / Sandro Brown",
+    role: "Creadores de Papeleria Artesanal y Objetos con intención.",
+    specialties: [],
+    image: "/foto-Faby-sandro.jpeg",
+    phones: [
+      { name: "Faby", phone: "542966540082" },
+      { name: "Sandro", phone: "542966489050" },
+    ],
+  },
 ]
 
 export function Team() {
@@ -108,7 +118,22 @@ export function Team() {
                     ))}
                   </div>
                 )}
-                {member.phone && (
+                {member.phones ? (
+                  <div className="flex flex-col gap-2">
+                    {member.phones.map((phoneItem, idx) => (
+                      <a
+                        key={idx}
+                        href={`https://wa.me/${phoneItem.phone}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 text-sm text-primary hover:underline"
+                      >
+                        <Phone className="h-4 w-4" />
+                        {phoneItem.name}: {phoneItem.phone.replace(/^54/, "")}
+                      </a>
+                    ))}
+                  </div>
+                ) : member.phone ? (
                   <a
                     href={`https://wa.me/${member.phone}`}
                     target="_blank"
@@ -118,7 +143,7 @@ export function Team() {
                     <Phone className="h-4 w-4" />
                     Contacto
                   </a>
-                )}
+                ) : null}
               </CardContent>
             </Card>
           ))}

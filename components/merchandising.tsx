@@ -2,18 +2,17 @@
 
 import { useState } from "react"
 import { ArrowRight } from "lucide-react"
+import { TiendaProductos } from "@/components/tienda-productos"
 
 export function Merchandising() {
-  const [showMessage, setShowMessage] = useState(false)
+  const [showTienda, setShowTienda] = useState(false)
 
   const handleButtonClick = () => {
-    setShowMessage(true)
-    // Ocultar el mensaje después de 3 segundos
-    if (typeof window !== "undefined") {
-      setTimeout(() => {
-        setShowMessage(false)
-      }, 3000)
-    }
+    setShowTienda(true)
+  }
+
+  const handleCloseTienda = () => {
+    setShowTienda(false)
   }
 
   return (
@@ -54,13 +53,9 @@ export function Merchandising() {
             <div className="absolute inset-0 border-2 border-primary opacity-0 group-hover:opacity-50 transition-opacity duration-300 rounded-lg pointer-events-none"></div>
           </div>
           
-          {showMessage && (
-            <div className="mt-2 px-4 py-2 bg-muted border border-border rounded-md text-sm text-muted-foreground transition-opacity duration-300">
-              En desarrollo...
-            </div>
-          )}
         </div>
       </div>
+      {showTienda && <TiendaProductos onClose={handleCloseTienda} />}
     </section>
   )
 }

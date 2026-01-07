@@ -27,12 +27,18 @@ export function Merchandising() {
         </div>
 
         <div className="flex flex-col justify-center items-center gap-4">
+          <img
+            src="/logo-tienda-Sentir.jpeg"
+            alt="Logo Tienda Sentir"
+            className="max-w-full h-auto object-contain"
+            style={{ maxWidth: "400px" }}
+          />
           <Button
             size="lg"
             className="px-8 py-6 text-base sm:text-lg font-semibold"
             onClick={handleButtonClick}
           >
-            Ingresar a la Tienda oficial de Sentir
+            Ingresar a la Tienda Oficial Sentir
           </Button>
           
           {showMessage && (

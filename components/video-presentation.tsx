@@ -43,9 +43,14 @@ export function VideoPresentation() {
           <Button
             variant="ghost"
             size="icon"
-            className="absolute top-2 right-2 z-10 rounded-full hover:bg-destructive hover:text-destructive-foreground"
-            onClick={handleClose}
+            className="absolute top-2 right-2 z-[10000] rounded-full hover:bg-destructive hover:text-destructive-foreground cursor-pointer"
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              handleClose()
+            }}
             aria-label="Cerrar presentación"
+            type="button"
           >
             <X className="h-5 w-5" />
           </Button>

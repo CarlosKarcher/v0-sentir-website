@@ -10,6 +10,7 @@ import { Testimonials } from "@/components/testimonials"
 import { Workshops } from "@/components/workshops"
 import { Team } from "@/components/team"
 import { Merchandising } from "@/components/merchandising"
+import { SentirDesdeAdentro } from "@/components/sentir-desde-adentro"
 import { Footer } from "@/components/footer"
 import { VideoPresentation } from "@/components/video-presentation"
 
@@ -41,6 +42,7 @@ export default function Page() {
       <Workshops />
       <Team />
       <Merchandising />
+      <SentirDesdeAdentro />
       <Footer />
     </main>
   )

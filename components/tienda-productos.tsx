@@ -23,10 +23,15 @@ export function TiendaProductos({ onClose }: TiendaProductosProps) {
     <div className="fixed inset-0 z-[10000] bg-background overflow-y-auto">
       <div className="w-full max-w-7xl mx-auto px-4 py-8 sm:py-12">
         {/* Header con botón de cerrar */}
-        <div className="flex justify-between items-center mb-8">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-balance">
-            Tienda Sentir - Productos diseñados por Faby & Brown
-          </h2>
+        <div className="flex justify-between items-start mb-8">
+          <div>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-balance mb-2">
+              Tienda Sentir - Productos diseñados por Faby & Brown
+            </h2>
+            <p className="text-base sm:text-lg text-muted-foreground">
+              Contacto → Fabi: 2966 540082 - Sandro: 2966 489050
+            </p>
+          </div>
           <Button
             variant="ghost"
             size="icon"

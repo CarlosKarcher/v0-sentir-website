@@ -1,6 +1,6 @@
 "use client"
 
-import { X } from "lucide-react"
+import { X, Phone } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 const productos = [
@@ -28,9 +28,28 @@ export function TiendaProductos({ onClose }: TiendaProductosProps) {
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-balance mb-2">
               Tienda Sentir - Productos diseñados por Faby & Brown
             </h2>
-            <p className="text-base sm:text-lg text-muted-foreground">
-              Contacto → Fabi: 2966 540082 - Sandro: 2966 489050
-            </p>
+            <div className="text-base sm:text-lg text-muted-foreground flex flex-wrap items-center gap-2">
+              <span>Contacto →</span>
+              <a
+                href="https://wa.me/542966540082"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-primary hover:text-primary/80 transition-colors underline"
+              >
+                <Phone className="h-4 w-4" />
+                <span>Fabi: 2966 540082</span>
+              </a>
+              <span>-</span>
+              <a
+                href="https://wa.me/542966489050"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-primary hover:text-primary/80 transition-colors underline"
+              >
+                <Phone className="h-4 w-4" />
+                <span>Sandro: 2966 489050</span>
+              </a>
+            </div>
           </div>
           <Button
             variant="ghost"

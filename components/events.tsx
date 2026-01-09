@@ -207,7 +207,7 @@ export function Events() {
     {
       title: "El Camino del Guerrero - Río Gallegos",
       date: "14 y 15 de Febrero de 2026",
-      time: "Inicio: 15 Horas",
+      time: "Inicio: sabado 14, 15 Horas",
       location: "Río Gallegos",
       type: "Otro Taller",
       available: true,

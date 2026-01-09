@@ -37,14 +37,20 @@ export function VideoPresentation() {
       {/* Modal con el video */}
       <div className="fixed inset-0 z-[9999] flex items-center justify-center pointer-events-none">
         <div 
-          className="relative bg-background rounded-lg shadow-2xl pointer-events-auto"
+          className="relative bg-background rounded-lg shadow-2xl pointer-events-auto flex items-center justify-center"
           onClick={(e) => e.stopPropagation()}
-          style={{ width: "15cm", height: "20cm", maxWidth: "90vw", maxHeight: "90vh" }}
+          style={{ 
+            width: "15cm", 
+            height: "20cm", 
+            maxWidth: "90vw", 
+            maxHeight: "90vh",
+            padding: "0.5rem"
+          }}
         >
           <Button
             variant="ghost"
             size="icon"
-            className="absolute top-2 right-2 z-[10000] rounded-full hover:bg-destructive hover:text-destructive-foreground cursor-pointer"
+            className="absolute top-1 right-1 z-[10000] rounded-full hover:bg-destructive hover:text-destructive-foreground cursor-pointer"
             onClick={(e) => {
               e.preventDefault()
               e.stopPropagation()
@@ -55,18 +61,17 @@ export function VideoPresentation() {
           >
             <X className="h-5 w-5" />
           </Button>
-          <div className="flex justify-center items-center w-full h-full p-2">
-            <video
-              ref={videoRef}
-              src="/video El camino del Guerrero febrero 2026.mp4"
-              controls
-              loop
-              playsInline
-              className="rounded-lg shadow-lg w-full h-full object-contain"
-            >
-              Tu navegador no soporta la reproducción de video.
-            </video>
-          </div>
+          <video
+            ref={videoRef}
+            src="/video El camino del Guerrero febrero 2026.mp4"
+            controls
+            loop
+            playsInline
+            className="rounded-lg shadow-lg w-full h-full object-contain"
+            style={{ width: "100%", height: "100%" }}
+          >
+            Tu navegador no soporta la reproducción de video.
+          </video>
         </div>
       </div>
     </>

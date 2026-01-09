@@ -257,6 +257,16 @@ export function Events() {
             <EventCard key={index} event={event} />
           ))}
         </div>
+
+        <div className="flex justify-center mt-8 sm:mt-12">
+          <Button
+            size="lg"
+            variant="outline"
+            className="px-8 py-6 text-base sm:text-lg font-semibold"
+          >
+            Historial de Eventos
+          </Button>
+        </div>
       </div>
     </section>
   )

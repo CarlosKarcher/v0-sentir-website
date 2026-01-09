@@ -37,8 +37,9 @@ export function VideoPresentation() {
       {/* Modal con el video */}
       <div className="fixed inset-0 z-[9999] flex items-center justify-center pointer-events-none">
         <div 
-          className="relative bg-background rounded-lg shadow-2xl p-6 pointer-events-auto"
+          className="relative bg-background rounded-lg shadow-2xl pointer-events-auto"
           onClick={(e) => e.stopPropagation()}
+          style={{ width: "15cm", height: "20cm", maxWidth: "90vw", maxHeight: "90vh" }}
         >
           <Button
             variant="ghost"
@@ -54,15 +55,14 @@ export function VideoPresentation() {
           >
             <X className="h-5 w-5" />
           </Button>
-          <div className="flex justify-center">
+          <div className="flex justify-center items-center w-full h-full p-2">
             <video
               ref={videoRef}
               src="/video El camino del Guerrero febrero 2026.mp4"
               controls
               loop
               playsInline
-              className="rounded-lg shadow-lg"
-              style={{ width: "10cm", height: "18cm", maxWidth: "90vw", maxHeight: "90vh" }}
+              className="rounded-lg shadow-lg w-full h-full object-contain"
             >
               Tu navegador no soporta la reproducción de video.
             </video>

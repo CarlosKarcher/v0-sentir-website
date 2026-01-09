@@ -264,7 +264,7 @@ export function Events() {
             variant="outline"
             className="px-8 py-6 text-base sm:text-lg font-semibold"
           >
-            Historial de Eventos
+            Registro de Eventos Realizados
           </Button>
         </div>
       </div>

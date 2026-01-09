@@ -8,6 +8,10 @@ import { SECTION_IDS } from "@/lib/constants"
 
 const videosInstitucionales = [
   {
+    title: "Tandil 2026",
+    video: "/Tandil-2026.mp4",
+  },
+  {
     title: "No ha sido fácil",
     video: "/No ha sido facil.mp4",
   },

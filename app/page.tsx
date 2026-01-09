@@ -12,6 +12,8 @@ import { Team } from "@/components/team"
 import { Merchandising } from "@/components/merchandising"
 import { SentirDesdeAdentro } from "@/components/sentir-desde-adentro"
 import { Footer } from "@/components/footer"
+import { VideoPresentation } from "@/components/video-presentation"
+
 export default function Page() {
   useEffect(() => {
     // Verificar que estamos en el cliente
@@ -30,6 +32,7 @@ export default function Page() {
 
   return (
     <main className="min-h-screen">
+      <VideoPresentation />
       <Header />
       <Hero />
       <About />

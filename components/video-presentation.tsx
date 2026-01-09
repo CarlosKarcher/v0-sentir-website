@@ -57,7 +57,7 @@ export function VideoPresentation() {
           <div className="flex justify-center">
             <video
               ref={videoRef}
-              src="/Tandil-2026.mp4"
+              src="/video El camino del Guerrero febrero 2026.mp4"
               controls
               loop
               playsInline

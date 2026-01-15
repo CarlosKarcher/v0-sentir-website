@@ -7,11 +7,15 @@ import { Button } from "@/components/ui/button"
 export function VideoPresentation() {
   const [isOpen, setIsOpen] = React.useState(true)
   const [isPlaying, setIsPlaying] = React.useState(false)
+  const [hasError, setHasError] = React.useState(false)
   const videoRef = React.useRef<HTMLVideoElement>(null)
 
   const handlePlay = () => {
     if (videoRef.current) {
-      videoRef.current.play()
+      videoRef.current.play().catch((error) => {
+        console.error("Error al reproducir el video:", error)
+        setHasError(true)
+      })
       setIsPlaying(true)
     }
   }
@@ -28,13 +32,25 @@ export function VideoPresentation() {
       const video = videoRef.current
       const handlePlayEvent = () => setIsPlaying(true)
       const handlePauseEvent = () => setIsPlaying(false)
+      const handleError = () => {
+        console.error("Error al cargar el video")
+        setHasError(true)
+      }
+      const handleLoadedData = () => {
+        console.log("Video cargado correctamente")
+        setHasError(false)
+      }
       
       video.addEventListener('play', handlePlayEvent)
       video.addEventListener('pause', handlePauseEvent)
+      video.addEventListener('error', handleError)
+      video.addEventListener('loadeddata', handleLoadedData)
       
       return () => {
         video.removeEventListener('play', handlePlayEvent)
         video.removeEventListener('pause', handlePauseEvent)
+        video.removeEventListener('error', handleError)
+        video.removeEventListener('loadeddata', handleLoadedData)
       }
     }
   }, [])
@@ -52,21 +68,23 @@ export function VideoPresentation() {
       {/* Modal con el video */}
       <div className="fixed inset-0 z-[9999] flex items-center justify-center pointer-events-none">
         <div 
-          className="relative bg-background rounded-lg shadow-2xl pointer-events-auto flex flex-col items-center justify-center"
+          className="relative bg-background rounded-lg shadow-2xl pointer-events-auto"
           onClick={(e) => e.stopPropagation()}
           style={{ 
             width: "15cm", 
             height: "20cm", 
             maxWidth: "90vw", 
             maxHeight: "90vh",
-            padding: "0.5rem"
+            padding: "0.5rem",
+            display: "flex",
+            flexDirection: "column"
           }}
         >
           {/* Botón de cerrar */}
           <Button
             variant="ghost"
             size="icon"
-            className="absolute top-1 right-1 z-[10000] rounded-full hover:bg-destructive hover:text-destructive-foreground cursor-pointer"
+            className="absolute top-1 right-1 z-[10000] rounded-full hover:bg-destructive hover:text-destructive-foreground cursor-pointer bg-background/80"
             onClick={(e) => {
               e.preventDefault()
               e.stopPropagation()
@@ -79,22 +97,45 @@ export function VideoPresentation() {
           </Button>
           
           {/* Video */}
-          <div className="relative w-full flex-1 flex items-center justify-center">
-            <video
-              ref={videoRef}
-              src="/Auto-enero-26-todo-listo.mp4"
-              loop
-              playsInline
-              className="rounded-lg shadow-lg w-full h-full object-contain"
-              style={{ width: "100%", height: "100%" }}
-            >
-              Tu navegador no soporta la reproducción de video.
-            </video>
+          <div className="relative flex-1 flex items-center justify-center min-h-0 overflow-hidden" style={{ width: "100%", height: "calc(100% - 4rem)" }}>
+            {hasError ? (
+              <div className="text-center p-8">
+                <p className="text-lg font-semibold mb-2">Error al cargar el video</p>
+                <p className="text-sm text-muted-foreground">Ruta: /Auto-enero-26-todo-listo.mp4</p>
+              </div>
+            ) : (
+              <video
+                ref={videoRef}
+                src="/Auto-enero-26-todo-listo.mp4"
+                loop
+                playsInline
+                preload="metadata"
+                controls={isPlaying}
+                className="rounded-lg shadow-lg w-full h-full"
+                style={{ 
+                  objectFit: "contain",
+                  display: "block"
+                }}
+                onError={(e) => {
+                  console.error("Error en el elemento video:", e)
+                  setHasError(true)
+                }}
+                onLoadedData={() => {
+                  console.log("Video cargado correctamente")
+                  setHasError(false)
+                }}
+                onCanPlay={() => {
+                  console.log("Video listo para reproducir")
+                }}
+              >
+                Tu navegador no soporta la reproducción de video.
+              </video>
+            )}
           </div>
           
           {/* Botón de play en la parte inferior */}
-          {!isPlaying && (
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-[10000]">
+          {!isPlaying && !hasError && (
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-[10000] pointer-events-auto">
               <Button
                 size="lg"
                 onClick={(e) => {

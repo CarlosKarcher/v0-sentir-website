@@ -71,14 +71,13 @@ export function VideoPresentation() {
           className="relative bg-background rounded-lg shadow-2xl pointer-events-auto"
           onClick={(e) => e.stopPropagation()}
           style={{ 
-            width: "20cm", 
+            width: "10cm", 
             height: "14cm", 
             maxWidth: "90vw", 
             maxHeight: "90vh",
             padding: "0.5rem",
             display: "flex",
-            flexDirection: "column",
-            aspectRatio: "20/14"
+            flexDirection: "column"
           }}
         >
           {/* Botón de cerrar */}

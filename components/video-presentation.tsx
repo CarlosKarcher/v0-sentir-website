@@ -71,13 +71,14 @@ export function VideoPresentation() {
           className="relative bg-background rounded-lg shadow-2xl pointer-events-auto"
           onClick={(e) => e.stopPropagation()}
           style={{ 
-            width: "15cm", 
-            height: "20cm", 
+            width: "20cm", 
+            height: "14cm", 
             maxWidth: "90vw", 
             maxHeight: "90vh",
             padding: "0.5rem",
             display: "flex",
-            flexDirection: "column"
+            flexDirection: "column",
+            aspectRatio: "20/14"
           }}
         >
           {/* Botón de cerrar */}
@@ -97,7 +98,7 @@ export function VideoPresentation() {
           </Button>
           
           {/* Video */}
-          <div className="relative flex-1 flex items-center justify-center min-h-0 overflow-hidden" style={{ width: "100%", height: "calc(100% - 4rem)" }}>
+          <div className="relative flex-1 flex items-center justify-center min-h-0 overflow-hidden" style={{ width: "100%", height: "100%" }}>
             {hasError ? (
               <div className="text-center p-8">
                 <p className="text-lg font-semibold mb-2">Error al cargar el video</p>

@@ -243,6 +243,21 @@ export function Header() {
 
               <NavigationMenuItem>
                 <NavigationMenuLink
+                  href="#musica-sentir"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    scrollToElement("musica-sentir", 80)
+                  }}
+                  className={cn(
+                    "group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 cursor-pointer",
+                  )}
+                >
+                  Música de Sentir
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+
+              <NavigationMenuItem>
+                <NavigationMenuLink
                   href="#merchandising"
                   onClick={(e) => {
                     e.preventDefault()
@@ -323,6 +338,19 @@ export function Header() {
                 onClick={() => setIsOpen(false)}
               >
                 Equipo
+              </a>
+              <a
+                href="#musica-sentir"
+                className="text-lg font-medium hover:text-primary transition-colors"
+                onClick={(e) => {
+                  e.preventDefault()
+                  setIsOpen(false)
+                  setTimeout(() => {
+                    scrollToElement("musica-sentir", 80)
+                  }, 100)
+                }}
+              >
+                Música de Sentir
               </a>
               <a
                 href="#merchandising"

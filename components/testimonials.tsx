@@ -52,6 +52,14 @@ const videoTestimonials: VideoTestimonial[] = [
     name: "Dami",
     video: "/Testimonio Visual Dami.mp4",
   },
+  {
+    name: "Lara",
+    video: "/testimonio Lara enero 2026.mp4",
+  },
+  {
+    name: "Yami",
+    video: "/testimonio Yami enero 2026.mp4",
+  },
 ]
 
 export function Testimonials() {

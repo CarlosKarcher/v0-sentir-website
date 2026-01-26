@@ -58,11 +58,11 @@ export function SentirDesdeAdentro() {
         </div>
 
         {/* Video de Autoconocimiento */}
-        <div className="max-w-4xl mx-auto mb-10 sm:mb-12 md:mb-16">
+        <div className="max-w-5xl mx-auto mb-10 sm:mb-12 md:mb-16">
           <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-6 text-center text-balance">
             Autoconocimiento 23, 24 y 25 de Enero 2026
           </h3>
-          <div className="space-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             <Card className="overflow-hidden">
               <CardContent className="p-0">
                 <div className="relative flex justify-center items-center">

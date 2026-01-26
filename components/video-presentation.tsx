@@ -101,12 +101,12 @@ export function VideoPresentation() {
             {hasError ? (
               <div className="text-center p-8">
                 <p className="text-lg font-semibold mb-2">Error al cargar el video</p>
-                <p className="text-sm text-muted-foreground">Ruta: /video-auto-enero-21012026.mp4</p>
+                <p className="text-sm text-muted-foreground">Ruta: /video-auto-enero-y-punta-arenas.mp4</p>
               </div>
             ) : (
               <video
                 ref={videoRef}
-                src="/video-auto-enero-21012026.mp4"
+                src="/video-auto-enero-y-punta-arenas.mp4"
                 loop
                 playsInline
                 preload="metadata"

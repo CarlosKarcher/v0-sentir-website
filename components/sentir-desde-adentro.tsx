@@ -65,11 +65,11 @@ export function SentirDesdeAdentro() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             <Card className="overflow-hidden">
               <CardContent className="p-0">
-                <div className="relative flex justify-center items-center">
+                <div className="relative w-full" style={{ aspectRatio: "16/9" }}>
                   <video
                     src="/Video circulo 2 sabado enero 2026.mp4"
                     controls
-                    className="w-full h-auto mx-auto block"
+                    className="w-full h-full object-contain mx-auto block"
                     preload="metadata"
                     playsInline
                     onError={(e) => {
@@ -83,11 +83,11 @@ export function SentirDesdeAdentro() {
             </Card>
             <Card className="overflow-hidden">
               <CardContent className="p-0">
-                <div className="relative flex justify-center items-center">
+                <div className="relative w-full" style={{ aspectRatio: "16/9" }}>
                   <video
                     src="/video Sentir  Domingo Enero 2026.mp4"
                     controls
-                    className="w-full h-auto mx-auto block"
+                    className="w-full h-full object-contain mx-auto block"
                     preload="metadata"
                     playsInline
                     onError={(e) => {

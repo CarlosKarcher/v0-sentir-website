@@ -177,20 +177,6 @@ export function Events() {
 
   const events = [
     {
-      title: "Taller de Autoconocimiento - Río Gallegos",
-      date: "23, 24 y 25 de Enero, 2026",
-      time: "Inicio: Viernes 23, 17 Horas",
-      location: "Lugar a Designar",
-      type: "Taller de Liderazgo",
-      available: true,
-      availabilityText: "Cupos disponibles",
-      hasFlyer: true,
-      flyerImage: "/Autoconocimiento Rio Gallegos Enero 2026.jpg",
-      flyerImageAlt: "/images/Autoconocimiento Rio Gallegos Enero 2026.jpg",
-      level: "1er Nivel",
-      contactPhone: "+54 9 2966 595803",
-    },
-    {
       title: "Taller de Autoconocimiento - Punta Arenas",
       date: "6, 7 y 8 de Febrero, 2026",
       time: "Inicio: Viernes 6, 17 Horas",

@@ -257,7 +257,7 @@ export function Events() {
       contactPhone: "+54 9 2966 211547",
     },
     {
-      title: "Taller Sanando mi niño interior",
+      title: "Taller: \"Sanando mi niño interior.\"",
       date: "8 de Marzo 2026.",
       time: "14 Horas a 20 horas.",
       location: "Río Gallegos. Lugar a confirmar.",

@@ -80,34 +80,16 @@ function EventCard({ event }: { event: Event }) {
                         style={{ maxHeight: '80vh', objectFit: 'contain', objectPosition: 'center' }}
                         onError={(e) => {
                           console.error('Error al cargar el flyer desde:', imageSrc)
-                          const currentAttempts = [...attemptedPaths, imageSrc]
-                          setAttemptedPaths(currentAttempts)
-                          
-                          // Lista de rutas alternativas a intentar
-                          const alternativePaths = [
-                            event.flyerImageAlt,
-                            event.flyerImage?.replace(' ', '%20'),
-                            event.flyerImage?.replace('. JPEG', '.jpeg'),
-                            event.flyerImage?.replace('. JPEG', '.JPEG'),
-                            event.flyerImage?.replace(' ', ''),
-                            event.flyerImageAlt?.replace(' ', '%20'),
-                            event.flyerImageAlt?.replace('. JPEG', '.jpeg'),
-                            event.flyerImageAlt?.replace('. JPEG', '.JPEG'),
-                            event.flyerImageAlt?.replace(' ', ''),
-                          ].filter((path): path is string => 
-                            path !== undefined && 
-                            path !== null && 
-                            !currentAttempts.includes(path)
-                          )
-                          
-                          if (alternativePaths.length > 0) {
-                            const nextPath = alternativePaths[0]
-                            console.log('Intentando con ruta alternativa:', nextPath)
-                            setImageSrc(nextPath)
+                          // Intentar con ruta alternativa si existe y no la hemos intentado
+                          if (event.flyerImageAlt && imageSrc === event.flyerImage && !attemptedPaths.includes(event.flyerImageAlt)) {
+                            console.log('Intentando con ruta alternativa:', event.flyerImageAlt)
+                            setAttemptedPaths([...attemptedPaths, imageSrc])
+                            setImageSrc(event.flyerImageAlt)
                             setImageError(false)
                             return
                           }
-                          
+                          // Si ya intentamos ambas rutas, mostrar error
+                          setAttemptedPaths([...attemptedPaths, imageSrc])
                           setImageError(true)
                         }}
                         onLoad={() => {

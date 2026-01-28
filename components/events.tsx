@@ -20,12 +20,14 @@ function EventCard({ event }: { event: Event }) {
   const [flyerOpen, setFlyerOpen] = useState(false)
   const [imageError, setImageError] = useState(false)
   const [imageSrc, setImageSrc] = useState(event.flyerImage || "/flyer-transformacion-rio-gallegos.jpg")
+  const [attemptedPaths, setAttemptedPaths] = useState<string[]>([])
   
   // Resetear el estado cuando se abre el modal
   const handleOpenChange = (open: boolean) => {
     setFlyerOpen(open)
     if (open) {
       setImageError(false)
+      setAttemptedPaths([])
       setImageSrc(event.flyerImage || "/flyer-transformacion-rio-gallegos.jpg")
     }
   }
@@ -78,22 +80,34 @@ function EventCard({ event }: { event: Event }) {
                         style={{ maxHeight: '80vh', objectFit: 'contain', objectPosition: 'center' }}
                         onError={(e) => {
                           console.error('Error al cargar el flyer desde:', imageSrc)
-                          // Intentar con ruta alternativa si existe
-                          if (event.flyerImageAlt) {
-                            if (imageSrc === event.flyerImage) {
-                              console.log('Intentando con ruta alternativa:', event.flyerImageAlt)
-                              setImageSrc(event.flyerImageAlt)
-                              setImageError(false)
-                              return
-                            } else if (imageSrc === event.flyerImageAlt) {
-                              // Si ya intentamos la alternativa, probar con la principal codificada
-                              const encodedSrc = encodeURI(event.flyerImage)
-                              console.log('Intentando con ruta principal codificada:', encodedSrc)
-                              setImageSrc(encodedSrc)
-                              setImageError(false)
-                              return
-                            }
+                          const currentAttempts = [...attemptedPaths, imageSrc]
+                          setAttemptedPaths(currentAttempts)
+                          
+                          // Lista de rutas alternativas a intentar
+                          const alternativePaths = [
+                            event.flyerImageAlt,
+                            event.flyerImage?.replace(' ', '%20'),
+                            event.flyerImage?.replace('. JPEG', '.jpeg'),
+                            event.flyerImage?.replace('. JPEG', '.JPEG'),
+                            event.flyerImage?.replace(' ', ''),
+                            event.flyerImageAlt?.replace(' ', '%20'),
+                            event.flyerImageAlt?.replace('. JPEG', '.jpeg'),
+                            event.flyerImageAlt?.replace('. JPEG', '.JPEG'),
+                            event.flyerImageAlt?.replace(' ', ''),
+                          ].filter((path): path is string => 
+                            path !== undefined && 
+                            path !== null && 
+                            !currentAttempts.includes(path)
+                          )
+                          
+                          if (alternativePaths.length > 0) {
+                            const nextPath = alternativePaths[0]
+                            console.log('Intentando con ruta alternativa:', nextPath)
+                            setImageSrc(nextPath)
+                            setImageError(false)
+                            return
                           }
+                          
                           setImageError(true)
                         }}
                         onLoad={() => {
@@ -221,8 +235,8 @@ export function Events() {
       available: true,
       availabilityText: "Cupos disponibles",
       hasFlyer: true,
-      flyerImage: "/Taller-de-Bio-07-03-2026.jpeg",
-      flyerImageAlt: "/images/Taller-de-Bio-07-03-2026.jpeg",
+      flyerImage: "/Taller-de-Bio-07-03-2026. JPEG",
+      flyerImageAlt: "/images/Taller-de-Bio-07-03-2026. JPEG",
       contactPhone: "+54 9 2966 211547",
     },
     {

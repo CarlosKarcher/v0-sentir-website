@@ -212,8 +212,8 @@ export function Events() {
       available: true,
       availabilityText: "Cupos disponibles",
       hasFlyer: true,
-      flyerImage: "/Taller de Bio Rio Gallegos 07-03-2026.jpeg",
-      flyerImageAlt: "/images/Taller de Bio Rio Gallegos 07-03-2026.jpeg",
+      flyerImage: "/Taller de Bio Rio Gallegos 07-03-2026.JPEG",
+      flyerImageAlt: "/images/Taller de Bio Rio Gallegos 07-03-2026.JPEG",
       contactPhone: "+54 9 2966 211547",
     },
     {

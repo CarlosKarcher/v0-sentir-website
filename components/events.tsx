@@ -244,7 +244,7 @@ export function Events() {
       contactPhone: "+54 9 2966 595803",
     },
     {
-      title: "Taller de Biodecodificacion - Tu Sintoma tiene algo que contarte.",
+      title: "Taller de Biodecodificacion: Tu Sintoma tiene algo que contarte.",
       date: "07 de Marzo de 2026.",
       time: "Inicio: sabado 14 Horas.",
       location: "Río Gallegos.",

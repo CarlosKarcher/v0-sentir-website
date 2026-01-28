@@ -119,11 +119,12 @@ function EventCard({ event }: { event: Event }) {
                       <div className="text-center text-muted-foreground p-8">
                         <p className="text-lg font-semibold mb-2">No se pudo cargar el flyer</p>
                         <p className="text-sm mb-4">Ruta intentada: {imageSrc}</p>
-                        <p className="text-sm mb-4">Asegúrate de que el archivo esté en: public/flyer-transformacion-rio-gallegos.jpg</p>
+                        <p className="text-sm mb-4">Asegúrate de que el archivo esté en: public{event.flyerImage} o public{event.flyerImageAlt || ''}</p>
                         <Button 
                           variant="outline" 
                           onClick={() => {
                             setImageError(false)
+                            setAttemptedPaths([])
                             setImageSrc(event.flyerImage)
                           }}
                         >
@@ -235,8 +236,8 @@ export function Events() {
       available: true,
       availabilityText: "Cupos disponibles",
       hasFlyer: true,
-      flyerImage: "/Taller-de-Bio-07-03-2026.JPEG",
-      flyerImageAlt: "/images/Taller-de-Bio-07-03-2026.JPEG",
+      flyerImage: "/Taller-de-Bio-07-03-2026.jpeg",
+      flyerImageAlt: "/images/Taller-de-Bio-07-03-2026.jpeg",
       contactPhone: "+54 9 2966 211547",
     },
     {

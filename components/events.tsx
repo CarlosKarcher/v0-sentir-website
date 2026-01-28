@@ -78,21 +78,25 @@ function EventCard({ event }: { event: Event }) {
         </div>
         
         {/* Botones para Taller de Transformación */}
-        {event.hasFlyer && (
+        {(event.hasFlyer || event.contactPhone) && (
           <div className="flex flex-col sm:flex-row flex-wrap gap-2 pt-2 items-center justify-between">
             <div className="flex flex-col sm:flex-row flex-wrap gap-2">
               <Button 
                 variant="outline" 
                 size="sm" 
                 className="flex items-center gap-2"
-                onClick={handleFlyerClick}
+                onClick={event.hasFlyer ? handleFlyerClick : () => {
+                  setFlyerOpen(true)
+                  setImageError(true)
+                }}
+                disabled={!event.hasFlyer}
               >
                 <FileText className="h-4 w-4" />
                 Ver Flyer
               </Button>
               
               {/* Pop-up de flyer */}
-              {flyerOpen && (
+              {flyerOpen && event.hasFlyer && (
                 <ImagePopup
                   src={imageError ? "" : encodeURI(imageSrc)}
                   alt={`Flyer - ${event.title}`}
@@ -106,24 +110,34 @@ function EventCard({ event }: { event: Event }) {
                 />
               )}
               
-              {/* Manejo de errores de carga */}
-              {imageError && flyerOpen && (
+              {/* Manejo de errores de carga o flyer no disponible */}
+              {flyerOpen && (imageError || !event.hasFlyer) && (
                 <div className="fixed inset-0 z-[9998] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4">
                   <div className="bg-background rounded-lg shadow-2xl p-8 max-w-md text-center">
-                    <p className="text-lg font-semibold mb-2">No se pudo cargar el flyer</p>
-                    <p className="text-sm mb-4">Ruta intentada: {imageSrc}</p>
-                    <p className="text-sm mb-4">Asegúrate de que el archivo esté en: public{event.flyerImage} o public{event.flyerImageAlt || ''}</p>
+                    <p className="text-lg font-semibold mb-2">
+                      {!event.hasFlyer ? "Flyer no disponible aún" : "No se pudo cargar el flyer"}
+                    </p>
+                    {!event.hasFlyer ? (
+                      <p className="text-sm mb-4">El flyer de este evento estará disponible próximamente.</p>
+                    ) : (
+                      <>
+                        <p className="text-sm mb-4">Ruta intentada: {imageSrc}</p>
+                        <p className="text-sm mb-4">Asegúrate de que el archivo esté en: public{event.flyerImage} o public{event.flyerImageAlt || ''}</p>
+                      </>
+                    )}
                     <div className="flex gap-2 justify-center">
-                      <Button 
-                        variant="outline" 
-                        onClick={() => {
-                          setImageError(false)
-                          setAttemptedPaths([])
-                          setImageSrc(event.flyerImage)
-                        }}
-                      >
-                        Reintentar
-                      </Button>
+                      {event.hasFlyer && (
+                        <Button 
+                          variant="outline" 
+                          onClick={() => {
+                            setImageError(false)
+                            setAttemptedPaths([])
+                            setImageSrc(event.flyerImage)
+                          }}
+                        >
+                          Reintentar
+                        </Button>
+                      )}
                       <Button 
                         variant="outline" 
                         onClick={() => {
@@ -140,23 +154,21 @@ function EventCard({ event }: { event: Event }) {
                 </div>
               )}
               
-              <Button
-                variant="outline"
-                size="sm"
-                className="flex items-center gap-2"
-                onClick={(e) => {
-                  e.preventDefault()
-                  e.stopPropagation()
-                  if (event.contactPhone) {
-                    window.open(getWhatsAppLink(event.contactPhone), '_blank')
-                  } else {
-                    scrollToElement(SECTION_IDS.CONTACTO)
-                  }
-                }}
-              >
-                <Phone className="h-4 w-4" />
-                Contacto
-              </Button>
+              {event.contactPhone && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex items-center gap-2"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    window.open(getWhatsAppLink(event.contactPhone!), '_blank')
+                  }}
+                >
+                  <Phone className="h-4 w-4" />
+                  Contacto
+                </Button>
+              )}
             </div>
             {event.level && (
               <Badge className="bg-blue-900 text-white hover:bg-blue-800 border-blue-900 text-xs font-semibold px-2 py-1">
@@ -243,6 +255,17 @@ export function Events() {
       flyerImage: "/Taller-de-Bio-07-03-2026.jpeg",
       flyerImageAlt: "/images/Taller-de-Bio-07-03-2026.jpeg",
       contactPhone: "+54 9 2966 211547",
+    },
+    {
+      title: "Taller Sanando mi niño interior",
+      date: "8 de Marzo 2026.",
+      time: "14 Horas a 20 horas.",
+      location: "Río Gallegos. Lugar a confirmar.",
+      type: "Otro Taller",
+      available: true,
+      availabilityText: "Cupos disponibles",
+      hasFlyer: false,
+      contactPhone: "+54 9 2966 595803",
     },
     {
       title: "Taller de Autoconocimiento - Tandil (Buenos Aires)",

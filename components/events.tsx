@@ -194,6 +194,16 @@ export function Events() {
 
   const pastEvents = [
     {
+      title: "Taller de Autoconocimiento",
+      date: "23, 24 y 25 de Enero del 2026",
+      time: "Evento Realizado",
+      location: "Río Gallegos - Salón de Vialidad Provincial, sito en Lisandro de la Torres 952",
+      type: "Taller de Liderazgo",
+      available: false,
+      availabilityText: "Evento Realizado",
+      level: "1er Nivel",
+    },
+    {
       title: "Taller de MyL: Creativa",
       date: "19 de Diciembre, 2025",
       time: "12:00 Horas",

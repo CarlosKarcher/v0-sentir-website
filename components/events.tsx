@@ -72,18 +72,27 @@ function EventCard({ event }: { event: Event }) {
                     {!imageError ? (
                       <img
                         key={imageSrc}
-                        src={imageSrc}
-                        alt="Flyer Taller de Transformación Río Gallegos"
+                        src={encodeURI(imageSrc)}
+                        alt={`Flyer - ${event.title}`}
                         className="max-w-full h-auto rounded-lg shadow-lg mx-auto block"
                         style={{ maxHeight: '80vh', objectFit: 'contain', objectPosition: 'center' }}
                         onError={(e) => {
                           console.error('Error al cargar el flyer desde:', imageSrc)
                           // Intentar con ruta alternativa si existe
-                          if (event.flyerImageAlt && imageSrc === event.flyerImage) {
-                            console.log('Intentando con ruta alternativa:', event.flyerImageAlt)
-                            setImageSrc(event.flyerImageAlt)
-                            setImageError(false)
-                            return
+                          if (event.flyerImageAlt) {
+                            if (imageSrc === event.flyerImage) {
+                              console.log('Intentando con ruta alternativa:', event.flyerImageAlt)
+                              setImageSrc(event.flyerImageAlt)
+                              setImageError(false)
+                              return
+                            } else if (imageSrc === event.flyerImageAlt) {
+                              // Si ya intentamos la alternativa, probar con la principal codificada
+                              const encodedSrc = encodeURI(event.flyerImage)
+                              console.log('Intentando con ruta principal codificada:', encodedSrc)
+                              setImageSrc(encodedSrc)
+                              setImageError(false)
+                              return
+                            }
                           }
                           setImageError(true)
                         }}
@@ -212,8 +221,8 @@ export function Events() {
       available: true,
       availabilityText: "Cupos disponibles",
       hasFlyer: true,
-      flyerImage: "/images/Taller de Bio Rio Gallegos 07-03-2026.jpeg",
-      flyerImageAlt: "/Taller de Bio Rio Gallegos 07-03-2026.jpeg",
+      flyerImage: "/Taller de Bio Rio Gallegos 07-03-2026.jpeg",
+      flyerImageAlt: "/images/Taller de Bio Rio Gallegos 07-03-2026.jpeg",
       contactPhone: "+54 9 2966 211547",
     },
     {

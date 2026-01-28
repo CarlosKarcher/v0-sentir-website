@@ -1,7 +1,9 @@
 "use client"
 
+import { useState } from "react"
 import { X, Phone } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { ImagePopup } from "@/components/ui/image-popup"
 
 const productos = [
   { nombre: "Logo Fabi & Sandro", imagen: "/Tienda/logo de fabi & Sandro.jpeg" },
@@ -19,6 +21,8 @@ interface TiendaProductosProps {
 }
 
 export function TiendaProductos({ onClose }: TiendaProductosProps) {
+  const [selectedImage, setSelectedImage] = useState<{ src: string; alt: string } | null>(null)
+
   return (
     <div className="fixed inset-0 z-[10000] bg-background overflow-y-auto">
       <div className="w-full max-w-7xl mx-auto px-4 py-8 sm:py-12">
@@ -69,7 +73,10 @@ export function TiendaProductos({ onClose }: TiendaProductosProps) {
               key={index}
               className="group relative bg-card border border-border rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300"
             >
-              <div className="aspect-square overflow-hidden bg-muted">
+              <div 
+                className="aspect-square overflow-hidden bg-muted cursor-pointer"
+                onClick={() => setSelectedImage({ src: producto.imagen, alt: producto.nombre })}
+              >
                 <img
                   src={producto.imagen}
                   alt={producto.nombre}
@@ -95,6 +102,16 @@ export function TiendaProductos({ onClose }: TiendaProductosProps) {
             Volver
           </Button>
         </div>
+        
+        {/* Pop-up de imagen */}
+        {selectedImage && (
+          <ImagePopup
+            src={selectedImage.src}
+            alt={selectedImage.alt}
+            isOpen={!!selectedImage}
+            onClose={() => setSelectedImage(null)}
+          />
+        )}
       </div>
     </div>
   )

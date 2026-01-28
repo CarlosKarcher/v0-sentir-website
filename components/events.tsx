@@ -4,11 +4,11 @@ import { Calendar, Clock, MapPin, Phone, FileText } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { useState } from "react"
 import { scrollToElement } from "@/lib/scroll"
 import { CONTACT_PHONE_NUMBER, SECTION_IDS } from "@/lib/constants"
 import type { Event } from "@/lib/types"
+import { ImagePopup } from "@/components/ui/image-popup"
 
 // Función helper para generar enlace de WhatsApp
 const getWhatsAppLink = (phoneNumber: string) => {
@@ -30,6 +30,28 @@ function EventCard({ event }: { event: Event }) {
       setAttemptedPaths([])
       setImageSrc(event.flyerImage || "/flyer-transformacion-rio-gallegos.jpg")
     }
+  }
+
+  const handleFlyerClick = () => {
+    setFlyerOpen(true)
+    setImageError(false)
+    setAttemptedPaths([])
+    setImageSrc(event.flyerImage || "/flyer-transformacion-rio-gallegos.jpg")
+    
+    // Pre-cargar la imagen para verificar si existe
+    const img = new Image()
+    img.onerror = () => {
+      // Si falla la principal, intentar la alternativa
+      if (event.flyerImageAlt && imageSrc === event.flyerImage) {
+        setImageSrc(event.flyerImageAlt)
+      } else {
+        setImageError(true)
+      }
+    }
+    img.onload = () => {
+      setImageError(false)
+    }
+    img.src = event.flyerImage || "/flyer-transformacion-rio-gallegos.jpg"
   }
   
   return (
@@ -59,64 +81,64 @@ function EventCard({ event }: { event: Event }) {
         {event.hasFlyer && (
           <div className="flex flex-col sm:flex-row flex-wrap gap-2 pt-2 items-center justify-between">
             <div className="flex flex-col sm:flex-row flex-wrap gap-2">
-              <Sheet open={flyerOpen} onOpenChange={handleOpenChange}>
-                <SheetTrigger asChild>
-                  <Button variant="outline" size="sm" className="flex items-center gap-2">
-                    <FileText className="h-4 w-4" />
-                    Ver Flyer
-                  </Button>
-                </SheetTrigger>
-                <SheetContent side="bottom" className="h-[85vh] sm:h-[90vh] overflow-auto">
-                  <SheetHeader>
-                    <SheetTitle>Flyer - {event.title}</SheetTitle>
-                  </SheetHeader>
-                  <div className="mt-4 flex justify-center items-center min-h-[400px] w-full p-4">
-                    {!imageError ? (
-                      <img
-                        key={imageSrc}
-                        src={encodeURI(imageSrc)}
-                        alt={`Flyer - ${event.title}`}
-                        className="max-w-full h-auto rounded-lg shadow-lg mx-auto block"
-                        style={{ maxHeight: '80vh', objectFit: 'contain', objectPosition: 'center' }}
-                        onError={(e) => {
-                          console.error('Error al cargar el flyer desde:', imageSrc)
-                          // Intentar con ruta alternativa si existe y no la hemos intentado
-                          if (event.flyerImageAlt && imageSrc === event.flyerImage && !attemptedPaths.includes(event.flyerImageAlt)) {
-                            console.log('Intentando con ruta alternativa:', event.flyerImageAlt)
-                            setAttemptedPaths([...attemptedPaths, imageSrc])
-                            setImageSrc(event.flyerImageAlt)
-                            setImageError(false)
-                            return
-                          }
-                          // Si ya intentamos ambas rutas, mostrar error
-                          setAttemptedPaths([...attemptedPaths, imageSrc])
-                          setImageError(true)
-                        }}
-                        onLoad={() => {
-                          console.log('Flyer cargado correctamente desde:', imageSrc)
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="flex items-center gap-2"
+                onClick={handleFlyerClick}
+              >
+                <FileText className="h-4 w-4" />
+                Ver Flyer
+              </Button>
+              
+              {/* Pop-up de flyer */}
+              {flyerOpen && (
+                <ImagePopup
+                  src={imageError ? "" : encodeURI(imageSrc)}
+                  alt={`Flyer - ${event.title}`}
+                  isOpen={flyerOpen && !imageError}
+                  onClose={() => {
+                    setFlyerOpen(false)
+                    setImageError(false)
+                    setAttemptedPaths([])
+                    setImageSrc(event.flyerImage || "/flyer-transformacion-rio-gallegos.jpg")
+                  }}
+                />
+              )}
+              
+              {/* Manejo de errores de carga */}
+              {imageError && flyerOpen && (
+                <div className="fixed inset-0 z-[9998] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4">
+                  <div className="bg-background rounded-lg shadow-2xl p-8 max-w-md text-center">
+                    <p className="text-lg font-semibold mb-2">No se pudo cargar el flyer</p>
+                    <p className="text-sm mb-4">Ruta intentada: {imageSrc}</p>
+                    <p className="text-sm mb-4">Asegúrate de que el archivo esté en: public{event.flyerImage} o public{event.flyerImageAlt || ''}</p>
+                    <div className="flex gap-2 justify-center">
+                      <Button 
+                        variant="outline" 
+                        onClick={() => {
                           setImageError(false)
+                          setAttemptedPaths([])
+                          setImageSrc(event.flyerImage)
                         }}
-                      />
-                    ) : (
-                      <div className="text-center text-muted-foreground p-8">
-                        <p className="text-lg font-semibold mb-2">No se pudo cargar el flyer</p>
-                        <p className="text-sm mb-4">Ruta intentada: {imageSrc}</p>
-                        <p className="text-sm mb-4">Asegúrate de que el archivo esté en: public{event.flyerImage} o public{event.flyerImageAlt || ''}</p>
-                        <Button 
-                          variant="outline" 
-                          onClick={() => {
-                            setImageError(false)
-                            setAttemptedPaths([])
-                            setImageSrc(event.flyerImage)
-                          }}
-                        >
-                          Reintentar
-                        </Button>
-                      </div>
-                    )}
+                      >
+                        Reintentar
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        onClick={() => {
+                          setFlyerOpen(false)
+                          setImageError(false)
+                          setAttemptedPaths([])
+                          setImageSrc(event.flyerImage || "/flyer-transformacion-rio-gallegos.jpg")
+                        }}
+                      >
+                        Cerrar
+                      </Button>
+                    </div>
                   </div>
-                </SheetContent>
-              </Sheet>
+                </div>
+              )}
               
               <Button
                 variant="outline"

@@ -7,6 +7,7 @@ import { useEffect, useState } from "react"
 import { scrollToElement } from "@/lib/scroll"
 import { SECTION_IDS, HEADER_OFFSET } from "@/lib/constants"
 import type { WrittenTestimonial, VideoTestimonial } from "@/lib/types"
+import { ImagePopup } from "@/components/ui/image-popup"
 
 const writtenTestimonials: WrittenTestimonial[] = [
   {
@@ -64,6 +65,7 @@ const videoTestimonials: VideoTestimonial[] = [
 
 export function Testimonials() {
   const [activeTab, setActiveTab] = useState("written")
+  const [selectedImage, setSelectedImage] = useState<{ src: string; alt: string } | null>(null)
 
   // Manejar cambio de pestaña desde clic directo
   const handleTabChange = (value: string) => {
@@ -130,7 +132,7 @@ export function Testimonials() {
           <TabsContent id={SECTION_IDS.TESTIMONIOS_ESCRITOS} value="written">
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {writtenTestimonials.map((testimonial, index) => (
-                <Card key={index} className="overflow-hidden">
+                <Card key={index} className="overflow-hidden cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setSelectedImage({ src: testimonial.image, alt: `Testimonio de ${testimonial.name}` })}>
                   <CardContent className="p-0 flex justify-center items-center">
                     <img
                       src={testimonial.image}
@@ -171,6 +173,16 @@ export function Testimonials() {
             </div>
           </TabsContent>
         </Tabs>
+        
+        {/* Pop-up de imagen */}
+        {selectedImage && (
+          <ImagePopup
+            src={selectedImage.src}
+            alt={selectedImage.alt}
+            isOpen={!!selectedImage}
+            onClose={() => setSelectedImage(null)}
+          />
+        )}
       </div>
     </section>
   )

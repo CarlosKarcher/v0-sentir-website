@@ -1,6 +1,10 @@
+"use client"
+
+import { useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Phone, Facebook, Instagram } from "lucide-react"
+import { ImagePopup } from "@/components/ui/image-popup"
 
 const team = [
   {
@@ -88,6 +92,8 @@ const team = [
 ]
 
 export function Team() {
+  const [selectedImage, setSelectedImage] = useState<{ src: string; alt: string } | null>(null)
+
   return (
     <section id="equipo" className="py-12 sm:py-16 md:py-20 bg-secondary/30 w-full">
       <div className="w-full max-w-7xl mx-auto px-4">
@@ -101,7 +107,10 @@ export function Team() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto">
           {team.map((member, index) => (
             <Card key={index} className="overflow-hidden hover:shadow-lg transition-shadow">
-              <div className="aspect-square overflow-hidden flex justify-center items-center bg-muted">
+              <div 
+                className="aspect-square overflow-hidden flex justify-center items-center bg-muted cursor-pointer"
+                onClick={() => setSelectedImage({ src: member.image || "/placeholder.svg", alt: member.name })}
+              >
                 <img
                   src={member.image || "/placeholder.svg"}
                   alt={member.name}
@@ -174,6 +183,16 @@ export function Team() {
             </Card>
           ))}
         </div>
+        
+        {/* Pop-up de imagen */}
+        {selectedImage && (
+          <ImagePopup
+            src={selectedImage.src}
+            alt={selectedImage.alt}
+            isOpen={!!selectedImage}
+            onClose={() => setSelectedImage(null)}
+          />
+        )}
       </div>
     </section>
   )

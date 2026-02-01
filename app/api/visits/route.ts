@@ -52,8 +52,32 @@ export async function GET() {
   }
 }
 
-export async function POST() {
+export async function POST(request: Request) {
   try {
+    // Verificar si es una petición de inicialización
+    const url = new URL(request.url)
+    const init = url.searchParams.get('init')
+    
+    if (init === '1000') {
+      // Inicializar contador en 1000
+      console.log('🔄 POST /api/visits?init=1000 - Inicializando contador en 1000...')
+      const supabase = getSupabaseClient()
+      
+      const { data: updatedData, error: updateError } = await supabase
+        .from('visit_counter')
+        .upsert({ id: 1, count: 1000, updated_at: new Date().toISOString() }, { onConflict: 'id' })
+        .select('count')
+        .single()
+      
+      if (updateError) {
+        console.error('❌ Error al inicializar:', updateError.message)
+        throw updateError
+      }
+      
+      console.log('✅ Contador inicializado en 1000')
+      return NextResponse.json({ count: 1000, success: true, message: 'Contador inicializado en 1000' })
+    }
+    
     console.log('🔄 POST /api/visits - Iniciando registro de visita...')
     const supabase = getSupabaseClient()
     
@@ -69,12 +93,12 @@ export async function POST() {
     
     if (selectError) {
       console.log('⚠️ Error al obtener contador:', selectError.message, selectError.code)
-      // Si no existe el registro, crear uno inicial
+      // Si no existe el registro, crear uno inicial en 1000
       if (selectError.code === 'PGRST116' || selectError.message.includes('No rows')) {
-        console.log('📝 Creando registro inicial...')
+        console.log('📝 Creando registro inicial en 1000...')
         const { data: newData, error: insertError } = await supabase
           .from('visit_counter')
-          .insert({ id: 1, count: 1, updated_at: new Date().toISOString() })
+          .insert({ id: 1, count: 1001, updated_at: new Date().toISOString() })
           .select('count')
           .single()
         
@@ -82,13 +106,32 @@ export async function POST() {
           console.error('❌ Error al insertar:', insertError.message)
           throw insertError
         }
-        console.log('✅ POST - Visita inicial creada. Total: 1')
-        return NextResponse.json({ count: newData?.count || 1, success: true })
+        console.log('✅ POST - Visita inicial creada. Total: 1001')
+        return NextResponse.json({ count: newData?.count || 1001, success: true })
       }
       throw selectError
     }
     
     currentCount = currentData?.count || 0
+    
+    // Si el contador está en 893 o menos, inicializarlo en 1000
+    if (currentCount <= 893) {
+      console.log('🔄 Contador en', currentCount, '- Inicializando en 1000...')
+      const { data: updatedData, error: updateError } = await supabase
+        .from('visit_counter')
+        .upsert({ id: 1, count: 1000, updated_at: new Date().toISOString() }, { onConflict: 'id' })
+        .select('count')
+        .single()
+      
+      if (updateError) {
+        console.error('❌ Error al inicializar:', updateError.message)
+        throw updateError
+      }
+      
+      console.log('✅ Contador inicializado en 1000')
+      return NextResponse.json({ count: 1000, success: true, message: 'Contador inicializado en 1000' })
+    }
+    
     console.log('📊 Contador actual:', currentCount)
     const newCount = currentCount + 1
     console.log('➕ Nuevo contador:', newCount)

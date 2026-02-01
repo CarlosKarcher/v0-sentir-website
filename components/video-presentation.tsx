@@ -71,8 +71,8 @@ export function VideoPresentation() {
           className="relative bg-background rounded-lg shadow-2xl pointer-events-auto"
           onClick={(e) => e.stopPropagation()}
           style={{ 
-            width: "10cm", 
-            height: "14cm", 
+            width: "min(10cm, 90vw)", 
+            height: "min(14cm, 90vh)", 
             maxWidth: "90vw", 
             maxHeight: "90vh",
             padding: "0.5rem",
@@ -109,12 +109,15 @@ export function VideoPresentation() {
                 src="/camino-del-guerrero-Febrero-2026.mp4"
                 loop
                 playsInline
+                webkit-playsinline="true"
+                x5-playsinline="true"
                 preload="metadata"
                 controls={isPlaying}
                 className="rounded-lg shadow-lg w-full h-full"
                 style={{ 
                   objectFit: "contain",
-                  display: "block"
+                  display: "block",
+                  WebkitPlaysinline: true
                 }}
                 onError={(e) => {
                   console.error("Error en el elemento video:", e)
@@ -135,7 +138,7 @@ export function VideoPresentation() {
           
           {/* Botón de play en la parte inferior */}
           {!isPlaying && !hasError && (
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-[10000] pointer-events-auto">
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-[10000] pointer-events-auto touch-manipulation">
               <Button
                 size="lg"
                 onClick={(e) => {
@@ -143,10 +146,17 @@ export function VideoPresentation() {
                   e.stopPropagation()
                   handlePlay()
                 }}
-                className="rounded-full shadow-lg px-6 py-6 text-white font-semibold"
+                onTouchStart={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  handlePlay()
+                }}
+                className="rounded-full shadow-lg px-6 py-6 text-white font-semibold touch-manipulation"
                 style={{ 
                   backgroundColor: "#FFB84D",
-                  borderColor: "#FFB84D"
+                  borderColor: "#FFB84D",
+                  touchAction: "manipulation",
+                  WebkitTapHighlightColor: "transparent"
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.backgroundColor = "#FFA500"

@@ -274,7 +274,9 @@ export function Events() {
       type: "Otro Taller",
       available: true,
       availabilityText: "Cupos disponibles",
-      hasFlyer: false,
+      hasFlyer: true,
+      flyerImage: "/niño-interior-marzo-2026.jpeg",
+      flyerImageAlt: "/images/niño-interior-marzo-2026.jpeg",
       contactPhone: "+54 9 2966 595803",
     },
     {

@@ -275,8 +275,8 @@ export function Events() {
       available: true,
       availabilityText: "Cupos disponibles",
       hasFlyer: true,
-      flyerImage: "/images/niño-interior-marzo-2026.jpeg",
-      flyerImageAlt: "/niño-interior-marzo-2026.jpeg",
+      flyerImage: "/images/nino-interior-marzo-2026.jpeg",
+      flyerImageAlt: "/nino-interior-marzo-2026.jpeg",
       contactPhone: "+54 9 2966 595803",
     },
     {

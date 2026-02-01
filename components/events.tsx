@@ -132,7 +132,7 @@ function EventCard({ event }: { event: Event }) {
                           onClick={() => {
                             setImageError(false)
                             setAttemptedPaths([])
-                            setImageSrc(event.flyerImage)
+                            setImageSrc(event.flyerImage || "/flyer-transformacion-rio-gallegos.jpg")
                           }}
                         >
                           Reintentar

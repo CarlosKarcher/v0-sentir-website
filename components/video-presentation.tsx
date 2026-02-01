@@ -109,8 +109,6 @@ export function VideoPresentation() {
                 src="/camino-del-guerrero-Febrero-2026.mp4"
                 loop
                 playsInline
-                webkit-playsinline="true"
-                x5-playsinline="true"
                 preload="metadata"
                 controls={isPlaying}
                 className="rounded-lg shadow-lg w-full h-full"
@@ -119,6 +117,10 @@ export function VideoPresentation() {
                   display: "block",
                   WebkitPlaysinline: true
                 }}
+                {...({
+                  'webkit-playsinline': true,
+                  'x5-playsinline': true
+                } as any)}
                 onError={(e) => {
                   console.error("Error en el elemento video:", e)
                   setHasError(true)

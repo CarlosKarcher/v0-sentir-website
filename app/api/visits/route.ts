@@ -4,14 +4,17 @@ import { createClient } from '@supabase/supabase-js'
 // Contador de visitas global usando Supabase
 function getSupabaseClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  
+  // Intentar usar service role key primero (para bypass RLS), luego anon key
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
   
   if (!supabaseUrl || !supabaseKey) {
     console.error('❌ Variables de Supabase no configuradas')
     throw new Error('Supabase no está configurado')
   }
   
-  console.log('✅ Supabase configurado:', supabaseUrl)
+  const usingServiceRole = !!process.env.SUPABASE_SERVICE_ROLE_KEY
+  console.log('✅ Supabase configurado:', supabaseUrl, usingServiceRole ? '(Service Role)' : '(Anon Key)')
   return createClient(supabaseUrl, supabaseKey)
 }
 

@@ -51,9 +51,11 @@ export async function GET() {
 
 export async function POST() {
   try {
+    console.log('🔄 POST /api/visits - Iniciando registro de visita...')
     const supabase = getSupabaseClient()
     
     // Obtener el contador actual
+    console.log('📊 Obteniendo contador actual...')
     const { data: currentData, error: selectError } = await supabase
       .from('visit_counter')
       .select('count')
@@ -63,15 +65,20 @@ export async function POST() {
     let currentCount = 0
     
     if (selectError) {
+      console.log('⚠️ Error al obtener contador:', selectError.message, selectError.code)
       // Si no existe el registro, crear uno inicial
       if (selectError.code === 'PGRST116' || selectError.message.includes('No rows')) {
+        console.log('📝 Creando registro inicial...')
         const { data: newData, error: insertError } = await supabase
           .from('visit_counter')
           .insert({ id: 1, count: 1, updated_at: new Date().toISOString() })
           .select('count')
           .single()
         
-        if (insertError) throw insertError
+        if (insertError) {
+          console.error('❌ Error al insertar:', insertError.message)
+          throw insertError
+        }
         console.log('✅ POST - Visita inicial creada. Total: 1')
         return NextResponse.json({ count: newData?.count || 1, success: true })
       }
@@ -79,20 +86,27 @@ export async function POST() {
     }
     
     currentCount = currentData?.count || 0
+    console.log('📊 Contador actual:', currentCount)
     const newCount = currentCount + 1
+    console.log('➕ Nuevo contador:', newCount)
     
     // Actualizar el contador
+    console.log('💾 Actualizando contador en Supabase...')
     const { error: updateError } = await supabase
       .from('visit_counter')
       .update({ count: newCount, updated_at: new Date().toISOString() })
       .eq('id', 1)
     
-    if (updateError) throw updateError
+    if (updateError) {
+      console.error('❌ Error al actualizar:', updateError.message)
+      throw updateError
+    }
     
     console.log('✅ POST - Visita incrementada Supabase. Total:', newCount)
     return NextResponse.json({ count: newCount, success: true })
   } catch (error: any) {
     console.error('❌ Error Supabase POST:', error.message)
+    console.error('❌ Stack:', error.stack)
     return NextResponse.json({ count: 0, success: false, error: error.message }, { status: 500 })
   }
 }

@@ -25,7 +25,20 @@ export async function GET() {
       .eq('id', 1)
       .single()
     
-    if (error) throw error
+    if (error) {
+      // Si la tabla no existe o no hay registro, crear uno inicial
+      if (error.code === 'PGRST116' || error.message.includes('No rows')) {
+        const { data: newData, error: insertError } = await supabase
+          .from('visit_counter')
+          .insert({ id: 1, count: 0, updated_at: new Date().toISOString() })
+          .select('count')
+          .single()
+        
+        if (insertError) throw insertError
+        return NextResponse.json({ count: newData?.count || 0, success: true })
+      }
+      throw error
+    }
     
     const count = data?.count || 0
     console.log('✅ GET contador Supabase:', count)
@@ -47,9 +60,25 @@ export async function POST() {
       .eq('id', 1)
       .single()
     
-    if (selectError) throw selectError
+    let currentCount = 0
     
-    const currentCount = currentData?.count || 0
+    if (selectError) {
+      // Si no existe el registro, crear uno inicial
+      if (selectError.code === 'PGRST116' || selectError.message.includes('No rows')) {
+        const { data: newData, error: insertError } = await supabase
+          .from('visit_counter')
+          .insert({ id: 1, count: 1, updated_at: new Date().toISOString() })
+          .select('count')
+          .single()
+        
+        if (insertError) throw insertError
+        console.log('✅ POST - Visita inicial creada. Total: 1')
+        return NextResponse.json({ count: newData?.count || 1, success: true })
+      }
+      throw selectError
+    }
+    
+    currentCount = currentData?.count || 0
     const newCount = currentCount + 1
     
     // Actualizar el contador

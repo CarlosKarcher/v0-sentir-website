@@ -93,20 +93,32 @@ export async function POST() {
     const newCount = currentCount + 1
     console.log('➕ Nuevo contador:', newCount)
     
-    // Actualizar el contador
+    // Actualizar el contador usando upsert para evitar problemas de permisos
     console.log('💾 Actualizando contador en Supabase...')
-    const { error: updateError } = await supabase
+    const { data: updatedData, error: updateError } = await supabase
       .from('visit_counter')
-      .update({ count: newCount, updated_at: new Date().toISOString() })
-      .eq('id', 1)
+      .upsert({ id: 1, count: newCount, updated_at: new Date().toISOString() }, { onConflict: 'id' })
+      .select('count')
+      .single()
     
     if (updateError) {
       console.error('❌ Error al actualizar:', updateError.message)
+      console.error('❌ Código de error:', updateError.code)
+      console.error('❌ Detalles:', updateError.details)
+      console.error('❌ Hint:', updateError.hint)
+      
+      // Si falla el update, intentar con insert (por si acaso el registro desapareció)
+      if (updateError.code === '42501' || updateError.message.includes('permission') || updateError.message.includes('policy')) {
+        console.log('⚠️ Error de permisos detectado. Verifica las políticas RLS en Supabase.')
+        console.log('⚠️ Asegúrate de usar SUPABASE_SERVICE_ROLE_KEY en las variables de entorno.')
+      }
+      
       throw updateError
     }
     
-    console.log('✅ POST - Visita incrementada Supabase. Total:', newCount)
-    return NextResponse.json({ count: newCount, success: true })
+    const finalCount = updatedData?.count || newCount
+    console.log('✅ POST - Visita incrementada Supabase. Total:', finalCount)
+    return NextResponse.json({ count: finalCount, success: true })
   } catch (error: any) {
     console.error('❌ Error Supabase POST:', error.message)
     console.error('❌ Stack:', error.stack)

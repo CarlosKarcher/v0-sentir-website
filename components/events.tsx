@@ -283,7 +283,7 @@ export function Events() {
       title: "Taller de Autoconocimiento - Río Gallegos",
       date: "13, 14 y 15 de Marzo 2026",
       time: "Inicio Viernes 13 de Marzo a las 17 Hs",
-      location: "A confirmar",
+      location: "Lisandro de la Torre Nº 952 (Edif. de Vialidad)",
       type: "Taller de Liderazgo",
       available: true,
       availabilityText: "Cupos disponibles",

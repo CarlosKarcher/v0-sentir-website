@@ -294,6 +294,18 @@ export function Events() {
       contactPhone: "+54 9 2966 595803",
     },
     {
+      title: "Taller de Transformación en Río Gallegos",
+      date: "2, 3, 4 y 5 de Abril 2026",
+      time: "Inicio: Jueves 2 de Abril a las 18:00 hs",
+      location: "Lugar a Confirmar",
+      type: "Taller de Liderazgo",
+      available: true,
+      availabilityText: "Cupos disponibles",
+      hasFlyer: false,
+      level: "2do Nivel",
+      contactPhone: "+54 9 2966 595803",
+    },
+    {
       title: "Taller de Autoconocimiento - Tandil (Buenos Aires)",
       date: "10, 11 y 12 de Abril, 2026",
       time: "Inicio: Viernes 10, 17 Horas",

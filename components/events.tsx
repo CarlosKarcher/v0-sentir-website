@@ -177,7 +177,7 @@ function EventCard({ event }: { event: Event }) {
             )}
           </div>
         )}
-        {!event.hasFlyer && event.level && (
+        {!event.hasFlyer && !event.contactPhone && event.level && (
           <div className="flex justify-end pt-2">
             <Badge className="bg-blue-900 text-white hover:bg-blue-800 border-blue-900 text-xs font-semibold px-2 py-1">
               {event.level}

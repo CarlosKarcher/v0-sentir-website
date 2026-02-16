@@ -227,19 +227,6 @@ export function Events() {
 
   const events = [
     {
-      title: "El Camino del Guerrero - Río Gallegos",
-      date: "14 y 15 de Febrero de 2026",
-      time: "Inicio: sabado 14, 15 Horas",
-      location: "Río Gallegos",
-      type: "Otro Taller",
-      available: true,
-      availabilityText: "Cupos disponibles",
-      hasFlyer: true,
-      flyerImage: "/El Camino de Guerrero febrero 2026.jpg",
-      flyerImageAlt: "/images/El Camino de Guerrero febrero 2026.jpg",
-      contactPhone: "+54 9 2966 595803",
-    },
-    {
       title: "Taller de Biodecodificación: \"Tu cuerpo tiene algo que contarte.\"",
       date: "07 de Marzo de 2026.",
       time: "Inicio: sabado 14 Horas.",

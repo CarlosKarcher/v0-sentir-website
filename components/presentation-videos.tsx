@@ -16,6 +16,12 @@ const WELCOME_TEXT = "¡Qué Finde SENTIR!!!.... El Camino del Guerrero fue incr
 export function PresentationVideos() {
   const [phase, setPhase] = React.useState<"welcome" | "videos">("welcome")
   const [isOpen, setIsOpen] = React.useState(true)
+
+  React.useEffect(() => {
+    if (phase !== "welcome") return
+    const t = setTimeout(() => setPhase("videos"), 10000)
+    return () => clearTimeout(t)
+  }, [phase])
   const [playing, setPlaying] = React.useState(false)
   const [errors, setErrors] = React.useState<boolean[]>([false, false])
   const [loading, setLoading] = React.useState<boolean[]>([true, true])
@@ -150,35 +156,22 @@ export function PresentationVideos() {
 
   if (phase === "welcome") {
     return (
-      <>
-        <div
-          className="fixed inset-0 z-[9998] bg-black/80 backdrop-blur-sm"
-          onClick={() => setPhase("videos")}
-          aria-hidden="true"
-        />
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center pointer-events-none p-4">
-          <div
-            className="animate-float-sentir pointer-events-auto bg-gradient-to-br from-primary/95 to-primary text-primary-foreground rounded-2xl shadow-2xl border-2 border-primary-foreground/20 px-8 py-10 max-w-md text-center cursor-pointer hover:scale-[1.02] transition-transform"
-            onClick={() => setPhase("videos")}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => e.key === "Enter" && setPhase("videos")}
-            aria-label="Ver videos de presentación"
-          >
-            <img
-              src="/fuego-de-sentir.png"
-              alt="Fuego de Sentir"
-              className="mx-auto h-20 w-auto object-contain mb-4"
-            />
-            <p className="text-xl sm:text-2xl font-bold leading-relaxed whitespace-pre-line">
-              {WELCOME_TEXT}
-            </p>
-            <p className="mt-6 text-lg font-semibold opacity-90">
-              Clic para ver los videos →
-            </p>
-          </div>
+      <div
+        className="animate-float-around-page z-[9999] pointer-events-none px-6 py-8 max-w-md text-center"
+        style={{ left: "5%", top: "12%" }}
+        aria-label="Mensaje de bienvenida"
+      >
+        <div className="text-foreground [text-shadow:0_1px_2px_rgba(255,255,255,0.9),0_0_20px_rgba(0,0,0,0.15)]">
+          <img
+            src="/fuego-de-sentir.png"
+            alt="Fuego de Sentir"
+            className="mx-auto h-20 w-auto object-contain mb-4 drop-shadow-md"
+          />
+          <p className="text-xl sm:text-2xl font-bold leading-relaxed whitespace-pre-line">
+            {WELCOME_TEXT}
+          </p>
         </div>
-      </>
+      </div>
     )
   }
 

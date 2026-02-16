@@ -143,3 +143,15 @@
 .animate-float-sentir {
   animation: float-sentir 3.5s ease-in-out infinite;
 }
+
+@keyframes float-around-page {
+  0% { left: 5%; top: 12%; }
+  25% { left: 72%; top: 10%; }
+  50% { left: 68%; top: 68%; }
+  75% { left: 8%; top: 72%; }
+  100% { left: 5%; top: 12%; }
+}
+.animate-float-around-page {
+  position: fixed;
+  animation: float-around-page 10s ease-in-out 1 forwards;
+}

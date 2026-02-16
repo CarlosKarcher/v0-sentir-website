@@ -135,3 +135,11 @@
     display: block !important;
   }
 }
+
+@keyframes float-sentir {
+  0%, 100% { transform: translateY(0) rotate(-0.5deg); }
+  50% { transform: translateY(-12px) rotate(0.5deg); }
+}
+.animate-float-sentir {
+  animation: float-sentir 3.5s ease-in-out infinite;
+}

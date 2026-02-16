@@ -32,16 +32,45 @@ export function PresentationVideos() {
     setIsOpen(false)
   }
 
-  const handlePlayAll = async () => {
-    const playPromises = videoRefs.map((ref) => ref.current?.play())
+  const handlePlayFirst = async () => {
+    const first = videoRefs[0].current
+    if (!first) return
     try {
-      await Promise.all(playPromises)
+      await first.play()
       setPlaying(true)
-      setLoading([false, false])
+      setLoading((prev) => {
+        const next = [...prev]
+        next[0] = false
+        return next
+      })
     } catch (err) {
       if ((err as Error).name !== "NotAllowedError") {
-        setErrors([true, true])
+        setErrors((prev) => {
+          const next = [...prev]
+          next[0] = true
+          return next
+        })
       }
+    }
+  }
+
+  const handleEnded = (index: number) => () => {
+    if (index === 0) {
+      videoRefs[1].current?.play().then(() => {
+        setLoading((prev) => {
+          const next = [...prev]
+          next[1] = false
+          return next
+        })
+      }).catch(() => {
+        setErrors((prev) => {
+          const next = [...prev]
+          next[1] = true
+          return next
+        })
+      })
+    } else {
+      setPlaying(false)
     }
   }
 
@@ -179,6 +208,7 @@ export function PresentationVideos() {
                       muted={false}
                       className="w-full h-full rounded-lg object-contain block"
                       onError={handleError(index)}
+                      onEnded={handleEnded(index)}
                       onCanPlay={() =>
                         setLoading((prev) => {
                           const next = [...prev]
@@ -204,7 +234,7 @@ export function PresentationVideos() {
                 onClick={(e) => {
                   e.preventDefault()
                   e.stopPropagation()
-                  handlePlayAll()
+                  handlePlayFirst()
                 }}
                 className="rounded-full shadow-lg px-6 py-6 text-white font-semibold"
                 style={{ backgroundColor: "#FFB84D", borderColor: "#FFB84D" }}

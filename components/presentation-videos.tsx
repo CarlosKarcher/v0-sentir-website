@@ -156,22 +156,26 @@ export function PresentationVideos() {
 
   if (phase === "welcome") {
     return (
-      <div
-        className="animate-float-around-page z-[9999] pointer-events-none px-6 py-8 max-w-md text-center"
-        style={{ left: "5%", top: "12%" }}
-        aria-label="Mensaje de bienvenida"
-      >
-        <div className="text-foreground [text-shadow:0_1px_2px_rgba(255,255,255,0.9),0_0_20px_rgba(0,0,0,0.15)]">
+      <>
+        <div
+          className="fixed inset-0 z-[9998] bg-black/90"
+          aria-hidden="true"
+        />
+        <div
+          className="animate-float-around-page z-[9999] pointer-events-none w-[min(22rem,88vw)] max-w-md px-6 py-8 text-center rounded-2xl shadow-2xl bg-gradient-to-br from-primary/98 to-primary text-primary-foreground border border-primary-foreground/20"
+          style={{ left: "8%", top: "20%" }}
+          aria-label="Mensaje de bienvenida"
+        >
           <img
             src="/fuego-de-sentir.png"
             alt="Fuego de Sentir"
-            className="mx-auto h-20 w-auto object-contain mb-4 drop-shadow-md"
+            className="mx-auto h-20 w-auto object-contain mb-4"
           />
           <p className="text-xl sm:text-2xl font-bold leading-relaxed whitespace-pre-line">
             {WELCOME_TEXT}
           </p>
         </div>
-      </div>
+      </>
     )
   }
 

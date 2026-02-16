@@ -145,13 +145,22 @@
 }
 
 @keyframes float-around-page {
-  0% { left: 5%; top: 12%; }
-  25% { left: 72%; top: 10%; }
-  50% { left: 68%; top: 68%; }
-  75% { left: 8%; top: 72%; }
-  100% { left: 5%; top: 12%; }
+  0% { left: 8%; top: 20%; }
+  25% { left: 58%; top: 18%; }
+  50% { left: 54%; top: 52%; }
+  75% { left: 10%; top: 50%; }
+  100% { left: 8%; top: 20%; }
 }
 .animate-float-around-page {
   position: fixed;
-  animation: float-around-page 10s ease-in-out 1 forwards;
+  animation: float-around-page 18s ease-in-out 1 forwards;
+}
+@media (max-width: 640px) {
+  @keyframes float-around-page {
+    0% { left: 6%; top: 18%; }
+    25% { left: 6%; top: 20%; }
+    50% { left: 6%; top: 45%; }
+    75% { left: 6%; top: 42%; }
+    100% { left: 6%; top: 18%; }
+  }
 }

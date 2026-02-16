@@ -165,6 +165,11 @@ export function PresentationVideos() {
             onKeyDown={(e) => e.key === "Enter" && setPhase("videos")}
             aria-label="Ver videos de presentación"
           >
+            <img
+              src="/fuego-de-sentir.png"
+              alt="Fuego de Sentir"
+              className="mx-auto h-20 w-auto object-contain mb-4"
+            />
             <p className="text-xl sm:text-2xl font-bold leading-relaxed whitespace-pre-line">
               {WELCOME_TEXT}
             </p>

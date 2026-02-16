@@ -2,5 +2,9 @@
 
 Cuando el usuario solicite modificaciones en el código:
 1. Aplicar los cambios solicitados.
-2. Después, ejecutar: `git add .` , `git commit -m "Descripción breve del cambio"` y `git push`.
+2. SIEMPRE, después de cada modificación, ejecutar:
+   - git add .
+   - git commit -m "Descripción breve del cambio en español"
+   - git push
+   No omitir este paso salvo que el usuario pida explícitamente no subir cambios.
 3. Usar mensajes de commit en español que describan claramente lo modificado.

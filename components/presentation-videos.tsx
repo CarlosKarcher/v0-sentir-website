@@ -11,17 +11,8 @@ function getVideoSrc(path: string): string {
   return `${window.location.origin}${path}`
 }
 
-const WELCOME_TEXT = "¡Qué Finde SENTIR!!!.... El Camino del Guerrero fue increíble... Ahora mirá los videoossss.... Gracias. Gracias. Gracias..."
-
 export function PresentationVideos() {
-  const [phase, setPhase] = React.useState<"welcome" | "videos">("welcome")
   const [isOpen, setIsOpen] = React.useState(true)
-
-  React.useEffect(() => {
-    if (phase !== "welcome") return
-    const t = setTimeout(() => setPhase("videos"), 10000)
-    return () => clearTimeout(t)
-  }, [phase])
   const [playing, setPlaying] = React.useState(false)
   const [errors, setErrors] = React.useState<boolean[]>([false, false])
   const [loading, setLoading] = React.useState<boolean[]>([true, true])
@@ -154,31 +145,6 @@ export function PresentationVideos() {
 
   if (!isOpen) return null
 
-  if (phase === "welcome") {
-    return (
-      <>
-        <div
-          className="fixed inset-0 z-[9998] bg-black/90"
-          aria-hidden="true"
-        />
-        <div
-          className="animate-float-around-page z-[9999] pointer-events-none w-[min(22rem,88vw)] max-w-md px-6 py-8 text-center rounded-2xl shadow-2xl bg-gradient-to-br from-primary/98 to-primary text-primary-foreground border border-primary-foreground/20"
-          style={{ left: "8%", top: "20%" }}
-          aria-label="Mensaje de bienvenida"
-        >
-          <img
-            src="/fuego-de-sentir.png"
-            alt="Fuego de Sentir"
-            className="mx-auto h-20 w-auto object-contain mb-4"
-          />
-          <p className="text-xl sm:text-2xl font-bold leading-relaxed whitespace-pre-line">
-            {WELCOME_TEXT}
-          </p>
-        </div>
-      </>
-    )
-  }
-
   return (
     <>
       <div
@@ -212,7 +178,11 @@ export function PresentationVideos() {
             <X className="h-5 w-5" />
           </Button>
 
-          <div className="flex gap-2 flex-1 min-h-0 mt-8">
+          <p className="text-center text-lg font-bold text-foreground pt-2 pb-1">
+            FINDE INCREIBLE.!!!! Graciasss....
+          </p>
+
+          <div className="flex gap-2 flex-1 min-h-0 mt-2">
             {VIDEO_PATHS.map((path, index) => (
               <div
                 key={`${index}-${retryCount[index]}`}

@@ -13,7 +13,6 @@ import { Merchandising } from "@/components/merchandising"
 import { MusicaSentir } from "@/components/musica-sentir"
 import { SentirDesdeAdentro } from "@/components/sentir-desde-adentro"
 import { Footer } from "@/components/footer"
-import { VideoPresentation } from "@/components/video-presentation"
 import { VisitTracker } from "@/components/visit-tracker"
 
 export default function Page() {
@@ -63,7 +62,6 @@ export default function Page() {
   return (
     <main className="min-h-screen">
       <VisitTracker />
-      <VideoPresentation />
       <Header />
       <Hero />
       <About />

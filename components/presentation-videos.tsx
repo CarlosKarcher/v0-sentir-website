@@ -4,7 +4,12 @@ import * as React from "react"
 import { X, Play } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
-const VIDEOS = ["/01-Guerrero-15-02.mp4", "/02-Guerrero-15-02.mp4"]
+const VIDEO_PATHS = ["/01-Guerrero-15-02.mp4", "/02-Guerrero-15-02.mp4"]
+
+function getVideoSrc(path: string): string {
+  if (typeof window === "undefined") return path
+  return `${window.location.origin}${path}`
+}
 
 export function PresentationVideos() {
   const [isOpen, setIsOpen] = React.useState(true)
@@ -12,10 +17,12 @@ export function PresentationVideos() {
   const [isPlaying, setIsPlaying] = React.useState(false)
   const [hasError, setHasError] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(true)
+  const [retryCount, setRetryCount] = React.useState(0)
   const videoRef = React.useRef<HTMLVideoElement>(null)
 
-  const currentSrc = VIDEOS[currentIndex]
-  const isLastVideo = currentIndex === VIDEOS.length - 1
+  const currentPath = VIDEO_PATHS[currentIndex]
+  const currentSrc = getVideoSrc(currentPath)
+  const isLastVideo = currentIndex === VIDEO_PATHS.length - 1
 
   const handleClose = () => {
     if (videoRef.current) {
@@ -45,6 +52,34 @@ export function PresentationVideos() {
     setCurrentIndex((i) => i + 1)
     setIsPlaying(false)
     setIsLoading(true)
+    setHasError(false)
+    setRetryCount(0)
+  }
+
+  const handleError = () => {
+    if (retryCount < 2) {
+      setRetryCount((c) => c + 1)
+      setIsLoading(true)
+      setHasError(false)
+      setTimeout(() => {
+        if (videoRef.current) {
+          videoRef.current.load()
+        }
+      }, 800)
+    } else {
+      setHasError(true)
+      setIsLoading(false)
+    }
+  }
+
+  const handleRetry = () => {
+    setHasError(false)
+    setRetryCount(0)
+    setIsLoading(true)
+    if (videoRef.current) {
+      videoRef.current.src = getVideoSrc(currentPath)
+      videoRef.current.load()
+    }
   }
 
   if (!isOpen) return null
@@ -93,8 +128,11 @@ export function PresentationVideos() {
               <div className="text-center p-8">
                 <p className="text-lg font-semibold mb-2">Error al cargar el video</p>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Video {currentIndex + 1}: {currentSrc}
+                  Video {currentIndex + 1}: {currentPath}
                 </p>
+                <Button variant="outline" onClick={handleRetry}>
+                  Reintentar
+                </Button>
               </div>
             ) : (
               <>
@@ -107,10 +145,10 @@ export function PresentationVideos() {
                 )}
                 <video
                   ref={videoRef}
-                  key={currentIndex}
+                  key={`${currentIndex}-${retryCount}`}
                   src={currentSrc}
                   playsInline
-                  preload="metadata"
+                  preload="auto"
                   controls={isPlaying}
                   muted={false}
                   className="rounded-lg shadow-lg w-full h-full"
@@ -119,10 +157,7 @@ export function PresentationVideos() {
                     display: "block",
                   }}
                   onEnded={handleEnded}
-                  onError={() => {
-                    setHasError(true)
-                    setIsLoading(false)
-                  }}
+                  onError={handleError}
                   onCanPlay={() => setIsLoading(false)}
                   onPlaying={() => setIsPlaying(true)}
                   onPause={() => setIsPlaying(false)}

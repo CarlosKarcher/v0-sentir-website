@@ -56,7 +56,27 @@ export function PresentationVideos() {
     setRetryCount(0)
   }
 
-  const handleError = () => {
+  const handleError = (e: React.SyntheticEvent<HTMLVideoElement, Event>) => {
+    const el = e.currentTarget
+    const err = el.error
+    const url = el.src || currentSrc
+    if (err) {
+      const codigos: Record<number, string> = {
+        1: "MEDIA_ERR_ABORTED (reproducción abortada)",
+        2: "MEDIA_ERR_NETWORK (error de red)",
+        3: "MEDIA_ERR_DECODE (error al decodificar)",
+        4: "MEDIA_ERR_SRC_NOT_SUPPORTED (no se pudo cargar la fuente)",
+      }
+      console.error(
+        "[Presentación] Error al cargar el video:",
+        codigos[err.code] || `Código ${err.code}`,
+        err.message || "",
+        "URL:",
+        url
+      )
+    } else {
+      console.error("[Presentación] Error al cargar el video (sin detalles). URL:", url)
+    }
     if (retryCount < 2) {
       setRetryCount((c) => c + 1)
       setIsLoading(true)
@@ -125,10 +145,16 @@ export function PresentationVideos() {
             style={{ width: "100%", height: "100%" }}
           >
             {hasError ? (
-              <div className="text-center p-8">
-                <p className="text-lg font-semibold mb-2">Error al cargar el video</p>
-                <p className="text-sm text-muted-foreground mb-4">
+              <div className="text-center p-8 space-y-4">
+                <p className="text-lg font-semibold">Error al cargar el video</p>
+                <p className="text-sm text-muted-foreground">
                   Video {currentIndex + 1}: {currentPath}
+                </p>
+                <p className="text-xs text-muted-foreground break-all">
+                  URL: {currentSrc}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Abrí la consola (F12 → Consola) para ver el detalle del error. Revisá también la pestaña Red para ver si el archivo responde 404.
                 </p>
                 <Button variant="outline" onClick={handleRetry}>
                   Reintentar
@@ -157,7 +183,7 @@ export function PresentationVideos() {
                     display: "block",
                   }}
                   onEnded={handleEnded}
-                  onError={handleError}
+                  onError={(e) => handleError(e)}
                   onCanPlay={() => setIsLoading(false)}
                   onPlaying={() => setIsPlaying(true)}
                   onPause={() => setIsPlaying(false)}

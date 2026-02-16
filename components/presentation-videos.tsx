@@ -4,7 +4,7 @@ import * as React from "react"
 import { X, Play } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
-const VIDEOS = ["/01-Guerrero-15-02.mp4", "/02-Guerrero-15-02.mp4"]
+const VIDEOS = ["/01-guerrero-15-02.mp4", "/02-Guerrero-15-02.mp4"]
 
 export function PresentationVideos() {
   const [isOpen, setIsOpen] = React.useState(true)

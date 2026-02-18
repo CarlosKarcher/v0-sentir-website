@@ -89,6 +89,13 @@ const team = [
     facebook: "https://www.facebook.com/share/1C1sBzAUB7/",
     instagram: "https://www.instagram.com/fabyBrown",
   },
+  {
+    name: "Jimena Natalia Catrihuala",
+    role: "Master Reiki - Masajista Profesional",
+    specialties: ["Staff de Sentir"],
+    image: "/Jimena Catriuala.jpeg",
+    phone: "5492966520362",
+  },
 ]
 
 export function Team() {

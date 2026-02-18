@@ -96,6 +96,13 @@ const team = [
     image: "/Jimena-Catrihuala.jpeg",
     phone: "5492966520362",
   },
+  {
+    name: "Karina Martinez",
+    role: "Terapias Energéticas - Munay Ki - Reiki - Péndulo",
+    specialties: [],
+    image: "/Karina-Martinez.jpeg",
+    phone: "5492966556444",
+  },
 ]
 
 export function Team() {

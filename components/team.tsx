@@ -103,6 +103,13 @@ const team = [
     image: "/Karina-Martinez.jpeg",
     phone: "5492966556444",
   },
+  {
+    name: "Sofía Martín",
+    role: "Reiki usui - Limpieza Energética con Péndulo",
+    specialties: ["Staff de Sentir"],
+    image: "/Sofy-Martin.jpeg",
+    phone: "5492966714217",
+  },
 ]
 
 export function Team() {

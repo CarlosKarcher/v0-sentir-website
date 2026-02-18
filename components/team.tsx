@@ -91,14 +91,14 @@ const team = [
   },
   {
     name: "Jimena Natalia Catrihuala",
-    role: "Terapias Olísticas - Master Reiki - Masajista Profesional.",
+    role: "Terapias Holísticas - Master Reiki - Masajista Profesional.",
     specialties: ["Staff de Sentir"],
     image: "/Jimena-Catrihuala.jpeg",
     phone: "5492966520362",
   },
   {
     name: "Karina Martinez",
-    role: "Terapias Energéticas - Munay Ki - Reiki - Péndulo",
+    role: "Terapias Energéticas - Munay Ki - Reiki - Péndulo - Reconstrucción del Alma - Herbolaría",
     specialties: [],
     image: "/Karina-Martinez.jpeg",
     phone: "5492966556444",

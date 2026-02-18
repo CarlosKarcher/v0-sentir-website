@@ -93,7 +93,7 @@ const team = [
     name: "Jimena Natalia Catrihuala",
     role: "Master Reiki - Masajista Profesional",
     specialties: ["Staff de Sentir"],
-    image: "/Jimena Catriuala.jpeg",
+    image: "/Jimena-Catrihuala.jpeg",
     phone: "5492966520362",
   },
 ]

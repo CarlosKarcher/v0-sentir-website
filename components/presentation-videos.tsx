@@ -178,9 +178,16 @@ export function PresentationVideos() {
             <X className="h-5 w-5" />
           </Button>
 
-          <p className="text-center text-lg font-bold text-foreground pt-2 pb-1">
-            FINDE INCREIBLE.!!!! Graciasss....
-          </p>
+          <div className="flex items-center justify-center gap-2 pt-2 pb-1">
+            <p className="text-lg font-bold text-foreground">
+              Somos SENTIR.
+            </p>
+            <img
+              src="/fuego-de-sentir.png"
+              alt="Fuego de Sentir"
+              className="h-8 w-auto object-contain"
+            />
+          </div>
 
           <div className="flex gap-2 flex-1 min-h-0 mt-2">
             {VIDEO_PATHS.map((path, index) => (

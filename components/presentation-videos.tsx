@@ -4,7 +4,7 @@ import * as React from "react"
 import { X, Play } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
-const VIDEO_PATHS = ["/Cual-es-tu-mejor-Terapia.mp4", "/circulo-auto-general.mp4"]
+const VIDEO_PATHS = ["/Cual%20es%20tu%20mejor%20Terapia..mp4", "/circulo-auto-general.mp4"]
 
 function getVideoSrc(path: string): string {
   if (typeof window === "undefined") return path

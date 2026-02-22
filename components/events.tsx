@@ -343,7 +343,9 @@ export function Events() {
       type: "Curso",
       available: true,
       availabilityText: "Cupos disponibles",
-      hasFlyer: false,
+      hasFlyer: true,
+      flyerImage: "/las-7-leyes-universales.jpeg",
+      flyerImageAlt: "/images/las-7-leyes-universales.jpeg",
       contactPhone: "+54 9 2966 595803",
     },
     {

@@ -186,7 +186,7 @@ export function PresentationVideos() {
             />
             <span className="inline-block w-5" aria-hidden="true" />
             <p className="text-lg font-bold text-foreground">
-              Autoconocimiento 13, 14 y 15 de Marzo - Sentir
+              Autoconocimiento 13, 14 y 15 de Marzo
             </p>
             <span className="inline-block w-5" aria-hidden="true" />
             <img

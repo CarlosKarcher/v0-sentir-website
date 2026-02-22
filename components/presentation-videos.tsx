@@ -178,15 +178,16 @@ export function PresentationVideos() {
             <X className="h-5 w-5" />
           </Button>
 
-          <div className="flex items-center justify-center gap-2 pt-2 pb-1">
-            <p className="text-lg font-bold text-foreground">
-              Somos SENTIR.
-            </p>
+          <div className="flex items-center justify-center gap-2 pt-2 pb-1 flex-wrap">
             <img
               src="/fuego-de-sentir.png"
               alt="Fuego de Sentir"
               className="h-8 w-auto object-contain"
             />
+            <span className="inline-block w-5" aria-hidden="true" />
+            <p className="text-lg font-bold text-foreground">
+              Autoconocimiento 13, 14 y 15 de Marzo
+            </p>
           </div>
 
           <div className="flex gap-2 flex-1 min-h-0 mt-2">

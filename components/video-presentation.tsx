@@ -211,7 +211,7 @@ export function VideoPresentation() {
             {hasError ? (
               <div className="text-center p-8">
                 <p className="text-lg font-semibold mb-2">Error al cargar el video</p>
-                <p className="text-sm text-muted-foreground mb-4">Ruta: /camino-del-guerrero-Febrero-2026-2.mp4</p>
+                <p className="text-sm text-muted-foreground mb-4">Ruta: /Cual es tu mejor Terapia..mp4</p>
                 {retryCount < 3 && (
                   <Button
                     onClick={handleRetry}
@@ -231,7 +231,7 @@ export function VideoPresentation() {
                 )}
                 <video
                   ref={videoRef}
-                  src="/camino-del-guerrero-Febrero-2026-2.mp4"
+                  src="/Cual%20es%20tu%20mejor%20Terapia..mp4"
                   loop
                   playsInline
                   preload={isMobile ? "none" : "metadata"}

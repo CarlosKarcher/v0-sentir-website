@@ -186,8 +186,14 @@ export function PresentationVideos() {
             />
             <span className="inline-block w-5" aria-hidden="true" />
             <p className="text-lg font-bold text-foreground">
-              Autoconocimiento 13, 14 y 15 de Marzo
+              Autoconocimiento 13, 14 y 15 de Marzo - Sentir
             </p>
+            <span className="inline-block w-5" aria-hidden="true" />
+            <img
+              src="/fuego-de-sentir.png"
+              alt="Fuego de Sentir"
+              className="h-8 w-auto object-contain"
+            />
           </div>
 
           <div className="flex gap-2 flex-1 min-h-0 mt-2">

@@ -62,6 +62,9 @@ function EventCard({ event }: { event: Event }) {
           <Badge variant="outline">{event.type}</Badge>
         </div>
         <CardTitle className="text-lg sm:text-xl">{event.title}</CardTitle>
+        {event.subtitle && (
+          <p className="text-sm text-muted-foreground mt-1">{event.subtitle}</p>
+        )}
       </CardHeader>
       <CardContent className="space-y-3">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -329,6 +332,18 @@ export function Events() {
       flyerImage: "/autoconocimiento Necochea Abril 2026.jpg",
       flyerImageAlt: "/images/autoconocimiento Necochea Abril 2026.jpg",
       level: "1er Nivel",
+      contactPhone: "+54 9 2966 595803",
+    },
+    {
+      title: "Las 7 Leyes Universales",
+      subtitle: "Gratuito y Virtual",
+      date: "Comienza 11 de Mayo 2026. 7 Noches (11, 13, 15, 18, 20, 22, 25 de Mayo)",
+      time: "21 Hs a 22:30 Hs",
+      location: "Virtual",
+      type: "Curso",
+      available: true,
+      availabilityText: "Cupos disponibles",
+      hasFlyer: false,
       contactPhone: "+54 9 2966 595803",
     },
     {

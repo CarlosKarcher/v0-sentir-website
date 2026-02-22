@@ -331,6 +331,17 @@ export function Events() {
       level: "1er Nivel",
       contactPhone: "+54 9 2966 595803",
     },
+    {
+      title: "CURSO ONLINE de ORATORIA 🗣️🧠",
+      date: "A partir del 12 de Mayo 2026. 5 clases: Martes y Jueves (12, 14, 19, 21 y 26 de Mayo)",
+      time: "21:00 Hs a 22:30 Hs",
+      location: "Online",
+      type: "Curso",
+      available: true,
+      availabilityText: "Cupos disponibles",
+      hasFlyer: false,
+      contactPhone: "+54 9 2966 595803",
+    },
   ]
 
   return (

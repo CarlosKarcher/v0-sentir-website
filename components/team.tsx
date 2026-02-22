@@ -78,6 +78,24 @@ const team = [
     phone: "5492494622736",
   },
   {
+    name: "Jimena Catrihuala",
+    role: "Staff de Sentir",
+    specialties: ["Staff de Sentir"],
+    image: "/Jimena-Catrihuala.jpeg",
+  },
+  {
+    name: "Karina Martinez",
+    role: "Staff de Sentir",
+    specialties: ["Staff de Sentir"],
+    image: "/Karina-Martinez.jpeg",
+  },
+  {
+    name: "Sofia Martin",
+    role: "Staff de Sentir",
+    specialties: ["Staff de Sentir"],
+    image: "/Sofy-Martin.jpeg",
+  },
+  {
     name: "Fabiola Mancilla Gallego / Sandro Brown",
     role: "Creadores de Papeleria Artesanal y Objetos con intención.",
     specialties: [],

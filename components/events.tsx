@@ -132,7 +132,7 @@ function EventCard({ event }: { event: Event }) {
                           onClick={() => {
                             setImageError(false)
                             setAttemptedPaths([])
-                            setImageSrc(event.flyerImage || "/flyer-transformacion-rio-gallegos.jpg")
+                            setImageSrc(event.flyerImage)
                           }}
                         >
                           Reintentar
@@ -177,7 +177,7 @@ function EventCard({ event }: { event: Event }) {
             )}
           </div>
         )}
-        {!event.hasFlyer && !event.contactPhone && event.level && (
+        {!event.hasFlyer && event.level && (
           <div className="flex justify-end pt-2">
             <Badge className="bg-blue-900 text-white hover:bg-blue-800 border-blue-900 text-xs font-semibold px-2 py-1">
               {event.level}
@@ -193,15 +193,6 @@ export function Events() {
   const [showHistory, setShowHistory] = useState(false)
 
   const pastEvents = [
-    {
-      title: "El Camino del Guerrero - Río Gallegos",
-      date: "14 y 15 de Febrero de 2026",
-      time: "Inicio: sábado 14, 15 Horas",
-      location: "Río Gallegos",
-      type: "Otro Taller",
-      available: false,
-      availabilityText: "Evento Realizado",
-    },
     {
       title: "Taller de Autoconocimiento",
       date: "23, 24 y 25 de Enero del 2026",
@@ -236,6 +227,33 @@ export function Events() {
 
   const events = [
     {
+      title: "Taller de Autoconocimiento - Punta Arenas",
+      date: "6, 7 y 8 de Febrero, 2026",
+      time: "Inicio: Viernes 6, 17 Horas",
+      location: "Avda. Jorge Alessandri #264 B° Sur - Sede Club Deportivo Huracán.",
+      type: "Taller de Liderazgo",
+      available: true,
+      availabilityText: "Cupos disponibles",
+      hasFlyer: true,
+      flyerImage: "/Autoconocimiento Punta Arenas febrero 2026.jpg",
+      flyerImageAlt: "/images/Autoconocimiento Punta Arenas febrero 2026.jpg",
+      level: "1er Nivel",
+      contactPhone: "+56 9 6113 0835",
+    },
+    {
+      title: "El Camino del Guerrero - Río Gallegos",
+      date: "14 y 15 de Febrero de 2026",
+      time: "Inicio: sabado 14, 15 Horas",
+      location: "Río Gallegos",
+      type: "Otro Taller",
+      available: true,
+      availabilityText: "Cupos disponibles",
+      hasFlyer: true,
+      flyerImage: "/El Camino de Guerrero febrero 2026.jpg",
+      flyerImageAlt: "/images/El Camino de Guerrero febrero 2026.jpg",
+      contactPhone: "+54 9 2966 595803",
+    },
+    {
       title: "Taller de Biodecodificación: \"Tu cuerpo tiene algo que contarte.\"",
       date: "07 de Marzo de 2026.",
       time: "Inicio: sabado 14 Horas.",
@@ -257,50 +275,8 @@ export function Events() {
       available: true,
       availabilityText: "Cupos disponibles",
       hasFlyer: true,
-      flyerImage: "/images/nino-interior-marzo-2026.jpeg",
-      flyerImageAlt: "/nino-interior-marzo-2026.jpeg",
-      contactPhone: "+54 9 2966 595803",
-    },
-    {
-      title: "Taller de Autoconocimiento - Río Gallegos",
-      date: "13, 14 y 15 de Marzo 2026",
-      time: "Inicio Viernes 13 de Marzo a las 17 Hs",
-      location: "Lisandro de la Torre Nº 952 (Edif. de Vialidad)",
-      type: "Taller de Liderazgo",
-      available: true,
-      availabilityText: "Cupos disponibles",
-      hasFlyer: true,
-      flyerImage: "/auto-marzo-correcto.jpeg",
-      flyerImageAlt: "/images/auto-marzo-correcto.jpeg",
-      level: "1er Nivel",
-      contactPhone: "+54 9 2966 595803",
-    },
-    {
-      title: "Taller de Autoconocimiento - Punta Arenas",
-      date: "27, 28 y 29 de Marzo 2026",
-      time: "Inicio: Viernes 27/03 a las 17 Horas.",
-      location: "Avda. Jorge Alessandri #264 Barrio Sur - Club Huracán",
-      type: "Taller de Liderazgo",
-      available: true,
-      availabilityText: "Cupos disponibles",
-      hasFlyer: true,
-      flyerImage: "/auto-punta-arenas-2026.jpeg",
-      flyerImageAlt: "/images/auto-punta-arenas-2026.jpeg",
-      level: "1er Nivel",
-      contactPhone: "+56 9 6113 0835",
-    },
-    {
-      title: "Taller de Transformación en Río Gallegos",
-      date: "2, 3, 4 y 5 de Abril 2026",
-      time: "Inicio: Jueves 2 de Abril a las 18:00 hs",
-      location: "Lugar a Confirmar",
-      type: "Taller de Liderazgo",
-      available: true,
-      availabilityText: "Cupos disponibles",
-      hasFlyer: true,
-      flyerImage: "/transfor-abril-2026.jpeg",
-      flyerImageAlt: "/images/transfor-abril-2026.jpeg",
-      level: "2do Nivel",
+      flyerImage: "/niño-interior-marzo-2026.jpeg",
+      flyerImageAlt: "/images/niño-interior-marzo-2026.jpeg",
       contactPhone: "+54 9 2966 595803",
     },
     {
@@ -339,7 +315,9 @@ export function Events() {
       type: "Curso",
       available: true,
       availabilityText: "Cupos disponibles",
-      hasFlyer: false,
+      hasFlyer: true,
+      flyerImage: "/Flayer-Oratoria.jpeg",
+      flyerImageAlt: "/images/Flayer-Oratoria.jpeg",
       contactPhone: "+54 9 2966 595803",
     },
   ]

@@ -89,27 +89,6 @@ const team = [
     facebook: "https://www.facebook.com/share/1C1sBzAUB7/",
     instagram: "https://www.instagram.com/fabyBrown",
   },
-  {
-    name: "Jimena Natalia Catrihuala",
-    role: "Terapias Holísticas - Master Reiki - Masajista Profesional.",
-    specialties: ["Staff de Sentir"],
-    image: "/Jimena-Catrihuala.jpeg",
-    phone: "5492966520362",
-  },
-  {
-    name: "Karina Martinez",
-    role: "Terapias Energéticas - Munay Ki - Reiki - Péndulo - Reconstrucción del Alma - Herbolaría",
-    specialties: [],
-    image: "/Karina-Martinez.jpeg",
-    phone: "5492966556444",
-  },
-  {
-    name: "Sofía Martín",
-    role: "Reiki usui - Limpieza Energética con Péndulo",
-    specialties: ["Staff de Sentir"],
-    image: "/Sofy-Martin.jpeg",
-    phone: "5492966714217",
-  },
 ]
 
 export function Team() {

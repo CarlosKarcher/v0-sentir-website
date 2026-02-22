@@ -119,48 +119,7 @@
   * {
     @apply border-border outline-ring/50;
   }
-  html, body {
-    @apply w-full m-0 p-0;
-    margin: 0 !important;
-    padding: 0 !important;
-  }
   body {
     @apply bg-background text-foreground;
-  }
-  main {
-    @apply w-full;
-  }
-  section {
-    @apply w-full block;
-    display: block !important;
-  }
-}
-
-@keyframes float-sentir {
-  0%, 100% { transform: translateY(0) rotate(-0.5deg); }
-  50% { transform: translateY(-12px) rotate(0.5deg); }
-}
-.animate-float-sentir {
-  animation: float-sentir 3.5s ease-in-out infinite;
-}
-
-@keyframes float-around-page {
-  0% { left: 8%; top: 20%; }
-  25% { left: 58%; top: 18%; }
-  50% { left: 54%; top: 52%; }
-  75% { left: 10%; top: 50%; }
-  100% { left: 8%; top: 20%; }
-}
-.animate-float-around-page {
-  position: fixed;
-  animation: float-around-page 18s ease-in-out 1 forwards;
-}
-@media (max-width: 640px) {
-  @keyframes float-around-page {
-    0% { left: 6%; top: 18%; }
-    25% { left: 6%; top: 20%; }
-    50% { left: 6%; top: 45%; }
-    75% { left: 6%; top: 42%; }
-    100% { left: 6%; top: 18%; }
   }
 }

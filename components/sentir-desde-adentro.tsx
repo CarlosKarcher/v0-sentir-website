@@ -57,51 +57,6 @@ export function SentirDesdeAdentro() {
           </p>
         </div>
 
-        {/* El Camino del Guerrero 14 y 15 de Febrero 2026 */}
-        <div className="max-w-5xl mx-auto mb-10 sm:mb-12 md:mb-16">
-          <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-6 text-center text-balance">
-            El Camino del Guerrero 14 y 15 de Febrero 2026
-          </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-            <Card className="overflow-hidden">
-              <CardContent className="p-0">
-                <div className="relative w-full" style={{ aspectRatio: "16/9" }}>
-                  <video
-                    src="/01-Guerrero-15-02.mp4"
-                    controls
-                    className="w-full h-full object-contain mx-auto block"
-                    preload="metadata"
-                    playsInline
-                    onError={(e) => {
-                      console.error("Error al cargar el video: /01-Guerrero-15-02.mp4", e)
-                    }}
-                  >
-                    Tu navegador no soporta el elemento de video.
-                  </video>
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="overflow-hidden">
-              <CardContent className="p-0">
-                <div className="relative w-full" style={{ aspectRatio: "16/9" }}>
-                  <video
-                    src="/02-Guerrero-15-02.mp4"
-                    controls
-                    className="w-full h-full object-contain mx-auto block"
-                    preload="metadata"
-                    playsInline
-                    onError={(e) => {
-                      console.error("Error al cargar el video: /02-Guerrero-15-02.mp4", e)
-                    }}
-                  >
-                    Tu navegador no soporta el elemento de video.
-                  </video>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-
         {/* Video de Autoconocimiento */}
         <div className="max-w-5xl mx-auto mb-10 sm:mb-12 md:mb-16">
           <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-6 text-center text-balance">
@@ -137,6 +92,51 @@ export function SentirDesdeAdentro() {
                     playsInline
                     onError={(e) => {
                       console.error("Error al cargar el video: /video Sentir  Domingo Enero 2026.mp4", e)
+                    }}
+                  >
+                    Tu navegador no soporta el elemento de video.
+                  </video>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
+        {/* El Camino del Guerrero 14 y 15 de Febrero 2026 */}
+        <div className="max-w-5xl mx-auto mb-10 sm:mb-12 md:mb-16">
+          <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-6 text-center text-balance">
+            El Camino del Guerrero 14 y 15 de Febrero 2026
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+            <Card className="overflow-hidden">
+              <CardContent className="p-0">
+                <div className="relative w-full" style={{ aspectRatio: "16/9" }}>
+                  <video
+                    src="/01-Guerrero-15-02.mp4"
+                    controls
+                    className="w-full h-full object-contain mx-auto block"
+                    preload="metadata"
+                    playsInline
+                    onError={(e) => {
+                      console.error("Error al cargar el video: /01-Guerrero-15-02.mp4", e)
+                    }}
+                  >
+                    Tu navegador no soporta el elemento de video.
+                  </video>
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="overflow-hidden">
+              <CardContent className="p-0">
+                <div className="relative w-full" style={{ aspectRatio: "16/9" }}>
+                  <video
+                    src="/02-Guerrero-15-02.mp4"
+                    controls
+                    className="w-full h-full object-contain mx-auto block"
+                    preload="metadata"
+                    playsInline
+                    onError={(e) => {
+                      console.error("Error al cargar el video: /02-Guerrero-15-02.mp4", e)
                     }}
                   >
                     Tu navegador no soporta el elemento de video.

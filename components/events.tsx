@@ -69,7 +69,7 @@ function EventCard({ event }: { event: Event }) {
       <CardContent className="space-y-3">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <Calendar className="h-4 w-4 text-primary flex-shrink-0" />
-          <span>{event.date}</span>
+          <span className="whitespace-pre-line">{event.date}</span>
         </div>
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <Clock className="h-4 w-4 text-primary flex-shrink-0" />
@@ -337,7 +337,7 @@ export function Events() {
     {
       title: "Las 7 Leyes Universales",
       subtitle: "Gratuito y Virtual",
-      date: "Comienza 11 de Mayo 2026. 7 Noches (11, 13, 15, 18, 20, 22, 25 de Mayo)",
+      date: "Comienza 11 de Mayo 2026.\n7 Noches (11, 13, 15, 18, 20, 22, 25 de Mayo)",
       time: "21 Hs a 22:30 Hs",
       location: "Virtual",
       type: "Curso",
@@ -348,7 +348,7 @@ export function Events() {
     },
     {
       title: "CURSO ONLINE de ORATORIA 🗣️🧠",
-      date: "A partir del 12 de Mayo 2026. 5 clases: Martes y Jueves (12, 14, 19, 21 y 26 de Mayo)",
+      date: "A partir del 12 de Mayo 2026.\n5 clases: Martes y Jueves (12, 14, 19, 21 y 26 de Mayo)",
       time: "21:00 Hs a 22:30 Hs",
       location: "Online",
       type: "Curso",

@@ -4,12 +4,18 @@ import * as React from "react"
 import { X, Play } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
+const VIDEO_SOURCES = [
+  "/Cual%20es%20tu%20mejor%20Terapia..mp4",
+  "/circulo-auto-general.mp4",
+]
+
 export function VideoPresentation() {
   const [isOpen, setIsOpen] = React.useState(true)
   const [isPlaying, setIsPlaying] = React.useState(false)
   const [hasError, setHasError] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(true)
   const [retryCount, setRetryCount] = React.useState(0)
+  const [currentVideoIndex, setCurrentVideoIndex] = React.useState(0)
   const videoRef = React.useRef<HTMLVideoElement>(null)
   const [isMobile, setIsMobile] = React.useState(false)
 
@@ -30,20 +36,22 @@ export function VideoPresentation() {
   const handlePlay = async () => {
     if (videoRef.current) {
       try {
-        // En móviles, a veces necesitamos cargar el video primero
+        // Si estamos en el 2º video, reiniciar desde el 1º
+        if (currentVideoIndex === 1) {
+          setCurrentVideoIndex(0)
+          videoRef.current.src = VIDEO_SOURCES[0]
+          videoRef.current.load()
+        }
         if (isMobile && videoRef.current.readyState < 2) {
           await videoRef.current.load()
         }
-        
         const playPromise = videoRef.current.play()
-        
         if (playPromise !== undefined) {
           await playPromise
           setIsPlaying(true)
         }
       } catch (error: any) {
         console.error("Error al reproducir el video:", error)
-        // Si es un error de autoplay, no marcamos como error fatal
         if (error.name !== 'NotAllowedError') {
           setHasError(true)
         }
@@ -56,6 +64,7 @@ export function VideoPresentation() {
       videoRef.current.pause()
       videoRef.current.currentTime = 0
     }
+    setCurrentVideoIndex(0)
     setIsOpen(false)
   }
 
@@ -165,6 +174,14 @@ export function VideoPresentation() {
     }
   }, [isMobile])
 
+  // Al pasar al 2º video, cargar y reproducir
+  React.useEffect(() => {
+    if (currentVideoIndex === 1 && videoRef.current) {
+      videoRef.current.load()
+      videoRef.current.play().catch(() => {})
+    }
+  }, [currentVideoIndex])
+
   if (!isOpen) return null
 
   return (
@@ -211,7 +228,7 @@ export function VideoPresentation() {
             {hasError ? (
               <div className="text-center p-8">
                 <p className="text-lg font-semibold mb-2">Error al cargar el video</p>
-                <p className="text-sm text-muted-foreground mb-4">Ruta: /Cual es tu mejor Terapia..mp4</p>
+                <p className="text-sm text-muted-foreground mb-4">Ruta: {VIDEO_SOURCES[currentVideoIndex]}</p>
                 {retryCount < 3 && (
                   <Button
                     onClick={handleRetry}
@@ -231,8 +248,7 @@ export function VideoPresentation() {
                 )}
                 <video
                   ref={videoRef}
-                  src="/Cual%20es%20tu%20mejor%20Terapia..mp4"
-                  loop
+                  src={VIDEO_SOURCES[currentVideoIndex]}
                   playsInline
                   preload={isMobile ? "none" : "metadata"}
                   controls={isPlaying}
@@ -282,6 +298,14 @@ export function VideoPresentation() {
                   onPlaying={() => {
                     console.log("Video reproduciéndose")
                     setIsLoading(false)
+                  }}
+                  onEnded={() => {
+                    if (currentVideoIndex < VIDEO_SOURCES.length - 1) {
+                      setIsLoading(true)
+                      setCurrentVideoIndex((i) => i + 1)
+                    } else {
+                      setIsPlaying(false)
+                    }
                   }}
                 >
                   Tu navegador no soporta la reproducción de video.

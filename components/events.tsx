@@ -194,6 +194,15 @@ export function Events() {
 
   const pastEvents = [
     {
+      title: "El Camino del Guerrero - Río Gallegos",
+      date: "14 y 15 de Febrero de 2026",
+      time: "Inicio: sábado 14, 15 Horas",
+      location: "Río Gallegos",
+      type: "Otro Taller",
+      available: false,
+      availabilityText: "Evento Realizado",
+    },
+    {
       title: "Taller de Autoconocimiento",
       date: "23, 24 y 25 de Enero del 2026",
       time: "Evento Realizado",

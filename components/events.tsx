@@ -236,20 +236,6 @@ export function Events() {
 
   const events = [
     {
-      title: "Taller de Autoconocimiento - Punta Arenas",
-      date: "6, 7 y 8 de Febrero, 2026",
-      time: "Inicio: Viernes 6, 17 Horas",
-      location: "Avda. Jorge Alessandri #264 B° Sur - Sede Club Deportivo Huracán.",
-      type: "Taller de Liderazgo",
-      available: true,
-      availabilityText: "Cupos disponibles",
-      hasFlyer: true,
-      flyerImage: "/Autoconocimiento Punta Arenas febrero 2026.jpg",
-      flyerImageAlt: "/images/Autoconocimiento Punta Arenas febrero 2026.jpg",
-      level: "1er Nivel",
-      contactPhone: "+56 9 6113 0835",
-    },
-    {
       title: "Taller de Biodecodificación: \"Tu cuerpo tiene algo que contarte.\"",
       date: "07 de Marzo de 2026.",
       time: "Inicio: sabado 14 Horas.",

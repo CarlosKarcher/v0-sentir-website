@@ -247,6 +247,7 @@ export function VideoPresentation() {
                   </div>
                 )}
                 <video
+                  key={currentVideoIndex}
                   ref={videoRef}
                   src={VIDEO_SOURCES[currentVideoIndex]}
                   playsInline

@@ -231,10 +231,10 @@ export function Team() {
                 href="https://wa.me/5492966556444"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-sm text-primary hover:underline"
+                className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+                aria-label="WhatsApp contacto Cromoterapia"
               >
-                <Phone className="h-4 w-4" />
-                Contacto: +54 9 2966 556444
+                <Phone className="h-5 w-5" />
               </a>
             </CardContent>
           </Card>

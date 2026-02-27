@@ -210,6 +210,9 @@ export function Team() {
               <video
                 src="/cromoterapia-despertar-lunar.mp4"
                 controls
+                autoPlay
+                muted
+                loop
                 className="w-full h-full object-cover"
                 preload="metadata"
                 playsInline
@@ -219,7 +222,7 @@ export function Team() {
             </div>
             <CardContent className="pt-6">
               <p className="text-xs sm:text-sm text-foreground mb-3 text-pretty">
-                Cromoterapia: Espacio Energético dónde el uso del color en conjunto con los cristales, promueven un estado de bienestar general.
+                <span className="text-base sm:text-lg font-semibold text-black">Cromoterapia:</span> Espacio Energético dónde el uso del color en conjunto con los cristales, promueven un estado de bienestar general.
               </p>
               <p className="text-xs text-muted-foreground mb-4">
                 <span className="font-semibold text-foreground">Lugar:</span> Centro Holístico &quot;Despertar Lunar&quot; — Patagones 230 — Terapeuta Karina Martínez.

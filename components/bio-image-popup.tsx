@@ -3,11 +3,11 @@
 import React, { useEffect, useState, useCallback } from "react"
 
 const IMAGE_SRC = "/Bio-ni%C3%B1o-7-03-2026.jpeg"
-const DURATION_MS = 20 * 1000 // 20 segundos
+const DURATION_MS = 10 * 1000 // 10 segundos
 const MOVE_INTERVAL_MS = 2500
 const SIZE_CM = 10
 
-const COUNTDOWN_START = 20
+const COUNTDOWN_START = 10
 
 export function BioImagePopup() {
   const [visible, setVisible] = useState(true)

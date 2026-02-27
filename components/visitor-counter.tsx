@@ -1,46 +1,59 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 export function VisitorCounter() {
   const [displayCount, setDisplayCount] = useState<number | null>(null)
   const [loading, setLoading] = useState(true)
+  const visitRegistered = useRef(false)
 
   useEffect(() => {
     const fetchCounter = async () => {
       try {
-        // Forzar bypass de caché con timestamp
         const timestamp = Date.now()
-        const response = await fetch(`/api/visits?t=${timestamp}`, { 
-          method: 'GET',
-          cache: 'no-store',
-          headers: { 'Content-Type': 'application/json' }
+        const response = await fetch(`/api/visits?t=${timestamp}`, {
+          method: "GET",
+          cache: "no-store",
+          headers: { "Content-Type": "application/json" },
         })
-        
         const data = await response.json()
-        
         if (data.success !== false) {
-          console.log('✅ Contador:', data.count)
           setDisplayCount(data.count)
         } else {
-          console.log('⚠️ API devolvió success=false')
           setDisplayCount(0)
         }
-        
         setLoading(false)
       } catch (error) {
-        console.error('❌ Error:', error)
+        console.error("Error contador:", error)
         setDisplayCount(0)
         setLoading(false)
       }
     }
 
-    // Obtener contador inicial
+    const registerVisit = async () => {
+      if (visitRegistered.current) return
+      visitRegistered.current = true
+      try {
+        const res = await fetch("/api/visits", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+        })
+        const data = await res.json()
+        if (data.success && data.count != null) {
+          setDisplayCount(data.count)
+        }
+      } catch {
+        // Si falla el POST, fetchCounter ya mostró el valor actual
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    // Mostrar contador actual y registrar esta visita (POST incrementa)
     fetchCounter()
-    
-    // Actualizar cada 5 segundos
+    registerVisit()
+
     const interval = setInterval(fetchCounter, 5000)
-    
     return () => clearInterval(interval)
   }, [])
 

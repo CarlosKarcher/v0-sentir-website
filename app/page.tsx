@@ -14,6 +14,7 @@ import { MusicaSentir } from "@/components/musica-sentir"
 import { SentirDesdeAdentro } from "@/components/sentir-desde-adentro"
 import { Footer } from "@/components/footer"
 import { PresentationVideos } from "@/components/presentation-videos"
+import { BioImagePopup } from "@/components/bio-image-popup"
 
 export default function Page() {
   useEffect(() => {
@@ -61,6 +62,7 @@ export default function Page() {
 
   return (
     <main className="min-h-screen">
+      <BioImagePopup />
       <PresentationVideos />
       <Header />
       <Hero />

@@ -125,6 +125,40 @@ export function Team() {
           </p>
         </div>
 
+        {/* Cromoterapia - Despertar Lunar */}
+        <div className="max-w-2xl mx-auto mb-12 sm:mb-16">
+          <Card className="overflow-hidden hover:shadow-lg transition-shadow">
+            <div className="relative w-full aspect-video bg-muted">
+              <video
+                src="/cromoterapia-despertar-lunar.mp4"
+                controls
+                className="w-full h-full object-contain"
+                preload="metadata"
+                playsInline
+              >
+                Tu navegador no soporta el video.
+              </video>
+            </div>
+            <CardContent className="pt-6">
+              <p className="text-sm sm:text-base text-foreground mb-4 text-pretty">
+                Cromoterapia: Espacio Energético dónde el uso del color en conjunto con los cristales, promueven un estado de bienestar general.
+              </p>
+              <p className="text-xs sm:text-sm text-muted-foreground mb-4">
+                <span className="font-semibold text-foreground">Lugar:</span> Centro Holístico &quot;Despertar Lunar&quot; — Ubicación: Patagones 230 — Terapeuta Karina Martínez.
+              </p>
+              <a
+                href="https://wa.me/5492966556444"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-sm text-primary hover:underline"
+              >
+                <Phone className="h-4 w-4" />
+                Contacto: +54 9 2966 556444
+              </a>
+            </CardContent>
+          </Card>
+        </div>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto">
           {team.map((member, index) => (
             <Card key={index} className="overflow-hidden hover:shadow-lg transition-shadow">

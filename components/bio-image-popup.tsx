@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useCallback } from "react"
 
 const IMAGE_SRC = "/Bio-ni%C3%B1o-7-03-2026.jpeg"
-const DURATION_MS = 120 * 1000 // 120 segundos
+const DURATION_MS = 20 * 1000 // 20 segundos
 const MOVE_INTERVAL_MS = 2500
 const SIZE_CM = 10
 

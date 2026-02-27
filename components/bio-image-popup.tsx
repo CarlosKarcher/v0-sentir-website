@@ -7,9 +7,12 @@ const DURATION_MS = 20 * 1000 // 20 segundos
 const MOVE_INTERVAL_MS = 2500
 const SIZE_CM = 10
 
+const COUNTDOWN_START = 20
+
 export function BioImagePopup() {
   const [visible, setVisible] = useState(true)
   const [position, setPosition] = useState({ x: 20, y: 20 })
+  const [countdown, setCountdown] = useState(COUNTDOWN_START)
 
   const moveToRandomPosition = useCallback(() => {
     if (typeof window === "undefined") return
@@ -29,6 +32,14 @@ export function BioImagePopup() {
   }, [visible])
 
   useEffect(() => {
+    if (!visible || countdown <= 0) return
+    const interval = setInterval(() => {
+      setCountdown((c) => (c <= 1 ? 0 : c - 1))
+    }, 1000)
+    return () => clearInterval(interval)
+  }, [visible, countdown])
+
+  useEffect(() => {
     if (!visible) return
     moveToRandomPosition()
     const interval = setInterval(moveToRandomPosition, MOVE_INTERVAL_MS)
@@ -39,7 +50,7 @@ export function BioImagePopup() {
 
   return (
     <div
-      className="fixed z-[10001] pointer-events-none transition-all duration-1000 ease-in-out"
+      className="fixed z-[10001] pointer-events-none transition-all duration-1000 ease-in-out relative"
       style={{
         left: position.x,
         top: position.y,
@@ -52,6 +63,11 @@ export function BioImagePopup() {
       }}
       aria-hidden
     >
+      <div className="absolute -top-8 left-1/2 -translate-x-1/2 w-full flex justify-center">
+        <span className="tabular-nums text-xl font-bold text-foreground bg-background/90 px-3 py-1 rounded-full shadow-md">
+          {countdown}
+        </span>
+      </div>
       <img
         src={IMAGE_SRC}
         alt=""

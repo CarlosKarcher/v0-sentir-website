@@ -63,17 +63,19 @@ export function BioImagePopup() {
       }}
       aria-hidden
     >
-      <div className="absolute -top-8 left-1/2 -translate-x-1/2 w-full flex justify-center">
-        <span className="tabular-nums text-xl font-bold text-foreground bg-background/90 px-3 py-1 rounded-full shadow-md">
-          {countdown}
-        </span>
+      <div className="relative w-full h-full rounded-lg overflow-hidden">
+        <img
+          src={IMAGE_SRC}
+          alt=""
+          className="w-full h-full object-contain drop-shadow-2xl rounded-lg"
+          style={{ pointerEvents: "none" }}
+        />
+        <div className="absolute top-2 left-1/2 -translate-x-1/2 flex justify-center">
+          <span className="tabular-nums text-xl font-bold text-foreground bg-background/90 px-3 py-1 rounded-full shadow-md">
+            {countdown}
+          </span>
+        </div>
       </div>
-      <img
-        src={IMAGE_SRC}
-        alt=""
-        className="w-full h-full object-contain drop-shadow-2xl rounded-lg"
-        style={{ pointerEvents: "none" }}
-      />
     </div>
   )
 }

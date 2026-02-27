@@ -225,7 +225,7 @@ export function Team() {
                 <span className="text-base sm:text-lg font-semibold text-black">Cromoterapia:</span> Espacio Energético dónde el uso del color en conjunto con los cristales, promueven un estado de bienestar general.
               </p>
               <p className="text-xs text-muted-foreground mb-4">
-                <span className="font-semibold text-foreground">Lugar:</span> Centro Holístico &quot;Despertar Lunar&quot; — Patagones 230 — Terapeuta Karina Martínez.
+                <span className="font-semibold text-foreground">Lugar:</span> Centro Holístico &quot;Despertar Lunar&quot; — Patagones 230 — <span className="text-base sm:text-lg font-bold text-black">Terapeuta: Karina Martínez</span>.
               </p>
               <a
                 href="https://wa.me/5492966556444"

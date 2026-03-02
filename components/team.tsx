@@ -99,6 +99,16 @@ const team = [
     phone: "5492966714217",
   },
   {
+    name: "Carla Duarte",
+    role: "Terapeuta Holística.",
+    specialties: [
+      "Coach Ontológico y Transformacional",
+      "Master de Registros Akáshicos",
+      "Entrenadora en Tarot terapéutico",
+    ],
+    image: "/Carla-Duarte.jpeg",
+  },
+  {
     name: "Fabiola Mancilla Gallego / Sandro Brown",
     role: "Creadores de Papeleria Artesanal y Objetos con intención.",
     specialties: [],

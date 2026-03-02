@@ -107,6 +107,7 @@ const team = [
       "Entrenadora en Tarot terapéutico",
     ],
     image: "/Carla-Duarte.jpeg",
+    phone: "5491167066630",
   },
   {
     name: "Fabiola Mancilla Gallego / Sandro Brown",

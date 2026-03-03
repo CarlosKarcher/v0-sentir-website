@@ -57,10 +57,10 @@ export function SentirDesdeAdentro() {
           </p>
         </div>
 
-        {/* Sentir - Encuentro Vitamina - 01/03/2026 (primer video) */}
+        {/* Sentir - 1er. Encuentro Vitamina - 1/03/2026 (primer video) */}
         <div className="max-w-5xl mx-auto mb-10 sm:mb-12 md:mb-16">
           <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-6 text-center text-balance">
-            Sentir - Encuentro Vitamina - 01/03/2026
+            Sentir - 1er. Encuentro Vitamina - 1/03/2026
           </h3>
           <div className="grid grid-cols-1 gap-4 sm:gap-6">
             <Card className="overflow-hidden">

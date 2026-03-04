@@ -64,7 +64,16 @@ export function AutoconocimientoVideoPopup() {
             <X className="h-5 w-5" />
           </Button>
 
-          <div className="flex-1 min-h-0 flex items-center justify-center relative p-2 pt-10">
+          <div className="flex items-center justify-center gap-2 py-2 px-4 border-b shrink-0">
+            <img
+              src="/fuego-de-sentir.png"
+              alt="Fuego de Sentir"
+              className="h-8 w-auto object-contain"
+            />
+            <span className="text-xl font-bold text-foreground">Sentir</span>
+          </div>
+
+          <div className="flex-1 min-h-0 flex items-center justify-center relative p-2">
             <video
               ref={videoRef}
               src={VIDEO_SRC}

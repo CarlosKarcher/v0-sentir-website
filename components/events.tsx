@@ -197,6 +197,32 @@ export function Events() {
 
   const pastEvents = [
     {
+      title: "Taller de Biodecodificación: \"Tu cuerpo tiene algo que contarte.\"",
+      date: "07 de Marzo de 2026.",
+      time: "Inicio: sabado 14 Horas.",
+      location: "Lisandro de la Torre Nº 952 (Edif. de Vialidad) - Río Gallegos.",
+      type: "Otro Taller",
+      available: false,
+      availabilityText: "Evento Realizado",
+      hasFlyer: true,
+      flyerImage: "/Taller-de-Bio-07-03-2026.jpeg",
+      flyerImageAlt: "/images/Taller-de-Bio-07-03-2026.jpeg",
+      contactPhone: "+54 9 2966 211547",
+    },
+    {
+      title: "Taller: \"Sanando mi niño interior.\"",
+      date: "8 de Marzo 2026.",
+      time: "14 Horas a 20 horas.",
+      location: "Lisandro de la Torre Nº 952 (Edif. de Vialidad) - Río Gallegos.",
+      type: "Otro Taller",
+      available: false,
+      availabilityText: "Evento Realizado",
+      hasFlyer: true,
+      flyerImage: "/nino-interior-marzo-2026.jpeg",
+      flyerImageAlt: "/images/nino-interior-marzo-2026.jpeg",
+      contactPhone: "+54 9 2966 595803",
+    },
+    {
       title: "El Camino del Guerrero - Río Gallegos",
       date: "14 y 15 de Febrero de 2026",
       time: "Inicio: sábado 14, 15 Horas",
@@ -238,32 +264,6 @@ export function Events() {
   ]
 
   const events = [
-    {
-      title: "Taller de Biodecodificación: \"Tu cuerpo tiene algo que contarte.\"",
-      date: "07 de Marzo de 2026.",
-      time: "Inicio: sabado 14 Horas.",
-      location: "Lisandro de la Torre Nº 952 (Edif. de Vialidad) - Río Gallegos.",
-      type: "Otro Taller",
-      available: true,
-      availabilityText: "Cupos disponibles",
-      hasFlyer: true,
-      flyerImage: "/Taller-de-Bio-07-03-2026.jpeg",
-      flyerImageAlt: "/images/Taller-de-Bio-07-03-2026.jpeg",
-      contactPhone: "+54 9 2966 211547",
-    },
-    {
-      title: "Taller: \"Sanando mi niño interior.\"",
-      date: "8 de Marzo 2026.",
-      time: "14 Horas a 20 horas.",
-      location: "Lisandro de la Torre Nº 952 (Edif. de Vialidad) - Río Gallegos.",
-      type: "Otro Taller",
-      available: true,
-      availabilityText: "Cupos disponibles",
-      hasFlyer: true,
-      flyerImage: "/nino-interior-marzo-2026.jpeg",
-      flyerImageAlt: "/images/nino-interior-marzo-2026.jpeg",
-      contactPhone: "+54 9 2966 595803",
-    },
     {
       title: "Taller de Autoconocimiento - Río Gallegos",
       date: "13, 14 y 15 de Marzo 2026",

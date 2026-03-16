@@ -197,6 +197,20 @@ export function Events() {
 
   const pastEvents = [
     {
+      title: "Taller de Autoconocimiento - Río Gallegos",
+      date: "13, 14 y 15 de Marzo 2026",
+      time: "Inicio Viernes 13 de Marzo a las 17 Hs",
+      location: "Lisandro de la Torre Nº 952 (Edif. de Vialidad)",
+      type: "Taller de Liderazgo",
+      available: false,
+      availabilityText: "Evento Realizado",
+      hasFlyer: true,
+      flyerImage: "/auto-marzo-correcto.jpeg",
+      flyerImageAlt: "/images/auto-marzo-correcto.jpeg",
+      level: "1er Nivel",
+      contactPhone: "+54 9 2966 595803",
+    },
+    {
       title: "Taller de Biodecodificación: \"Tu cuerpo tiene algo que contarte.\"",
       date: "07 de Marzo de 2026.",
       time: "Inicio: sabado 14 Horas.",
@@ -264,20 +278,6 @@ export function Events() {
   ]
 
   const events = [
-    {
-      title: "Taller de Autoconocimiento - Río Gallegos",
-      date: "13, 14 y 15 de Marzo 2026",
-      time: "Inicio Viernes 13 de Marzo a las 17 Hs",
-      location: "Lisandro de la Torre Nº 952 (Edif. de Vialidad)",
-      type: "Taller de Liderazgo",
-      available: true,
-      availabilityText: "Cupos disponibles",
-      hasFlyer: true,
-      flyerImage: "/auto-marzo-correcto.jpeg",
-      flyerImageAlt: "/images/auto-marzo-correcto.jpeg",
-      level: "1er Nivel",
-      contactPhone: "+54 9 2966 595803",
-    },
     {
       title: "Taller de Autoconocimiento - Punta Arenas",
       date: "27, 28 y 29 de Marzo 2026",

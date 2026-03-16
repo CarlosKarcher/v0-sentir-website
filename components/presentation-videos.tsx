@@ -4,7 +4,7 @@ import * as React from "react"
 import { X, Play } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
-const VIDEO_PATHS = ["/Cual%20es%20tu%20mejor%20Terapia..mp4", "/circulo-auto-general.mp4"]
+const VIDEO_PATHS = ["/Auto-Rg-15-03-2026-Circulo.mp4", "/Auto-RG-15-03-2026-Saludo.mp4"]
 
 function getVideoSrc(path: string): string {
   if (typeof window === "undefined") return path
@@ -186,7 +186,7 @@ export function PresentationVideos() {
             />
             <span className="inline-block w-5" aria-hidden="true" />
             <p className="text-lg font-bold text-foreground">
-              Autoconocimiento 13, 14 y 15 de Marzo
+              Autoconocimiento - 15 de Marzo 2026
             </p>
             <span className="inline-block w-5" aria-hidden="true" />
             <img

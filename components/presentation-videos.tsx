@@ -18,6 +18,7 @@ export function PresentationVideos() {
   const [loading, setLoading] = React.useState<boolean[]>([true, true])
   const [retryCount, setRetryCount] = React.useState([0, 0])
   const videoRefs = [React.useRef<HTMLVideoElement>(null), React.useRef<HTMLVideoElement>(null)]
+  const autoplayAttempted = React.useRef(false)
 
   const hasAnyError = errors[0] || errors[1]
   const isLoading = loading[0] || loading[1]
@@ -227,13 +228,17 @@ export function PresentationVideos() {
                       className="w-full h-full rounded-lg object-contain block"
                       onError={handleError(index)}
                       onEnded={handleEnded(index)}
-                      onCanPlay={() =>
+                      onCanPlay={() => {
                         setLoading((prev) => {
                           const next = [...prev]
                           next[index] = false
                           return next
                         })
-                      }
+                        if (index === 0 && !autoplayAttempted.current) {
+                          autoplayAttempted.current = true
+                          handlePlayFirst()
+                        }
+                      }}
                       onPlaying={() => setPlaying(true)}
                       onPause={() => setPlaying(false)}
                     >

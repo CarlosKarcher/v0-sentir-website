@@ -124,7 +124,7 @@ function MonthCalendar({
 
   return (
     <div className="bg-card border border-border rounded-xl p-3 shadow-sm flex-1 min-w-0">
-      <h3 className="text-center font-bold text-base sm:text-lg mb-2 text-foreground">
+      <h3 className="text-center font-semibold text-sm mb-2 text-foreground">
         {MONTHS_ES[monthIndex]}
       </h3>
 
@@ -200,7 +200,7 @@ export function CalendarioSentir() {
       <div className="w-full max-w-7xl mx-auto px-4">
         {/* Header */}
         <div className="max-w-3xl mx-auto text-center mb-8 sm:mb-12">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 text-balance">
+          <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-3 sm:mb-4 text-balance">
             Calendario Sentir 2026
           </h2>
           <p className="text-base sm:text-lg text-muted-foreground text-pretty">

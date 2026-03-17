@@ -9,7 +9,15 @@ const MONTHS_ES = [
 
 const DAYS_ES = ["Lu", "Ma", "Mi", "Ju", "Vi", "Sa", "Do"]
 
-const EVENT_TYPES = {
+interface EventTypeConfig {
+  bg: string
+  text: string
+  dotBg: string
+  label: string
+  fireIcon?: boolean
+}
+
+const EVENT_TYPES: Record<string, EventTypeConfig> = {
   autoconocimiento: {
     bg: "bg-teal-500",
     text: "text-white",
@@ -21,6 +29,25 @@ const EVENT_TYPES = {
     text: "text-white",
     dotBg: "bg-blue-600",
     label: "Transformación",
+  },
+  guerrero: {
+    bg: "bg-gray-800",
+    text: "text-white",
+    dotBg: "bg-gray-800",
+    label: "Camino del Guerrero",
+    fireIcon: true,
+  },
+  biodecodificacion: {
+    bg: "bg-violet-600",
+    text: "text-white",
+    dotBg: "bg-violet-600",
+    label: "Biodecodificación",
+  },
+  nino: {
+    bg: "bg-sky-400",
+    text: "text-white",
+    dotBg: "bg-sky-400",
+    label: "Niño Interior",
   },
   leyes: {
     bg: "bg-purple-600",
@@ -34,7 +61,7 @@ const EVENT_TYPES = {
     dotBg: "bg-orange-500",
     label: "Oratoria",
   },
-} as const
+}
 
 type EventType = keyof typeof EVENT_TYPES
 
@@ -46,23 +73,51 @@ interface DayEvent {
 }
 
 const CALENDAR_EVENTS: DayEvent[] = [
+  // ── EVENTOS REALIZADOS ──────────────────────────────────────
+
+  // Enero — Autoconocimiento Río Gallegos (realizado)
+  { month: 0, day: 23, type: "autoconocimiento", label: "Autocon. – Río Gallegos" },
+  { month: 0, day: 24, type: "autoconocimiento", label: "Autocon. – Río Gallegos" },
+  { month: 0, day: 25, type: "autoconocimiento", label: "Autocon. – Río Gallegos" },
+
+  // Febrero — Camino del Guerrero Río Gallegos (realizado)
+  { month: 1, day: 14, type: "guerrero", label: "Camino del Guerrero – Río Gallegos" },
+  { month: 1, day: 15, type: "guerrero", label: "Camino del Guerrero – Río Gallegos" },
+
+  // Marzo — Biodecodificación (realizado)
+  { month: 2, day: 7, type: "biodecodificacion", label: "Taller de Biodecodificación" },
+
+  // Marzo — Niño Interior (realizado)
+  { month: 2, day: 8, type: "nino", label: "Taller Niño Interior" },
+
+  // Marzo — Autoconocimiento Río Gallegos (realizado)
+  { month: 2, day: 13, type: "autoconocimiento", label: "Autocon. – Río Gallegos" },
+  { month: 2, day: 14, type: "autoconocimiento", label: "Autocon. – Río Gallegos" },
+  { month: 2, day: 15, type: "autoconocimiento", label: "Autocon. – Río Gallegos" },
+
+  // ── PRÓXIMOS EVENTOS ────────────────────────────────────────
+
   // Marzo — Autoconocimiento Punta Arenas
   { month: 2, day: 27, type: "autoconocimiento", label: "Autocon. – Punta Arenas" },
   { month: 2, day: 28, type: "autoconocimiento", label: "Autocon. – Punta Arenas" },
   { month: 2, day: 29, type: "autoconocimiento", label: "Autocon. – Punta Arenas" },
+
   // Abril — Transformación Río Gallegos
   { month: 3, day: 2, type: "transformacion", label: "Transfor. – Río Gallegos" },
   { month: 3, day: 3, type: "transformacion", label: "Transfor. – Río Gallegos" },
   { month: 3, day: 4, type: "transformacion", label: "Transfor. – Río Gallegos" },
   { month: 3, day: 5, type: "transformacion", label: "Transfor. – Río Gallegos" },
+
   // Abril — Autoconocimiento Tandil
   { month: 3, day: 10, type: "autoconocimiento", label: "Autocon. – Tandil" },
   { month: 3, day: 11, type: "autoconocimiento", label: "Autocon. – Tandil" },
   { month: 3, day: 12, type: "autoconocimiento", label: "Autocon. – Tandil" },
+
   // Abril — Autoconocimiento Necochea
   { month: 3, day: 17, type: "autoconocimiento", label: "Autocon. – Necochea" },
   { month: 3, day: 18, type: "autoconocimiento", label: "Autocon. – Necochea" },
   { month: 3, day: 19, type: "autoconocimiento", label: "Autocon. – Necochea" },
+
   // Mayo — Las 7 Leyes Universales
   { month: 4, day: 11, type: "leyes", label: "Las 7 Leyes Universales" },
   { month: 4, day: 13, type: "leyes", label: "Las 7 Leyes Universales" },
@@ -71,6 +126,7 @@ const CALENDAR_EVENTS: DayEvent[] = [
   { month: 4, day: 20, type: "leyes", label: "Las 7 Leyes Universales" },
   { month: 4, day: 22, type: "leyes", label: "Las 7 Leyes Universales" },
   { month: 4, day: 25, type: "leyes", label: "Las 7 Leyes Universales" },
+
   // Mayo — Oratoria Online
   { month: 4, day: 12, type: "oratoria", label: "Curso de Oratoria Online" },
   { month: 4, day: 14, type: "oratoria", label: "Curso de Oratoria Online" },
@@ -80,7 +136,6 @@ const CALENDAR_EVENTS: DayEvent[] = [
 ]
 
 function getFirstWeekday(year: number, month: number): number {
-  // Returns 0=Monday … 6=Sunday
   const day = new Date(year, month, 1).getDay()
   return (day + 6) % 7
 }
@@ -114,8 +169,6 @@ function MonthCalendar({
     ...Array(firstDay).fill(null),
     ...Array.from({ length: totalDays }, (_, i) => i + 1),
   ]
-
-  // Pad to full weeks
   while (cells.length % 7 !== 0) cells.push(null)
 
   function getEventsForDay(day: number) {
@@ -143,11 +196,12 @@ function MonthCalendar({
           const dayEvents = day ? getEventsForDay(day) : []
           const hasEvent = dayEvents.length > 0
           const evType = hasEvent ? EVENT_TYPES[dayEvents[0].type] : null
+          const showFire = hasEvent && evType?.fireIcon
 
           return (
             <div
               key={idx}
-              className={`relative flex items-center justify-center rounded-full aspect-square text-[11px] font-medium transition-all cursor-default select-none mx-px my-px
+              className={`relative flex flex-col items-center justify-center rounded-full aspect-square text-[11px] font-medium transition-all cursor-default select-none mx-px my-px
                 ${!day ? "invisible" : ""}
                 ${hasEvent ? `${evType!.bg} ${evType!.text} shadow-sm scale-105` : "hover:bg-muted text-foreground"}
               `}
@@ -164,7 +218,18 @@ function MonthCalendar({
               }}
               onMouseLeave={() => onDayHover({ visible: false, label: "", x: 0, y: 0 })}
             >
-              {day}
+              {showFire ? (
+                <>
+                  <span className="leading-none text-[10px]">{day}</span>
+                  <img
+                    src="/fuego-de-sentir.png"
+                    alt=""
+                    className="w-3 h-3 object-contain"
+                  />
+                </>
+              ) : (
+                day
+              )}
             </div>
           )
         })}
@@ -177,7 +242,6 @@ export function CalendarioSentir() {
   const year = 2026
   const [tooltip, setTooltip] = useState<TooltipState>({ visible: false, label: "", x: 0, y: 0 })
 
-  // Group months into rows of 3
   const rows = [
     [0, 1, 2],
     [3, 4, 5],
@@ -209,15 +273,16 @@ export function CalendarioSentir() {
         </div>
 
         {/* Legend */}
-        <div className="flex flex-wrap justify-center gap-3 mb-8">
-          {(Object.entries(EVENT_TYPES) as [EventType, typeof EVENT_TYPES[EventType]][]).map(
-            ([key, val]) => (
-              <div key={key} className="flex items-center gap-2">
-                <span className={`inline-block w-5 h-5 rounded-full flex-shrink-0 ${val.dotBg}`} />
-                <span className="text-base sm:text-lg font-medium text-foreground">{val.label}</span>
-              </div>
-            )
-          )}
+        <div className="flex flex-wrap justify-center gap-x-5 gap-y-3 mb-8">
+          {Object.entries(EVENT_TYPES).map(([key, val]) => (
+            <div key={key} className="flex items-center gap-2">
+              <span className={`inline-block w-5 h-5 rounded-full flex-shrink-0 ${val.dotBg}`} />
+              {val.fireIcon && (
+                <img src="/fuego-de-sentir.png" alt="" className="w-5 h-5 object-contain -ml-1" />
+              )}
+              <span className="text-base sm:text-lg font-medium text-foreground">{val.label}</span>
+            </div>
+          ))}
         </div>
 
         {/* Calendar grid — 3 months per row */}

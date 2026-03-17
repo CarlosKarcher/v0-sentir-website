@@ -180,7 +180,7 @@ function EventCard({ event }: { event: Event }) {
             )}
           </div>
         )}
-        {!event.hasFlyer && event.level && (
+        {!event.hasFlyer && !event.contactPhone && event.level && (
           <div className="flex justify-end pt-2">
             <Badge className="bg-blue-900 text-white hover:bg-blue-800 border-blue-900 text-xs font-semibold px-2 py-1">
               {event.level}
@@ -373,7 +373,7 @@ export function Events() {
       contactPhone: "+54 9 2966 595803",
     },
     {
-      title: "Taller de MyL 7 - Cierre y Campamento",
+      title: "Taller de MyL 7 - 1ra, Sala.",
       date: "1 y 2 de Agosto 2026",
       time: "Inicio: Sábado 1 de Agosto, 10:00 Horas",
       location: "Río Gallegos",

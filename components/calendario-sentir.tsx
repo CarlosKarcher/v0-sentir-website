@@ -61,6 +61,12 @@ const EVENT_TYPES: Record<string, EventTypeConfig> = {
     dotBg: "bg-orange-500",
     label: "Oratoria",
   },
+  myl: {
+    bg: "bg-amber-800",
+    text: "text-white",
+    dotBg: "bg-amber-800",
+    label: "MyL 7",
+  },
 }
 
 type EventType = keyof typeof EVENT_TYPES
@@ -137,6 +143,10 @@ const CALENDAR_EVENTS: DayEvent[] = [
   // Mayo — Camino del Guerrero
   { month: 4, day: 16, type: "guerrero", label: "Camino del Guerrero – Río Gallegos" },
   { month: 4, day: 17, type: "guerrero", label: "Camino del Guerrero – Río Gallegos" },
+
+  // Agosto — MyL 7 Cierre y Campamento
+  { month: 7, day: 1, type: "myl", label: "MyL 7 – Cierre y Campamento" },
+  { month: 7, day: 2, type: "myl", label: "MyL 7 – Cierre y Campamento" },
 ]
 
 function getFirstWeekday(year: number, month: number): number {

@@ -372,6 +372,18 @@ export function Events() {
       hasFlyer: false,
       contactPhone: "+54 9 2966 595803",
     },
+    {
+      title: "Taller de MyL 7 - Cierre y Campamento",
+      date: "1 y 2 de Agosto 2026",
+      time: "Inicio: Sábado 1 de Agosto, 10:00 Horas",
+      location: "Río Gallegos",
+      type: "Taller de Liderazgo",
+      available: true,
+      availabilityText: "Cupos disponibles",
+      hasFlyer: false,
+      level: "3er Nivel",
+      contactPhone: "+54 9 2966 595803",
+    },
   ]
 
   return (

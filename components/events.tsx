@@ -361,6 +361,17 @@ export function Events() {
       flyerImageAlt: "/images/Flayer-Oratoria.jpeg",
       contactPhone: "+54 9 2966 595803",
     },
+    {
+      title: "El Camino del Guerrero",
+      date: "16 y 17 de Mayo 2026",
+      time: "Inicio: Sábado 16 de Mayo, 15 Horas",
+      location: "Río Gallegos",
+      type: "Otro Taller",
+      available: true,
+      availabilityText: "Cupos disponibles",
+      hasFlyer: false,
+      contactPhone: "+54 9 2966 595803",
+    },
   ]
 
   return (

@@ -133,6 +133,10 @@ const CALENDAR_EVENTS: DayEvent[] = [
   { month: 4, day: 19, type: "oratoria", label: "Curso de Oratoria Online" },
   { month: 4, day: 21, type: "oratoria", label: "Curso de Oratoria Online" },
   { month: 4, day: 26, type: "oratoria", label: "Curso de Oratoria Online" },
+
+  // Mayo — Camino del Guerrero
+  { month: 4, day: 16, type: "guerrero", label: "Camino del Guerrero – Río Gallegos" },
+  { month: 4, day: 17, type: "guerrero", label: "Camino del Guerrero – Río Gallegos" },
 ]
 
 function getFirstWeekday(year: number, month: number): number {

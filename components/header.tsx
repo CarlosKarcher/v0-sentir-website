@@ -106,6 +106,17 @@ export function Header() {
 
               <NavigationMenuItem>
                 <NavigationMenuLink
+                  href="#calendario-sentir"
+                  className={cn(
+                    "group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50",
+                  )}
+                >
+                  Calendario
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+
+              <NavigationMenuItem>
+                <NavigationMenuLink
                   href="#proximos-eventos"
                   className={cn(
                     "group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50",
@@ -310,6 +321,13 @@ export function Header() {
                 onClick={() => setIsOpen(false)}
               >
                 A Quién Va Dirigido
+              </a>
+              <a
+                href="#calendario-sentir"
+                className="text-lg font-medium hover:text-primary transition-colors"
+                onClick={() => setIsOpen(false)}
+              >
+                Calendario Sentir
               </a>
               <a
                 href="#proximos-eventos"

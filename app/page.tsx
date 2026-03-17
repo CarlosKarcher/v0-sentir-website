@@ -5,6 +5,7 @@ import { Header } from "@/components/header"
 import { Hero } from "@/components/hero"
 import { About } from "@/components/about"
 import { Events } from "@/components/events"
+import { CalendarioSentir } from "@/components/calendario-sentir"
 import { Inspiration } from "@/components/inspiration"
 import { Testimonials } from "@/components/testimonials"
 import { Workshops } from "@/components/workshops"
@@ -65,6 +66,7 @@ export default function Page() {
       <Header />
       <Hero />
       <About />
+      <CalendarioSentir />
       <Events />
       <Inspiration />
       <Testimonials />

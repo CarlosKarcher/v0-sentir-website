@@ -124,7 +124,7 @@ function MonthCalendar({
 
   return (
     <div className="bg-card border border-border rounded-xl p-3 shadow-sm flex-1 min-w-0">
-      <h3 className="text-center font-semibold text-sm mb-2 text-foreground">
+      <h3 className="text-center font-bold text-base sm:text-lg mb-2 text-foreground">
         {MONTHS_ES[monthIndex]}
       </h3>
 
@@ -212,9 +212,9 @@ export function CalendarioSentir() {
         <div className="flex flex-wrap justify-center gap-3 mb-8">
           {(Object.entries(EVENT_TYPES) as [EventType, typeof EVENT_TYPES[EventType]][]).map(
             ([key, val]) => (
-              <div key={key} className="flex items-center gap-1.5">
-                <span className={`inline-block w-3 h-3 rounded-full ${val.dotBg}`} />
-                <span className="text-sm text-muted-foreground">{val.label}</span>
+              <div key={key} className="flex items-center gap-2">
+                <span className={`inline-block w-5 h-5 rounded-full flex-shrink-0 ${val.dotBg}`} />
+                <span className="text-base sm:text-lg font-medium text-foreground">{val.label}</span>
               </div>
             )
           )}

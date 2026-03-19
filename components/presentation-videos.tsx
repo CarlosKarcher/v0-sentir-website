@@ -87,7 +87,7 @@ export function PresentationVideos() {
           className="relative bg-background rounded-lg shadow-2xl pointer-events-auto flex flex-col"
           onClick={(e) => e.stopPropagation()}
           style={{
-            width: "min(52rem, 96vw)",
+            width: "fit-content",
             maxWidth: "96vw",
             maxHeight: "90vh",
             padding: "0.5rem",
@@ -143,8 +143,8 @@ export function PresentationVideos() {
                     preload="auto"
                     controls={playing}
                     muted={false}
-                    className="w-full rounded-lg object-contain block"
-                    style={{ maxHeight: "70vh" }}
+                    className="rounded-lg object-contain block"
+                    style={{ width: "min(480px, 90vw)", maxHeight: "70vh" }}
                     onError={handleError}
                     onEnded={() => setPlaying(false)}
                     onCanPlay={() => {

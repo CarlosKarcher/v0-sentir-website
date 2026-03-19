@@ -146,7 +146,7 @@ export function PresentationVideos() {
                     className="rounded-lg object-contain block"
                     style={{ width: "min(480px, 90vw)", maxHeight: "70vh" }}
                     onError={handleError}
-                    onEnded={() => setPlaying(false)}
+                    onEnded={handleClose}
                     onCanPlay={() => {
                       setLoading(false)
                       if (!autoplayAttempted.current) {

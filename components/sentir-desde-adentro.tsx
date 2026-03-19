@@ -81,6 +81,45 @@ export function SentirDesdeAdentro() {
           </div>
         </div>
 
+        {/* Taller de Bio y de Niño Interior */}
+        <div className="max-w-5xl mx-auto mb-10 sm:mb-12 md:mb-16">
+          <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-6 text-center text-balance">
+            Taller de Bio y de Niño Interior
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+            <Card className="overflow-hidden">
+              <CardContent className="p-0">
+                <div className="relative w-full" style={{ aspectRatio: "16/9" }}>
+                  <video
+                    src="/Taller-Bio-07-03-2026.mp4"
+                    controls
+                    className="w-full h-full object-contain mx-auto block"
+                    preload="metadata"
+                    playsInline
+                  >
+                    Tu navegador no soporta el elemento de video.
+                  </video>
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="overflow-hidden">
+              <CardContent className="p-0">
+                <div className="relative w-full" style={{ aspectRatio: "16/9" }}>
+                  <video
+                    src="/taller-niño-08-03-2026.mp4"
+                    controls
+                    className="w-full h-full object-contain mx-auto block"
+                    preload="metadata"
+                    playsInline
+                  >
+                    Tu navegador no soporta el elemento de video.
+                  </video>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
         {/* El Camino del Guerrero 14 y 15 de Febrero 2026 */}
         <div className="max-w-5xl mx-auto mb-10 sm:mb-12 md:mb-16">
           <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-6 text-center text-balance">

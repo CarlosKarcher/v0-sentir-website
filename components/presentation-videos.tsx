@@ -4,7 +4,7 @@ import * as React from "react"
 import { X, Play } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
-const VIDEO_PATHS = ["/Auto-Rg-15-03-2026-Circulo.mp4", "/Auto-RG-15-03-2026-Saludo.mp4"]
+const VIDEO_SRC = "/video-punta-arenas.mp4"
 
 function getVideoSrc(path: string): string {
   if (typeof window === "undefined") return path
@@ -14,71 +14,35 @@ function getVideoSrc(path: string): string {
 export function PresentationVideos() {
   const [isOpen, setIsOpen] = React.useState(true)
   const [playing, setPlaying] = React.useState(false)
-  const [errors, setErrors] = React.useState<boolean[]>([false, false])
-  const [loading, setLoading] = React.useState<boolean[]>([true, true])
-  const [retryCount, setRetryCount] = React.useState([0, 0])
-  const videoRefs = [React.useRef<HTMLVideoElement>(null), React.useRef<HTMLVideoElement>(null)]
+  const [error, setError] = React.useState(false)
+  const [loading, setLoading] = React.useState(true)
+  const [retryCount, setRetryCount] = React.useState(0)
+  const videoRef = React.useRef<HTMLVideoElement>(null)
   const autoplayAttempted = React.useRef(false)
 
-  const hasAnyError = errors[0] || errors[1]
-  const isLoading = loading[0] || loading[1]
-
   const handleClose = () => {
-    videoRefs.forEach((ref) => {
-      if (ref.current) {
-        ref.current.pause()
-        ref.current.currentTime = 0
-      }
-    })
+    if (videoRef.current) {
+      videoRef.current.pause()
+      videoRef.current.currentTime = 0
+    }
     setIsOpen(false)
   }
 
-  const handlePlayFirst = async () => {
-    const first = videoRefs[0].current
-    if (!first) return
+  const handlePlay = async () => {
+    if (!videoRef.current) return
     try {
-      await first.play()
+      await videoRef.current.play()
       setPlaying(true)
-      setLoading((prev) => {
-        const next = [...prev]
-        next[0] = false
-        return next
-      })
     } catch (err) {
       if ((err as Error).name !== "NotAllowedError") {
-        setErrors((prev) => {
-          const next = [...prev]
-          next[0] = true
-          return next
-        })
+        setError(true)
       }
     }
   }
 
-  const handleEnded = (index: number) => () => {
-    if (index === 0) {
-      videoRefs[1].current?.play().then(() => {
-        setLoading((prev) => {
-          const next = [...prev]
-          next[1] = false
-          return next
-        })
-      }).catch(() => {
-        setErrors((prev) => {
-          const next = [...prev]
-          next[1] = true
-          return next
-        })
-      })
-    } else {
-      setPlaying(false)
-    }
-  }
-
-  const handleError = (index: number) => (e: React.SyntheticEvent<HTMLVideoElement, Event>) => {
+  const handleError = (e: React.SyntheticEvent<HTMLVideoElement, Event>) => {
     const el = e.currentTarget
     const err = el.error
-    const url = el.src || getVideoSrc(VIDEO_PATHS[index])
     if (err) {
       const codigos: Record<number, string> = {
         1: "MEDIA_ERR_ABORTED",
@@ -86,61 +50,26 @@ export function PresentationVideos() {
         3: "MEDIA_ERR_DECODE",
         4: "MEDIA_ERR_SRC_NOT_SUPPORTED",
       }
-      console.error(`[Presentación] Video ${index + 1}:`, codigos[err.code] || err.code, "URL:", url)
-    } else {
-      console.error("[Presentación] Error sin detalles. URL:", url)
+      console.error("[Presentación]", codigos[err.code] || err.code, "URL:", el.src)
     }
-    if (retryCount[index] < 2) {
-      setRetryCount((prev) => {
-        const next = [...prev]
-        next[index] += 1
-        return next
-      })
-      setLoading((prev) => {
-        const next = [...prev]
-        next[index] = true
-        return next
-      })
-      setErrors((prev) => {
-        const next = [...prev]
-        next[index] = false
-        return next
-      })
-      setTimeout(() => videoRefs[index].current?.load(), 800)
+    if (retryCount < 2) {
+      setRetryCount((c) => c + 1)
+      setLoading(true)
+      setError(false)
+      setTimeout(() => videoRef.current?.load(), 800)
     } else {
-      setErrors((prev) => {
-        const next = [...prev]
-        next[index] = true
-        return next
-      })
-      setLoading((prev) => {
-        const next = [...prev]
-        next[index] = false
-        return next
-      })
+      setError(true)
+      setLoading(false)
     }
   }
 
-  const handleRetry = (index: number) => () => {
-    setErrors((prev) => {
-      const next = [...prev]
-      next[index] = false
-      return next
-    })
-    setRetryCount((prev) => {
-      const next = [...prev]
-      next[index] = 0
-      return next
-    })
-    setLoading((prev) => {
-      const next = [...prev]
-      next[index] = true
-      return next
-    })
-    const ref = videoRefs[index].current
-    if (ref) {
-      ref.src = getVideoSrc(VIDEO_PATHS[index])
-      ref.load()
+  const handleRetry = () => {
+    setError(false)
+    setRetryCount(0)
+    setLoading(true)
+    if (videoRef.current) {
+      videoRef.current.src = getVideoSrc(VIDEO_SRC)
+      videoRef.current.load()
     }
   }
 
@@ -158,7 +87,7 @@ export function PresentationVideos() {
           className="relative bg-background rounded-lg shadow-2xl pointer-events-auto flex flex-col"
           onClick={(e) => e.stopPropagation()}
           style={{
-            width: "min(42rem, 96vw)",
+            width: "min(52rem, 96vw)",
             maxWidth: "96vw",
             maxHeight: "90vh",
             padding: "0.5rem",
@@ -180,88 +109,73 @@ export function PresentationVideos() {
           </Button>
 
           <div className="flex items-center justify-center gap-2 pt-2 pb-1 flex-wrap">
-            <img
-              src="/fuego-de-sentir.png"
-              alt="Fuego de Sentir"
-              className="h-8 w-auto object-contain"
-            />
-            <span className="inline-block w-5" aria-hidden="true" />
+            <img src="/fuego-de-sentir.png" alt="" className="h-8 w-auto object-contain" />
             <p className="text-lg font-bold text-foreground">
-              Autoconocimiento - 15 de Marzo 2026
+              Taller de Autoconocimiento — Punta Arenas 2026
             </p>
-            <span className="inline-block w-5" aria-hidden="true" />
-            <img
-              src="/fuego-de-sentir.png"
-              alt="Fuego de Sentir"
-              className="h-8 w-auto object-contain"
-            />
+            <img src="/fuego-de-sentir.png" alt="" className="h-8 w-auto object-contain" />
           </div>
 
-          <div className="flex gap-2 flex-1 min-h-0 mt-2">
-            {VIDEO_PATHS.map((path, index) => (
-              <div
-                key={`${index}-${retryCount[index]}`}
-                className="flex-1 min-w-0 flex flex-col items-center justify-center rounded-lg overflow-hidden bg-muted/30"
-              >
-                {errors[index] ? (
-                  <div className="text-center p-4 space-y-2 w-full">
-                    <p className="text-sm font-semibold">Error video {index + 1}</p>
-                    <p className="text-xs text-muted-foreground break-all">{path}</p>
-                    <Button variant="outline" size="sm" onClick={handleRetry(index)}>
-                      Reintentar
-                    </Button>
-                  </div>
-                ) : (
-                  <div className="relative w-full flex-1 min-h-0 flex items-center justify-center">
-                    {loading[index] && (
-                      <div className="absolute inset-0 flex items-center justify-center bg-background/50 z-10 rounded-lg">
-                        <span className="text-xs text-muted-foreground">Cargando...</span>
-                      </div>
-                    )}
-                    <video
-                      ref={videoRefs[index]}
-                      src={getVideoSrc(path)}
-                      playsInline
-                      preload="auto"
-                      controls={playing}
-                      muted={false}
-                      className="w-full h-full rounded-lg object-contain block"
-                      onError={handleError(index)}
-                      onEnded={handleEnded(index)}
-                      onCanPlay={() => {
-                        setLoading((prev) => {
-                          const next = [...prev]
-                          next[index] = false
-                          return next
-                        })
-                        if (index === 0 && !autoplayAttempted.current) {
-                          autoplayAttempted.current = true
-                          handlePlayFirst()
-                        }
-                      }}
-                      onPlaying={() => setPlaying(true)}
-                      onPause={() => setPlaying(false)}
-                    >
-                      Tu navegador no soporta el video.
-                    </video>
-                  </div>
-                )}
-              </div>
-            ))}
+          <div className="flex-1 min-h-0 mt-2">
+            <div
+              key={retryCount}
+              className="w-full flex flex-col items-center justify-center rounded-lg overflow-hidden bg-muted/30"
+            >
+              {error ? (
+                <div className="text-center p-6 space-y-2">
+                  <p className="text-sm font-semibold">No se pudo cargar el video</p>
+                  <p className="text-xs text-muted-foreground break-all">{VIDEO_SRC}</p>
+                  <Button variant="outline" size="sm" onClick={handleRetry}>
+                    Reintentar
+                  </Button>
+                </div>
+              ) : (
+                <div className="relative w-full flex items-center justify-center">
+                  {loading && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-background/50 z-10 rounded-lg">
+                      <span className="text-xs text-muted-foreground">Cargando...</span>
+                    </div>
+                  )}
+                  <video
+                    ref={videoRef}
+                    src={getVideoSrc(VIDEO_SRC)}
+                    playsInline
+                    preload="auto"
+                    controls={playing}
+                    muted={false}
+                    className="w-full rounded-lg object-contain block"
+                    style={{ maxHeight: "70vh" }}
+                    onError={handleError}
+                    onEnded={() => setPlaying(false)}
+                    onCanPlay={() => {
+                      setLoading(false)
+                      if (!autoplayAttempted.current) {
+                        autoplayAttempted.current = true
+                        handlePlay()
+                      }
+                    }}
+                    onPlaying={() => setPlaying(true)}
+                    onPause={() => setPlaying(false)}
+                  >
+                    Tu navegador no soporta el video.
+                  </video>
+                </div>
+              )}
+            </div>
           </div>
 
-          {!playing && !hasAnyError && (
+          {!playing && !error && (
             <div className="flex justify-center py-3">
               <Button
                 size="lg"
                 onClick={(e) => {
                   e.preventDefault()
                   e.stopPropagation()
-                  handlePlayFirst()
+                  handlePlay()
                 }}
                 className="rounded-full shadow-lg px-6 py-6 text-white font-semibold"
                 style={{ backgroundColor: "#FFB84D", borderColor: "#FFB84D" }}
-                aria-label="Reproducir videos"
+                aria-label="Reproducir video"
                 type="button"
               >
                 <Play className="h-6 w-6 mr-2" />

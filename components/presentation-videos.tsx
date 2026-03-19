@@ -24,6 +24,26 @@ export function PresentationVideos() {
     }
   }, [])
 
+  // Si el video ya está en caché, los eventos disparan ANTES de que React
+  // termine de montar — chequeamos readyState manualmente al montar
+  React.useEffect(() => {
+    const v = videoRef.current
+    if (!v) return
+    // readyState >= 1 = HAVE_METADATA (ya cargado desde caché)
+    if (v.readyState >= 1) {
+      stopLoading()
+      if (!autoplayAttempted.current) {
+        autoplayAttempted.current = true
+        v.muted = false
+        v.play().catch(() => {
+          v.muted = true
+          v.play().catch(() => {})
+        })
+      }
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   const stopLoading = () => {
     setLoading(false)
     if (loadingTimerRef.current) clearTimeout(loadingTimerRef.current)

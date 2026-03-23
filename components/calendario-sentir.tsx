@@ -149,8 +149,8 @@ const CALENDAR_EVENTS: DayEvent[] = [
   { month: 7, day: 2, type: "myl", label: "MyL 7 - 1ra Sala." },
 
   // Agosto — MyL 7 · 2da Sala
-  { month: 7, day: 29, type: "myl", label: "MyL 7 - 1ra Sala." },
-  { month: 7, day: 30, type: "myl", label: "MyL 7 - 1ra Sala." },
+  { month: 7, day: 29, type: "myl", label: "MyL 7 - 2da Sala." },
+  { month: 7, day: 30, type: "myl", label: "MyL 7 - 2da Sala." },
 
   // Octubre/Noviembre — MyL 7 · Campamento y Cierre
   { month: 9, day: 31, type: "myl", label: "MyL 7 - Campamento y Cierre" },

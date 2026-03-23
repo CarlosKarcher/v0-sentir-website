@@ -144,9 +144,17 @@ const CALENDAR_EVENTS: DayEvent[] = [
   { month: 4, day: 16, type: "guerrero", label: "Camino del Guerrero – Río Gallegos" },
   { month: 4, day: 17, type: "guerrero", label: "Camino del Guerrero – Río Gallegos" },
 
-  // Agosto — MyL 7 Cierre y Campamento
-  { month: 7, day: 1, type: "myl", label: "MyL 7 – Cierre y Campamento" },
-  { month: 7, day: 2, type: "myl", label: "MyL 7 – Cierre y Campamento" },
+  // Agosto — MyL 7 · 1ra Sala
+  { month: 7, day: 1, type: "myl", label: "MyL 7 - 1ra Sala." },
+  { month: 7, day: 2, type: "myl", label: "MyL 7 - 1ra Sala." },
+
+  // Agosto — MyL 7 · 2da Sala
+  { month: 7, day: 29, type: "myl", label: "MyL 7 - 1ra Sala." },
+  { month: 7, day: 30, type: "myl", label: "MyL 7 - 1ra Sala." },
+
+  // Octubre/Noviembre — MyL 7 · Campamento y Cierre
+  { month: 9, day: 31, type: "myl", label: "MyL 7 - Campamento y Cierre" },
+  { month: 10, day: 1, type: "myl", label: "MyL 7 - Campamento y Cierre" },
 ]
 
 function getFirstWeekday(year: number, month: number): number {

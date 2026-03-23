@@ -152,6 +152,11 @@ const CALENDAR_EVENTS: DayEvent[] = [
   { month: 7, day: 29, type: "myl", label: "MyL 7 - 2da Sala." },
   { month: 7, day: 30, type: "myl", label: "MyL 7 - 2da Sala." },
 
+  // Septiembre — Autoconocimiento Córdoba
+  { month: 8, day: 25, type: "autoconocimiento", label: "Autocon. – Córdoba" },
+  { month: 8, day: 26, type: "autoconocimiento", label: "Autocon. – Córdoba" },
+  { month: 8, day: 27, type: "autoconocimiento", label: "Autocon. – Córdoba" },
+
   // Octubre/Noviembre — MyL 7 · Campamento y Cierre
   { month: 9, day: 31, type: "myl", label: "MyL 7 - Campamento y Cierre" },
   { month: 10, day: 1, type: "myl", label: "MyL 7 - Campamento y Cierre" },

@@ -398,6 +398,30 @@ export function Events() {
       level: "3er Nivel",
       contactPhone: "+54 9 2966 595803",
     },
+    {
+      title: "Taller de MyL 7 - 2da Sala.",
+      date: "29 y 30 de Agosto 2026",
+      time: "Inicio: Sábado 29 de Agosto, 10:00 Horas",
+      location: "Río Gallegos",
+      type: "Taller de Liderazgo",
+      available: true,
+      availabilityText: "Cupos disponibles",
+      hasFlyer: false,
+      level: "3er Nivel",
+      contactPhone: "+54 9 2966 595803",
+    },
+    {
+      title: "Taller de MyL 7 - Campamento y Cierre.",
+      date: "31 de Octubre y 1 de Noviembre 2026",
+      time: "Inicio: Sábado 31 de Octubre, 10:00 Horas",
+      location: "Río Gallegos",
+      type: "Taller de Liderazgo",
+      available: true,
+      availabilityText: "Cupos disponibles",
+      hasFlyer: false,
+      level: "3er Nivel",
+      contactPhone: "+54 9 2966 595803",
+    },
   ]
 
   return (

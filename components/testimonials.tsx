@@ -136,12 +136,12 @@ export function Testimonials() {
           <TabsContent id={SECTION_IDS.TESTIMONIOS_ESCRITOS} value="written">
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {writtenTestimonials.map((testimonial, index) => (
-                <Card key={index} className="overflow-hidden cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setSelectedImage({ src: testimonial.image, alt: `Testimonio de ${testimonial.name}` })}>
+                <Card key={index} className={`overflow-hidden cursor-pointer hover:shadow-lg transition-shadow${index === 0 ? ' col-span-full' : ''}`} onClick={() => setSelectedImage({ src: testimonial.image, alt: `Testimonio de ${testimonial.name}` })}>
                   <CardContent className="p-0 flex justify-center items-center">
                     <img
                       src={testimonial.image}
                       alt={`Testimonio de ${testimonial.name}`}
-                      className="w-full h-auto object-contain mx-auto block"
+                      className={index === 0 ? "w-full max-w-2xl h-auto object-contain mx-auto block" : "w-full h-auto object-contain mx-auto block"}
                     />
                   </CardContent>
                 </Card>

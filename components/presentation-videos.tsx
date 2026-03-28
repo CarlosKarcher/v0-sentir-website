@@ -31,9 +31,8 @@ export function PresentationVideos() {
       attempted = true
       v.muted = false
       v.play().catch(() => {
-        // Si el navegador bloquea el autoplay con sonido, intentar sin mute
-        // pero dejar que el usuario active el sonido manualmente
-        v.muted = false
+        v.muted = true
+        v.play().catch(() => {})
       })
     }
 

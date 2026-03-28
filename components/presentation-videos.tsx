@@ -30,7 +30,10 @@ export function PresentationVideos() {
       if (attempted) return
       attempted = true
       v.muted = false
-      v.play().catch(() => {})
+      v.play().catch(() => {
+        v.muted = true
+        v.play().catch(() => {})
+      })
     }
 
     if (v.readyState >= 1) {
@@ -50,7 +53,10 @@ export function PresentationVideos() {
     const v = video2Ref.current
     if (!v) return
     v.muted = false
-    v.play().catch(() => {})
+    v.play().catch(() => {
+      v.muted = true
+      v.play().catch(() => {})
+    })
   }, [])
 
   if (!isOpen) return null

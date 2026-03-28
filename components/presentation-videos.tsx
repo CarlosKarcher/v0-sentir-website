@@ -4,24 +4,24 @@ import * as React from "react"
 import { X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
-const VIDEO_SRC = "/Video-transfor-abril-2026.mp4"
+const VIDEO_1 = "/Video-transfor-abril-2026.mp4"
+const VIDEO_2 = "/video-transfor-abril-2026-2.mp4"
 
 export function PresentationVideos() {
   const [isOpen, setIsOpen] = React.useState(true)
-  const videoRef = React.useRef<HTMLVideoElement>(null)
+  const [activeVideo, setActiveVideo] = React.useState<1 | 2>(1)
+  const video1Ref = React.useRef<HTMLVideoElement>(null)
+  const video2Ref = React.useRef<HTMLVideoElement>(null)
 
   const handleClose = React.useCallback(() => {
-    if (videoRef.current) {
-      videoRef.current.pause()
-      videoRef.current.currentTime = 0
-    }
+    video1Ref.current?.pause()
+    video2Ref.current?.pause()
     setIsOpen(false)
   }, [])
 
-  // Intento de autoplay usando listener nativo del DOM (más confiable que
-  // los synthetic events de React, especialmente con caché en móvil)
+  // Autoplay del primer video al abrir
   React.useEffect(() => {
-    const v = videoRef.current
+    const v = video1Ref.current
     if (!v) return
 
     let attempted = false
@@ -37,16 +37,31 @@ export function PresentationVideos() {
     }
 
     if (v.readyState >= 1) {
-      // Ya cargado desde caché → actuar de inmediato
       tryPlay()
     } else {
-      // Primera carga → esperar el evento nativo
       v.addEventListener("loadedmetadata", tryPlay, { once: true })
     }
 
     return () => {
       v.removeEventListener("loadedmetadata", tryPlay)
     }
+  }, [])
+
+  // Cuando termina el video 1 → arrancar video 2
+  const handleVideo1Ended = React.useCallback(() => {
+    setActiveVideo(2)
+    const v = video2Ref.current
+    if (!v) return
+    v.muted = false
+    v.play().catch(() => {
+      v.muted = true
+      v.play().catch(() => {})
+    })
+  }, [])
+
+  // Cuando termina el video 2 → cerrar
+  const handleVideo2Ended = React.useCallback(() => {
+    setIsOpen(false)
   }, [])
 
   if (!isOpen) return null
@@ -88,16 +103,32 @@ export function PresentationVideos() {
             <img src="/fuego-de-sentir.png" alt="" className="h-7 w-auto" />
           </div>
 
-          {/* Video — sin spinner, controles nativos siempre visibles */}
+          {/* Videos */}
           <div className="bg-black">
+            {/* Video 1 */}
             <video
-              ref={videoRef}
-              src={VIDEO_SRC}
+              ref={video1Ref}
+              src={VIDEO_1}
               playsInline
               controls
               preload="metadata"
               className="w-full block"
-              style={{ maxHeight: "70vh" }}
+              style={{ maxHeight: "70vh", display: activeVideo === 1 ? "block" : "none" }}
+              onEnded={handleVideo1Ended}
+            >
+              Tu navegador no soporta el video.
+            </video>
+
+            {/* Video 2 */}
+            <video
+              ref={video2Ref}
+              src={VIDEO_2}
+              playsInline
+              controls
+              preload="metadata"
+              className="w-full block"
+              style={{ maxHeight: "70vh", display: activeVideo === 2 ? "block" : "none" }}
+              onEnded={handleVideo2Ended}
             >
               Tu navegador no soporta el video.
             </video>

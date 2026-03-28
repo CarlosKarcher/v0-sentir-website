@@ -29,13 +29,11 @@ export function PresentationVideos() {
     const tryPlay = () => {
       if (attempted) return
       attempted = true
-      // Primero con sonido, si falla (política móvil) → silenciado
       v.muted = false
       v.play().catch(() => {
-        v.muted = true
-        v.play().catch(() => {
-          // El usuario usa los controles nativos del navegador
-        })
+        // Si el navegador bloquea el autoplay con sonido, intentar sin mute
+        // pero dejar que el usuario active el sonido manualmente
+        v.muted = false
       })
     }
 
@@ -101,7 +99,6 @@ export function PresentationVideos() {
               preload="metadata"
               className="w-full block"
               style={{ maxHeight: "70vh" }}
-              onEnded={handleClose}
             >
               Tu navegador no soporta el video.
             </video>

@@ -30,10 +30,7 @@ export function PresentationVideos() {
       if (attempted) return
       attempted = true
       v.muted = false
-      v.play().catch(() => {
-        v.muted = true
-        v.play().catch(() => {})
-      })
+      v.play().catch(() => {})
     }
 
     if (v.readyState >= 1) {
@@ -53,15 +50,7 @@ export function PresentationVideos() {
     const v = video2Ref.current
     if (!v) return
     v.muted = false
-    v.play().catch(() => {
-      v.muted = true
-      v.play().catch(() => {})
-    })
-  }, [])
-
-  // Cuando termina el video 2 → cerrar
-  const handleVideo2Ended = React.useCallback(() => {
-    setIsOpen(false)
+    v.play().catch(() => {})
   }, [])
 
   if (!isOpen) return null
@@ -128,7 +117,6 @@ export function PresentationVideos() {
               preload="metadata"
               className="w-full block"
               style={{ maxHeight: "70vh", display: activeVideo === 2 ? "block" : "none" }}
-              onEnded={handleVideo2Ended}
             >
               Tu navegador no soporta el video.
             </video>

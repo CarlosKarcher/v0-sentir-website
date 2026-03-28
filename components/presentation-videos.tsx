@@ -4,7 +4,7 @@ import * as React from "react"
 import { X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
-const VIDEO_SRC = "/video-punta-arenas-2.mp4"
+const VIDEO_SRC = "/Video-transfor-abril-2026.mp4"
 
 export function PresentationVideos() {
   const [isOpen, setIsOpen] = React.useState(true)
@@ -86,7 +86,7 @@ export function PresentationVideos() {
           <div className="flex items-center justify-center gap-2 px-8 pt-3 pb-2 flex-wrap">
             <img src="/fuego-de-sentir.png" alt="" className="h-7 w-auto" />
             <p className="text-sm sm:text-base font-bold text-center text-foreground">
-              Taller de Autoconocimiento — Punta Arenas 2026
+              Taller de Transformación — Abril 2026
             </p>
             <img src="/fuego-de-sentir.png" alt="" className="h-7 w-auto" />
           </div>

@@ -12,7 +12,7 @@ import { ImagePopup } from "@/components/ui/image-popup"
 const writtenTestimonials: WrittenTestimonial[] = [
   {
     name: "Patricio Lovera",
-    image: "/Testimonio-Patricio-Lovera.png",
+    image: "/Testimonio Patricio Lovera2.png",
   },
   {
     name: "Ainhoa Almonacid",

@@ -134,14 +134,25 @@ export function Testimonials() {
           </TabsList>
 
           <TabsContent id={SECTION_IDS.TESTIMONIOS_ESCRITOS} value="written">
+            <div className="flex justify-center mb-4 sm:mb-6">
+              <Card className="w-full max-w-sm overflow-hidden cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setSelectedImage({ src: writtenTestimonials[0].image, alt: `Testimonio de ${writtenTestimonials[0].name}` })}>
+                <CardContent className="p-0 flex justify-center items-center">
+                  <img
+                    src={writtenTestimonials[0].image}
+                    alt={`Testimonio de ${writtenTestimonials[0].name}`}
+                    className="w-full h-auto object-contain mx-auto block"
+                  />
+                </CardContent>
+              </Card>
+            </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              {writtenTestimonials.map((testimonial, index) => (
-                <Card key={index} className={`overflow-hidden cursor-pointer hover:shadow-lg transition-shadow${index === 0 ? ' col-span-full' : ''}`} onClick={() => setSelectedImage({ src: testimonial.image, alt: `Testimonio de ${testimonial.name}` })}>
+              {writtenTestimonials.slice(1).map((testimonial, index) => (
+                <Card key={index} className="overflow-hidden cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setSelectedImage({ src: testimonial.image, alt: `Testimonio de ${testimonial.name}` })}>
                   <CardContent className="p-0 flex justify-center items-center">
                     <img
                       src={testimonial.image}
                       alt={`Testimonio de ${testimonial.name}`}
-                      className={index === 0 ? "w-full max-w-2xl h-auto object-contain mx-auto block" : "w-full h-auto object-contain mx-auto block"}
+                      className="w-full h-auto object-contain mx-auto block"
                     />
                   </CardContent>
                 </Card>

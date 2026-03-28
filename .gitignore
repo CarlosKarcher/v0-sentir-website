@@ -38,3 +38,4 @@ next-env.d.ts
 
 # visit counter
 visit-counter.json
+.vercel

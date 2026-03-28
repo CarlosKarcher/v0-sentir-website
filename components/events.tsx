@@ -197,6 +197,20 @@ export function Events() {
 
   const pastEvents = [
     {
+      title: "Taller de Autoconocimiento - Punta Arenas",
+      date: "27, 28 y 29 de Marzo 2026",
+      time: "Inicio: Viernes 27/03 a las 17 Horas.",
+      location: "Avda. Jorge Alessandri #264 Barrio Sur - Club Huracán",
+      type: "Taller de Liderazgo",
+      available: false,
+      availabilityText: "Evento Realizado",
+      hasFlyer: true,
+      flyerImage: "/auto-punta-arenas-2026.jpeg",
+      flyerImageAlt: "/images/auto-punta-arenas-2026.jpeg",
+      level: "1er Nivel",
+      contactPhone: "+56 9 6113 0835",
+    },
+    {
       title: "Taller de Autoconocimiento - Río Gallegos",
       date: "13, 14 y 15 de Marzo 2026",
       time: "Inicio Viernes 13 de Marzo a las 17 Hs",
@@ -278,20 +292,6 @@ export function Events() {
   ]
 
   const events = [
-    {
-      title: "Taller de Autoconocimiento - Punta Arenas",
-      date: "27, 28 y 29 de Marzo 2026",
-      time: "Inicio: Viernes 27/03 a las 17 Horas.",
-      location: "Avda. Jorge Alessandri #264 Barrio Sur - Club Huracán",
-      type: "Taller de Liderazgo",
-      available: true,
-      availabilityText: "Cupos disponibles",
-      hasFlyer: true,
-      flyerImage: "/auto-punta-arenas-2026.jpeg",
-      flyerImageAlt: "/images/auto-punta-arenas-2026.jpeg",
-      level: "1er Nivel",
-      contactPhone: "+56 9 6113 0835",
-    },
     {
       title: "Taller de Transformación en Río Gallegos",
       date: "2, 3, 4 y 5 de Abril 2026",

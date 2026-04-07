@@ -14,7 +14,6 @@ import { Merchandising } from "@/components/merchandising"
 import { MusicaSentir } from "@/components/musica-sentir"
 import { SentirDesdeAdentro } from "@/components/sentir-desde-adentro"
 import { Footer } from "@/components/footer"
-import { PresentationVideos } from "@/components/presentation-videos"
 
 export default function Page() {
   useEffect(() => {
@@ -62,8 +61,7 @@ export default function Page() {
 
   return (
     <main className="min-h-screen">
-      <PresentationVideos />
-      <Header />
+<Header />
       <Hero />
       <About />
       <CalendarioSentir />

@@ -4,15 +4,40 @@ import * as React from "react"
 import { X, Play } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
-const VIDEOS = ["/Video-transfor.mp4", "/La-tribu-de-sentir.mp4"]
-
 export function VideoPopup() {
   const [isOpen, setIsOpen] = React.useState(true)
+  const [activeVideo, setActiveVideo] = React.useState<1 | 2>(1)
   const [isPlaying, setIsPlaying] = React.useState(false)
-  const [currentIndex, setCurrentIndex] = React.useState(0)
-  const videoRef = React.useRef<HTMLVideoElement>(null)
+  const video1Ref = React.useRef<HTMLVideoElement>(null)
+  const video2Ref = React.useRef<HTMLVideoElement>(null)
 
-  const playVideo = (v: HTMLVideoElement) => {
+  // Autorun video 1 al montar
+  React.useEffect(() => {
+    const v = video1Ref.current
+    if (!v) return
+
+    const tryPlay = () => {
+      v.muted = false
+      v.play().catch(() => {
+        v.muted = true
+        v.play().catch(() => {})
+      })
+    }
+
+    if (v.readyState >= 1) {
+      tryPlay()
+    } else {
+      v.addEventListener("loadedmetadata", tryPlay, { once: true })
+    }
+
+    return () => v.removeEventListener("loadedmetadata", tryPlay)
+  }, [])
+
+  // Cuando termina video 1 → reproducir video 2
+  const handleVideo1Ended = () => {
+    setActiveVideo(2)
+    const v = video2Ref.current
+    if (!v) return
     v.muted = false
     v.play().catch(() => {
       v.muted = true
@@ -20,47 +45,20 @@ export function VideoPopup() {
     })
   }
 
-  // Autorun del primer video al montar
-  React.useEffect(() => {
-    const v = videoRef.current
-    if (!v) return
-    if (v.readyState >= 1) {
-      playVideo(v)
-    } else {
-      v.addEventListener("loadedmetadata", () => playVideo(v), { once: true })
-    }
-  }, [])
-
-  // Cuando cambia el índice: cambiar src, cargar y reproducir
-  React.useEffect(() => {
-    if (currentIndex === 0) return
-    const v = videoRef.current
-    if (!v) return
-    v.src = VIDEOS[currentIndex]
-    v.load()
-    const onReady = () => playVideo(v)
-    v.addEventListener("loadedmetadata", onReady, { once: true })
-    return () => v.removeEventListener("loadedmetadata", onReady)
-  }, [currentIndex])
-
   const handleClose = () => {
-    videoRef.current?.pause()
+    video1Ref.current?.pause()
+    video2Ref.current?.pause()
     setIsOpen(false)
   }
 
   const handlePlay = () => {
-    const v = videoRef.current
+    const v = activeVideo === 1 ? video1Ref.current : video2Ref.current
     if (!v) return
-    playVideo(v)
-  }
-
-  const handleEnded = () => {
-    if (currentIndex < VIDEOS.length - 1) {
-      setIsPlaying(false)
-      setCurrentIndex((i) => i + 1)
-    } else {
-      setIsPlaying(false)
-    }
+    v.muted = false
+    v.play().catch(() => {
+      v.muted = true
+      v.play().catch(() => {})
+    })
   }
 
   if (!isOpen) return null
@@ -93,23 +91,39 @@ export function VideoPopup() {
             <X className="h-5 w-5" />
           </Button>
 
-          {/* Video — elemento único, src se cambia imperativamente */}
+          {/* Video 1 */}
           <video
-            ref={videoRef}
-            src={VIDEOS[0]}
+            ref={video1Ref}
+            src="/Video-transfor.mp4"
             playsInline
             controls
             preload="metadata"
             className="w-full block"
-            style={{ maxHeight: "85vh" }}
+            style={{ maxHeight: "85vh", display: activeVideo === 1 ? "block" : "none" }}
             onPlay={() => setIsPlaying(true)}
             onPause={() => setIsPlaying(false)}
-            onEnded={handleEnded}
+            onEnded={handleVideo1Ended}
           >
             Tu navegador no soporta el video.
           </video>
 
-          {/* Botón play (visible solo si no está reproduciendo) */}
+          {/* Video 2 */}
+          <video
+            ref={video2Ref}
+            src="/La-tribu-de-sentir.mp4"
+            playsInline
+            controls
+            preload="metadata"
+            className="w-full block"
+            style={{ maxHeight: "85vh", display: activeVideo === 2 ? "block" : "none" }}
+            onPlay={() => setIsPlaying(true)}
+            onPause={() => setIsPlaying(false)}
+            onEnded={() => setIsPlaying(false)}
+          >
+            Tu navegador no soporta el video.
+          </video>
+
+          {/* Botón play */}
           {!isPlaying && (
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
               <Button

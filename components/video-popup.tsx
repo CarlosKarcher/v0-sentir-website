@@ -12,26 +12,35 @@ export function VideoPopup() {
   const [currentIndex, setCurrentIndex] = React.useState(0)
   const videoRef = React.useRef<HTMLVideoElement>(null)
 
-  // Autorun al montar
+  const playVideo = (v: HTMLVideoElement) => {
+    v.muted = false
+    v.play().catch(() => {
+      v.muted = true
+      v.play().catch(() => {})
+    })
+  }
+
+  // Autorun del primer video al montar
   React.useEffect(() => {
     const v = videoRef.current
     if (!v) return
-
-    const tryPlay = () => {
-      v.muted = false
-      v.play().catch(() => {
-        v.muted = true
-        v.play().catch(() => {})
-      })
-    }
-
     if (v.readyState >= 1) {
-      tryPlay()
+      playVideo(v)
     } else {
-      v.addEventListener("loadedmetadata", tryPlay, { once: true })
+      v.addEventListener("loadedmetadata", () => playVideo(v), { once: true })
     }
+  }, [])
 
-    return () => v.removeEventListener("loadedmetadata", tryPlay)
+  // Cuando cambia el índice: cambiar src, cargar y reproducir
+  React.useEffect(() => {
+    if (currentIndex === 0) return
+    const v = videoRef.current
+    if (!v) return
+    v.src = VIDEOS[currentIndex]
+    v.load()
+    const onReady = () => playVideo(v)
+    v.addEventListener("loadedmetadata", onReady, { once: true })
+    return () => v.removeEventListener("loadedmetadata", onReady)
   }, [currentIndex])
 
   const handleClose = () => {
@@ -42,15 +51,12 @@ export function VideoPopup() {
   const handlePlay = () => {
     const v = videoRef.current
     if (!v) return
-    v.muted = false
-    v.play().catch(() => {
-      v.muted = true
-      v.play().catch(() => {})
-    })
+    playVideo(v)
   }
 
   const handleEnded = () => {
     if (currentIndex < VIDEOS.length - 1) {
+      setIsPlaying(false)
       setCurrentIndex((i) => i + 1)
     } else {
       setIsPlaying(false)
@@ -87,13 +93,12 @@ export function VideoPopup() {
             <X className="h-5 w-5" />
           </Button>
 
-          {/* Video */}
+          {/* Video — elemento único, src se cambia imperativamente */}
           <video
-            key={currentIndex}
             ref={videoRef}
-            src={VIDEOS[currentIndex]}
+            src={VIDEOS[0]}
             playsInline
-            controls={isPlaying}
+            controls
             preload="metadata"
             className="w-full block"
             style={{ maxHeight: "85vh" }}

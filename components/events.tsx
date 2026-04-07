@@ -197,6 +197,20 @@ export function Events() {
 
   const pastEvents = [
     {
+      title: "Taller de Transformación en Río Gallegos",
+      date: "2, 3, 4 y 5 de Abril 2026",
+      time: "Inicio: Jueves 2 de Abril a las 18:00 hs",
+      location: "Lugar a Confirmar",
+      type: "Taller de Liderazgo",
+      available: false,
+      availabilityText: "Evento Realizado",
+      hasFlyer: true,
+      flyerImage: "/transfor-abril-2026.jpeg",
+      flyerImageAlt: "/images/transfor-abril-2026.jpeg",
+      level: "2do Nivel",
+      contactPhone: "+54 9 2966 595803",
+    },
+    {
       title: "Taller de Autoconocimiento - Punta Arenas",
       date: "27, 28 y 29 de Marzo 2026",
       time: "Inicio: Viernes 27/03 a las 17 Horas.",
@@ -292,20 +306,6 @@ export function Events() {
   ]
 
   const events = [
-    {
-      title: "Taller de Transformación en Río Gallegos",
-      date: "2, 3, 4 y 5 de Abril 2026",
-      time: "Inicio: Jueves 2 de Abril a las 18:00 hs",
-      location: "Lugar a Confirmar",
-      type: "Taller de Liderazgo",
-      available: true,
-      availabilityText: "Cupos disponibles",
-      hasFlyer: true,
-      flyerImage: "/transfor-abril-2026.jpeg",
-      flyerImageAlt: "/images/transfor-abril-2026.jpeg",
-      level: "2do Nivel",
-      contactPhone: "+54 9 2966 595803",
-    },
     {
       title: "Taller de Autoconocimiento - Tandil (Buenos Aires)",
       date: "10, 11 y 12 de Abril, 2026",

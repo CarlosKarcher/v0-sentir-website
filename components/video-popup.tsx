@@ -4,9 +4,12 @@ import * as React from "react"
 import { X, Play } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
+const VIDEOS = ["/Video-transfor.mp4", "/La-tribu-de-sentir.mp4"]
+
 export function VideoPopup() {
   const [isOpen, setIsOpen] = React.useState(true)
   const [isPlaying, setIsPlaying] = React.useState(false)
+  const [currentIndex, setCurrentIndex] = React.useState(0)
   const videoRef = React.useRef<HTMLVideoElement>(null)
 
   // Autorun al montar
@@ -29,7 +32,7 @@ export function VideoPopup() {
     }
 
     return () => v.removeEventListener("loadedmetadata", tryPlay)
-  }, [])
+  }, [currentIndex])
 
   const handleClose = () => {
     videoRef.current?.pause()
@@ -37,7 +40,21 @@ export function VideoPopup() {
   }
 
   const handlePlay = () => {
-    videoRef.current?.play().catch(() => {})
+    const v = videoRef.current
+    if (!v) return
+    v.muted = false
+    v.play().catch(() => {
+      v.muted = true
+      v.play().catch(() => {})
+    })
+  }
+
+  const handleEnded = () => {
+    if (currentIndex < VIDEOS.length - 1) {
+      setCurrentIndex((i) => i + 1)
+    } else {
+      setIsPlaying(false)
+    }
   }
 
   if (!isOpen) return null
@@ -72,8 +89,9 @@ export function VideoPopup() {
 
           {/* Video */}
           <video
+            key={currentIndex}
             ref={videoRef}
-            src="/Video-transfor.mp4"
+            src={VIDEOS[currentIndex]}
             playsInline
             controls={isPlaying}
             preload="metadata"
@@ -81,7 +99,7 @@ export function VideoPopup() {
             style={{ maxHeight: "85vh" }}
             onPlay={() => setIsPlaying(true)}
             onPause={() => setIsPlaying(false)}
-            onEnded={() => setIsPlaying(false)}
+            onEnded={handleEnded}
           >
             Tu navegador no soporta el video.
           </video>

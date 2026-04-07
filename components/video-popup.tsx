@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button"
 export function VideoPopup() {
   const [isOpen, setIsOpen] = React.useState(true)
   const [activeVideo, setActiveVideo] = React.useState<1 | 2>(1)
-  const [isPlaying, setIsPlaying] = React.useState(false)
   const video1Ref = React.useRef<HTMLVideoElement>(null)
   const video2Ref = React.useRef<HTMLVideoElement>(null)
 
@@ -51,16 +50,6 @@ export function VideoPopup() {
     setIsOpen(false)
   }
 
-  const handlePlay = () => {
-    const v = activeVideo === 1 ? video1Ref.current : video2Ref.current
-    if (!v) return
-    v.muted = false
-    v.play().catch(() => {
-      v.muted = true
-      v.play().catch(() => {})
-    })
-  }
-
   if (!isOpen) return null
 
   return (
@@ -72,12 +61,12 @@ export function VideoPopup() {
         aria-hidden="true"
       />
 
-      {/* Modal */}
+      {/* Modal ancho para dos videos lado a lado */}
       <div className="fixed inset-0 z-[9999] flex items-center justify-center p-2 sm:p-4">
         <div
           className="relative bg-black rounded-xl shadow-2xl overflow-hidden"
           onClick={(e) => e.stopPropagation()}
-          style={{ width: "min(480px, 96vw)", maxHeight: "92vh" }}
+          style={{ width: "min(900px, 97vw)", maxHeight: "92vh" }}
         >
           {/* Botón cerrar */}
           <Button
@@ -91,54 +80,55 @@ export function VideoPopup() {
             <X className="h-5 w-5" />
           </Button>
 
-          {/* Video 1 */}
-          <video
-            ref={video1Ref}
-            src="/Video-transfor.mp4"
-            playsInline
-            controls
-            preload="metadata"
-            className="w-full block"
-            style={{ maxHeight: "85vh", display: activeVideo === 1 ? "block" : "none" }}
-            onPlay={() => setIsPlaying(true)}
-            onPause={() => setIsPlaying(false)}
-            onEnded={handleVideo1Ended}
-          >
-            Tu navegador no soporta el video.
-          </video>
-
-          {/* Video 2 */}
-          <video
-            ref={video2Ref}
-            src="/La-tribu-de-sentir.mp4"
-            playsInline
-            controls
-            preload="metadata"
-            className="w-full block"
-            style={{ maxHeight: "85vh", display: activeVideo === 2 ? "block" : "none" }}
-            onPlay={() => setIsPlaying(true)}
-            onPause={() => setIsPlaying(false)}
-            onEnded={() => setIsPlaying(false)}
-          >
-            Tu navegador no soporta el video.
-          </video>
-
-          {/* Botón play */}
-          {!isPlaying && (
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <Button
-                size="lg"
-                className="rounded-full px-6 py-6 text-white font-semibold pointer-events-auto"
-                style={{ backgroundColor: "#FFB84D", borderColor: "#FFB84D" }}
-                onClick={handlePlay}
-                type="button"
-                aria-label="Reproducir"
+          {/* Dos videos lado a lado */}
+          <div className="flex flex-row gap-1">
+            {/* Video 1 */}
+            <div className="relative flex-1">
+              <video
+                ref={video1Ref}
+                src="/Video-transfor.mp4"
+                playsInline
+                controls
+                preload="metadata"
+                className="w-full block"
+                style={{ maxHeight: "85vh" }}
+                onEnded={handleVideo1Ended}
               >
-                <Play className="h-6 w-6 mr-2" />
-                Reproducir
-              </Button>
+                Tu navegador no soporta el video.
+              </video>
+              {activeVideo === 1 && (
+                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-yellow-400 text-black text-xs font-bold px-2 py-0.5 rounded-full pointer-events-none">
+                  ▶ Reproduciendo
+                </div>
+              )}
             </div>
-          )}
+
+            {/* Video 2 */}
+            <div className="relative flex-1">
+              <video
+                ref={video2Ref}
+                src="/La-tribu-de-sentir.mp4"
+                playsInline
+                controls
+                preload="metadata"
+                className="w-full block"
+                style={{ maxHeight: "85vh" }}
+                onPlay={() => setActiveVideo(2)}
+              >
+                Tu navegador no soporta el video.
+              </video>
+              {activeVideo === 1 && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded pointer-events-none">
+                  <Play className="h-10 w-10 text-white/60" />
+                </div>
+              )}
+              {activeVideo === 2 && (
+                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-yellow-400 text-black text-xs font-bold px-2 py-0.5 rounded-full pointer-events-none">
+                  ▶ Reproduciendo
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </>

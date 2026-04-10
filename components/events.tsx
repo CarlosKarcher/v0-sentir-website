@@ -391,8 +391,8 @@ export function Events() {
     },
     {
       title: "El Camino del Guerrero - Punta Arenas",
-      date: "30 y 31 de Mayo 2026",
-      time: "Inicio: Sábado 30 de Mayo, 15 Horas",
+      date: "23 y 24 de Mayo 2026",
+      time: "Inicio: Sábado 23 de Mayo, 15 Horas",
       location: "Punta Arenas",
       type: "Otro Taller",
       available: true,

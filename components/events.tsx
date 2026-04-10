@@ -400,8 +400,8 @@ export function Events() {
       available: true,
       availabilityText: "Cupos disponibles",
       hasFlyer: true,
-      flyerImage: "/niño-mayo-punta-arenas.jpeg",
-      flyerImageAlt: "/images/niño-mayo-punta-arenas.jpeg",
+      flyerImage: "/nino-mayo-punta-arenas.jpeg",
+      flyerImageAlt: "/images/nino-mayo-punta-arenas.jpeg",
       contactPhone: "+56 9 6113 0835",
     },
     {

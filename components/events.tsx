@@ -386,7 +386,9 @@ export function Events() {
       type: "Otro Taller",
       available: true,
       availabilityText: "Cupos disponibles",
-      hasFlyer: false,
+      hasFlyer: true,
+      flyerImage: "/El-guerrero-mayo-gallegos.jpeg",
+      flyerImageAlt: "/images/El-guerrero-mayo-gallegos.jpeg",
       contactPhone: "+54 9 2966 595803",
     },
     {
@@ -397,7 +399,9 @@ export function Events() {
       type: "Otro Taller",
       available: true,
       availabilityText: "Cupos disponibles",
-      hasFlyer: false,
+      hasFlyer: true,
+      flyerImage: "/El-guerrero-mayo-punta-arenas.jpeg",
+      flyerImageAlt: "/images/El-guerrero-mayo-punta-arenas.jpeg",
       contactPhone: "+56 9 6113 0835",
     },
     {

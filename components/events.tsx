@@ -19,39 +19,15 @@ const getWhatsAppLink = (phoneNumber: string) => {
 function EventCard({ event }: { event: Event }) {
   const [flyerOpen, setFlyerOpen] = useState(false)
   const [imageError, setImageError] = useState(false)
-  const [imageSrc, setImageSrc] = useState(event.flyerImage || "/flyer-transformacion-rio-gallegos.jpg")
-  const [attemptedPaths, setAttemptedPaths] = useState<string[]>([])
-  
-  // Resetear el estado cuando se abre el modal
-  const handleOpenChange = (open: boolean) => {
-    setFlyerOpen(open)
-    if (open) {
-      setImageError(false)
-      setAttemptedPaths([])
-      setImageSrc(event.flyerImage || "/flyer-transformacion-rio-gallegos.jpg")
-    }
-  }
 
   const handleFlyerClick = () => {
     setFlyerOpen(true)
     setImageError(false)
-    setAttemptedPaths([])
-    setImageSrc(event.flyerImage || "/flyer-transformacion-rio-gallegos.jpg")
-    
-    // Pre-cargar la imagen para verificar si existe
-    const img = new Image()
-    img.onerror = () => {
-      // Si falla la principal, intentar la alternativa
-      if (event.flyerImageAlt && imageSrc === event.flyerImage) {
-        setImageSrc(event.flyerImageAlt)
-      } else {
-        setImageError(true)
-      }
-    }
-    img.onload = () => {
-      setImageError(false)
-    }
-    img.src = event.flyerImage || "/flyer-transformacion-rio-gallegos.jpg"
+  }
+
+  const handleClose = () => {
+    setFlyerOpen(false)
+    setImageError(false)
   }
   
   return (
@@ -101,60 +77,22 @@ function EventCard({ event }: { event: Event }) {
               </Button>
               
               {/* Pop-up de flyer */}
-              {flyerOpen && event.hasFlyer && (
+              {flyerOpen && event.hasFlyer && !imageError && (
                 <ImagePopup
-                  src={imageError ? "" : encodeURI(imageSrc)}
+                  src={event.flyerImage!}
                   alt={`Flyer - ${event.title}`}
-                  isOpen={flyerOpen && !imageError}
-                  onClose={() => {
-                    setFlyerOpen(false)
-                    setImageError(false)
-                    setAttemptedPaths([])
-                    setImageSrc(event.flyerImage || "/flyer-transformacion-rio-gallegos.jpg")
-                  }}
+                  isOpen={true}
+                  onClose={handleClose}
                 />
               )}
-              
-              {/* Manejo de errores de carga o flyer no disponible */}
+
+              {/* Flyer no disponible */}
               {flyerOpen && (imageError || !event.hasFlyer) && (
                 <div className="fixed inset-0 z-[9998] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4">
                   <div className="bg-background rounded-lg shadow-2xl p-8 max-w-md text-center">
-                    <p className="text-lg font-semibold mb-2">
-                      {!event.hasFlyer ? "Flyer no disponible aún" : "No se pudo cargar el flyer"}
-                    </p>
-                    {!event.hasFlyer ? (
-                      <p className="text-sm mb-4">El flyer de este evento estará disponible próximamente.</p>
-                    ) : (
-                      <>
-                        <p className="text-sm mb-4">Ruta intentada: {imageSrc}</p>
-                        <p className="text-sm mb-4">Asegúrate de que el archivo esté en: public{event.flyerImage} o public{event.flyerImageAlt || ''}</p>
-                      </>
-                    )}
-                    <div className="flex gap-2 justify-center">
-                      {event.hasFlyer && (
-                        <Button 
-                          variant="outline" 
-                          onClick={() => {
-                            setImageError(false)
-                            setAttemptedPaths([])
-                            setImageSrc(event.flyerImage)
-                          }}
-                        >
-                          Reintentar
-                        </Button>
-                      )}
-                      <Button 
-                        variant="outline" 
-                        onClick={() => {
-                          setFlyerOpen(false)
-                          setImageError(false)
-                          setAttemptedPaths([])
-                          setImageSrc(event.flyerImage || "/flyer-transformacion-rio-gallegos.jpg")
-                        }}
-                      >
-                        Cerrar
-                      </Button>
-                    </div>
+                    <p className="text-lg font-semibold mb-2">Flyer no disponible aún</p>
+                    <p className="text-sm mb-4">El flyer de este evento estará disponible próximamente.</p>
+                    <Button variant="outline" onClick={handleClose}>Cerrar</Button>
                   </div>
                 </div>
               )}

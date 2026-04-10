@@ -144,6 +144,12 @@ const CALENDAR_EVENTS: DayEvent[] = [
   { month: 4, day: 16, type: "guerrero", label: "Camino del Guerrero – Río Gallegos" },
   { month: 4, day: 17, type: "guerrero", label: "Camino del Guerrero – Río Gallegos" },
 
+  // Julio — Transformación
+  { month: 6, day: 9, type: "transformacion", label: "Transfor." },
+  { month: 6, day: 10, type: "transformacion", label: "Transfor." },
+  { month: 6, day: 11, type: "transformacion", label: "Transfor." },
+  { month: 6, day: 12, type: "transformacion", label: "Transfor." },
+
   // Agosto — MyL 7 · 1ra Sala
   { month: 7, day: 1, type: "myl", label: "MyL 7 - 1ra Sala." },
   { month: 7, day: 2, type: "myl", label: "MyL 7 - 1ra Sala." },

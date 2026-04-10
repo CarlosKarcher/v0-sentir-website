@@ -387,6 +387,18 @@ export function Events() {
       contactPhone: "+54 9 2966 595803",
     },
     {
+      title: "Taller de Transformación",
+      date: "9, 10, 11 y 12 de Julio 2026",
+      time: "Inicio: Jueves 9 de Julio, 17 Horas",
+      location: "Lugar a Confirmar",
+      type: "Taller de Liderazgo",
+      available: true,
+      availabilityText: "Cupos disponibles",
+      hasFlyer: false,
+      level: "2do Nivel",
+      contactPhone: "+54 9 2966 595803",
+    },
+    {
       title: "Taller de MyL 7 - 1ra, Sala.",
       date: "1 y 2 de Agosto 2026",
       time: "Inicio: Sábado 1 de Agosto, 10:00 Horas",

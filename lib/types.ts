@@ -5,6 +5,7 @@
 export interface Event {
   title: string
   subtitle?: string
+  subtitleHighlight?: boolean
   date: string
   time: string
   location: string

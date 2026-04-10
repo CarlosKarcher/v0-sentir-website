@@ -140,9 +140,13 @@ const CALENDAR_EVENTS: DayEvent[] = [
   { month: 4, day: 21, type: "oratoria", label: "Curso de Oratoria Online" },
   { month: 4, day: 26, type: "oratoria", label: "Curso de Oratoria Online" },
 
-  // Mayo — Camino del Guerrero
+  // Mayo — Camino del Guerrero Río Gallegos
   { month: 4, day: 16, type: "guerrero", label: "Camino del Guerrero – Río Gallegos" },
   { month: 4, day: 17, type: "guerrero", label: "Camino del Guerrero – Río Gallegos" },
+
+  // Mayo — Camino del Guerrero Punta Arenas
+  { month: 4, day: 30, type: "guerrero", label: "Camino del Guerrero – Punta Arenas" },
+  { month: 4, day: 31, type: "guerrero", label: "Camino del Guerrero – Punta Arenas" },
 
   // Julio — Transformación
   { month: 6, day: 9, type: "transformacion", label: "Transfor." },

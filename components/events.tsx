@@ -63,7 +63,9 @@ function EventCard({ event }: { event: Event }) {
         </div>
         <CardTitle className="text-lg sm:text-xl">{event.title}</CardTitle>
         {event.subtitle && (
-          <p className="text-sm text-muted-foreground mt-1">{event.subtitle}</p>
+          event.subtitleHighlight
+            ? <p className="text-base font-bold text-center mt-1">({event.subtitle})</p>
+            : <p className="text-sm text-muted-foreground mt-1">{event.subtitle}</p>
         )}
       </CardHeader>
       <CardContent className="space-y-3">
@@ -350,7 +352,8 @@ export function Events() {
     },
     {
       title: "Las 7 Leyes Universales",
-      subtitle: "Gratuito y Virtual",
+      subtitle: "Virtual y Gratuito",
+      subtitleHighlight: true,
       date: "Comienza 11 de Mayo 2026.\n7 Noches (11, 13, 15, 18, 20, 22, 25 de Mayo)",
       time: "21 Hs a 22:30 Hs",
       location: "Virtual",
@@ -376,7 +379,7 @@ export function Events() {
       contactPhone: "+54 9 2966 595803",
     },
     {
-      title: "El Camino del Guerrero",
+      title: "El Camino del Guerrero - Río Gallegos",
       date: "16 y 17 de Mayo 2026",
       time: "Inicio: Sábado 16 de Mayo, 15 Horas",
       location: "Río Gallegos",
@@ -387,7 +390,18 @@ export function Events() {
       contactPhone: "+54 9 2966 595803",
     },
     {
-      title: "Taller de Transformación",
+      title: "El Camino del Guerrero - Punta Arenas",
+      date: "30 y 31 de Mayo 2026",
+      time: "Inicio: Sábado 30 de Mayo, 15 Horas",
+      location: "Punta Arenas",
+      type: "Otro Taller",
+      available: true,
+      availabilityText: "Cupos disponibles",
+      hasFlyer: false,
+      contactPhone: "+56 9 6113 0835",
+    },
+    {
+      title: "Taller de Transformación - Río Gallegos",
       date: "9, 10, 11 y 12 de Julio 2026",
       time: "Inicio: Jueves 9 de Julio, 17 Horas",
       location: "Lugar a Confirmar",

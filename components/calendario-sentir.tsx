@@ -271,14 +271,14 @@ function MonthCalendar({
                 <>
                   <span className="leading-none text-[10px]">{day}</span>
                   {isPast
-                    ? <span className="leading-none text-[9px]">✓</span>
+                    ? <span className="leading-none text-[10px] font-bold">✓</span>
                     : <img src="/fuego-de-sentir.png" alt="" className="w-3 h-3 object-contain" />
                   }
                 </>
               ) : hasEvent && isPast ? (
                 <>
                   <span className="leading-none text-[10px]">{day}</span>
-                  <span className="leading-none text-[9px]">✓</span>
+                  <span className="leading-none text-[10px] font-bold">✓</span>
                 </>
               ) : (
                 day

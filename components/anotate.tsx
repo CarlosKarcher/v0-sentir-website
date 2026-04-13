@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { supabase } from "@/lib/supabase-client"
 import { Button } from "@/components/ui/button"
-import { X, CheckCircle } from "lucide-react"
+import { X, CheckCircle, Sparkles, Heart } from "lucide-react"
 
 const MESES = [
   "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
@@ -222,26 +222,58 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
 
             /* PASO 0: PREGUNTA INICIAL */
             ) : step === "pregunta" ? (
-              <div className="py-6 text-center space-y-6">
-                <p className="text-xl font-semibold leading-snug">
-                  ¿Hiciste alguno de<br />nuestros talleres?
-                </p>
-                <div className="flex gap-4 justify-center">
-                  <Button
-                    size="lg"
-                    className="w-32 text-base bg-blue-900 hover:bg-blue-800 text-white font-bold"
-                    onClick={() => setStep("miembro")}
-                  >
-                    Sí
-                  </Button>
-                  <Button
-                    size="lg"
-                    className="w-32 text-base bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold"
-                    onClick={() => setStep("interesado")}
-                  >
-                    No
-                  </Button>
+              <div className="py-4 text-center space-y-6">
+                {/* Ícono decorativo */}
+                <div className="flex justify-center">
+                  <div className="relative">
+                    <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/40 dark:to-blue-800/40 flex items-center justify-center shadow-md">
+                      <Heart className="h-9 w-9 text-blue-800 dark:text-blue-300" />
+                    </div>
+                    <span className="absolute -top-1 -right-1 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center shadow">
+                      <Sparkles className="h-3.5 w-3.5 text-yellow-900" />
+                    </span>
+                  </div>
                 </div>
+
+                {/* Título */}
+                <div className="space-y-2">
+                  <p className="text-2xl font-bold text-foreground leading-snug">
+                    ¿Hiciste alguno de<br />nuestros talleres?
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    Contanos tu experiencia con la comunidad Sentir
+                  </p>
+                </div>
+
+                {/* Botones */}
+                <div className="flex gap-4 justify-center pt-2">
+                  <button
+                    onClick={() => setStep("miembro")}
+                    className="group relative w-36 py-4 rounded-2xl bg-gradient-to-br from-blue-800 to-blue-950 hover:from-blue-700 hover:to-blue-900 text-white font-bold text-base shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0"
+                  >
+                    <span className="flex flex-col items-center gap-1">
+                      <span className="text-2xl">✅</span>
+                      <span>Sí</span>
+                      <span className="text-xs font-normal opacity-80">Ya participé</span>
+                    </span>
+                  </button>
+
+                  <button
+                    onClick={() => setStep("interesado")}
+                    className="group relative w-36 py-4 rounded-2xl bg-gradient-to-br from-gray-100 to-gray-200 hover:from-gray-200 hover:to-gray-300 dark:from-gray-700 dark:to-gray-800 dark:hover:from-gray-600 dark:hover:to-gray-700 text-gray-800 dark:text-gray-200 font-bold text-base shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0"
+                  >
+                    <span className="flex flex-col items-center gap-1">
+                      <span className="text-2xl">🌱</span>
+                      <span>No</span>
+                      <span className="text-xs font-normal opacity-70">Quiero conocer</span>
+                    </span>
+                  </button>
+                </div>
+
+                {/* Nota al pie */}
+                <p className="text-xs text-muted-foreground pt-1">
+                  Tu registro nos ayuda a mantenernos en contacto con vos
+                </p>
               </div>
 
             /* PASO 1: FORMULARIO MIEMBRO (hizo talleres) */

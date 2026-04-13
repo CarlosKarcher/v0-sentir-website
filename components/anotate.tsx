@@ -32,7 +32,7 @@ const schema = z.object({
   nombre_gafete: z.string().min(1, "Ingresá el nombre para el gafete"),
   celular_caracteristica: z.string().min(1, "Ingresá la característica"),
   celular_numero: z.string().min(6, "Ingresá tu número"),
-  email: z.string().email("Ingresá un email válido"),
+  email: z.string().email("Ingresá un email válido").optional().or(z.literal("")),
   comentario: z.string().optional(),
 })
 
@@ -95,7 +95,7 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
       nombre_gafete: data.nombre_gafete,
       celular_caracteristica: data.celular_caracteristica,
       celular_numero: data.celular_numero,
-      email: data.email,
+      email: data.email || null,
       comentario: data.comentario || null,
       taller_autoconocimiento: t.autoconocimiento.checked,
       autoconocimiento_mes: t.autoconocimiento.checked && t.autoconocimiento.mes ? parseInt(t.autoconocimiento.mes) : null,
@@ -246,7 +246,7 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-1">Email *</label>
+                  <label className="block text-sm font-medium mb-1">Email</label>
                   <input
                     {...register("email")}
                     type="email"

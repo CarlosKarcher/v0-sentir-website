@@ -124,6 +124,11 @@ const CALENDAR_EVENTS: DayEvent[] = [
   { month: 3, day: 18, type: "autoconocimiento", label: "Autocon. – Necochea" },
   { month: 3, day: 19, type: "autoconocimiento", label: "Autocon. – Necochea" },
 
+  // Mayo — Autoconocimiento Río Gallegos
+  { month: 4, day: 8, type: "autoconocimiento", label: "Autocon. – Río Gallegos" },
+  { month: 4, day: 9, type: "autoconocimiento", label: "Autocon. – Río Gallegos" },
+  { month: 4, day: 10, type: "autoconocimiento", label: "Autocon. – Río Gallegos" },
+
   // Mayo — Las 7 Leyes Universales
   { month: 4, day: 11, type: "leyes", label: "Las 7 Leyes Universales" },
   { month: 4, day: 13, type: "leyes", label: "Las 7 Leyes Universales" },

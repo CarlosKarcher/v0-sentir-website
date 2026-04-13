@@ -199,6 +199,20 @@ export function Events() {
 
   const pastEvents = [
     {
+      title: "Taller de Autoconocimiento - Tandil (Buenos Aires)",
+      date: "10, 11 y 12 de Abril, 2026",
+      time: "Inicio: Viernes 10, 17 Horas",
+      location: "Ruta 30 y Muñiz",
+      type: "Taller de Liderazgo",
+      available: false,
+      availabilityText: "Evento Realizado",
+      hasFlyer: true,
+      flyerImage: "/Autoconocimiento Tandil Abril 2026.jpg",
+      flyerImageAlt: "/images/Autoconocimiento Tandil Abril 2026.jpg",
+      level: "1er Nivel",
+      contactPhone: "+54 9 2966 595803",
+    },
+    {
       title: "Taller de Transformación en Río Gallegos",
       date: "2, 3, 4 y 5 de Abril 2026",
       time: "Inicio: Jueves 2 de Abril a las 18:00 hs",
@@ -308,20 +322,6 @@ export function Events() {
   ]
 
   const events = [
-    {
-      title: "Taller de Autoconocimiento - Tandil (Buenos Aires)",
-      date: "10, 11 y 12 de Abril, 2026",
-      time: "Inicio: Viernes 10, 17 Horas",
-      location: "Ruta 30 y Muñiz",
-      type: "Taller de Liderazgo",
-      available: true,
-      availabilityText: "Cupos disponibles",
-      hasFlyer: true,
-      flyerImage: "/Autoconocimiento Tandil Abril 2026.jpg",
-      flyerImageAlt: "/images/Autoconocimiento Tandil Abril 2026.jpg",
-      level: "1er Nivel",
-      contactPhone: "+54 9 2966 595803",
-    },
     {
       title: "Taller de Autoconocimiento - Necochea (Buenos Aires)",
       date: "17, 18 y 19 de Abril, 2026",

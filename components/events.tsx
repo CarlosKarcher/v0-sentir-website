@@ -425,7 +425,9 @@ export function Events() {
       type: "Otro Taller",
       available: true,
       availabilityText: "Cupos disponibles",
-      hasFlyer: false,
+      hasFlyer: true,
+      flyerImage: "/bio-13-06-2026.jpeg",
+      flyerImageAlt: "/images/bio-13-06-2026.jpeg",
       contactPhone: "+54 9 2966 211547",
     },
     {
@@ -436,7 +438,9 @@ export function Events() {
       type: "Otro Taller",
       available: true,
       availabilityText: "Cupos disponibles",
-      hasFlyer: false,
+      hasFlyer: true,
+      flyerImage: "/sanando-14-06-2026.jpeg",
+      flyerImageAlt: "/images/sanando-14-06-2026.jpeg",
       contactPhone: "+54 9 2966 595803",
     },
     {

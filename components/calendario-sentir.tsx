@@ -153,6 +153,12 @@ const CALENDAR_EVENTS: DayEvent[] = [
   { month: 4, day: 23, type: "guerrero", label: "Camino del Guerrero – Punta Arenas" },
   { month: 4, day: 24, type: "guerrero", label: "Camino del Guerrero – Punta Arenas" },
 
+  // Junio — Biodecodificación
+  { month: 5, day: 13, type: "biodecodificacion", label: "Taller de Biodecodificación" },
+
+  // Junio — Niño Interior
+  { month: 5, day: 14, type: "nino", label: "Taller Sanando mi Niño Interior" },
+
   // Julio — Transformación
   { month: 6, day: 9, type: "transformacion", label: "Transfor." },
   { month: 6, day: 10, type: "transformacion", label: "Transfor." },

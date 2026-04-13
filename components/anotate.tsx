@@ -172,32 +172,12 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
     setError("")
     const payload = {
       nombre_apellido: data.nombre_apellido,
-      nombre_gafete: null,
       celular_caracteristica: data.celular_caracteristica,
       celular_numero: data.celular_numero,
       email: data.email || null,
-      comentario: null,
-      taller_autoconocimiento: false,
-      autoconocimiento_mes: null,
-      autoconocimiento_anio: null,
-      taller_transformacion: false,
-      transformacion_mes: null,
-      transformacion_anio: null,
-      taller_myl: false,
-      myl_mes: null,
-      myl_anio: null,
-      taller_guerrero: false,
-      guerrero_mes: null,
-      guerrero_anio: null,
-      taller_nino_interior: false,
-      nino_interior_mes: null,
-      nino_interior_anio: null,
-      taller_constelaciones: false,
-      constelaciones_mes: null,
-      constelaciones_anio: null,
       recibir_informacion: recibirInfo,
     }
-    const { data: res, error: sbError } = await supabase.from("miembros").insert(payload).select("numero").single()
+    const { data: res, error: sbError } = await supabase.from("nomembros").insert(payload).select("numero").single()
     if (sbError) {
       setError("Hubo un error al enviar. Por favor intentá de nuevo.")
       setEnviando(false)

@@ -58,6 +58,7 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
   const [enviado, setEnviado] = useState(false)
   const [enviando, setEnviando] = useState(false)
   const [error, setError] = useState("")
+  const [numeroMiembro, setNumeroMiembro] = useState<number | null>(null)
 
   useEffect(() => { setMounted(true) }, [])
 
@@ -113,12 +114,13 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
       constelaciones_mes: null,
       constelaciones_anio: null,
     }
-    const { error: sbError } = await supabase.from("miembros").insert(payload)
+    const { data, error: sbError } = await supabase.from("miembros").insert(payload).select("numero").single()
     if (sbError) {
       setError("Hubo un error al enviar. Por favor intentá de nuevo.")
       setEnviando(false)
       return
     }
+    setNumeroMiembro(data?.numero ?? null)
     setEnviado(true)
     setEnviando(false)
   }
@@ -146,6 +148,9 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
               <div className="text-center py-8">
                 <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
                 <h3 className="text-2xl font-bold mb-2">¡Ya estás anotado!</h3>
+                {numeroMiembro && (
+                  <p className="text-3xl font-bold text-blue-900 my-3">Miembro Nº {numeroMiembro}</p>
+                )}
                 <p className="text-muted-foreground mb-6">Gracias por sumarte a la comunidad Sentir.</p>
                 <Button onClick={onClose} className="bg-blue-900 hover:bg-blue-800 text-white">Cerrar</Button>
               </div>

@@ -195,28 +195,26 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
                   <label className="block text-sm font-medium mb-3">Talleres Realizados</label>
                   <div className="space-y-3">
                     {TALLERES.map(({ key, label, conFecha }) => (
-                      <div key={key}>
-                        <label className="flex items-center gap-3 cursor-pointer">
-                          <div
-                            onClick={() => toggleTaller(key)}
-                            className={`w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 transition-colors cursor-pointer
-                              ${talleres[key].checked ? "bg-blue-900 border-blue-900" : "border-border hover:border-blue-700"}`}
-                          >
-                            {talleres[key].checked && (
-                              <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                              </svg>
-                            )}
-                          </div>
-                          <span className="text-sm font-medium" onClick={() => toggleTaller(key)}>{label}</span>
-                        </label>
+                      <div key={key} className="flex items-center gap-2 flex-wrap">
+                        <div
+                          onClick={() => toggleTaller(key)}
+                          className={`w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 transition-colors cursor-pointer
+                            ${talleres[key].checked ? "bg-blue-900 border-blue-900" : "border-border hover:border-blue-700"}`}
+                        >
+                          {talleres[key].checked && (
+                            <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                          )}
+                        </div>
+                        <span className="text-sm font-medium cursor-pointer" onClick={() => toggleTaller(key)}>{label}</span>
 
                         {talleres[key].checked && conFecha && (
-                          <div className="ml-8 mt-2 flex gap-2">
+                          <>
                             <select
                               value={talleres[key].mes}
                               onChange={e => setFecha(key, "mes", e.target.value)}
-                              className="flex-1 border border-border rounded-md px-2 py-1.5 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                              className="border border-border rounded-md px-2 py-1 text-xs bg-background focus:outline-none focus:ring-2 focus:ring-primary"
                             >
                               <option value="">Mes</option>
                               {MESES.map((mes, i) => (
@@ -226,14 +224,14 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
                             <select
                               value={talleres[key].anio}
                               onChange={e => setFecha(key, "anio", e.target.value)}
-                              className="w-28 border border-border rounded-md px-2 py-1.5 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                              className="w-20 border border-border rounded-md px-2 py-1 text-xs bg-background focus:outline-none focus:ring-2 focus:ring-primary"
                             >
                               <option value="">Año</option>
                               {ANIOS.map(anio => (
                                 <option key={anio} value={anio}>{anio}</option>
                               ))}
                             </select>
-                          </div>
+                          </>
                         )}
                       </div>
                     ))}

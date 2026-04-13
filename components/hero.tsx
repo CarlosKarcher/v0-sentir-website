@@ -38,7 +38,7 @@ const heroImages = [
   },
 ]
 
-export function Hero() {
+export function Hero({ onAnotate }: { onAnotate?: () => void }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
   useEffect(() => {
@@ -138,9 +138,9 @@ export function Hero() {
           <Button
             size="lg"
             className="text-sm sm:text-base bg-green-700 hover:bg-green-600 text-white w-full sm:w-auto font-bold"
-            onClick={() => scrollToElement(SECTION_IDS.ANOTATE)}
+            onClick={onAnotate}
           >
-            ¡ANOTATE!
+            Registrate
           </Button>
         </div>
       </div>

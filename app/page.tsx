@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { Header } from "@/components/header"
 import { Hero } from "@/components/hero"
 import { About } from "@/components/about"
@@ -13,11 +13,13 @@ import { Team } from "@/components/team"
 import { Merchandising } from "@/components/merchandising"
 import { MusicaSentir } from "@/components/musica-sentir"
 import { SentirDesdeAdentro } from "@/components/sentir-desde-adentro"
-import { Anotate } from "@/components/anotate"
+import { AnotateModal } from "@/components/anotate"
 import { Footer } from "@/components/footer"
 import { VideoPopup } from "@/components/video-popup"
 
 export default function Page() {
+  const [showAnotate, setShowAnotate] = useState(false)
+
   useEffect(() => {
     // Verificar que estamos en el cliente
     if (typeof window !== "undefined") {
@@ -63,9 +65,10 @@ export default function Page() {
 
   return (
     <main className="min-h-screen">
+      <AnotateModal isOpen={showAnotate} onClose={() => setShowAnotate(false)} />
       <VideoPopup />
       <Header />
-      <Hero />
+      <Hero onAnotate={() => setShowAnotate(true)} />
       <About />
       <CalendarioSentir />
       <Events />
@@ -76,7 +79,6 @@ export default function Page() {
       <MusicaSentir />
       <Merchandising />
       <SentirDesdeAdentro />
-      <Anotate />
       <Footer />
     </main>
   )

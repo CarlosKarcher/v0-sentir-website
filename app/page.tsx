@@ -13,6 +13,7 @@ import { Team } from "@/components/team"
 import { Merchandising } from "@/components/merchandising"
 import { MusicaSentir } from "@/components/musica-sentir"
 import { SentirDesdeAdentro } from "@/components/sentir-desde-adentro"
+import { Anotate } from "@/components/anotate"
 import { Footer } from "@/components/footer"
 import { VideoPopup } from "@/components/video-popup"
 
@@ -75,6 +76,7 @@ export default function Page() {
       <MusicaSentir />
       <Merchandising />
       <SentirDesdeAdentro />
+      <Anotate />
       <Footer />
     </main>
   )

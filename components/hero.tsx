@@ -127,13 +127,20 @@ export function Hero() {
             Contacto
           </Button>
         </div>
-        <div className="mt-3 sm:mt-4 px-4">
-          <Button 
-            size="lg" 
+        <div className="mt-3 sm:mt-4 px-4 flex flex-col sm:flex-row gap-3 justify-center">
+          <Button
+            size="lg"
             className="text-sm sm:text-base bg-blue-900 hover:bg-blue-800 text-white w-full sm:w-auto"
             onClick={() => scrollToElement(SECTION_IDS.SENTIR_DESDE_ADENTRO)}
           >
             Sentir desde Adentro
+          </Button>
+          <Button
+            size="lg"
+            className="text-sm sm:text-base bg-green-700 hover:bg-green-600 text-white w-full sm:w-auto font-bold"
+            onClick={() => scrollToElement(SECTION_IDS.ANOTATE)}
+          >
+            ¡ANOTATE!
           </Button>
         </div>
       </div>

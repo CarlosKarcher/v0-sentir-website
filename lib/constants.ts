@@ -26,6 +26,7 @@ export const SECTION_IDS = {
   EQUIPO: "equipo",
   MUSICA_SENTIR: "musica-sentir",
   SENTIR_DESDE_ADENTRO: "sentir-desde-adentro",
+  ANOTATE: "anotate",
   CONTACTO: "contacto",
 } as const
 

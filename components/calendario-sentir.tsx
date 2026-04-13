@@ -186,6 +186,12 @@ function getDaysInMonth(year: number, month: number): number {
   return new Date(year, month + 1, 0).getDate()
 }
 
+function isPastDate(year: number, month: number, day: number): boolean {
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  return new Date(year, month, day) < today
+}
+
 interface TooltipState {
   visible: boolean
   label: string
@@ -239,6 +245,7 @@ function MonthCalendar({
           const hasEvent = dayEvents.length > 0
           const evType = hasEvent ? EVENT_TYPES[dayEvents[0].type] : null
           const showFire = hasEvent && evType?.fireIcon
+          const isPast = day ? isPastDate(year, monthIndex, day) : false
 
           return (
             <div
@@ -263,11 +270,15 @@ function MonthCalendar({
               {showFire ? (
                 <>
                   <span className="leading-none text-[10px]">{day}</span>
-                  <img
-                    src="/fuego-de-sentir.png"
-                    alt=""
-                    className="w-3 h-3 object-contain"
-                  />
+                  {isPast
+                    ? <span className="leading-none text-[9px]">✓</span>
+                    : <img src="/fuego-de-sentir.png" alt="" className="w-3 h-3 object-contain" />
+                  }
+                </>
+              ) : hasEvent && isPast ? (
+                <>
+                  <span className="leading-none text-[10px]">{day}</span>
+                  <span className="leading-none text-[9px]">✓</span>
                 </>
               ) : (
                 day

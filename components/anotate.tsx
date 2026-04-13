@@ -27,7 +27,7 @@ const TALLERES = [
 
 type TallerKey = typeof TALLERES[number]["key"]
 
-const schema = z.object({
+const schemaMiembro = z.object({
   nombre_apellido: z.string().min(2, "Ingresá tu nombre y apellido"),
   nombre_gafete: z.string().optional(),
   celular_caracteristica: z.string().min(1, "Ingresá la característica"),
@@ -36,10 +36,20 @@ const schema = z.object({
   comentario: z.string().optional(),
 })
 
-type FormData = z.infer<typeof schema>
+const schemaInteresado = z.object({
+  nombre_apellido: z.string().min(2, "Ingresá tu nombre y apellido"),
+  celular_caracteristica: z.string().min(1, "Ingresá la característica"),
+  celular_numero: z.string().min(6, "Ingresá tu número"),
+  email: z.string().email("Ingresá un email válido").optional().or(z.literal("")),
+})
+
+type MiembroData = z.infer<typeof schemaMiembro>
+type InteresadoData = z.infer<typeof schemaInteresado>
 
 type TallerState = { checked: boolean; mes: string; anio: string }
 const tallerInicial = (): TallerState => ({ checked: false, mes: "", anio: "" })
+
+type Step = "pregunta" | "miembro" | "interesado"
 
 interface AnotateModalProps {
   isOpen: boolean
@@ -48,6 +58,7 @@ interface AnotateModalProps {
 
 export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
   const [mounted, setMounted] = useState(false)
+  const [step, setStep] = useState<Step>("pregunta")
   const [talleres, setTalleres] = useState<Record<TallerKey, TallerState>>({
     autoconocimiento: tallerInicial(),
     transformacion: tallerInicial(),
@@ -56,6 +67,7 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
     nino_interior: tallerInicial(),
     constelaciones: tallerInicial(),
   })
+  const [recibirInfo, setRecibirInfo] = useState<boolean | null>(null)
   const [enviado, setEnviado] = useState(false)
   const [enviando, setEnviando] = useState(false)
   const [error, setError] = useState("")
@@ -74,9 +86,27 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
     }
   }, [isOpen, onClose])
 
-  const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
-    resolver: zodResolver(schema),
-  })
+  // Reset al cerrar
+  useEffect(() => {
+    if (!isOpen) {
+      setStep("pregunta")
+      setEnviado(false)
+      setError("")
+      setNumeroMiembro(null)
+      setRecibirInfo(null)
+      setTalleres({
+        autoconocimiento: tallerInicial(),
+        transformacion: tallerInicial(),
+        myl: tallerInicial(),
+        guerrero: tallerInicial(),
+        nino_interior: tallerInicial(),
+        constelaciones: tallerInicial(),
+      })
+    }
+  }, [isOpen])
+
+  const formMiembro = useForm<MiembroData>({ resolver: zodResolver(schemaMiembro) })
+  const formInteresado = useForm<InteresadoData>({ resolver: zodResolver(schemaInteresado) })
 
   const toggleTaller = (key: TallerKey) => {
     setTalleres(prev => ({ ...prev, [key]: { ...prev[key], checked: !prev[key].checked } }))
@@ -86,7 +116,7 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
     setTalleres(prev => ({ ...prev, [key]: { ...prev[key], [field]: value } }))
   }
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmitMiembro = async (data: MiembroData) => {
     const algunTaller = Object.values(talleres).some(t => t.checked)
     if (!algunTaller) {
       setError("Seleccioná al menos un taller realizado.")
@@ -120,14 +150,60 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
       taller_constelaciones: t.constelaciones.checked,
       constelaciones_mes: null,
       constelaciones_anio: null,
+      recibir_informacion: false,
     }
-    const { data, error: sbError } = await supabase.from("miembros").insert(payload).select("numero").single()
+    const { data: res, error: sbError } = await supabase.from("miembros").insert(payload).select("numero").single()
     if (sbError) {
       setError("Hubo un error al enviar. Por favor intentá de nuevo.")
       setEnviando(false)
       return
     }
-    setNumeroMiembro(data?.numero ?? null)
+    setNumeroMiembro(res?.numero ?? null)
+    setEnviado(true)
+    setEnviando(false)
+  }
+
+  const onSubmitInteresado = async (data: InteresadoData) => {
+    if (recibirInfo === null) {
+      setError("Por favor respondé si deseás recibir información.")
+      return
+    }
+    setEnviando(true)
+    setError("")
+    const payload = {
+      nombre_apellido: data.nombre_apellido,
+      nombre_gafete: null,
+      celular_caracteristica: data.celular_caracteristica,
+      celular_numero: data.celular_numero,
+      email: data.email || null,
+      comentario: null,
+      taller_autoconocimiento: false,
+      autoconocimiento_mes: null,
+      autoconocimiento_anio: null,
+      taller_transformacion: false,
+      transformacion_mes: null,
+      transformacion_anio: null,
+      taller_myl: false,
+      myl_mes: null,
+      myl_anio: null,
+      taller_guerrero: false,
+      guerrero_mes: null,
+      guerrero_anio: null,
+      taller_nino_interior: false,
+      nino_interior_mes: null,
+      nino_interior_anio: null,
+      taller_constelaciones: false,
+      constelaciones_mes: null,
+      constelaciones_anio: null,
+      recibir_informacion: recibirInfo,
+    }
+    const { data: res, error: sbError } = await supabase.from("miembros").insert(payload).select("numero").single()
+    if (sbError) {
+      setError("Hubo un error al enviar. Por favor intentá de nuevo.")
+      setEnviando(false)
+      return
+    }
+    setNumeroMiembro(res?.numero ?? null)
     setEnviado(true)
     setEnviando(false)
   }
@@ -144,67 +220,102 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
         >
           {/* Header */}
           <div className="sticky top-0 bg-background border-b border-border px-6 py-4 flex items-center justify-between rounded-t-xl">
-            <h2 className="text-2xl font-bold">ANOTATE</h2>
+            <h2 className="text-2xl font-bold">REGISTRATE</h2>
             <button onClick={onClose} className="p-1 rounded-full hover:bg-muted transition-colors">
               <X className="h-5 w-5" />
             </button>
           </div>
 
           <div className="px-6 py-5">
+            {/* PANTALLA DE ÉXITO */}
             {enviado ? (
               <div className="text-center py-8">
                 <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
-                <h3 className="text-2xl font-bold mb-2">¡Ya estás anotado!</h3>
+                <h3 className="text-2xl font-bold mb-2">¡Ya estás registrado!</h3>
                 {numeroMiembro && (
                   <p className="text-3xl font-bold text-blue-900 my-3">Miembro Nº {numeroMiembro}</p>
                 )}
                 <p className="text-muted-foreground mb-6">Gracias por sumarte a la comunidad Sentir.</p>
                 <Button onClick={onClose} className="bg-blue-900 hover:bg-blue-800 text-white">Cerrar</Button>
               </div>
-            ) : (
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+
+            /* PASO 0: PREGUNTA INICIAL */
+            ) : step === "pregunta" ? (
+              <div className="py-6 text-center space-y-6">
+                <p className="text-xl font-semibold leading-snug">
+                  ¿Hiciste alguno de<br />nuestros talleres?
+                </p>
+                <div className="flex gap-4 justify-center">
+                  <Button
+                    size="lg"
+                    className="w-32 text-base bg-blue-900 hover:bg-blue-800 text-white font-bold"
+                    onClick={() => setStep("miembro")}
+                  >
+                    Sí
+                  </Button>
+                  <Button
+                    size="lg"
+                    className="w-32 text-base bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold"
+                    onClick={() => setStep("interesado")}
+                  >
+                    No
+                  </Button>
+                </div>
+              </div>
+
+            /* PASO 1: FORMULARIO MIEMBRO (hizo talleres) */
+            ) : step === "miembro" ? (
+              <form onSubmit={formMiembro.handleSubmit(onSubmitMiembro)} className="space-y-5">
+                <button
+                  type="button"
+                  onClick={() => setStep("pregunta")}
+                  className="text-sm text-blue-700 hover:underline mb-1"
+                >
+                  ← Volver
+                </button>
 
                 <div>
                   <label className="block text-sm font-medium mb-1">Nombre y Apellido *</label>
                   <input
-                    {...register("nombre_apellido")}
+                    {...formMiembro.register("nombre_apellido")}
                     className="w-full border border-border rounded-md px-3 py-2 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary"
                     placeholder="Ej: Juan Pérez"
                   />
-                  {errors.nombre_apellido && <p className="text-red-500 text-xs mt-1">{errors.nombre_apellido.message}</p>}
+                  {formMiembro.formState.errors.nombre_apellido && (
+                    <p className="text-red-500 text-xs mt-1">{formMiembro.formState.errors.nombre_apellido.message}</p>
+                  )}
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium mb-1">Nombre en el Gafete</label>
                   <input
-                    {...register("nombre_gafete")}
+                    {...formMiembro.register("nombre_gafete")}
                     className="w-full border border-border rounded-md px-3 py-2 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary"
                     placeholder="Ej: Juan"
                   />
-                  {errors.nombre_gafete && <p className="text-red-500 text-xs mt-1">{errors.nombre_gafete.message}</p>}
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium mb-1">Celular *</label>
                   <div className="flex gap-2">
                     <input
-                      {...register("celular_caracteristica")}
+                      {...formMiembro.register("celular_caracteristica")}
                       className="w-20 border border-border rounded-md px-3 py-2 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary"
                       placeholder="+54"
                     />
                     <input
-                      {...register("celular_numero")}
+                      {...formMiembro.register("celular_numero")}
                       className="flex-1 border border-border rounded-md px-3 py-2 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary"
                       placeholder="9 2966 595803"
                     />
                   </div>
-                  {(errors.celular_caracteristica || errors.celular_numero) && (
+                  {(formMiembro.formState.errors.celular_caracteristica || formMiembro.formState.errors.celular_numero) && (
                     <p className="text-red-500 text-xs mt-1">Ingresá tu celular completo</p>
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-3">Talleres Realizados</label>
+                  <label className="block text-sm font-medium mb-3">Talleres Realizados *</label>
                   <div className="space-y-3">
                     {TALLERES.map(({ key, label, conFecha }) => (
                       <div key={key} className="flex items-center gap-2 flex-wrap">
@@ -220,7 +331,6 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
                           )}
                         </div>
                         <span className="text-sm font-medium cursor-pointer" onClick={() => toggleTaller(key)}>{label}</span>
-
                         {talleres[key].checked && conFecha && (
                           <>
                             <select
@@ -253,18 +363,20 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
                 <div>
                   <label className="block text-sm font-medium mb-1">Email</label>
                   <input
-                    {...register("email")}
+                    {...formMiembro.register("email")}
                     type="email"
                     className="w-full border border-border rounded-md px-3 py-2 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary"
                     placeholder="ejemplo@mail.com"
                   />
-                  {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
+                  {formMiembro.formState.errors.email && (
+                    <p className="text-red-500 text-xs mt-1">{formMiembro.formState.errors.email.message}</p>
+                  )}
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium mb-1">Déjanos un comentario</label>
                   <textarea
-                    {...register("comentario")}
+                    {...formMiembro.register("comentario")}
                     rows={3}
                     className="w-full border border-border rounded-md px-3 py-2 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary resize-none"
                     placeholder="Contanos algo sobre vos..."
@@ -279,6 +391,103 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
                   className="w-full bg-blue-900 hover:bg-blue-800 text-white py-6 text-base font-semibold"
                 >
                   {enviando ? "Enviando..." : "¡Me anoto!"}
+                </Button>
+              </form>
+
+            /* PASO 2: FORMULARIO INTERESADO (no hizo talleres) */
+            ) : (
+              <form onSubmit={formInteresado.handleSubmit(onSubmitInteresado)} className="space-y-5">
+                <button
+                  type="button"
+                  onClick={() => setStep("pregunta")}
+                  className="text-sm text-blue-700 hover:underline mb-1"
+                >
+                  ← Volver
+                </button>
+
+                <div>
+                  <label className="block text-sm font-medium mb-1">Nombre y Apellido *</label>
+                  <input
+                    {...formInteresado.register("nombre_apellido")}
+                    className="w-full border border-border rounded-md px-3 py-2 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                    placeholder="Ej: Juan Pérez"
+                  />
+                  {formInteresado.formState.errors.nombre_apellido && (
+                    <p className="text-red-500 text-xs mt-1">{formInteresado.formState.errors.nombre_apellido.message}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-1">Celular *</label>
+                  <div className="flex gap-2">
+                    <input
+                      {...formInteresado.register("celular_caracteristica")}
+                      className="w-20 border border-border rounded-md px-3 py-2 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                      placeholder="+54"
+                    />
+                    <input
+                      {...formInteresado.register("celular_numero")}
+                      className="flex-1 border border-border rounded-md px-3 py-2 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                      placeholder="9 2966 595803"
+                    />
+                  </div>
+                  {(formInteresado.formState.errors.celular_caracteristica || formInteresado.formState.errors.celular_numero) && (
+                    <p className="text-red-500 text-xs mt-1">Ingresá tu celular completo</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-1">Email</label>
+                  <input
+                    {...formInteresado.register("email")}
+                    type="email"
+                    className="w-full border border-border rounded-md px-3 py-2 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                    placeholder="ejemplo@mail.com"
+                  />
+                  {formInteresado.formState.errors.email && (
+                    <p className="text-red-500 text-xs mt-1">{formInteresado.formState.errors.email.message}</p>
+                  )}
+                </div>
+
+                {/* DIÁLOGO: ¿Deseás recibir información? */}
+                <div className="rounded-xl border-2 border-blue-200 bg-blue-50 dark:bg-blue-950/30 dark:border-blue-800 p-4 text-center space-y-3">
+                  <p className="text-base font-semibold text-blue-900 dark:text-blue-200">
+                    ¿Deseás recibir información<br />sobre nuestros talleres?
+                  </p>
+                  <div className="flex gap-3 justify-center">
+                    <button
+                      type="button"
+                      onClick={() => setRecibirInfo(true)}
+                      className={`px-6 py-2 rounded-lg font-bold text-sm transition-colors border-2
+                        ${recibirInfo === true
+                          ? "bg-blue-900 border-blue-900 text-white"
+                          : "bg-white border-blue-300 text-blue-900 hover:bg-blue-100 dark:bg-transparent dark:text-blue-200 dark:border-blue-600"
+                        }`}
+                    >
+                      Sí
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setRecibirInfo(false)}
+                      className={`px-6 py-2 rounded-lg font-bold text-sm transition-colors border-2
+                        ${recibirInfo === false
+                          ? "bg-gray-600 border-gray-600 text-white"
+                          : "bg-white border-gray-300 text-gray-700 hover:bg-gray-100 dark:bg-transparent dark:text-gray-300 dark:border-gray-600"
+                        }`}
+                    >
+                      No
+                    </button>
+                  </div>
+                </div>
+
+                {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+
+                <Button
+                  type="submit"
+                  disabled={enviando}
+                  className="w-full bg-blue-900 hover:bg-blue-800 text-white py-6 text-base font-semibold"
+                >
+                  {enviando ? "Enviando..." : "Registrarme"}
                 </Button>
               </form>
             )}

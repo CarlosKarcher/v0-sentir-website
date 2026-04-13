@@ -214,7 +214,9 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
                 {numeroMiembro && (
                   <p className="text-3xl font-bold text-blue-900 my-3">Miembro Nº {numeroMiembro}</p>
                 )}
-                <p className="text-muted-foreground mb-6">Gracias por sumarte a la comunidad Sentir.</p>
+                <p className="text-muted-foreground mb-6">
+                  {step === "interesado" ? "Gracias por interesarte por nuestra Comunidad." : "Gracias por sumarte a la comunidad Sentir."}
+                </p>
                 <Button onClick={onClose} className="bg-blue-900 hover:bg-blue-800 text-white">Cerrar</Button>
               </div>
 

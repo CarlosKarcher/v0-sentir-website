@@ -29,7 +29,7 @@ type TallerKey = typeof TALLERES[number]["key"]
 
 const schema = z.object({
   nombre_apellido: z.string().min(2, "Ingresá tu nombre y apellido"),
-  nombre_gafete: z.string().min(1, "Ingresá el nombre para el gafete"),
+  nombre_gafete: z.string().optional(),
   celular_caracteristica: z.string().min(1, "Ingresá la característica"),
   celular_numero: z.string().min(6, "Ingresá tu número"),
   email: z.string().email("Ingresá un email válido").optional().or(z.literal("")),
@@ -87,12 +87,17 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
   }
 
   const onSubmit = async (data: FormData) => {
+    const algunTaller = Object.values(talleres).some(t => t.checked)
+    if (!algunTaller) {
+      setError("Seleccioná al menos un taller realizado.")
+      return
+    }
     setEnviando(true)
     setError("")
     const t = talleres
     const payload = {
       nombre_apellido: data.nombre_apellido,
-      nombre_gafete: data.nombre_gafete,
+      nombre_gafete: data.nombre_gafete || null,
       celular_caracteristica: data.celular_caracteristica,
       celular_numero: data.celular_numero,
       email: data.email || null,
@@ -170,7 +175,7 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-1">Nombre en el Gafete *</label>
+                  <label className="block text-sm font-medium mb-1">Nombre en el Gafete</label>
                   <input
                     {...register("nombre_gafete")}
                     className="w-full border border-border rounded-md px-3 py-2 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary"

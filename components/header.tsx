@@ -21,14 +21,12 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       {process.env.NEXT_PUBLIC_BUILD_TIME && (
-        <div className="hidden sm:block w-full px-4 pt-1 text-left">
-          <span className="text-xs text-muted-foreground font-mono">
-            v{new Date(process.env.NEXT_PUBLIC_BUILD_TIME).toLocaleString("es-AR", {
-              day: "2-digit", month: "2-digit", year: "numeric",
-              hour: "2-digit", minute: "2-digit", timeZone: "America/Argentina/Buenos_Aires"
-            })}
-          </span>
-        </div>
+        <span className="hidden sm:block absolute top-1 left-2 text-xs text-muted-foreground font-mono z-10">
+          v{new Date(process.env.NEXT_PUBLIC_BUILD_TIME).toLocaleString("es-AR", {
+            day: "2-digit", month: "2-digit", year: "numeric",
+            hour: "2-digit", minute: "2-digit", timeZone: "America/Argentina/Buenos_Aires"
+          })}
+        </span>
       )}
       <div className="w-full max-w-7xl mx-auto flex h-14 sm:h-16 items-center justify-between px-4">
         <div className="flex items-center gap-3">

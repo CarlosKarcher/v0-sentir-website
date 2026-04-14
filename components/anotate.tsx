@@ -161,13 +161,13 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
       constelaciones_anio: null,
       recibir_informacion: false,
     }
-    const { data: res, error: sbError } = await supabase.from("miembros").insert(payload).select("numero").single()
+    const { data: res, error: sbError } = await supabase.rpc('registrar_miembro', payload)
     if (sbError) {
       setError(`Error ${sbError.code}: ${sbError.message}`)
       setEnviando(false)
       return
     }
-    setNumeroMiembro(res?.numero ?? null)
+    setNumeroMiembro(res ?? null)
     setEnviado(true)
     setEnviando(false)
   }

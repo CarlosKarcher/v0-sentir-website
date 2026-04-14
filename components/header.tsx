@@ -326,13 +326,13 @@ export function Header() {
           </NavigationMenu>
         </nav>
 
-        {nombreUsuario && (
-          <span className="text-sm font-medium text-blue-900 dark:text-blue-300">
-            {nombreUsuario}
-          </span>
-        )}
-
-        <Sheet open={isOpen} onOpenChange={setIsOpen}>
+        <div className="flex items-center gap-3 ml-auto">
+          {nombreUsuario && (
+            <span className="text-sm font-medium text-blue-900 dark:text-blue-300 pr-2">
+              {nombreUsuario}
+            </span>
+          )}
+          <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild className="md:hidden">
             <Button variant="ghost" size="icon">
               <Menu className="h-5 w-5" />
@@ -435,6 +435,7 @@ export function Header() {
             </nav>
           </SheetContent>
         </Sheet>
+        </div>
       </div>
     </header>
   )

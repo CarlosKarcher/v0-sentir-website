@@ -147,6 +147,9 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
       window.dispatchEvent(new CustomEvent("sentir_usuario", { detail: nombre }))
       setCelularRegistrado(`${caracteristica.trim()} ${numero.trim()}`)
       setStep("ya_registrado")
+    } else {
+      // No está en la BD — limpiar localStorage desactualizado
+      localStorage.removeItem("sentir_celular")
     }
   }
 

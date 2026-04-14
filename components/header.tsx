@@ -287,6 +287,15 @@ export function Header() {
           </NavigationMenu>
         </nav>
 
+        {process.env.NEXT_PUBLIC_BUILD_TIME && (
+          <span className="hidden sm:block text-xs text-muted-foreground font-mono border border-border/50 rounded px-2 py-0.5 bg-muted/30">
+            v{new Date(process.env.NEXT_PUBLIC_BUILD_TIME).toLocaleString("es-AR", {
+              day: "2-digit", month: "2-digit", year: "numeric",
+              hour: "2-digit", minute: "2-digit", timeZone: "America/Argentina/Buenos_Aires"
+            })}
+          </span>
+        )}
+
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild className="md:hidden">
             <Button variant="ghost" size="icon">

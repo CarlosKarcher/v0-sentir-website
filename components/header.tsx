@@ -20,19 +20,19 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      {process.env.NEXT_PUBLIC_BUILD_TIME && (
-        <div className="hidden sm:block w-full bg-muted/50 border-b border-border/30 px-4 py-0.5 text-left">
-          <span className="text-xs text-muted-foreground font-mono">
-            v{new Date(process.env.NEXT_PUBLIC_BUILD_TIME).toLocaleString("es-AR", {
-              day: "2-digit", month: "2-digit", year: "numeric",
-              hour: "2-digit", minute: "2-digit", timeZone: "America/Argentina/Buenos_Aires"
-            })}
-          </span>
-        </div>
-      )}
       <div className="w-full max-w-7xl mx-auto flex h-14 sm:h-16 items-center justify-between px-4">
         <div className="flex items-center gap-3">
-          <span className="text-lg sm:text-xl font-bold text-blue-900">SENTIR</span>
+          <div className="flex flex-col">
+            <span className="text-lg sm:text-xl font-bold text-blue-900">SENTIR</span>
+            {process.env.NEXT_PUBLIC_BUILD_TIME && (
+              <span className="hidden sm:block text-[10px] text-muted-foreground font-mono leading-none">
+                v{new Date(process.env.NEXT_PUBLIC_BUILD_TIME).toLocaleString("es-AR", {
+                  day: "2-digit", month: "2-digit", year: "numeric",
+                  hour: "2-digit", minute: "2-digit", timeZone: "America/Argentina/Buenos_Aires"
+                })}
+              </span>
+            )}
+          </div>
           <img
             src="/fuego-de-sentir.png"
             alt="Fuego de Sentir"

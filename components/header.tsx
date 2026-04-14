@@ -307,7 +307,7 @@ export function Header() {
         </nav>
 
         {nombreUsuario && (
-          <span className="hidden md:block text-sm font-medium text-blue-900 dark:text-blue-300">
+          <span className="text-sm font-medium text-blue-900 dark:text-blue-300">
             {nombreUsuario}
           </span>
         )}

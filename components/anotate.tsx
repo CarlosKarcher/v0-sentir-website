@@ -27,9 +27,16 @@ const TALLERES = [
 
 type TallerKey = typeof TALLERES[number]["key"]
 
+const soloLetrasYNumeros = /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ0-9\s]+$/
+
 const schemaMiembro = z.object({
-  nombre_apellido: z.string().min(2, "Ingresá tu nombre y apellido"),
-  nombre_gafete: z.string().optional(),
+  nombre_apellido: z.string()
+    .min(2, "Ingresá tu nombre y apellido (mínimo 2 caracteres)")
+    .regex(soloLetrasYNumeros, "Solo se permiten letras, números y espacios"),
+  nombre_gafete: z.string()
+    .regex(/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ0-9\s]*$/, "Solo se permiten letras, números y espacios")
+    .optional()
+    .or(z.literal("")),
   celular_caracteristica: z.string().min(1, "Ingresá la característica"),
   celular_numero: z.string().min(6, "Ingresá tu número"),
   email: z.string().email("Ingresá un email válido").optional().or(z.literal("")),
@@ -37,7 +44,9 @@ const schemaMiembro = z.object({
 })
 
 const schemaInteresado = z.object({
-  nombre_apellido: z.string().min(2, "Ingresá tu nombre y apellido"),
+  nombre_apellido: z.string()
+    .min(2, "Ingresá tu nombre y apellido (mínimo 2 caracteres)")
+    .regex(soloLetrasYNumeros, "Solo se permiten letras, números y espacios"),
   celular_caracteristica: z.string().min(1, "Ingresá la característica"),
   celular_numero: z.string().min(6, "Ingresá tu número"),
   email: z.string().email("Ingresá un email válido").optional().or(z.literal("")),

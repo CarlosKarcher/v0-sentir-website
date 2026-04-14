@@ -77,7 +77,10 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
     constelaciones: tallerInicial(),
   })
   const [celularRegistrado, setCelularRegistrado] = useState("")
-  const [verificandoInicio, setVerificandoInicio] = useState(false)
+  const [verificandoInicio, setVerificandoInicio] = useState(() => {
+    if (typeof window === "undefined") return false
+    return !!localStorage.getItem("sentir_celular")
+  })
   const [recibirInfo, setRecibirInfo] = useState<boolean | null>(null)
   const [enviado, setEnviado] = useState(false)
   const [enviando, setEnviando] = useState(false)

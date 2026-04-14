@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { supabase } from "@/lib/supabase-client"
 import { Button } from "@/components/ui/button"
 import { Menu } from "lucide-react"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
@@ -20,13 +21,30 @@ export function Header() {
   const [nombreUsuario, setNombreUsuario] = useState<string | null>(null)
 
   useEffect(() => {
-    try {
-      const guardado = localStorage.getItem("sentir_celular")
-      if (guardado) {
-        const { nombre } = JSON.parse(guardado)
-        if (nombre) setNombreUsuario(nombre)
-      }
-    } catch {}
+    const cargarNombre = async () => {
+      try {
+        const guardado = localStorage.getItem("sentir_celular")
+        if (!guardado) return
+        const { caracteristica, numero, nombre } = JSON.parse(guardado)
+        if (nombre) {
+          setNombreUsuario(nombre)
+          return
+        }
+        // Si no tiene nombre guardado, lo busca en la BD
+        const { data } = await supabase
+          .from("miembros")
+          .select("nombre_gafete, nombre_apellido")
+          .eq("celular_caracteristica", caracteristica)
+          .eq("celular_numero", numero)
+          .maybeSingle()
+        if (data) {
+          const n = data.nombre_gafete || data.nombre_apellido.split(" ")[0]
+          setNombreUsuario(n)
+          localStorage.setItem("sentir_celular", JSON.stringify({ caracteristica, numero, nombre: n }))
+        }
+      } catch {}
+    }
+    cargarNombre()
   }, [])
 
   return (

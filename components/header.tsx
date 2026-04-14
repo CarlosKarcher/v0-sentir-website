@@ -23,21 +23,29 @@ export function Header() {
       <div className="w-full max-w-7xl mx-auto flex h-14 sm:h-16 items-center justify-between px-4">
         <div className="flex items-center gap-3">
           <span className="text-lg sm:text-xl font-bold text-blue-900">SENTIR</span>
-          <img 
-            src="/fuego-de-sentir.png" 
-            alt="Fuego de Sentir" 
+          <img
+            src="/fuego-de-sentir.png"
+            alt="Fuego de Sentir"
             className="h-[2.4em] w-auto object-contain"
             style={{ height: '2.4em', width: 'auto' }}
           />
           <span className="text-lg sm:text-xl font-bold text-blue-900 flex items-center gap-1.5">
             <span className="ml-2">En</span>
-            <img 
-              src="/banderas_2.png" 
-              alt="" 
+            <img
+              src="/banderas_2.png"
+              alt=""
               className="h-[2em] w-auto object-contain"
               style={{ height: '2em', width: 'auto' }}
             />
           </span>
+          {process.env.NEXT_PUBLIC_BUILD_TIME && (
+            <span className="hidden sm:block text-xs text-muted-foreground font-mono border border-border/50 rounded px-2 py-0.5 bg-muted/30">
+              v{new Date(process.env.NEXT_PUBLIC_BUILD_TIME).toLocaleString("es-AR", {
+                day: "2-digit", month: "2-digit", year: "numeric",
+                hour: "2-digit", minute: "2-digit", timeZone: "America/Argentina/Buenos_Aires"
+              })}
+            </span>
+          )}
         </div>
 
         {/* Desktop Navigation */}
@@ -286,15 +294,6 @@ export function Header() {
             </NavigationMenuList>
           </NavigationMenu>
         </nav>
-
-        {process.env.NEXT_PUBLIC_BUILD_TIME && (
-          <span className="hidden sm:block text-xs text-muted-foreground font-mono border border-border/50 rounded px-2 py-0.5 bg-muted/30">
-            v{new Date(process.env.NEXT_PUBLIC_BUILD_TIME).toLocaleString("es-AR", {
-              day: "2-digit", month: "2-digit", year: "numeric",
-              hour: "2-digit", minute: "2-digit", timeZone: "America/Argentina/Buenos_Aires"
-            })}
-          </span>
-        )}
 
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild className="md:hidden">

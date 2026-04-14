@@ -123,17 +123,23 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
     if (!numero || numero.length < 6) return
     const { data: enMiembros } = await supabase
       .from("miembros")
-      .select("id")
+      .select("id, nombre_gafete, nombre_apellido")
       .eq("celular_caracteristica", caracteristica.trim())
       .eq("celular_numero", numero.trim())
       .maybeSingle()
     const { data: enNomembros } = await supabase
       .from("nomembros")
-      .select("id")
+      .select("id, nombre_apellido")
       .eq("celular_caracteristica", caracteristica.trim())
       .eq("celular_numero", numero.trim())
       .maybeSingle()
     if (enMiembros || enNomembros) {
+      const nombre = enMiembros
+        ? (enMiembros.nombre_gafete || enMiembros.nombre_apellido.split(" ")[0])
+        : enNomembros!.nombre_apellido.split(" ")[0]
+      const data = { caracteristica: caracteristica.trim(), numero: numero.trim(), nombre }
+      localStorage.setItem("sentir_celular", JSON.stringify(data))
+      window.dispatchEvent(new CustomEvent("sentir_usuario", { detail: nombre }))
       setCelularRegistrado(`${caracteristica.trim()} ${numero.trim()}`)
       setStep("ya_registrado")
     }

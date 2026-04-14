@@ -26,11 +26,8 @@ export function Header() {
         const guardado = localStorage.getItem("sentir_celular")
         if (!guardado) return
         const { caracteristica, numero, nombre } = JSON.parse(guardado)
-        if (nombre) {
-          setNombreUsuario(nombre)
-          return
-        }
-        // Si no tiene nombre guardado, lo busca en la BD
+        if (nombre) { setNombreUsuario(nombre); return }
+        // Si no tiene nombre, lo busca en la BD
         const { data } = await supabase
           .from("miembros")
           .select("nombre_gafete, nombre_apellido")
@@ -45,6 +42,11 @@ export function Header() {
       } catch {}
     }
     cargarNombre()
+
+    // Escuchar cuando el modal detecta al usuario y avisa
+    const onUsuario = (e: Event) => setNombreUsuario((e as CustomEvent).detail)
+    window.addEventListener("sentir_usuario", onUsuario)
+    return () => window.removeEventListener("sentir_usuario", onUsuario)
   }, [])
 
   return (

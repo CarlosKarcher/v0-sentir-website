@@ -139,6 +139,17 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
     }
   }
 
+  // Al abrir, verificar si ya se registró antes (guardado en localStorage)
+  useEffect(() => {
+    if (!isOpen) return
+    const guardado = localStorage.getItem("sentir_celular")
+    if (!guardado) return
+    try {
+      const { caracteristica, numero } = JSON.parse(guardado)
+      checkCelular(caracteristica, numero)
+    } catch {}
+  }, [isOpen])
+
   const toggleTaller = (key: TallerKey) => {
     setTalleres(prev => ({ ...prev, [key]: { ...prev[key], checked: !prev[key].checked } }))
   }
@@ -189,6 +200,10 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
       setEnviando(false)
       return
     }
+    localStorage.setItem("sentir_celular", JSON.stringify({
+      caracteristica: data.celular_caracteristica,
+      numero: data.celular_numero,
+    }))
     setNumeroMiembro(res ?? null)
     setEnviado(true)
     setEnviando(false)
@@ -214,6 +229,10 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
       setEnviando(false)
       return
     }
+    localStorage.setItem("sentir_celular", JSON.stringify({
+      caracteristica: data.celular_caracteristica,
+      numero: data.celular_numero,
+    }))
     setEnviado(true)
     setEnviando(false)
   }

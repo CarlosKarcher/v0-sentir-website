@@ -77,6 +77,7 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
     constelaciones: tallerInicial(),
   })
   const [celularRegistrado, setCelularRegistrado] = useState("")
+  const [verificandoInicio, setVerificandoInicio] = useState(false)
   const [recibirInfo, setRecibirInfo] = useState<boolean | null>(null)
   const [enviado, setEnviado] = useState(false)
   const [enviando, setEnviando] = useState(false)
@@ -105,6 +106,7 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
       setNumeroMiembro(null)
       setRecibirInfo(null)
       setCelularRegistrado("")
+      setVerificandoInicio(false)
       setTalleres({
         autoconocimiento: tallerInicial(),
         transformacion: tallerInicial(),
@@ -152,8 +154,11 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
     if (!guardado) return
     try {
       const { caracteristica, numero } = JSON.parse(guardado)
-      checkCelular(caracteristica, numero)
-    } catch {}
+      setVerificandoInicio(true)
+      checkCelular(caracteristica, numero).finally(() => setVerificandoInicio(false))
+    } catch {
+      setVerificandoInicio(false)
+    }
   }, [isOpen])
 
   const toggleTaller = (key: TallerKey) => {
@@ -306,8 +311,15 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
           </div>
 
           <div className="px-6 py-5">
-            {/* PANTALLA DE ÉXITO */}
-            {enviado ? (
+            {/* VERIFICANDO */}
+            {verificandoInicio ? (
+              <div className="text-center py-12">
+                <div className="w-10 h-10 border-4 border-blue-900 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+                <p className="text-sm text-muted-foreground">Verificando...</p>
+              </div>
+
+            /* PANTALLA DE ÉXITO */
+            ) : enviado ? (
               <div className="text-center py-8">
                 <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
                 <h3 className="text-2xl font-bold mb-2">¡Ya estás registrado!</h3>

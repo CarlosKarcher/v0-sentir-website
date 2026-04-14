@@ -163,7 +163,7 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
     }
     const { data: res, error: sbError } = await supabase.from("miembros").insert(payload).select("numero").single()
     if (sbError) {
-      setError("Hubo un error al enviar. Por favor intentá de nuevo.")
+      setError(`Error ${sbError.code}: ${sbError.message}`)
       setEnviando(false)
       return
     }
@@ -188,7 +188,7 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
     }
     const { error: sbError } = await supabase.from("nomembros").insert(payload)
     if (sbError) {
-      setError("Hubo un error al enviar. Por favor intentá de nuevo.")
+      setError(`Error ${sbError.code}: ${sbError.message}`)
       setEnviando(false)
       return
     }

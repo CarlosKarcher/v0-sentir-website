@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { supabase } from "@/lib/supabase-client"
 import { Button } from "@/components/ui/button"
-import { X, CheckCircle, Sparkles, Heart } from "lucide-react"
+import { X, CheckCircle, Sparkles, Heart, AlertCircle } from "lucide-react"
 
 const MESES = [
   "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
@@ -58,7 +58,7 @@ type InteresadoData = z.infer<typeof schemaInteresado>
 type TallerState = { checked: boolean; mes: string; anio: string }
 const tallerInicial = (): TallerState => ({ checked: false, mes: "", anio: "" })
 
-type Step = "pregunta" | "miembro" | "interesado"
+type Step = "pregunta" | "verificar" | "ya_registrado" | "miembro" | "interesado"
 
 interface AnotateModalProps {
   isOpen: boolean
@@ -76,6 +76,11 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
     nino_interior: tallerInicial(),
     constelaciones: tallerInicial(),
   })
+  const [destinoStep, setDestinoStep] = useState<"miembro" | "interesado">("miembro")
+  const [celularVerif, setCelularVerif] = useState({ caracteristica: "+54", numero: "" })
+  const [verificando, setVerificando] = useState(false)
+  const [errorVerif, setErrorVerif] = useState("")
+  const [celularRegistrado, setCelularRegistrado] = useState("")
   const [recibirInfo, setRecibirInfo] = useState<boolean | null>(null)
   const [enviado, setEnviado] = useState(false)
   const [enviando, setEnviando] = useState(false)
@@ -103,6 +108,9 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
       setError("")
       setNumeroMiembro(null)
       setRecibirInfo(null)
+      setCelularVerif({ caracteristica: "+54", numero: "" })
+      setErrorVerif("")
+      setCelularRegistrado("")
       setTalleres({
         autoconocimiento: tallerInicial(),
         transformacion: tallerInicial(),
@@ -116,6 +124,41 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
 
   const formMiembro = useForm<MiembroData>({ resolver: zodResolver(schemaMiembro) })
   const formInteresado = useForm<InteresadoData>({ resolver: zodResolver(schemaInteresado) })
+
+  const irAVerificar = (destino: "miembro" | "interesado") => {
+    setDestinoStep(destino)
+    setCelularVerif({ caracteristica: "+54", numero: "" })
+    setErrorVerif("")
+    setStep("verificar")
+  }
+
+  const verificarCelular = async () => {
+    if (!celularVerif.numero.trim()) {
+      setErrorVerif("Ingresá tu número de celular.")
+      return
+    }
+    setVerificando(true)
+    setErrorVerif("")
+    const { data: enMiembros } = await supabase
+      .from("miembros")
+      .select("id")
+      .eq("celular_caracteristica", celularVerif.caracteristica.trim())
+      .eq("celular_numero", celularVerif.numero.trim())
+      .maybeSingle()
+    const { data: enNomembros } = await supabase
+      .from("nomembros")
+      .select("id")
+      .eq("celular_caracteristica", celularVerif.caracteristica.trim())
+      .eq("celular_numero", celularVerif.numero.trim())
+      .maybeSingle()
+    setVerificando(false)
+    if (enMiembros || enNomembros) {
+      setCelularRegistrado(`${celularVerif.caracteristica.trim()} ${celularVerif.numero.trim()}`)
+      setStep("ya_registrado")
+    } else {
+      setStep(destinoStep)
+    }
+  }
 
   const toggleTaller = (key: TallerKey) => {
     setTalleres(prev => ({ ...prev, [key]: { ...prev[key], checked: !prev[key].checked } }))
@@ -257,7 +300,7 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
                 {/* Botones */}
                 <div className="flex gap-4 justify-center pt-2">
                   <button
-                    onClick={() => setStep("miembro")}
+                    onClick={() => irAVerificar("miembro")}
                     className="group relative w-36 py-4 rounded-2xl bg-gradient-to-br from-blue-800 to-blue-950 hover:from-blue-700 hover:to-blue-900 text-white font-bold text-base shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0"
                   >
                     <span className="flex flex-col items-center gap-1">
@@ -268,7 +311,7 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
                   </button>
 
                   <button
-                    onClick={() => setStep("interesado")}
+                    onClick={() => irAVerificar("interesado")}
                     className="group relative w-36 py-4 rounded-2xl bg-gradient-to-br from-gray-100 to-gray-200 hover:from-gray-200 hover:to-gray-300 dark:from-gray-700 dark:to-gray-800 dark:hover:from-gray-600 dark:hover:to-gray-700 text-gray-800 dark:text-gray-200 font-bold text-base shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0"
                   >
                     <span className="flex flex-col items-center gap-1">
@@ -283,6 +326,69 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
                 <p className="text-xs text-muted-foreground pt-1">
                   Tu registro nos ayuda a mantenernos en contacto con vos
                 </p>
+              </div>
+
+            /* PASO VERIFICAR CELULAR */
+            ) : step === "verificar" ? (
+              <div className="py-4 space-y-5">
+                <button
+                  type="button"
+                  onClick={() => setStep("pregunta")}
+                  className="text-sm text-blue-700 hover:underline"
+                >
+                  ← Volver
+                </button>
+                <div className="text-center space-y-1">
+                  <p className="text-lg font-bold">Ingresá tu número de celular</p>
+                  <p className="text-sm text-muted-foreground">para verificar si ya estás registrado</p>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Celular *</label>
+                  <div className="flex gap-2">
+                    <input
+                      value={celularVerif.caracteristica}
+                      onChange={e => setCelularVerif(v => ({ ...v, caracteristica: e.target.value }))}
+                      className="w-20 border border-border rounded-md px-3 py-2 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                      placeholder="+54"
+                    />
+                    <input
+                      value={celularVerif.numero}
+                      onChange={e => setCelularVerif(v => ({ ...v, numero: e.target.value }))}
+                      onKeyDown={e => { if (e.key === "Enter") { e.preventDefault(); verificarCelular() } }}
+                      className="flex-1 border border-border rounded-md px-3 py-2 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                      placeholder="9 2966 595803"
+                      autoFocus
+                    />
+                  </div>
+                  {errorVerif && <p className="text-red-500 text-xs mt-1">{errorVerif}</p>}
+                </div>
+                <Button
+                  onClick={verificarCelular}
+                  disabled={verificando}
+                  className="w-full bg-blue-900 hover:bg-blue-800 text-white py-6 text-base font-semibold"
+                >
+                  {verificando ? "Verificando..." : "Continuar"}
+                </Button>
+              </div>
+
+            /* PASO YA REGISTRADO */
+            ) : step === "ya_registrado" ? (
+              <div className="text-center py-8 space-y-4">
+                <div className="flex justify-center">
+                  <div className="w-20 h-20 rounded-full bg-green-100 dark:bg-green-900/40 flex items-center justify-center shadow-md">
+                    <AlertCircle className="h-9 w-9 text-green-700 dark:text-green-300" />
+                  </div>
+                </div>
+                <h3 className="text-2xl font-bold">¡Ya estás registrado!</h3>
+                <p className="text-muted-foreground">
+                  El número <span className="font-semibold text-foreground">{celularRegistrado}</span> ya figura en nuestra comunidad.
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Si creés que es un error, comunicate con nosotros.
+                </p>
+                <Button onClick={onClose} className="bg-blue-900 hover:bg-blue-800 text-white px-8">
+                  Cerrar
+                </Button>
               </div>
 
             /* PASO 1: FORMULARIO MIEMBRO (hizo talleres) */

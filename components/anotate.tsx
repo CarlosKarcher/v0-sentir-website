@@ -172,6 +172,10 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
       p_numero: data.celular_numero.trim(),
     })
     if (verificacion?.encontrado) {
+      localStorage.setItem("sentir_celular", JSON.stringify({
+        caracteristica: data.celular_caracteristica.trim(),
+        numero: data.celular_numero.trim(),
+      }))
       setCelularRegistrado(`${data.celular_caracteristica.trim()} ${data.celular_numero.trim()}`)
       setStep("ya_registrado")
       setEnviando(false)
@@ -235,6 +239,10 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
       p_numero: data.celular_numero.trim(),
     })
     if (verificacion?.encontrado) {
+      localStorage.setItem("sentir_celular", JSON.stringify({
+        caracteristica: data.celular_caracteristica.trim(),
+        numero: data.celular_numero.trim(),
+      }))
       setCelularRegistrado(`${data.celular_caracteristica.trim()} ${data.celular_numero.trim()}`)
       setStep("ya_registrado")
       setEnviando(false)

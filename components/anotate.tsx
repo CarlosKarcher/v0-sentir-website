@@ -126,29 +126,18 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
 
   const checkCelular = async (caracteristica: string, numero: string) => {
     if (!numero || numero.length < 6) return
-    const { data: enMiembros } = await supabase
-      .from("miembros")
-      .select("id, nombre_gafete, nombre_apellido")
-      .eq("celular_caracteristica", caracteristica.trim())
-      .eq("celular_numero", numero.trim())
-      .maybeSingle()
-    const { data: enNomembros } = await supabase
-      .from("nomembros")
-      .select("id, nombre_apellido")
-      .eq("celular_caracteristica", caracteristica.trim())
-      .eq("celular_numero", numero.trim())
-      .maybeSingle()
-    if (enMiembros || enNomembros) {
-      const nombre = enMiembros
-        ? (enMiembros.nombre_gafete || enMiembros.nombre_apellido.split(" ")[0])
-        : enNomembros!.nombre_apellido.split(" ")[0]
-      const data = { caracteristica: caracteristica.trim(), numero: numero.trim(), nombre }
-      localStorage.setItem("sentir_celular", JSON.stringify(data))
+    const { data } = await supabase.rpc("verificar_celular_registrado", {
+      p_caracteristica: caracteristica.trim(),
+      p_numero: numero.trim(),
+    })
+    if (data?.encontrado) {
+      const nombre = data.nombre_gafete || (data.nombre_apellido?.split(" ")[0] ?? "")
+      const stored = { caracteristica: caracteristica.trim(), numero: numero.trim(), nombre }
+      localStorage.setItem("sentir_celular", JSON.stringify(stored))
       window.dispatchEvent(new CustomEvent("sentir_usuario", { detail: nombre }))
       setCelularRegistrado(`${caracteristica.trim()} ${numero.trim()}`)
       setStep("ya_registrado")
     } else {
-      // No está en la BD — limpiar localStorage desactualizado
       localStorage.removeItem("sentir_celular")
     }
   }

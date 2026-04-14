@@ -77,13 +77,18 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
     constelaciones: tallerInicial(),
   })
   const [celularRegistrado, setCelularRegistrado] = useState("")
+  const [verificandoInicio, setVerificandoInicio] = useState(false)
   const [recibirInfo, setRecibirInfo] = useState<boolean | null>(null)
   const [enviado, setEnviado] = useState(false)
   const [enviando, setEnviando] = useState(false)
   const [error, setError] = useState("")
   const [numeroMiembro, setNumeroMiembro] = useState<number | null>(null)
 
-  useEffect(() => { setMounted(true) }, [])
+  useEffect(() => {
+    setMounted(true)
+    // Si hay celular guardado, pre-cargar verificación
+    if (localStorage.getItem("sentir_celular")) setVerificandoInicio(true)
+  }, [])
 
   useEffect(() => {
     if (!isOpen) return
@@ -96,6 +101,31 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
     }
   }, [isOpen, onClose])
 
+  // Cuando abre el modal, verificar localStorage
+  useEffect(() => {
+    if (!isOpen) return
+    const guardado = localStorage.getItem("sentir_celular")
+    if (!guardado) return
+    setVerificandoInicio(true)
+    try {
+      const { caracteristica, numero } = JSON.parse(guardado)
+      supabase.rpc("verificar_celular_registrado", {
+        p_caracteristica: caracteristica,
+        p_numero: numero,
+      }).then(({ data }) => {
+        if (data?.encontrado) {
+          setCelularRegistrado(`${caracteristica} ${numero}`)
+          setStep("ya_registrado")
+        } else {
+          localStorage.removeItem("sentir_celular")
+        }
+        setVerificandoInicio(false)
+      })
+    } catch {
+      setVerificandoInicio(false)
+    }
+  }, [isOpen])
+
   useEffect(() => {
     if (!isOpen) {
       setStep("pregunta")
@@ -104,6 +134,7 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
       setNumeroMiembro(null)
       setRecibirInfo(null)
       setCelularRegistrado("")
+      setVerificandoInicio(false)
       setTalleres({
         autoconocimiento: tallerInicial(),
         transformacion: tallerInicial(),
@@ -181,6 +212,10 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
       setEnviando(false)
       return
     }
+    localStorage.setItem("sentir_celular", JSON.stringify({
+      caracteristica: data.celular_caracteristica.trim(),
+      numero: data.celular_numero.trim(),
+    }))
     setNumeroMiembro(res ?? null)
     setEnviado(true)
     setEnviando(false)
@@ -241,7 +276,12 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
           </div>
 
           <div className="px-6 py-5">
-            {enviado ? (
+            {verificandoInicio ? (
+              <div className="text-center py-12">
+                <div className="w-10 h-10 border-4 border-blue-900 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+                <p className="text-sm text-muted-foreground">Verificando...</p>
+              </div>
+            ) : enviado ? (
               <div className="text-center py-8">
                 <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
                 <h3 className="text-2xl font-bold mb-2">¡Ya estás registrado!</h3>

@@ -166,6 +166,19 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
     }
     setEnviando(true)
     setError("")
+    // Verificar duplicado antes de insertar
+    const { data: dup } = await supabase
+      .from("miembros")
+      .select("id")
+      .eq("celular_caracteristica", data.celular_caracteristica.trim())
+      .eq("celular_numero", data.celular_numero.trim())
+      .maybeSingle()
+    if (dup) {
+      setCelularRegistrado(`${data.celular_caracteristica.trim()} ${data.celular_numero.trim()}`)
+      setStep("ya_registrado")
+      setEnviando(false)
+      return
+    }
     const t = talleres
     const payload = {
       nombre_apellido: data.nombre_apellido,
@@ -221,6 +234,25 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
     }
     setEnviando(true)
     setError("")
+    // Verificar duplicado antes de insertar
+    const { data: dupM } = await supabase
+      .from("miembros")
+      .select("id")
+      .eq("celular_caracteristica", data.celular_caracteristica.trim())
+      .eq("celular_numero", data.celular_numero.trim())
+      .maybeSingle()
+    const { data: dupN } = await supabase
+      .from("nomembros")
+      .select("id")
+      .eq("celular_caracteristica", data.celular_caracteristica.trim())
+      .eq("celular_numero", data.celular_numero.trim())
+      .maybeSingle()
+    if (dupM || dupN) {
+      setCelularRegistrado(`${data.celular_caracteristica.trim()} ${data.celular_numero.trim()}`)
+      setStep("ya_registrado")
+      setEnviando(false)
+      return
+    }
     const payload = {
       nombre_apellido: data.nombre_apellido,
       celular_caracteristica: data.celular_caracteristica,

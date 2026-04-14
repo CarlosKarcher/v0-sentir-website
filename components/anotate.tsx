@@ -196,7 +196,12 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
     }
     const { data: res, error: sbError } = await supabase.rpc('registrar_miembro', payload)
     if (sbError) {
-      setError(`Error ${sbError.code}: ${sbError.message}`)
+      if (sbError.code === "23505") {
+        setCelularRegistrado(`${data.celular_caracteristica} ${data.celular_numero}`)
+        setStep("ya_registrado")
+      } else {
+        setError(`Error ${sbError.code}: ${sbError.message}`)
+      }
       setEnviando(false)
       return
     }
@@ -225,7 +230,12 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
     }
     const { error: sbError } = await supabase.from("nomembros").insert(payload)
     if (sbError) {
-      setError(`Error ${sbError.code}: ${sbError.message}`)
+      if (sbError.code === "23505") {
+        setCelularRegistrado(`${data.celular_caracteristica} ${data.celular_numero}`)
+        setStep("ya_registrado")
+      } else {
+        setError(`Error ${sbError.code}: ${sbError.message}`)
+      }
       setEnviando(false)
       return
     }

@@ -221,6 +221,7 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
     localStorage.setItem("sentir_celular", JSON.stringify({
       caracteristica: data.celular_caracteristica,
       numero: data.celular_numero,
+      nombre: data.nombre_gafete || data.nombre_apellido.split(" ")[0],
     }))
     setNumeroMiembro(res ?? null)
     setEnviado(true)
@@ -274,6 +275,7 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
     localStorage.setItem("sentir_celular", JSON.stringify({
       caracteristica: data.celular_caracteristica,
       numero: data.celular_numero,
+      nombre: data.nombre_apellido.split(" ")[0],
     }))
     setEnviado(true)
     setEnviando(false)

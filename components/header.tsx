@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Menu } from "lucide-react"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
@@ -17,6 +17,17 @@ import { scrollToElement } from "@/lib/scroll"
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false)
+  const [nombreUsuario, setNombreUsuario] = useState<string | null>(null)
+
+  useEffect(() => {
+    try {
+      const guardado = localStorage.getItem("sentir_celular")
+      if (guardado) {
+        const { nombre } = JSON.parse(guardado)
+        if (nombre) setNombreUsuario(nombre)
+      }
+    } catch {}
+  }, [])
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -294,6 +305,12 @@ export function Header() {
             </NavigationMenuList>
           </NavigationMenu>
         </nav>
+
+        {nombreUsuario && (
+          <span className="hidden md:block text-sm font-medium text-blue-900 dark:text-blue-300">
+            {nombreUsuario}
+          </span>
+        )}
 
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild className="md:hidden">

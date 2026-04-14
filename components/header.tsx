@@ -21,25 +21,27 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="w-full max-w-7xl mx-auto flex h-14 sm:h-16 items-center justify-between px-4">
-        <div className="flex items-center gap-3">
-          <span className="text-lg sm:text-xl font-bold text-blue-900">SENTIR</span>
-          <img
-            src="/fuego-de-sentir.png"
-            alt="Fuego de Sentir"
-            className="h-[2.4em] w-auto object-contain"
-            style={{ height: '2.4em', width: 'auto' }}
-          />
-          <span className="text-lg sm:text-xl font-bold text-blue-900 flex items-center gap-1.5">
-            <span className="ml-2">En</span>
+        <div className="flex flex-col">
+          <div className="flex items-center gap-3">
+            <span className="text-lg sm:text-xl font-bold text-blue-900">SENTIR</span>
             <img
-              src="/banderas_2.png"
-              alt=""
-              className="h-[2em] w-auto object-contain"
-              style={{ height: '2em', width: 'auto' }}
+              src="/fuego-de-sentir.png"
+              alt="Fuego de Sentir"
+              className="h-[2.4em] w-auto object-contain"
+              style={{ height: '2.4em', width: 'auto' }}
             />
-          </span>
+            <span className="text-lg sm:text-xl font-bold text-blue-900 flex items-center gap-1.5">
+              <span className="ml-2">En</span>
+              <img
+                src="/banderas_2.png"
+                alt=""
+                className="h-[2em] w-auto object-contain"
+                style={{ height: '2em', width: 'auto' }}
+              />
+            </span>
+          </div>
           {process.env.NEXT_PUBLIC_BUILD_TIME && (
-            <span className="hidden sm:block text-xs text-muted-foreground font-mono border border-border/50 rounded px-2 py-0.5 bg-muted/30">
+            <span className="hidden sm:block text-[10px] text-muted-foreground font-mono leading-none mt-0.5">
               v{new Date(process.env.NEXT_PUBLIC_BUILD_TIME).toLocaleString("es-AR", {
                 day: "2-digit", month: "2-digit", year: "numeric",
                 hour: "2-digit", minute: "2-digit", timeZone: "America/Argentina/Buenos_Aires"

@@ -396,7 +396,7 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-1">Déjanos un comentario</label>
+                  <label className="block text-sm font-medium mb-1">Déjanos un comentario <span className="text-muted-foreground font-normal">(Opcional)</span></label>
                   <textarea
                     {...formMiembro.register("comentario")}
                     rows={3}

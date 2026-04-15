@@ -21,6 +21,7 @@ const TALLERES = [
   { key: "transformacion", label: "Transformación", conFecha: true },
   { key: "myl", label: "MyL", conFecha: true },
   { key: "guerrero", label: "El Camino del Guerrero", conFecha: true },
+  { key: "biodecodificacion", label: "Biodecod.", conFecha: true },
   { key: "nino_interior", label: "Sanando mi Niño Interior", conFecha: true },
   { key: "constelaciones", label: "Sesiones de Constelaciones Grupales", conFecha: false },
 ] as const
@@ -73,6 +74,7 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
     transformacion: tallerInicial(),
     myl: tallerInicial(),
     guerrero: tallerInicial(),
+    biodecodificacion: tallerInicial(),
     nino_interior: tallerInicial(),
     constelaciones: tallerInicial(),
   })
@@ -144,6 +146,7 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
         transformacion: tallerInicial(),
         myl: tallerInicial(),
         guerrero: tallerInicial(),
+        biodecodificacion: tallerInicial(),
         nino_interior: tallerInicial(),
         constelaciones: tallerInicial(),
       })
@@ -211,6 +214,9 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
       taller_guerrero: t.guerrero.checked,
       guerrero_mes: t.guerrero.checked && t.guerrero.mes ? parseInt(t.guerrero.mes) : null,
       guerrero_anio: t.guerrero.checked && t.guerrero.anio ? parseInt(t.guerrero.anio) : null,
+      taller_biodecodificacion: t.biodecodificacion.checked,
+      biodecodificacion_mes: t.biodecodificacion.checked && t.biodecodificacion.mes ? parseInt(t.biodecodificacion.mes) : null,
+      biodecodificacion_anio: t.biodecodificacion.checked && t.biodecodificacion.anio ? parseInt(t.biodecodificacion.anio) : null,
       taller_nino_interior: t.nino_interior.checked,
       nino_interior_mes: t.nino_interior.checked && t.nino_interior.mes ? parseInt(t.nino_interior.mes) : null,
       nino_interior_anio: t.nino_interior.checked && t.nino_interior.anio ? parseInt(t.nino_interior.anio) : null,

@@ -89,6 +89,11 @@ export function Header() {
               style={{ height: '2em', width: 'auto' }}
             />
           </span>
+          {nombreUsuario && (
+            <span className="md:hidden text-sm font-medium text-blue-900 dark:text-blue-300 ml-4">
+              {nombreUsuario}{nroMiembro ? ` (${nroMiembro})` : ""}
+            </span>
+          )}
         </div>
 
         {/* Desktop Navigation */}
@@ -340,7 +345,7 @@ export function Header() {
 
         <div className="flex items-center gap-3 ml-auto">
           {nombreUsuario && (
-            <span className="text-sm font-medium text-blue-900 dark:text-blue-300 pr-2">
+            <span className="hidden md:inline text-sm font-medium text-blue-900 dark:text-blue-300 pr-2">
               {nombreUsuario}{nroMiembro ? ` (${nroMiembro})` : ""}
             </span>
           )}

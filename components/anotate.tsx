@@ -21,7 +21,7 @@ const TALLERES = [
   { key: "transformacion", label: "Transformación", conFecha: true },
   { key: "myl", label: "MyL", conFecha: true },
   { key: "guerrero", label: "El Camino del Guerrero", conFecha: true },
-  { key: "biodecodificacion", label: "Biodecod.", conFecha: true },
+  { key: "biodecodificacion", label: "Biodecodificación", conFecha: true },
   { key: "nino_interior", label: "Sanando mi Niño Interior", conFecha: true },
   { key: "constelaciones", label: "Sesiones de Constelaciones Grupales", conFecha: false },
 ] as const

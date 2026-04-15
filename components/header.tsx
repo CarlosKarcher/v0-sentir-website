@@ -19,6 +19,7 @@ import { scrollToElement } from "@/lib/scroll"
 export function Header() {
   const [isOpen, setIsOpen] = useState(false)
   const [nombreUsuario, setNombreUsuario] = useState<string | null>(null)
+  const [nroMiembro, setNroMiembro] = useState<number | null>(null)
 
   useEffect(() => {
     const cargarNombre = async () => {
@@ -34,9 +35,11 @@ export function Header() {
         })
         if (data?.encontrado) {
           const n = data.nombre_gafete || data.nombre_apellido?.split(" ")[0] || ""
+          const nro = data.numero ? Number(data.numero) : null
           if (n) {
             setNombreUsuario(n)
-            localStorage.setItem("sentir_celular", JSON.stringify({ caracteristica, numero, nombre: n }))
+            setNroMiembro(nro)
+            localStorage.setItem("sentir_celular", JSON.stringify({ caracteristica, numero, nombre: n, nroMiembro: nro }))
           }
         } else {
           // No está en la BD (o fue borrado), limpiar localStorage
@@ -47,7 +50,13 @@ export function Header() {
     cargarNombre()
 
     // Escuchar cuando el modal detecta al usuario y avisa
-    const onUsuario = (e: Event) => setNombreUsuario((e as CustomEvent).detail)
+    const onUsuario = (e: Event) => {
+      const detail = (e as CustomEvent).detail
+      if (detail?.nombre) {
+        setNombreUsuario(detail.nombre)
+        setNroMiembro(detail.nroMiembro ?? null)
+      }
+    }
     window.addEventListener("sentir_usuario", onUsuario)
     return () => window.removeEventListener("sentir_usuario", onUsuario)
   }, [])
@@ -332,7 +341,7 @@ export function Header() {
         <div className="flex items-center gap-3 ml-auto">
           {nombreUsuario && (
             <span className="text-sm font-medium text-blue-900 dark:text-blue-300 pr-2">
-              {nombreUsuario}
+              {nombreUsuario}{nroMiembro ? ` (${nroMiembro})` : ""}
             </span>
           )}
           <Sheet open={isOpen} onOpenChange={setIsOpen}>

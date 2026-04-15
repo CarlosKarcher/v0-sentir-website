@@ -25,19 +25,22 @@ export function Header() {
       try {
         const guardado = localStorage.getItem("sentir_celular")
         if (!guardado) return
-        const { caracteristica, numero, nombre } = JSON.parse(guardado)
-        if (nombre) { setNombreUsuario(nombre); return }
-        // Si no tiene nombre, lo busca por RPC (bypassa RLS)
-        const { data: rpcData } = await supabase.rpc("verificar_celular_registrado", {
+        const { caracteristica, numero } = JSON.parse(guardado)
+        if (!caracteristica || !numero) return
+        // Siempre verificar en la BD — si no está, no mostrar nada
+        const { data } = await supabase.rpc("verificar_celular_registrado", {
           p_caracteristica: caracteristica,
           p_numero: numero,
         })
-        if (rpcData?.encontrado) {
-          const n = rpcData.nombre_gafete || rpcData.nombre_apellido?.split(" ")[0] || ""
+        if (data?.encontrado) {
+          const n = data.nombre_gafete || data.nombre_apellido?.split(" ")[0] || ""
           if (n) {
             setNombreUsuario(n)
             localStorage.setItem("sentir_celular", JSON.stringify({ caracteristica, numero, nombre: n }))
           }
+        } else {
+          // No está en la BD (o fue borrado), limpiar localStorage
+          localStorage.removeItem("sentir_celular")
         }
       } catch {}
     }

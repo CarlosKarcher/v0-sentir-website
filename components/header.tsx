@@ -15,11 +15,17 @@ import {
 } from "@/components/ui/navigation-menu"
 import { cn } from "@/lib/utils"
 import { scrollToElement } from "@/lib/scroll"
+import { AdminPanel } from "@/components/admin-panel"
+
+const ADMIN_CARACTERISTICA = "+54"
+const ADMIN_NUMERO = "2966211547"
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false)
   const [nombreUsuario, setNombreUsuario] = useState<string | null>(null)
   const [nroMiembro, setNroMiembro] = useState<number | null>(null)
+  const [esAdmin, setEsAdmin] = useState(false)
+  const [adminPanelOpen, setAdminPanelOpen] = useState(false)
 
   useEffect(() => {
     const cargarNombre = async () => {
@@ -41,6 +47,7 @@ export function Header() {
             setNroMiembro(nro)
             localStorage.setItem("sentir_celular", JSON.stringify({ caracteristica, numero, nombre: n, nroMiembro: nro }))
           }
+          if (caracteristica === ADMIN_CARACTERISTICA && numero === ADMIN_NUMERO) setEsAdmin(true)
         } else {
           // No está en la BD (o fue borrado), limpiar localStorage
           localStorage.removeItem("sentir_celular")
@@ -55,6 +62,13 @@ export function Header() {
       if (detail?.nombre) {
         setNombreUsuario(detail.nombre)
         setNroMiembro(detail.nroMiembro ?? null)
+        try {
+          const guardado = localStorage.getItem("sentir_celular")
+          if (guardado) {
+            const { caracteristica, numero } = JSON.parse(guardado)
+            if (caracteristica === ADMIN_CARACTERISTICA && numero === ADMIN_NUMERO) setEsAdmin(true)
+          }
+        } catch {}
       }
     }
     window.addEventListener("sentir_usuario", onUsuario)
@@ -62,6 +76,7 @@ export function Header() {
   }, [])
 
   return (
+    <>
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       {process.env.NEXT_PUBLIC_BUILD_TIME && (
         <span className="hidden sm:block absolute top-1 left-2 text-xs text-muted-foreground font-mono z-10">
@@ -349,6 +364,14 @@ export function Header() {
               {nombreUsuario}{nroMiembro ? ` (${nroMiembro})` : ""}
             </span>
           )}
+          {esAdmin && (
+            <button
+              onClick={() => setAdminPanelOpen(true)}
+              className="hidden md:inline-flex items-center gap-1 text-xs font-semibold bg-blue-900 hover:bg-blue-800 text-white px-3 py-1.5 rounded-lg transition-colors"
+            >
+              Admin
+            </button>
+          )}
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild className="md:hidden">
             <Button variant="ghost" size="icon">
@@ -455,5 +478,14 @@ export function Header() {
         </div>
       </div>
     </header>
+    {esAdmin && (
+      <AdminPanel
+        isOpen={adminPanelOpen}
+        onClose={() => setAdminPanelOpen(false)}
+        adminCaracteristica={ADMIN_CARACTERISTICA}
+        adminNumero={ADMIN_NUMERO}
+      />
+    )}
+  </>
   )
 }

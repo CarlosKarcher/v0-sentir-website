@@ -114,6 +114,9 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
         p_numero: numero,
       }).then(({ data }) => {
         if (data?.encontrado) {
+          const nombre = data.nombre_gafete || data.nombre_apellido?.split(" ")[0] || ""
+          localStorage.setItem("sentir_celular", JSON.stringify({ caracteristica, numero, nombre }))
+          if (nombre) window.dispatchEvent(new CustomEvent("sentir_usuario", { detail: nombre }))
           setCelularRegistrado(`${caracteristica} ${numero}`)
           setStep("ya_registrado")
         } else {
@@ -172,10 +175,13 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
       p_numero: data.celular_numero.trim(),
     })
     if (verificacion?.encontrado) {
+      const nombre = verificacion.nombre_gafete || verificacion.nombre_apellido?.split(" ")[0] || ""
       localStorage.setItem("sentir_celular", JSON.stringify({
         caracteristica: data.celular_caracteristica.trim(),
         numero: data.celular_numero.trim(),
+        nombre,
       }))
+      if (nombre) window.dispatchEvent(new CustomEvent("sentir_usuario", { detail: nombre }))
       setCelularRegistrado(`${data.celular_caracteristica.trim()} ${data.celular_numero.trim()}`)
       setStep("ya_registrado")
       setEnviando(false)
@@ -216,10 +222,13 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
       setEnviando(false)
       return
     }
+    const nombre = data.nombre_gafete || data.nombre_apellido.split(" ")[0]
     localStorage.setItem("sentir_celular", JSON.stringify({
       caracteristica: data.celular_caracteristica.trim(),
       numero: data.celular_numero.trim(),
+      nombre,
     }))
+    window.dispatchEvent(new CustomEvent("sentir_usuario", { detail: nombre }))
     setNumeroMiembro(res ?? null)
     setEnviado(true)
     setEnviando(false)
@@ -239,10 +248,13 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
       p_numero: data.celular_numero.trim(),
     })
     if (verificacion?.encontrado) {
+      const nombre = verificacion.nombre_gafete || verificacion.nombre_apellido?.split(" ")[0] || ""
       localStorage.setItem("sentir_celular", JSON.stringify({
         caracteristica: data.celular_caracteristica.trim(),
         numero: data.celular_numero.trim(),
+        nombre,
       }))
+      if (nombre) window.dispatchEvent(new CustomEvent("sentir_usuario", { detail: nombre }))
       setCelularRegistrado(`${data.celular_caracteristica.trim()} ${data.celular_numero.trim()}`)
       setStep("ya_registrado")
       setEnviando(false)

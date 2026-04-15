@@ -27,17 +27,17 @@ export function Header() {
         if (!guardado) return
         const { caracteristica, numero, nombre } = JSON.parse(guardado)
         if (nombre) { setNombreUsuario(nombre); return }
-        // Si no tiene nombre, lo busca en la BD
-        const { data } = await supabase
-          .from("miembros")
-          .select("nombre_gafete, nombre_apellido")
-          .eq("celular_caracteristica", caracteristica)
-          .eq("celular_numero", numero)
-          .maybeSingle()
-        if (data) {
-          const n = data.nombre_gafete || data.nombre_apellido.split(" ")[0]
-          setNombreUsuario(n)
-          localStorage.setItem("sentir_celular", JSON.stringify({ caracteristica, numero, nombre: n }))
+        // Si no tiene nombre, lo busca por RPC (bypassa RLS)
+        const { data: rpcData } = await supabase.rpc("verificar_celular_registrado", {
+          p_caracteristica: caracteristica,
+          p_numero: numero,
+        })
+        if (rpcData?.encontrado) {
+          const n = rpcData.nombre_gafete || rpcData.nombre_apellido?.split(" ")[0] || ""
+          if (n) {
+            setNombreUsuario(n)
+            localStorage.setItem("sentir_celular", JSON.stringify({ caracteristica, numero, nombre: n }))
+          }
         }
       } catch {}
     }

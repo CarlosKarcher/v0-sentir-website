@@ -59,7 +59,7 @@ type InteresadoData = z.infer<typeof schemaInteresado>
 type TallerState = { checked: boolean; mes: string; anio: string }
 const tallerInicial = (): TallerState => ({ checked: false, mes: "", anio: "" })
 
-type Step = "pregunta" | "verificar_celular" | "ya_registrado" | "miembro" | "interesado"
+type Step = "pregunta" | "ya_registrado" | "miembro" | "interesado"
 
 interface AnotateModalProps {
   isOpen: boolean
@@ -85,16 +85,9 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
   const [enviando, setEnviando] = useState(false)
   const [error, setError] = useState("")
   const [numeroMiembro, setNumeroMiembro] = useState<number | null>(null)
-  const [pendingStep, setPendingStep] = useState<"miembro" | "interesado" | null>(null)
-  const [celularPrefill, setCelularPrefill] = useState<{ caracteristica: string; numero: string } | null>(null)
-  const [verificandoCelular, setVerificandoCelular] = useState(false)
-  const [inputCaracteristica, setInputCaracteristica] = useState("")
-  const [inputNumero, setInputNumero] = useState("")
-  const [errorCelular, setErrorCelular] = useState("")
 
   useEffect(() => {
     setMounted(true)
-    // Si hay celular guardado, pre-cargar verificación
     if (localStorage.getItem("sentir_celular")) setVerificandoInicio(true)
   }, [])
 
@@ -140,19 +133,6 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
   }, [isOpen])
 
   useEffect(() => {
-    if (celularPrefill) {
-      if (step === "miembro") {
-        formMiembro.setValue("celular_caracteristica", celularPrefill.caracteristica)
-        formMiembro.setValue("celular_numero", celularPrefill.numero)
-      }
-      if (step === "interesado") {
-        formInteresado.setValue("celular_caracteristica", celularPrefill.caracteristica)
-        formInteresado.setValue("celular_numero", celularPrefill.numero)
-      }
-    }
-  }, [celularPrefill, step])
-
-  useEffect(() => {
     if (!isOpen) {
       setStep("pregunta")
       setEnviado(false)
@@ -161,11 +141,6 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
       setRecibirInfo(null)
       setCelularRegistrado("")
       setVerificandoInicio(false)
-      setPendingStep(null)
-      setCelularPrefill(null)
-      setInputCaracteristica("")
-      setInputNumero("")
-      setErrorCelular("")
       setTalleres({
         autoconocimiento: tallerInicial(),
         transformacion: tallerInicial(),
@@ -180,36 +155,6 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
 
   const formMiembro = useForm<MiembroData>({ resolver: zodResolver(schemaMiembro) })
   const formInteresado = useForm<InteresadoData>({ resolver: zodResolver(schemaInteresado) })
-
-  const onVerificarCelular = async () => {
-    if (!inputCaracteristica.trim() || !inputNumero.trim()) {
-      setErrorCelular("Ingresá tu número de celular completo")
-      return
-    }
-    setVerificandoCelular(true)
-    setErrorCelular("")
-    const { data } = await supabase.rpc("verificar_celular_registrado", {
-      p_caracteristica: inputCaracteristica.trim(),
-      p_numero: inputNumero.trim(),
-    })
-    if (data?.encontrado) {
-      const nombre = data.nombre_gafete || data.nombre_apellido?.split(" ")[0] || ""
-      const nroMiembro = data.numero || null
-      localStorage.setItem("sentir_celular", JSON.stringify({
-        caracteristica: inputCaracteristica.trim(),
-        numero: inputNumero.trim(),
-        nombre,
-        nroMiembro,
-      }))
-      if (nombre) window.dispatchEvent(new CustomEvent("sentir_usuario", { detail: { nombre, nroMiembro } }))
-      setCelularRegistrado(`${inputCaracteristica.trim()} ${inputNumero.trim()}`)
-      setStep("ya_registrado")
-    } else {
-      setCelularPrefill({ caracteristica: inputCaracteristica.trim(), numero: inputNumero.trim() })
-      setStep(pendingStep!)
-    }
-    setVerificandoCelular(false)
-  }
 
   const toggleTaller = (key: TallerKey) => {
     setTalleres(prev => ({ ...prev, [key]: { ...prev[key], checked: !prev[key].checked } }))
@@ -342,13 +287,6 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
       setEnviando(false)
       return
     }
-    const nombre = data.nombre_apellido.split(" ")[0]
-    localStorage.setItem("sentir_celular", JSON.stringify({
-      caracteristica: data.celular_caracteristica.trim(),
-      numero: data.celular_numero.trim(),
-      nombre,
-      nroMiembro: null,
-    }))
     setEnviado(true)
     setEnviando(false)
   }
@@ -442,7 +380,7 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
                 </div>
                 <div className="flex gap-4 justify-center pt-2">
                   <button
-                    onClick={() => { setPendingStep("miembro"); setStep("verificar_celular") }}
+                    onClick={() => setStep("miembro")}
                     className="group relative w-36 py-4 rounded-2xl bg-gradient-to-br from-blue-800 to-blue-950 hover:from-blue-700 hover:to-blue-900 text-white font-bold text-base shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0"
                   >
                     <span className="flex flex-col items-center gap-1">
@@ -452,7 +390,7 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
                     </span>
                   </button>
                   <button
-                    onClick={() => { setPendingStep("interesado"); setStep("verificar_celular") }}
+                    onClick={() => setStep("interesado")}
                     className="group relative w-36 py-4 rounded-2xl bg-gradient-to-br from-gray-100 to-gray-200 hover:from-gray-200 hover:to-gray-300 dark:from-gray-700 dark:to-gray-800 dark:hover:from-gray-600 dark:hover:to-gray-700 text-gray-800 dark:text-gray-200 font-bold text-base shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0"
                   >
                     <span className="flex flex-col items-center gap-1">
@@ -467,45 +405,9 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
                 </p>
               </div>
 
-            ) : step === "verificar_celular" ? (
-              <div className="py-4 space-y-5">
-                <button type="button" onClick={() => setStep("pregunta")} className="text-sm text-blue-700 hover:underline mb-1">
-                  ← Volver
-                </button>
-                <div className="text-center space-y-1">
-                  <p className="text-xl font-bold">Ingresá tu número de celular</p>
-                  <p className="text-sm text-muted-foreground">Verificamos si ya estás en nuestra comunidad</p>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Celular *</label>
-                  <div className="flex gap-2">
-                    <input
-                      value={inputCaracteristica}
-                      onChange={e => setInputCaracteristica(e.target.value)}
-                      className="w-20 border border-border rounded-md px-3 py-2 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-                      placeholder="+54"
-                    />
-                    <input
-                      value={inputNumero}
-                      onChange={e => setInputNumero(e.target.value)}
-                      className="flex-1 border border-border rounded-md px-3 py-2 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-                      placeholder="9 2966 595803"
-                    />
-                  </div>
-                  {errorCelular && <p className="text-red-500 text-xs mt-1">{errorCelular}</p>}
-                </div>
-                <Button
-                  onClick={onVerificarCelular}
-                  disabled={verificandoCelular}
-                  className="w-full bg-blue-900 hover:bg-blue-800 text-white py-6 text-base font-semibold"
-                >
-                  {verificandoCelular ? "Verificando..." : "Continuar"}
-                </Button>
-              </div>
-
             ) : step === "miembro" ? (
               <form onSubmit={formMiembro.handleSubmit(onSubmitMiembro)} className="space-y-5">
-                <button type="button" onClick={() => setStep("verificar_celular")} className="text-sm text-blue-700 hover:underline mb-1">
+                <button type="button" onClick={() => setStep("pregunta")} className="text-sm text-blue-700 hover:underline mb-1">
                   ← Volver
                 </button>
                 <div>
@@ -567,7 +469,7 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
 
             ) : (
               <form onSubmit={formInteresado.handleSubmit(onSubmitInteresado)} className="space-y-5">
-                <button type="button" onClick={() => setStep("verificar_celular")} className="text-sm text-blue-700 hover:underline mb-1">
+                <button type="button" onClick={() => setStep("pregunta")} className="text-sm text-blue-700 hover:underline mb-1">
                   ← Volver
                 </button>
                 <div>

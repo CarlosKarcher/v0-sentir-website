@@ -84,7 +84,7 @@ export function VideoPopup() {
           <div style={{ display: "flex", flexDirection: "row", gap: "1cm" }}>
             <video
               ref={video1Ref}
-              src="/Video-Neco.mp4"
+              src="/auto-neco-2.mp4"
               playsInline
               controls
               preload="metadata"

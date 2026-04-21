@@ -181,6 +181,15 @@ const CALENDAR_EVENTS: DayEvent[] = [
   // Octubre/Noviembre — MyL 7 · Campamento y Cierre
   { month: 9, day: 31, type: "myl", label: "MyL 7 - Campamento y Cierre" },
   { month: 10, day: 1, type: "myl", label: "MyL 7 - Campamento y Cierre" },
+
+  // Noviembre — Camino del Guerrero Quequén/Necochea
+  { month: 10, day: 7, type: "guerrero", label: "Camino del Guerrero – Quequén/Necochea" },
+  { month: 10, day: 8, type: "guerrero", label: "Camino del Guerrero – Quequén/Necochea" },
+
+  // Noviembre — Autoconocimiento Quequén/Necochea
+  { month: 10, day: 13, type: "autoconocimiento", label: "Autocon. – Quequén/Necochea" },
+  { month: 10, day: 14, type: "autoconocimiento", label: "Autocon. – Quequén/Necochea" },
+  { month: 10, day: 15, type: "autoconocimiento", label: "Autocon. – Quequén/Necochea" },
 ]
 
 function getFirstWeekday(year: number, month: number): number {

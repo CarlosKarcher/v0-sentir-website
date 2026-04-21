@@ -101,6 +101,16 @@ const CALENDAR_EVENTS: DayEvent[] = [
   { month: 2, day: 14, type: "autoconocimiento", label: "Autocon. – Río Gallegos" },
   { month: 2, day: 15, type: "autoconocimiento", label: "Autocon. – Río Gallegos" },
 
+  // Abril — Autoconocimiento Tandil (realizado)
+  { month: 3, day: 10, type: "autoconocimiento", label: "Autocon. – Tandil" },
+  { month: 3, day: 11, type: "autoconocimiento", label: "Autocon. – Tandil" },
+  { month: 3, day: 12, type: "autoconocimiento", label: "Autocon. – Tandil" },
+
+  // Abril — Autoconocimiento Necochea (realizado)
+  { month: 3, day: 17, type: "autoconocimiento", label: "Autocon. – Necochea" },
+  { month: 3, day: 18, type: "autoconocimiento", label: "Autocon. – Necochea" },
+  { month: 3, day: 19, type: "autoconocimiento", label: "Autocon. – Necochea" },
+
   // ── PRÓXIMOS EVENTOS ────────────────────────────────────────
 
   // Marzo — Autoconocimiento Punta Arenas
@@ -113,16 +123,6 @@ const CALENDAR_EVENTS: DayEvent[] = [
   { month: 3, day: 3, type: "transformacion", label: "Transfor. – Río Gallegos" },
   { month: 3, day: 4, type: "transformacion", label: "Transfor. – Río Gallegos" },
   { month: 3, day: 5, type: "transformacion", label: "Transfor. – Río Gallegos" },
-
-  // Abril — Autoconocimiento Tandil
-  { month: 3, day: 10, type: "autoconocimiento", label: "Autocon. – Tandil" },
-  { month: 3, day: 11, type: "autoconocimiento", label: "Autocon. – Tandil" },
-  { month: 3, day: 12, type: "autoconocimiento", label: "Autocon. – Tandil" },
-
-  // Abril — Autoconocimiento Necochea
-  { month: 3, day: 17, type: "autoconocimiento", label: "Autocon. – Necochea" },
-  { month: 3, day: 18, type: "autoconocimiento", label: "Autocon. – Necochea" },
-  { month: 3, day: 19, type: "autoconocimiento", label: "Autocon. – Necochea" },
 
   // Mayo — Autoconocimiento Río Gallegos
   { month: 4, day: 8, type: "autoconocimiento", label: "Autocon. – Río Gallegos" },

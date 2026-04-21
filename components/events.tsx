@@ -418,7 +418,7 @@ export function Events() {
       contactPhone: "+56 9 6113 0835",
     },
     {
-      title: "Taller de Biodecodificación: \"Tu cuerpo tiene algo que contarte.\"",
+      title: "Taller de Biodecodificación: \"Tu cuerpo tiene algo que contarte.\" - Río Gallegos",
       date: "13 de Junio de 2026",
       time: "Inicio: Sábado 14 Horas",
       location: "Lugar a Confirmar",
@@ -431,7 +431,7 @@ export function Events() {
       contactPhone: "+54 9 2966 211547",
     },
     {
-      title: "Taller: \"Sanando mi Niño Interior.\"",
+      title: "Taller: \"Sanando mi Niño Interior.\" - Río Gallegos",
       date: "14 de Junio de 2026",
       time: "Inicio: Domingo 14 Horas",
       location: "Lugar a Confirmar",

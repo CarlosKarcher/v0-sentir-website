@@ -199,6 +199,20 @@ export function Events() {
 
   const pastEvents = [
     {
+      title: "Taller de Autoconocimiento - Necochea (Buenos Aires)",
+      date: "17, 18 y 19 de Abril, 2026",
+      time: "Inicio: Viernes 17, 17 Horas",
+      location: "Por Primera Vez",
+      type: "Taller de Liderazgo",
+      available: false,
+      availabilityText: "Evento Realizado",
+      hasFlyer: true,
+      flyerImage: "/autoconocimiento Necochea Abril 2026.jpg",
+      flyerImageAlt: "/images/autoconocimiento Necochea Abril 2026.jpg",
+      level: "1er Nivel",
+      contactPhone: "+54 9 2966 595803",
+    },
+    {
       title: "Taller de Autoconocimiento - Tandil (Buenos Aires)",
       date: "10, 11 y 12 de Abril, 2026",
       time: "Inicio: Viernes 10, 17 Horas",
@@ -322,20 +336,6 @@ export function Events() {
   ]
 
   const events = [
-    {
-      title: "Taller de Autoconocimiento - Necochea (Buenos Aires)",
-      date: "17, 18 y 19 de Abril, 2026",
-      time: "Inicio: Viernes 17, 17 Horas",
-      location: "Por Primera Vez",
-      type: "Taller de Liderazgo",
-      available: true,
-      availabilityText: "Cupos disponibles",
-      hasFlyer: true,
-      flyerImage: "/autoconocimiento Necochea Abril 2026.jpg",
-      flyerImageAlt: "/images/autoconocimiento Necochea Abril 2026.jpg",
-      level: "1er Nivel",
-      contactPhone: "+54 9 2966 595803",
-    },
     {
       title: "Taller de Autoconocimiento - Río Gallegos",
       date: "8, 9 y 10 de Mayo 2026",

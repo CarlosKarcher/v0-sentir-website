@@ -57,6 +57,28 @@ export function SentirDesdeAdentro() {
           </p>
         </div>
 
+        {/* Taller de Transformación Abril 2026 — PRIMERO */}
+        <div className="max-w-4xl mx-auto mb-10 sm:mb-12 md:mb-16">
+          <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-6 text-center text-balance">
+            Taller de Transformación — Abril 2026
+          </h3>
+          <Card className="overflow-hidden">
+            <CardContent className="p-0">
+              <div className="relative w-full" style={{ aspectRatio: "16/9" }}>
+                <video
+                  src="/Video-transfor.mp4"
+                  controls
+                  className="w-full h-full object-contain mx-auto block"
+                  preload="metadata"
+                  playsInline
+                >
+                  Tu navegador no soporta el elemento de video.
+                </video>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
         {/* Taller de Bio y Niño Interior — PRIMERO */}
         <div className="max-w-5xl mx-auto mb-10 sm:mb-12 md:mb-16">
           <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-6 text-center text-balance">

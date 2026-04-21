@@ -8,8 +8,9 @@ export function VideoPopup() {
   const [isOpen, setIsOpen] = React.useState(true)
   const [muted, setMuted] = React.useState(true)
   const video1Ref = React.useRef<HTMLVideoElement>(null)
+  const video2Ref = React.useRef<HTMLVideoElement>(null)
 
-  // Autorun video al montar (muted para que el navegador lo permita)
+  // Autorun video 1 al montar (muted para que el navegador lo permita)
   React.useEffect(() => {
     const v = video1Ref.current
     if (!v) return
@@ -20,13 +21,23 @@ export function VideoPopup() {
     return () => v.removeEventListener("loadedmetadata", tryPlay)
   }, [])
 
-  // Sincronizar mute/unmute
+  // Sincronizar mute/unmute en ambos videos
   React.useEffect(() => {
     if (video1Ref.current) video1Ref.current.muted = muted
+    if (video2Ref.current) video2Ref.current.muted = muted
   }, [muted])
+
+  // Cuando termina video 1 → autorun video 2
+  const handleVideo1Ended = () => {
+    const v = video2Ref.current
+    if (!v) return
+    v.muted = muted
+    v.play().catch(() => {})
+  }
 
   const handleClose = () => {
     video1Ref.current?.pause()
+    video2Ref.current?.pause()
     setIsOpen(false)
   }
 
@@ -69,15 +80,24 @@ export function VideoPopup() {
             {muted ? <VolumeX style={{ width: 20, height: 20 }} /> : <Volume2 style={{ width: 20, height: 20 }} />}
           </Button>
 
-          {/* Video */}
-          <div style={{ display: "flex", justifyContent: "center" }}>
+          {/* Dos videos lado a lado */}
+          <div style={{ display: "flex", flexDirection: "row", gap: "1cm" }}>
             <video
               ref={video1Ref}
+              src="/Luzu-taller-vivencial.mp4"
+              playsInline
+              controls
+              preload="metadata"
+              onEnded={handleVideo1Ended}
+              style={{ flex: 1, minWidth: 0, maxHeight: "88vh", display: "block", background: "#000" }}
+            />
+            <video
+              ref={video2Ref}
               src="/La-tribu-de-sentir.mp4"
               playsInline
               controls
               preload="metadata"
-              style={{ width: "100%", maxHeight: "88vh", display: "block", background: "#000" }}
+              style={{ flex: 1, minWidth: 0, maxHeight: "88vh", display: "block", background: "#000" }}
             />
           </div>
         </div>

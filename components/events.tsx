@@ -337,20 +337,6 @@ export function Events() {
 
   const events = [
     {
-      title: "Taller de Autoconocimiento - Quequén/Necochea",
-      date: "13, 14 y 15 de Noviembre, 2026",
-      time: "Inicio: Viernes 13, 16 Horas",
-      location: "A Confirmar",
-      type: "Taller de Liderazgo",
-      available: true,
-      availabilityText: "Cupos disponibles",
-      hasFlyer: true,
-      flyerImage: "/auto neco noviembre 2026.jpeg",
-      flyerImageAlt: "/images/auto neco noviembre 2026.jpeg",
-      level: "1er Nivel",
-      contactPhone: "+54 11 6706 6630",
-    },
-    {
       title: "Taller de Autoconocimiento - Río Gallegos",
       date: "8, 9 y 10 de Mayo 2026",
       time: "Inicio Viernes 8 de Mayo a las 17 Hs",
@@ -520,6 +506,20 @@ export function Events() {
       hasFlyer: false,
       level: "3er Nivel",
       contactPhone: "+54 9 2966 595803",
+    },
+    {
+      title: "Taller de Autoconocimiento - Quequén/Necochea",
+      date: "13, 14 y 15 de Noviembre, 2026",
+      time: "Inicio: Viernes 13, 16 Horas",
+      location: "A Confirmar",
+      type: "Taller de Liderazgo",
+      available: true,
+      availabilityText: "Cupos disponibles",
+      hasFlyer: true,
+      flyerImage: "/auto neco noviembre 2026.jpeg",
+      flyerImageAlt: "/images/auto neco noviembre 2026.jpeg",
+      level: "1er Nivel",
+      contactPhone: "+54 11 6706 6630",
     },
   ]
 

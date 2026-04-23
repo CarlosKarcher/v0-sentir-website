@@ -340,7 +340,7 @@ export function Events() {
       title: "Taller de Autoconocimiento - Río Gallegos",
       date: "8, 9 y 10 de Mayo 2026",
       time: "Inicio Viernes 8 de Mayo a las 17 Hs",
-      location: "Lisandro de la Torre Nº 952 (Edif. de Vialidad)",
+      location: "A confirmar.",
       type: "Taller de Liderazgo",
       available: true,
       availabilityText: "Cupos disponibles",

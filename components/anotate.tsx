@@ -118,7 +118,7 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
           const nombre = data.nombre_gafete || data.nombre_apellido?.split(" ")[0] || ""
           const nroMiembro = data.numero || null
           localStorage.setItem("sentir_celular", JSON.stringify({ caracteristica, numero, nombre, nroMiembro }))
-          if (nombre) window.dispatchEvent(new CustomEvent("sentir_usuario", { detail: { nombre, nroMiembro } }))
+          if (nombre) window.dispatchEvent(new CustomEvent("sentir_usuario", { detail: { nombre, nroMiembro, esAdmin: data.es_admin ?? false } }))
           setCelularRegistrado(`${caracteristica} ${numero}`)
           setStep("ya_registrado")
         } else if (!error) {
@@ -267,7 +267,7 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
         nombre,
         nroMiembro,
       }))
-      if (nombre) window.dispatchEvent(new CustomEvent("sentir_usuario", { detail: { nombre, nroMiembro } }))
+      if (nombre) window.dispatchEvent(new CustomEvent("sentir_usuario", { detail: { nombre, nroMiembro, esAdmin: verificacion.es_admin ?? false } }))
       setCelularRegistrado(`${data.celular_caracteristica.trim()} ${data.celular_numero.trim()}`)
       setStep("ya_registrado")
       setEnviando(false)

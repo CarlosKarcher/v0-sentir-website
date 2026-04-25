@@ -17,15 +17,13 @@ import { cn } from "@/lib/utils"
 import { scrollToElement } from "@/lib/scroll"
 import { AdminPanel } from "@/components/admin-panel"
 
-const ADMIN_CARACTERISTICA = "+54"
-const ADMIN_NUMERO = "2966211547"
-
 export function Header() {
   const [isOpen, setIsOpen] = useState(false)
   const [nombreUsuario, setNombreUsuario] = useState<string | null>(null)
   const [nroMiembro, setNroMiembro] = useState<number | null>(null)
   const [esAdmin, setEsAdmin] = useState(false)
   const [adminPanelOpen, setAdminPanelOpen] = useState(false)
+  const [adminCelular, setAdminCelular] = useState({ caracteristica: "", numero: "" })
 
   useEffect(() => {
     const cargarNombre = async () => {
@@ -34,7 +32,6 @@ export function Header() {
         if (!guardado) return
         const { caracteristica, numero } = JSON.parse(guardado)
         if (!caracteristica || !numero) return
-        // Siempre verificar en la BD — si no está, no mostrar nada
         const { data } = await supabase.rpc("verificar_celular_registrado", {
           p_caracteristica: caracteristica,
           p_numero: numero,
@@ -47,16 +44,17 @@ export function Header() {
             setNroMiembro(nro)
             localStorage.setItem("sentir_celular", JSON.stringify({ caracteristica, numero, nombre: n, nroMiembro: nro }))
           }
-          if (caracteristica === ADMIN_CARACTERISTICA && numero === ADMIN_NUMERO) setEsAdmin(true)
+          if (data.es_admin) {
+            setEsAdmin(true)
+            setAdminCelular({ caracteristica, numero })
+          }
         } else {
-          // No está en la BD (o fue borrado), limpiar localStorage
           localStorage.removeItem("sentir_celular")
         }
       } catch {}
     }
     cargarNombre()
 
-    // Escuchar cuando el modal detecta al usuario y avisa
     const onUsuario = (e: Event) => {
       const detail = (e as CustomEvent).detail
       if (detail?.nombre) {
@@ -66,7 +64,10 @@ export function Header() {
           const guardado = localStorage.getItem("sentir_celular")
           if (guardado) {
             const { caracteristica, numero } = JSON.parse(guardado)
-            if (caracteristica === ADMIN_CARACTERISTICA && numero === ADMIN_NUMERO) setEsAdmin(true)
+            if (detail.esAdmin) {
+              setEsAdmin(true)
+              setAdminCelular({ caracteristica, numero })
+            }
           }
         } catch {}
       }
@@ -482,8 +483,8 @@ export function Header() {
       <AdminPanel
         isOpen={adminPanelOpen}
         onClose={() => setAdminPanelOpen(false)}
-        adminCaracteristica={ADMIN_CARACTERISTICA}
-        adminNumero={ADMIN_NUMERO}
+        adminCaracteristica={adminCelular.caracteristica}
+        adminNumero={adminCelular.numero}
       />
     )}
   </>

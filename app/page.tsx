@@ -21,42 +21,12 @@ export default function Page() {
   const [showAnotate, setShowAnotate] = useState(false)
 
   useEffect(() => {
-    // Verificar que estamos en el cliente
     if (typeof window !== "undefined") {
-      // Limpiar todas las cookies del dominio actual
-      const clearCookies = () => {
-        const domain = window.location.hostname
-        const cookies = document.cookie.split(";")
-        
-        cookies.forEach((cookie) => {
-          const eqPos = cookie.indexOf("=")
-          const name = eqPos > -1 ? cookie.substr(0, eqPos).trim() : cookie.trim()
-          
-          // Eliminar cookie para el dominio actual
-          document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`
-          // También intentar eliminar para subdominios
-          document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=${domain}`
-          document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=.${domain}`
-        })
-        
-        // Limpiar también localStorage y sessionStorage
-        try {
-          localStorage.clear()
-          sessionStorage.clear()
-        } catch (e) {
-          console.log("Error al limpiar storage:", e)
-        }
-      }
-      
-      // Ejecutar limpieza de cookies al cargar
-      clearCookies()
-      
       // Asegurar que la página comience en el inicio cuando no hay hash
       if (!window.location.hash) {
         window.scrollTo({ top: 0, behavior: "instant" })
       }
-      
-      // También prevenir el scroll automático del navegador al recargar
+      // Prevenir el scroll automático del navegador al recargar
       if (window.history.scrollRestoration) {
         window.history.scrollRestoration = "manual"
       }

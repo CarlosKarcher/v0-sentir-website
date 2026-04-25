@@ -166,8 +166,8 @@ const CALENDAR_EVENTS: DayEvent[] = [
   { month: 6, day: 12, type: "transformacion", label: "Transfor." },
 
   // Agosto — MyL 7 · 1ra Sala
-  { month: 7, day: 7, type: "myl", label: "MyL 7 - 1ra Sala." },
   { month: 7, day: 8, type: "myl", label: "MyL 7 - 1ra Sala." },
+  { month: 7, day: 9, type: "myl", label: "MyL 7 - 1ra Sala." },
 
   // Agosto — MyL 7 · 2da Sala
   { month: 7, day: 29, type: "myl", label: "MyL 7 - 2da Sala." },

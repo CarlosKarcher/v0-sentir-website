@@ -67,7 +67,7 @@ export default function Page() {
     <main className="min-h-screen">
       <AnotateModal isOpen={showAnotate} onClose={() => setShowAnotate(false)} />
       <VideoPopup />
-      <Header />
+      <Header onAnotate={() => setShowAnotate(true)} />
       <Hero onAnotate={() => setShowAnotate(true)} />
       <About />
       <CalendarioSentir />

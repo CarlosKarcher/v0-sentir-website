@@ -17,7 +17,11 @@ import { cn } from "@/lib/utils"
 import { scrollToElement } from "@/lib/scroll"
 import { AdminPanel } from "@/components/admin-panel"
 
-export function Header() {
+interface HeaderProps {
+  onAnotate?: () => void
+}
+
+export function Header({ onAnotate }: HeaderProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [nombreUsuario, setNombreUsuario] = useState<string | null>(null)
   const [nroMiembro, setNroMiembro] = useState<number | null>(null)
@@ -232,6 +236,20 @@ export function Header() {
                 <NavigationMenuTrigger>Talleres y Sesiones</NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="grid w-[500px] gap-3 p-4">
+                    <li className="col-span-full flex gap-2 pb-2 border-b border-border">
+                      <a
+                        href="#talleres"
+                        className="flex-1 text-center text-sm font-semibold px-4 py-2 rounded-lg border border-border hover:bg-muted transition-colors"
+                      >
+                        Talleres y Sesiones
+                      </a>
+                      <button
+                        onClick={() => onAnotate?.()}
+                        className="flex-1 text-center text-sm font-semibold px-4 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white transition-colors"
+                      >
+                        Inscribir a talleres
+                      </button>
+                    </li>
                     <li className="row-span-3">
                       <div className="mb-2 text-sm font-medium text-primary">Talleres de Liderazgo</div>
                       <ul className="space-y-2">
@@ -440,6 +458,12 @@ export function Header() {
               >
                 Talleres y Sesiones
               </a>
+              <button
+                onClick={() => { setIsOpen(false); onAnotate?.() }}
+                className="text-left text-lg font-semibold text-white bg-green-600 hover:bg-green-700 px-4 py-3 rounded-lg transition-colors"
+              >
+                Inscribir a talleres
+              </button>
               <a
                 href="#equipo"
                 className="text-lg font-medium hover:text-primary transition-colors"

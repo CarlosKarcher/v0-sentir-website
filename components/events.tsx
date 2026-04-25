@@ -459,8 +459,8 @@ export function Events() {
     },
     {
       title: "Taller de MyL 7 - 1ra, Sala.",
-      date: "1 y 2 de Agosto 2026",
-      time: "Inicio: Sábado 1 de Agosto, 10:00 Horas",
+      date: "7 y 8 de Agosto 2026",
+      time: "Inicio: Sábado 7 de Agosto, 10:00 Horas",
       location: "Río Gallegos",
       type: "Taller de Liderazgo",
       available: true,

@@ -473,6 +473,14 @@ export function Header() {
               >
                 Tienda Sentir
               </a>
+              {esAdmin && (
+                <button
+                  onClick={() => { setIsOpen(false); setAdminPanelOpen(true) }}
+                  className="mt-4 w-full text-left text-lg font-bold text-white bg-blue-900 hover:bg-blue-800 px-4 py-3 rounded-lg transition-colors"
+                >
+                  Admin
+                </button>
+              )}
             </nav>
           </SheetContent>
         </Sheet>

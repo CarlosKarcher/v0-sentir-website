@@ -1,17 +1,15 @@
 import { NextRequest, NextResponse } from "next/server"
 
-// Supabase OTP magic link callback
-// Cuando el usuario hace clic en el link del email, aterriza acá
-// y es redirigido al inicio con la sesión activa
+// Callback OAuth de Google / Supabase Auth
+// Redirige al inicio preservando el code para que el cliente lo intercambie
 export async function GET(request: NextRequest) {
-  const { searchParams, origin } = new URL(request.url)
-  const code = searchParams.get("code")
-  const next = searchParams.get("next") ?? "/"
+  const url = new URL(request.url)
+  const code = url.searchParams.get("code")
 
   if (code) {
-    // El fragmento #access_token lo maneja el cliente — solo redirigimos
-    return NextResponse.redirect(`${origin}${next}`)
+    // Redirigir al inicio con el code para que supabaseAuth (detectSessionInUrl) lo intercambie
+    return NextResponse.redirect(`${url.origin}/${url.search}`)
   }
 
-  return NextResponse.redirect(`${origin}/`)
+  return NextResponse.redirect(`${url.origin}/`)
 }

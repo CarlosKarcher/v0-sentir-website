@@ -1,6 +1,6 @@
 "use client"
 
-import { Calendar, Clock, MapPin, Phone, FileText, ClipboardList } from "lucide-react"
+import { Calendar, Clock, MapPin, Phone, FileText, ClipboardList, Lock } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -9,6 +9,7 @@ import { scrollToElement } from "@/lib/scroll"
 import { CONTACT_PHONE_NUMBER, SECTION_IDS } from "@/lib/constants"
 import type { Event } from "@/lib/types"
 import { ImagePopup } from "@/components/ui/image-popup"
+import { useUser } from "@/lib/user-context"
 
 // Función helper para generar enlace de WhatsApp
 const getWhatsAppLink = (phoneNumber: string) => {
@@ -17,6 +18,7 @@ const getWhatsAppLink = (phoneNumber: string) => {
 }
 
 function EventCard({ event }: { event: Event }) {
+  const { estado, login } = useUser()
   const [flyerOpen, setFlyerOpen] = useState(false)
   const [imageError, setImageError] = useState(false)
   const [imageSrc, setImageSrc] = useState(event.flyerImage || "/flyer-transformacion-rio-gallegos.jpg")
@@ -191,13 +193,39 @@ function EventCard({ event }: { event: Event }) {
         )}
         {event.tallerSlug && event.available && (
           <div className="pt-3">
-            <a
-              href={`/inscribirse?taller=${event.tallerSlug}&evento=${encodeURIComponent(`${event.title} — ${event.date} — ${event.location}`)}`}
-              className="flex items-center justify-center gap-2 w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-sm"
-            >
-              <ClipboardList className="h-4 w-4" />
-              Inscribirme
-            </a>
+            {estado === "registrado" ? (
+              <a
+                href={`/inscribirse?taller=${event.tallerSlug}&evento=${encodeURIComponent(`${event.title} — ${event.date} — ${event.location}`)}`}
+                className="flex items-center justify-center gap-2 w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-sm"
+              >
+                <ClipboardList className="h-4 w-4" />
+                Inscribirme
+              </a>
+            ) : estado === "sin_registro" ? (
+              <a
+                href="#inicio"
+                className="flex items-center justify-center gap-2 w-full bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300 font-semibold py-2 px-4 rounded-lg transition-colors text-sm"
+              >
+                <Lock className="h-4 w-4" />
+                Registrate para inscribirte
+              </a>
+            ) : estado === "no_logueado" ? (
+              <button
+                onClick={login}
+                className="flex items-center justify-center gap-2 w-full bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300 font-semibold py-2 px-4 rounded-lg transition-colors text-sm"
+              >
+                <Lock className="h-4 w-4" />
+                Ingresá para inscribirte
+              </button>
+            ) : (
+              <a
+                href={`/inscribirse?taller=${event.tallerSlug}&evento=${encodeURIComponent(`${event.title} — ${event.date} — ${event.location}`)}`}
+                className="flex items-center justify-center gap-2 w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-sm"
+              >
+                <ClipboardList className="h-4 w-4" />
+                Inscribirme
+              </a>
+            )}
           </div>
         )}
       </CardContent>

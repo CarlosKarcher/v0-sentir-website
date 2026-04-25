@@ -79,7 +79,6 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
     constelaciones: tallerInicial(),
   })
   const [celularRegistrado, setCelularRegistrado] = useState("")
-  const [verificandoInicio, setVerificandoInicio] = useState(false)
   const [recibirInfo, setRecibirInfo] = useState<boolean | null>(null)
   const [enviado, setEnviado] = useState(false)
   const [enviando, setEnviando] = useState(false)
@@ -88,7 +87,6 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
 
   useEffect(() => {
     setMounted(true)
-    if (localStorage.getItem("sentir_celular")) setVerificandoInicio(true)
   }, [])
 
   useEffect(() => {
@@ -102,35 +100,6 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
     }
   }, [isOpen, onClose])
 
-  // Cuando abre el modal, verificar localStorage
-  useEffect(() => {
-    if (!isOpen) return
-    const guardado = localStorage.getItem("sentir_celular")
-    if (!guardado) return
-    setVerificandoInicio(true)
-    try {
-      const { caracteristica, numero } = JSON.parse(guardado)
-      supabase.rpc("verificar_celular_registrado", {
-        p_caracteristica: caracteristica,
-        p_numero: numero,
-      }).then(({ data, error }) => {
-        if (data?.encontrado) {
-          const nombre = data.nombre_gafete || data.nombre_apellido?.split(" ")[0] || ""
-          const nroMiembro = data.numero || null
-          localStorage.setItem("sentir_celular", JSON.stringify({ caracteristica, numero, nombre, nroMiembro }))
-          if (nombre) window.dispatchEvent(new CustomEvent("sentir_usuario", { detail: { nombre, nroMiembro, esAdmin: data.es_admin ?? false } }))
-          setCelularRegistrado(`${caracteristica} ${numero}`)
-          setStep("ya_registrado")
-        } else if (!error) {
-          // Solo borrar si realmente no está en la BD (no por error de red u otro)
-          localStorage.removeItem("sentir_celular")
-        }
-        setVerificandoInicio(false)
-      })
-    } catch {
-      setVerificandoInicio(false)
-    }
-  }, [isOpen])
 
   useEffect(() => {
     if (!isOpen) {
@@ -140,7 +109,6 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
       setNumeroMiembro(null)
       setRecibirInfo(null)
       setCelularRegistrado("")
-      setVerificandoInicio(false)
       setTalleres({
         autoconocimiento: tallerInicial(),
         transformacion: tallerInicial(),
@@ -179,15 +147,6 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
       p_numero: data.celular_numero.trim(),
     })
     if (verificacion?.encontrado) {
-      const nombre = verificacion.nombre_gafete || verificacion.nombre_apellido?.split(" ")[0] || ""
-      const nroMiembro = verificacion.numero || null
-      localStorage.setItem("sentir_celular", JSON.stringify({
-        caracteristica: data.celular_caracteristica.trim(),
-        numero: data.celular_numero.trim(),
-        nombre,
-        nroMiembro,
-      }))
-      if (nombre) window.dispatchEvent(new CustomEvent("sentir_usuario", { detail: { nombre, nroMiembro, esAdmin: verificacion.es_admin ?? false } }))
       setCelularRegistrado(`${data.celular_caracteristica.trim()} ${data.celular_numero.trim()}`)
       setStep("ya_registrado")
       setEnviando(false)
@@ -231,15 +190,6 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
       setEnviando(false)
       return
     }
-    const nombre = data.nombre_gafete || data.nombre_apellido.split(" ")[0]
-    const nroMiembro = res ?? null
-    localStorage.setItem("sentir_celular", JSON.stringify({
-      caracteristica: data.celular_caracteristica.trim(),
-      numero: data.celular_numero.trim(),
-      nombre,
-      nroMiembro,
-    }))
-    window.dispatchEvent(new CustomEvent("sentir_usuario", { detail: { nombre, nroMiembro } }))
     setNumeroMiembro(res ?? null)
     setEnviado(true)
     setEnviando(false)
@@ -259,15 +209,6 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
       p_numero: data.celular_numero.trim(),
     })
     if (verificacion?.encontrado) {
-      const nombre = verificacion.nombre_gafete || verificacion.nombre_apellido?.split(" ")[0] || ""
-      const nroMiembro = verificacion.numero || null
-      localStorage.setItem("sentir_celular", JSON.stringify({
-        caracteristica: data.celular_caracteristica.trim(),
-        numero: data.celular_numero.trim(),
-        nombre,
-        nroMiembro,
-      }))
-      if (nombre) window.dispatchEvent(new CustomEvent("sentir_usuario", { detail: { nombre, nroMiembro, esAdmin: verificacion.es_admin ?? false } }))
       setCelularRegistrado(`${data.celular_caracteristica.trim()} ${data.celular_numero.trim()}`)
       setStep("ya_registrado")
       setEnviando(false)
@@ -309,12 +250,7 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
           </div>
 
           <div className="px-6 py-5">
-            {verificandoInicio ? (
-              <div className="text-center py-12">
-                <div className="w-10 h-10 border-4 border-blue-900 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-                <p className="text-sm text-muted-foreground">Verificando...</p>
-              </div>
-            ) : enviado ? (
+            {enviado ? (
               <div className="text-center py-8">
                 <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
                 <h3 className="text-2xl font-bold mb-2">¡Ya estás registrado!</h3>

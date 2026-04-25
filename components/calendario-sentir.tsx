@@ -178,6 +178,11 @@ const CALENDAR_EVENTS: DayEvent[] = [
   { month: 8, day: 26, type: "autoconocimiento", label: "Autocon. – Córdoba" },
   { month: 8, day: 27, type: "autoconocimiento", label: "Autocon. – Córdoba" },
 
+  // Octubre — Autoconocimiento El Calafate
+  { month: 9, day: 9, type: "autoconocimiento", label: "Autocon. – El Calafate" },
+  { month: 9, day: 10, type: "autoconocimiento", label: "Autocon. – El Calafate" },
+  { month: 9, day: 11, type: "autoconocimiento", label: "Autocon. – El Calafate" },
+
   // Octubre/Noviembre — MyL 7 · Campamento y Cierre
   { month: 9, day: 31, type: "myl", label: "MyL 7 - Campamento y Cierre" },
   { month: 10, day: 1, type: "myl", label: "MyL 7 - Campamento y Cierre" },

@@ -59,7 +59,7 @@ type InteresadoData = z.infer<typeof schemaInteresado>
 type TallerState = { checked: boolean; mes: string; anio: string }
 const tallerInicial = (): TallerState => ({ checked: false, mes: "", anio: "" })
 
-type Step = "pregunta" | "ya_registrado" | "miembro" | "interesado" | "identificar"
+type Step = "pregunta" | "ya_registrado" | "miembro" | "interesado"
 
 interface AnotateModalProps {
   isOpen: boolean
@@ -85,10 +85,6 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
   const [enviando, setEnviando] = useState(false)
   const [error, setError] = useState("")
   const [numeroMiembro, setNumeroMiembro] = useState<number | null>(null)
-  const [idCaract, setIdCaract] = useState("")
-  const [idNumero, setIdNumero] = useState("")
-  const [idError, setIdError] = useState("")
-  const [idVerificando, setIdVerificando] = useState(false)
 
   useEffect(() => {
     setMounted(true)
@@ -154,9 +150,6 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
         nino_interior: tallerInicial(),
         constelaciones: tallerInicial(),
       })
-      setIdCaract("")
-      setIdNumero("")
-      setIdError("")
     }
   }, [isOpen])
 
@@ -169,33 +162,6 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
 
   const setFecha = (key: TallerKey, field: "mes" | "anio", value: string) => {
     setTalleres(prev => ({ ...prev, [key]: { ...prev[key], [field]: value } }))
-  }
-
-  const handleIdentificar = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!idCaract.trim() || !idNumero.trim()) { setIdError("Ingresá tu celular completo"); return }
-    setIdVerificando(true)
-    setIdError("")
-    const { data } = await supabase.rpc("verificar_celular_registrado", {
-      p_caracteristica: idCaract.trim(),
-      p_numero: idNumero.trim(),
-    })
-    setIdVerificando(false)
-    if (data?.encontrado) {
-      const nombre = data.nombre_gafete || data.nombre_apellido?.split(" ")[0] || ""
-      const nroMiembro = data.numero || null
-      localStorage.setItem("sentir_celular", JSON.stringify({
-        caracteristica: idCaract.trim(),
-        numero: idNumero.trim(),
-        nombre,
-        nroMiembro,
-      }))
-      if (nombre) window.dispatchEvent(new CustomEvent("sentir_usuario", { detail: { nombre, nroMiembro, esAdmin: data.es_admin ?? false } }))
-      setCelularRegistrado(`${idCaract.trim()} ${idNumero.trim()}`)
-      setStep("ya_registrado")
-    } else {
-      setIdError("No encontramos ese celular. Verificá el número o registrate.")
-    }
   }
 
   const onSubmitMiembro = async (data: MiembroData) => {
@@ -437,45 +403,7 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
                 <p className="text-xs text-muted-foreground pt-1">
                   Tu registro nos ayuda a mantenernos en contacto con vos
                 </p>
-                <button
-                  onClick={() => setStep("identificar")}
-                  className="text-sm text-blue-700 hover:underline"
-                >
-                  Ya me registré antes → Identificarme
-                </button>
               </div>
-
-            ) : step === "identificar" ? (
-              <form onSubmit={handleIdentificar} className="space-y-5">
-                <button type="button" onClick={() => setStep("pregunta")} className="text-sm text-blue-700 hover:underline mb-1">
-                  ← Volver
-                </button>
-                <div className="text-center space-y-2 pb-2">
-                  <p className="text-xl font-bold">Identificarme</p>
-                  <p className="text-sm text-muted-foreground">Ingresá el celular con el que te registraste</p>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Celular *</label>
-                  <div className="flex gap-2">
-                    <input
-                      value={idCaract}
-                      onChange={e => setIdCaract(e.target.value)}
-                      className="w-20 border border-border rounded-md px-3 py-2 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-                      placeholder="+54"
-                    />
-                    <input
-                      value={idNumero}
-                      onChange={e => setIdNumero(e.target.value)}
-                      className="flex-1 border border-border rounded-md px-3 py-2 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-                      placeholder="9 2966 595803"
-                    />
-                  </div>
-                  {idError && <p className="text-red-500 text-xs mt-1">{idError}</p>}
-                </div>
-                <Button type="submit" disabled={idVerificando} className="w-full bg-blue-900 hover:bg-blue-800 text-white py-6 text-base font-semibold">
-                  {idVerificando ? "Verificando..." : "Identificarme"}
-                </Button>
-              </form>
 
             ) : step === "miembro" ? (
               <form onSubmit={formMiembro.handleSubmit(onSubmitMiembro)} className="space-y-5">

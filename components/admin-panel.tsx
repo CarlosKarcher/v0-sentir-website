@@ -151,7 +151,10 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
 
   if (!isOpen) return null
 
-  const miembrosFiltrados = miembros.filter(m => !m[tallerFiltro])
+  const miembrosFiltrados = miembros.filter(m =>
+    !m[tallerFiltro] &&
+    (tallerFiltro !== "taller_myl" || m.taller_transformacion)
+  )
   const tallerLabel = TALLERES.find(t => t.key === tallerFiltro)?.label || ""
 
   const titulos: Record<Vista, string> = {
@@ -304,6 +307,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                   {miembros.length > 0 && (
                     <span className="text-sm text-muted-foreground">
                       {miembrosFiltrados.length} miembro{miembrosFiltrados.length !== 1 ? "s" : ""} sin {tallerLabel}
+                      {tallerFiltro === "taller_myl" && " (con Transformación realizada)"}
                     </span>
                   )}
                 </div>

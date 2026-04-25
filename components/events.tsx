@@ -1,6 +1,6 @@
 "use client"
 
-import { Calendar, Clock, MapPin, Phone, FileText } from "lucide-react"
+import { Calendar, Clock, MapPin, Phone, FileText, ClipboardList } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -189,6 +189,17 @@ function EventCard({ event }: { event: Event }) {
             </Badge>
           </div>
         )}
+        {event.tallerSlug && event.available && (
+          <div className="pt-3">
+            <a
+              href={`/inscribirse?taller=${event.tallerSlug}&evento=${encodeURIComponent(`${event.title} — ${event.date} — ${event.location}`)}`}
+              className="flex items-center justify-center gap-2 w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-sm"
+            >
+              <ClipboardList className="h-4 w-4" />
+              Inscribirme
+            </a>
+          </div>
+        )}
       </CardContent>
     </Card>
   )
@@ -349,6 +360,7 @@ export function Events() {
       flyerImageAlt: "/images/auto-mayo-2026.jpeg",
       level: "1er Nivel",
       contactPhone: "+54 9 2966 595803",
+      tallerSlug: "autoconocimiento",
     },
     {
       title: "Las 7 Leyes Universales",
@@ -390,6 +402,7 @@ export function Events() {
       flyerImage: "/El-guerrero-mayo-gallegos.jpeg",
       flyerImageAlt: "/images/El-guerrero-mayo-gallegos.jpeg",
       contactPhone: "+54 9 2966 595803",
+      tallerSlug: "camino-del-guerrero",
     },
     {
       title: "Sanando mi Niño Interior - Punta Arenas",
@@ -403,6 +416,7 @@ export function Events() {
       flyerImage: "/nino-mayo-punta-arenas.jpeg",
       flyerImageAlt: "/images/nino-mayo-punta-arenas.jpeg",
       contactPhone: "+56 9 6113 0835",
+      tallerSlug: "sanando-mi-nino-interior",
     },
     {
       title: "El Camino del Guerrero - Punta Arenas",
@@ -416,6 +430,7 @@ export function Events() {
       flyerImage: "/El-guerrero-mayo-punta-arenas.jpeg",
       flyerImageAlt: "/images/El-guerrero-mayo-punta-arenas.jpeg",
       contactPhone: "+56 9 6113 0835",
+      tallerSlug: "camino-del-guerrero",
     },
     {
       title: "Taller de Biodecodificación: \"Tu cuerpo tiene algo que contarte.\" - Río Gallegos",
@@ -429,6 +444,7 @@ export function Events() {
       flyerImage: "/bio-13-06-2026.jpeg",
       flyerImageAlt: "/images/bio-13-06-2026.jpeg",
       contactPhone: "+54 9 2966 211547",
+      tallerSlug: "biodecodificacion",
     },
     {
       title: "Taller: \"Sanando mi Niño Interior.\" - Río Gallegos",
@@ -442,6 +458,7 @@ export function Events() {
       flyerImage: "/sanando-14-06-2026.jpeg",
       flyerImageAlt: "/images/sanando-14-06-2026.jpeg",
       contactPhone: "+54 9 2966 595803",
+      tallerSlug: "sanando-mi-nino-interior",
     },
     {
       title: "Taller de Transformación - Río Gallegos",
@@ -456,6 +473,7 @@ export function Events() {
       flyerImageAlt: "/images/transfor-gallegos-julio-2026.jpeg",
       level: "2do Nivel",
       contactPhone: "+54 9 2966 595803",
+      tallerSlug: "transformacion",
     },
     {
       title: "Taller de MyL 7 - 1ra, Sala.",
@@ -468,6 +486,7 @@ export function Events() {
       hasFlyer: false,
       level: "3er Nivel",
       contactPhone: "+54 9 2966 595803",
+      tallerSlug: "metas-y-logros",
     },
     {
       title: "Taller de MyL 7 - 2da Sala.",
@@ -480,6 +499,7 @@ export function Events() {
       hasFlyer: false,
       level: "3er Nivel",
       contactPhone: "+54 9 2966 595803",
+      tallerSlug: "metas-y-logros",
     },
     {
       title: "Taller de Autoconocimiento - Córdoba",
@@ -494,6 +514,7 @@ export function Events() {
       flyerImageAlt: "/images/Auto-Cordoba-25-26-27-septiembre.jpeg",
       level: "1er Nivel",
       contactPhone: "+54 9 2966 595803",
+      tallerSlug: "autoconocimiento",
     },
     {
       title: "Taller de Autoconocimiento - El Calafate",
@@ -508,6 +529,7 @@ export function Events() {
       flyerImageAlt: "/images/auto-Calafate-octubre-2026.jpeg",
       level: "1er Nivel",
       contactPhone: "+54 9 2966 595803",
+      tallerSlug: "autoconocimiento",
     },
     {
       title: "Taller de MyL 7 - Campamento y Cierre.",
@@ -533,6 +555,7 @@ export function Events() {
       flyerImage: "/El Guerrero Necochea.jpeg",
       flyerImageAlt: "/images/El Guerrero Necochea.jpeg",
       contactPhone: "+54 11 6706 6630",
+      tallerSlug: "camino-del-guerrero",
     },
     {
       title: "Taller de Autoconocimiento - Quequén/Necochea",
@@ -547,6 +570,7 @@ export function Events() {
       flyerImageAlt: "/images/auto neco noviembre 2026.jpeg",
       level: "1er Nivel",
       contactPhone: "+54 11 6706 6630",
+      tallerSlug: "autoconocimiento",
     },
   ]
 

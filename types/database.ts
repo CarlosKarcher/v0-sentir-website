@@ -1,4 +1,5 @@
 export type TallerEstado = 'pendiente' | 'confirmado' | 'cancelado'
+export type DescuentoTipo = 'porcentaje' | 'monto_fijo' | null
 
 export interface Taller {
   id: string
@@ -8,6 +9,8 @@ export interface Taller {
   descripcion_corta: string | null
   precio: number
   moneda: string
+  descuento_tipo: DescuentoTipo
+  descuento_valor: number | null
   duracion: string | null
   modalidad: string | null
   fecha_inicio: string | null
@@ -16,6 +19,21 @@ export interface Taller {
   activo: boolean
   orden: number
   creado_en: string
+}
+
+export function calcularPrecioFinal(taller: Pick<Taller, 'precio' | 'descuento_tipo' | 'descuento_valor'>) {
+  const precioReal = taller.precio
+  let descuentoMonto = 0
+  if (taller.descuento_tipo === 'porcentaje' && taller.descuento_valor) {
+    descuentoMonto = Math.round(precioReal * taller.descuento_valor / 100)
+  } else if (taller.descuento_tipo === 'monto_fijo' && taller.descuento_valor) {
+    descuentoMonto = taller.descuento_valor
+  }
+  return {
+    precioReal,
+    descuentoMonto,
+    precioFinal: Math.max(0, precioReal - descuentoMonto),
+  }
 }
 
 export interface Inscripcion {

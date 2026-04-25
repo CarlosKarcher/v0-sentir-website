@@ -3,8 +3,10 @@
 import { useState, useEffect } from "react"
 import { createPortal } from "react-dom"
 import { supabase } from "@/lib/supabase-client"
-import { X, Download, RefreshCw, ArrowLeft, Users, UserX, Filter } from "lucide-react"
+import { X, Download, RefreshCw, ArrowLeft, Users, UserX, Filter, ClipboardList, DollarSign, Check, Ban } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { calcularPrecioFinal } from "@/types/database"
+import type { Taller, InscripcionConTaller } from "@/types/database"
 
 type Miembro = {
   numero: number
@@ -34,7 +36,8 @@ type Nomembro = {
   created_at: string
 }
 
-type Vista = "menu" | "miembros" | "nomembros" | "taller"
+type Vista = "menu" | "inscripciones" | "miembros" | "nomembros" | "taller"
+type InscripcionesTab = "inscriptos" | "precios"
 
 const TALLERES = [
   { key: "taller_autoconocimiento" as const, label: "Autoconocimiento" },
@@ -62,6 +65,71 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
   const [cargando, setCargando] = useState(false)
   const [tallerFiltro, setTallerFiltro] = useState<TallerKey>("taller_autoconocimiento")
 
+  // Inscripciones
+  const [inscripcionesTab, setInscripcionesTab] = useState<InscripcionesTab>("inscriptos")
+  const [inscripciones, setInscripciones] = useState<InscripcionConTaller[]>([])
+  const [talleresList, setTalleresList] = useState<Taller[]>([])
+  const [filtroEstado, setFiltroEstado] = useState<"todos" | "pendiente" | "confirmado" | "cancelado">("todos")
+  const [editandoPrecio, setEditandoPrecio] = useState<string | null>(null) // taller id
+  const [precioEdit, setPrecioEdit] = useState({ precio: "", descuento_tipo: "porcentaje" as "porcentaje" | "monto_fijo" | null, descuento_valor: "" })
+  const [guardandoPrecio, setGuardandoPrecio] = useState(false)
+  const [accionInscripcion, setAccionInscripcion] = useState<string | null>(null) // inscripcion id en proceso
+
+  const cargarInscripciones = async () => {
+    setCargando(true)
+    const { data } = await supabase.rpc("listar_inscripciones", {
+      p_admin_caracteristica: adminCaracteristica,
+      p_admin_numero: adminNumero,
+    })
+    if (Array.isArray(data)) setInscripciones(data as InscripcionConTaller[])
+    setCargando(false)
+  }
+
+  const cargarTalleres = async () => {
+    const { data } = await supabase.rpc("listar_talleres_admin", {
+      p_admin_caracteristica: adminCaracteristica,
+      p_admin_numero: adminNumero,
+    })
+    if (Array.isArray(data)) setTalleresList(data as Taller[])
+  }
+
+  const aprobarInscripcion = async (id: string) => {
+    setAccionInscripcion(id)
+    await supabase.rpc("aprobar_inscripcion", {
+      p_admin_caracteristica: adminCaracteristica,
+      p_admin_numero: adminNumero,
+      p_inscripcion_id: id,
+    })
+    await cargarInscripciones()
+    setAccionInscripcion(null)
+  }
+
+  const cancelarInscripcion = async (id: string) => {
+    setAccionInscripcion(id)
+    await supabase.rpc("cancelar_inscripcion", {
+      p_admin_caracteristica: adminCaracteristica,
+      p_admin_numero: adminNumero,
+      p_inscripcion_id: id,
+    })
+    await cargarInscripciones()
+    setAccionInscripcion(null)
+  }
+
+  const guardarPrecio = async (tallerId: string) => {
+    setGuardandoPrecio(true)
+    await supabase.rpc("actualizar_precio_taller", {
+      p_admin_caracteristica: adminCaracteristica,
+      p_admin_numero: adminNumero,
+      p_taller_id: tallerId,
+      p_precio: parseFloat(precioEdit.precio) || 0,
+      p_descuento_tipo: precioEdit.descuento_tipo,
+      p_descuento_valor: parseFloat(precioEdit.descuento_valor) || null,
+    })
+    await cargarTalleres()
+    setEditandoPrecio(null)
+    setGuardandoPrecio(false)
+  }
+
   const cargarMiembros = async () => {
     setCargando(true)
     const { data } = await supabase.rpc("listar_miembros", {
@@ -84,12 +152,17 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
 
   const irA = (v: Vista) => {
     setVista(v)
+    if (v === "inscripciones") {
+      if (inscripciones.length === 0) cargarInscripciones()
+      if (talleresList.length === 0) cargarTalleres()
+    }
     if (v === "miembros" && miembros.length === 0) cargarMiembros()
     if (v === "nomembros" && nomembros.length === 0) cargarNomembros()
     if (v === "taller" && miembros.length === 0) cargarMiembros()
   }
 
   const recargar = () => {
+    if (vista === "inscripciones") { cargarInscripciones(); cargarTalleres() }
     if (vista === "miembros" || vista === "taller") cargarMiembros()
     if (vista === "nomembros") cargarNomembros()
   }
@@ -99,6 +172,8 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
       setVista("menu")
       setMiembros([])
       setNomembros([])
+      setInscripciones([])
+      setTalleresList([])
     }
   }, [isOpen])
 
@@ -157,8 +232,29 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
   )
   const tallerLabel = TALLERES.find(t => t.key === tallerFiltro)?.label || ""
 
+  const exportarCSVInscripciones = (data: InscripcionConTaller[]) => {
+    const headers = ["Taller", "Evento", "Nombre", "Apellido", "Email", "Teléfono", "DNI", "Ciudad", "Estado", "Método Pago", "Monto Pagado", "Mensaje", "Fecha"]
+    const rows = data.map(i => [
+      i.taller_nombre,
+      (i as any).evento_descripcion || "",
+      i.nombre,
+      i.apellido,
+      i.email,
+      i.telefono,
+      i.dni || "",
+      i.ciudad || "",
+      i.estado,
+      i.metodo_pago,
+      i.monto_pagado ?? "",
+      i.mensaje_inscripto || "",
+      new Date(i.creado_en).toLocaleDateString("es-AR"),
+    ])
+    descargarCSV(headers, rows, `inscripciones_sentir_${new Date().toISOString().slice(0, 10)}.csv`)
+  }
+
   const titulos: Record<Vista, string> = {
     menu: "Panel Administrador",
+    inscripciones: "Inscripciones",
     miembros: "Miembros de Sentir",
     nomembros: "No Miembros",
     taller: "Filtrar por Taller",
@@ -185,6 +281,9 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                 </button>
               )}
               <h2 className="text-xl font-bold">{titulos[vista]}</h2>
+              {!cargando && vista === "inscripciones" && inscripciones.length > 0 && (
+                <span className="text-sm text-muted-foreground">{inscripciones.length} inscripciones</span>
+              )}
               {!cargando && vista === "miembros" && miembros.length > 0 && (
                 <span className="text-sm text-muted-foreground">{miembros.length} registros</span>
               )}
@@ -204,6 +303,16 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                 >
                   <RefreshCw className={`h-4 w-4 ${cargando ? "animate-spin" : ""}`} />
                 </button>
+              )}
+              {vista === "inscripciones" && inscripcionesTab === "inscriptos" && inscripciones.length > 0 && (
+                <Button
+                  onClick={() => exportarCSVInscripciones(
+                    filtroEstado === "todos" ? inscripciones : inscripciones.filter(i => i.estado === filtroEstado)
+                  )}
+                  variant="outline" size="sm" className="gap-2"
+                >
+                  <Download className="h-4 w-4" /> Exportar CSV
+                </Button>
               )}
               {vista === "miembros" && miembros.length > 0 && (
                 <Button
@@ -240,7 +349,15 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
 
             {/* Menú principal */}
             {vista === "menu" && (
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 py-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 py-6">
+                <button
+                  onClick={() => irA("inscripciones")}
+                  className="flex flex-col items-center gap-3 p-6 rounded-xl border-2 border-border hover:border-green-600 hover:bg-green-50 dark:hover:bg-green-950/30 transition-all group"
+                >
+                  <ClipboardList className="h-10 w-10 text-green-700 group-hover:scale-110 transition-transform" />
+                  <span className="font-bold text-lg">Inscripciones</span>
+                  <span className="text-sm text-muted-foreground text-center">Gestionar inscriptos y precios de talleres</span>
+                </button>
                 <button
                   onClick={() => irA("miembros")}
                   className="flex flex-col items-center gap-3 p-6 rounded-xl border-2 border-border hover:border-blue-700 hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-all group"
@@ -268,8 +385,191 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
               </div>
             )}
 
+            {/* Vista Inscripciones */}
+            {vista === "inscripciones" && (
+              <div className="space-y-4">
+                {/* Sub-tabs */}
+                <div className="flex gap-2 border-b border-border pb-3">
+                  <button
+                    onClick={() => setInscripcionesTab("inscriptos")}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      inscripcionesTab === "inscriptos"
+                        ? "bg-primary text-primary-foreground"
+                        : "hover:bg-muted"
+                    }`}
+                  >
+                    Inscriptos
+                  </button>
+                  <button
+                    onClick={() => { setInscripcionesTab("precios"); if (talleresList.length === 0) cargarTalleres() }}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      inscripcionesTab === "precios"
+                        ? "bg-primary text-primary-foreground"
+                        : "hover:bg-muted"
+                    }`}
+                  >
+                    Precios
+                  </button>
+                </div>
+
+                {cargando && (
+                  <div className="text-center py-8">
+                    <div className="w-8 h-8 border-4 border-blue-900 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+                    <p className="text-sm text-muted-foreground">Cargando...</p>
+                  </div>
+                )}
+
+                {/* Tab Inscriptos */}
+                {!cargando && inscripcionesTab === "inscriptos" && (
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3 flex-wrap">
+                      <label className="text-sm font-medium">Filtrar por estado:</label>
+                      <select
+                        value={filtroEstado}
+                        onChange={e => setFiltroEstado(e.target.value as typeof filtroEstado)}
+                        className="border border-border rounded-md px-3 py-1.5 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                      >
+                        <option value="todos">Todos</option>
+                        <option value="pendiente">Pendiente</option>
+                        <option value="confirmado">Confirmado</option>
+                        <option value="cancelado">Cancelado</option>
+                      </select>
+                    </div>
+                    {inscripciones.length === 0 ? (
+                      <p className="text-center text-muted-foreground py-8">No hay inscripciones registradas.</p>
+                    ) : (
+                      <TablaInscripciones
+                        inscripciones={filtroEstado === "todos" ? inscripciones : inscripciones.filter(i => i.estado === filtroEstado)}
+                        accionInscripcion={accionInscripcion}
+                        onAprobar={aprobarInscripcion}
+                        onCancelar={cancelarInscripcion}
+                      />
+                    )}
+                  </div>
+                )}
+
+                {/* Tab Precios */}
+                {!cargando && inscripcionesTab === "precios" && (
+                  <div className="space-y-3">
+                    {talleresList.length === 0 ? (
+                      <p className="text-center text-muted-foreground py-8">Cargando talleres...</p>
+                    ) : (
+                      <table className="w-full text-sm border-collapse">
+                        <thead>
+                          <tr className="border-b-2 border-border bg-muted/50">
+                            <th className="text-left px-3 py-2 font-semibold">Taller</th>
+                            <th className="text-right px-3 py-2 font-semibold whitespace-nowrap">Precio Real</th>
+                            <th className="text-right px-3 py-2 font-semibold whitespace-nowrap">Descuento</th>
+                            <th className="text-right px-3 py-2 font-semibold whitespace-nowrap">Precio Final</th>
+                            <th className="text-center px-3 py-2 font-semibold">Acciones</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {talleresList.map((t, i) => {
+                            const precios = calcularPrecioFinal(t)
+                            const editando = editandoPrecio === t.id
+                            return (
+                              <tr key={t.id} className={`border-b border-border/50 ${i % 2 === 0 ? "" : "bg-muted/10"}`}>
+                                <td className="px-3 py-2 font-medium whitespace-nowrap">{t.nombre}</td>
+                                {editando ? (
+                                  <>
+                                    <td className="px-3 py-2">
+                                      <input
+                                        type="number"
+                                        value={precioEdit.precio}
+                                        onChange={e => setPrecioEdit(p => ({ ...p, precio: e.target.value }))}
+                                        className="w-28 border border-border rounded px-2 py-1 text-right bg-background text-sm"
+                                        placeholder="Precio"
+                                      />
+                                    </td>
+                                    <td className="px-3 py-2">
+                                      <div className="flex gap-1 items-center">
+                                        <select
+                                          value={precioEdit.descuento_tipo ?? ""}
+                                          onChange={e => setPrecioEdit(p => ({ ...p, descuento_tipo: (e.target.value || null) as any }))}
+                                          className="border border-border rounded px-1 py-1 text-xs bg-background"
+                                        >
+                                          <option value="">Sin descuento</option>
+                                          <option value="porcentaje">%</option>
+                                          <option value="monto_fijo">$</option>
+                                        </select>
+                                        {precioEdit.descuento_tipo && (
+                                          <input
+                                            type="number"
+                                            value={precioEdit.descuento_valor}
+                                            onChange={e => setPrecioEdit(p => ({ ...p, descuento_valor: e.target.value }))}
+                                            className="w-20 border border-border rounded px-2 py-1 text-right bg-background text-sm"
+                                            placeholder="Valor"
+                                          />
+                                        )}
+                                      </div>
+                                    </td>
+                                    <td className="px-3 py-2 text-right text-muted-foreground text-xs">— calcular al guardar —</td>
+                                    <td className="px-3 py-2 text-center">
+                                      <div className="flex gap-1 justify-center">
+                                        <Button
+                                          size="sm"
+                                          variant="default"
+                                          disabled={guardandoPrecio}
+                                          onClick={() => guardarPrecio(t.id)}
+                                          className="h-7 px-2 text-xs"
+                                        >
+                                          {guardandoPrecio ? "..." : "Guardar"}
+                                        </Button>
+                                        <Button
+                                          size="sm"
+                                          variant="outline"
+                                          onClick={() => setEditandoPrecio(null)}
+                                          className="h-7 px-2 text-xs"
+                                        >
+                                          Cancelar
+                                        </Button>
+                                      </div>
+                                    </td>
+                                  </>
+                                ) : (
+                                  <>
+                                    <td className="px-3 py-2 text-right">${precios.precioReal.toLocaleString("es-AR")} {t.moneda}</td>
+                                    <td className="px-3 py-2 text-right text-sm text-muted-foreground">
+                                      {t.descuento_tipo === "porcentaje" ? `${t.descuento_valor}%` :
+                                       t.descuento_tipo === "monto_fijo" ? `-$${t.descuento_valor?.toLocaleString("es-AR")}` :
+                                       "—"}
+                                    </td>
+                                    <td className={`px-3 py-2 text-right font-semibold ${precios.descuentoMonto > 0 ? "text-green-600 dark:text-green-400" : ""}`}>
+                                      ${precios.precioFinal.toLocaleString("es-AR")} {t.moneda}
+                                    </td>
+                                    <td className="px-3 py-2 text-center">
+                                      <Button
+                                        size="sm"
+                                        variant="outline"
+                                        onClick={() => {
+                                          setEditandoPrecio(t.id)
+                                          setPrecioEdit({
+                                            precio: t.precio.toString(),
+                                            descuento_tipo: t.descuento_tipo ?? null,
+                                            descuento_valor: t.descuento_valor?.toString() ?? "",
+                                          })
+                                        }}
+                                        className="h-7 px-2 text-xs"
+                                      >
+                                        <DollarSign className="h-3 w-3 mr-1" /> Editar
+                                      </Button>
+                                    </td>
+                                  </>
+                                )}
+                              </tr>
+                            )
+                          })}
+                        </tbody>
+                      </table>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+
             {/* Spinner */}
-            {cargando && (
+            {vista !== "inscripciones" && cargando && (
               <div className="text-center py-12">
                 <div className="w-10 h-10 border-4 border-blue-900 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
                 <p className="text-sm text-muted-foreground">Cargando...</p>
@@ -325,6 +625,85 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
       </div>
     </>,
     document.body
+  )
+}
+
+function TablaInscripciones({
+  inscripciones,
+  accionInscripcion,
+  onAprobar,
+  onCancelar,
+}: {
+  inscripciones: InscripcionConTaller[]
+  accionInscripcion: string | null
+  onAprobar: (id: string) => void
+  onCancelar: (id: string) => void
+}) {
+  const estadoBadge = (estado: string) => {
+    if (estado === "confirmado") return "bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300"
+    if (estado === "cancelado") return "bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300"
+    return "bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300"
+  }
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full text-sm border-collapse min-w-[800px]">
+        <thead>
+          <tr className="border-b-2 border-border bg-muted/50">
+            <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Taller</th>
+            <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Nombre</th>
+            <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Email</th>
+            <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Teléfono</th>
+            <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Ciudad</th>
+            <th className="text-center px-2 py-2 font-semibold whitespace-nowrap">Estado</th>
+            <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Fecha</th>
+            <th className="text-center px-2 py-2 font-semibold whitespace-nowrap">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {inscripciones.map((ins, i) => (
+            <tr key={ins.id} className={`border-b border-border/50 hover:bg-muted/30 transition-colors ${i % 2 === 0 ? "" : "bg-muted/10"}`}>
+              <td className="px-2 py-2 whitespace-nowrap font-medium text-xs">{ins.taller_nombre}</td>
+              <td className="px-2 py-2 whitespace-nowrap">{ins.nombre} {ins.apellido}</td>
+              <td className="px-2 py-2 whitespace-nowrap text-xs text-muted-foreground">{ins.email}</td>
+              <td className="px-2 py-2 whitespace-nowrap text-xs">{ins.telefono}</td>
+              <td className="px-2 py-2 whitespace-nowrap text-xs text-muted-foreground">{ins.ciudad || "—"}</td>
+              <td className="px-2 py-2 text-center">
+                <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${estadoBadge(ins.estado)}`}>
+                  {ins.estado}
+                </span>
+              </td>
+              <td className="px-2 py-2 whitespace-nowrap text-xs text-muted-foreground">
+                {new Date(ins.creado_en).toLocaleDateString("es-AR")}
+              </td>
+              <td className="px-2 py-2 text-center">
+                <div className="flex gap-1 justify-center">
+                  {ins.estado !== "confirmado" && ins.estado !== "cancelado" && (
+                    <button
+                      disabled={accionInscripcion === ins.id}
+                      onClick={() => onAprobar(ins.id)}
+                      title="Aprobar"
+                      className="p-1 rounded hover:bg-green-100 dark:hover:bg-green-900/40 text-green-700 disabled:opacity-50 transition-colors"
+                    >
+                      <Check className="h-4 w-4" />
+                    </button>
+                  )}
+                  {ins.estado !== "cancelado" && (
+                    <button
+                      disabled={accionInscripcion === ins.id}
+                      onClick={() => onCancelar(ins.id)}
+                      title="Cancelar"
+                      className="p-1 rounded hover:bg-red-100 dark:hover:bg-red-900/40 text-red-700 disabled:opacity-50 transition-colors"
+                    >
+                      <Ban className="h-4 w-4" />
+                    </button>
+                  )}
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   )
 }
 

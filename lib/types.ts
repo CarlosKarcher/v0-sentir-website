@@ -17,6 +17,7 @@ export interface Event {
   flyerImageAlt?: string
   level?: string
   contactPhone?: string
+  tallerSlug?: string  // slug del taller en DB para inscripción
 }
 
 export interface WrittenTestimonial {

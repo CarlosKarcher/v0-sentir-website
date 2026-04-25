@@ -8,16 +8,15 @@ import type { Taller } from "@/types/database"
 import { Header } from "@/components/header"
 
 const TALLERES_LISTA = [
-  { slug: "autoconocimiento",        nombre: "Taller de Autoconocimiento" },
-  { slug: "transformacion",          nombre: "Taller de Transformación" },
-  { slug: "metas-y-logros",          nombre: "Taller de MyL (Metas y Logros)" },
-  { slug: "camino-del-guerrero",     nombre: "El Camino del Guerrero" },
-  { slug: "biodecodificacion",       nombre: "Taller de Biodecodificación" },
-  { slug: "sanando-mi-nino-interior","nombre": "Sanando mi Niño Interior" },
-  { slug: "constelaciones-grupales", nombre: "Constelaciones Grupales" },
+  { slug: "autoconocimiento",         nombre: "Taller de Autoconocimiento" },
+  { slug: "transformacion",           nombre: "Taller de Transformación" },
+  { slug: "metas-y-logros",           nombre: "Taller de MyL (Metas y Logros)" },
+  { slug: "camino-del-guerrero",      nombre: "El Camino del Guerrero" },
+  { slug: "biodecodificacion",        nombre: "Taller de Biodecodificación" },
+  { slug: "sanando-mi-nino-interior", nombre: "Sanando mi Niño Interior" },
+  { slug: "constelaciones-grupales",  nombre: "Constelaciones Grupales" },
 ]
 
-// Prerequisito: key = taller a cursar, value = taller que debe haberse realizado
 const PREREQUISITOS: Record<string, string> = {
   "transformacion": "autoconocimiento",
   "metas-y-logros": "transformacion",
@@ -27,6 +26,11 @@ function InscribirseForm() {
   const searchParams = useSearchParams()
   const tallerSlugParam = searchParams.get("taller") || ""
   const eventoParam = searchParams.get("evento") || ""
+
+  // Estado de carga del usuario desde localStorage + DB
+  const [estadoUsuario, setEstadoUsuario] = useState<"cargando" | "no_registrado" | "ok">("cargando")
+  const [celularCaracteristica, setCelularCaracteristica] = useState("")
+  const [celularNumero, setCelularNumero] = useState("")
 
   const [tallerSlug, setTallerSlug] = useState(tallerSlugParam)
   const [tallerData, setTallerData] = useState<Taller | null>(null)
@@ -50,6 +54,41 @@ function InscribirseForm() {
   const [error, setError] = useState<string | null>(null)
   const [exito, setExito] = useState(false)
 
+  // Al montar: leer localStorage y buscar datos en DB
+  useEffect(() => {
+    const raw = localStorage.getItem("sentir_celular")
+    if (!raw) {
+      setEstadoUsuario("no_registrado")
+      return
+    }
+    let celular: { caracteristica?: string; numero?: string } = {}
+    try { celular = JSON.parse(raw) } catch { setEstadoUsuario("no_registrado"); return }
+
+    const caract = celular.caracteristica || ""
+    const num = celular.numero || ""
+    if (!caract || !num) { setEstadoUsuario("no_registrado"); return }
+
+    setCelularCaracteristica(caract)
+    setCelularNumero(num)
+    setTelefono(`${caract} ${num}`)
+
+    // Buscar datos en miembros / nomembros
+    supabase.rpc("buscar_persona_por_celular", {
+      p_caracteristica: caract,
+      p_numero: num,
+    }).then(({ data }) => {
+      if (!data || !data.encontrado) {
+        setEstadoUsuario("no_registrado")
+        return
+      }
+      setNombre(data.nombre || "")
+      setApellido(data.apellido || "")
+      setEmail(data.email || "")
+      setEstadoUsuario("ok")
+    })
+  }, [])
+
+  // Cargar precio del taller seleccionado
   useEffect(() => {
     if (!tallerSlug) { setTallerData(null); return }
     setCargandoTaller(true)
@@ -153,6 +192,51 @@ function InscribirseForm() {
   const precios = tallerData ? calcularPrecioFinal(tallerData) : null
   const tallerNombreSeleccionado = TALLERES_LISTA.find(t => t.slug === tallerSlug)?.nombre || ""
 
+  // Pantalla de carga inicial
+  if (estadoUsuario === "cargando") {
+    return (
+      <main className="flex-1 flex items-center justify-center p-6">
+        <div className="text-center space-y-3">
+          <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="text-muted-foreground text-sm">Verificando tu registro...</p>
+        </div>
+      </main>
+    )
+  }
+
+  // Pantalla: no está registrado
+  if (estadoUsuario === "no_registrado") {
+    return (
+      <main className="flex-1 flex items-center justify-center p-6">
+        <div className="max-w-md w-full text-center space-y-6 py-12">
+          <div className="text-6xl">🔒</div>
+          <h2 className="text-2xl font-bold">Primero necesitás registrarte</h2>
+          <p className="text-muted-foreground">
+            Para inscribirte en un taller, primero tenés que registrarte en la comunidad Sentir.
+          </p>
+          <p className="text-muted-foreground text-sm">
+            Es rápido y gratuito. Hacé clic en <strong>"Registrate"</strong> en la página principal y completá tus datos.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <a
+              href="/#inicio"
+              className="inline-block bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 px-6 rounded-xl transition-colors"
+            >
+              Ir a registrarse
+            </a>
+            <a
+              href="/"
+              className="inline-block border border-border hover:bg-muted font-medium py-3 px-6 rounded-xl transition-colors"
+            >
+              Volver al inicio
+            </a>
+          </div>
+        </div>
+      </main>
+    )
+  }
+
+  // Pantalla de éxito
   if (exito) {
     return (
       <main className="flex-1 flex items-center justify-center p-6">
@@ -192,6 +276,7 @@ function InscribirseForm() {
     )
   }
 
+  // Formulario principal
   return (
     <main className="flex-1 py-12 px-4">
       <div className="max-w-2xl mx-auto">
@@ -249,7 +334,7 @@ function InscribirseForm() {
             </div>
           )}
 
-          {/* Nombre y Apellido */}
+          {/* Nombre y Apellido — pre-rellenados desde DB, editables */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1">
               <label className="text-sm font-medium">Nombre *</label>
@@ -275,7 +360,7 @@ function InscribirseForm() {
             </div>
           </div>
 
-          {/* Email */}
+          {/* Email — pre-rellenado desde DB */}
           <div className="space-y-1">
             <label className="text-sm font-medium">Email *</label>
             <input
@@ -288,7 +373,7 @@ function InscribirseForm() {
             />
           </div>
 
-          {/* Teléfono con verificación de prerequisito */}
+          {/* Teléfono — pre-rellenado desde localStorage */}
           <div className="space-y-1">
             <label className="text-sm font-medium">Teléfono / Celular *</label>
             <input

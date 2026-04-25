@@ -368,7 +368,7 @@ export function Header() {
           {esAdmin && (
             <button
               onClick={() => setAdminPanelOpen(true)}
-              className="hidden md:inline-flex items-center gap-1 text-xs font-semibold bg-blue-900 hover:bg-blue-800 text-white px-3 py-1.5 rounded-lg transition-colors"
+              className="inline-flex items-center gap-1 text-xs font-semibold bg-blue-900 hover:bg-blue-800 text-white px-3 py-1.5 rounded-lg transition-colors"
             >
               Admin
             </button>

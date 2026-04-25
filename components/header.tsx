@@ -245,12 +245,12 @@ export function Header({ onAnotate }: HeaderProps) {
                       </a>
                     </li>
                     <li>
-                      <button
-                        onClick={() => onAnotate?.()}
-                        className="w-full text-center text-sm font-semibold px-4 py-2.5 rounded-lg bg-green-600 hover:bg-green-700 text-white transition-colors"
+                      <a
+                        href="#proximos-eventos"
+                        className="block text-center text-sm font-semibold px-4 py-2.5 rounded-lg bg-green-600 hover:bg-green-700 text-white transition-colors"
                       >
                         Inscribir a talleres
-                      </button>
+                      </a>
                     </li>
                   </ul>
                 </NavigationMenuContent>
@@ -381,12 +381,13 @@ export function Header({ onAnotate }: HeaderProps) {
               >
                 Talleres y Sesiones
               </a>
-              <button
-                onClick={() => { setIsOpen(false); onAnotate?.() }}
-                className="text-left text-lg font-semibold text-white bg-green-600 hover:bg-green-700 px-4 py-3 rounded-lg transition-colors"
+              <a
+                href="#proximos-eventos"
+                className="text-center text-lg font-semibold text-white bg-green-600 hover:bg-green-700 px-4 py-3 rounded-lg transition-colors"
+                onClick={() => setIsOpen(false)}
               >
                 Inscribir a talleres
-              </button>
+              </a>
               <a
                 href="#equipo"
                 className="text-lg font-medium hover:text-primary transition-colors"

@@ -40,7 +40,7 @@ const schemaMiembro = z.object({
     .or(z.literal("")),
   celular_caracteristica: z.string().min(1, "Ingresá la característica"),
   celular_numero: z.string().min(6, "Ingresá tu número"),
-  email: z.string().email("Ingresá un email válido").optional().or(z.literal("")),
+  email: z.string().email("Ingresá un email válido"),
   comentario: z.string().optional(),
 })
 
@@ -50,7 +50,7 @@ const schemaInteresado = z.object({
     .regex(soloLetrasYNumeros, "Solo se permiten letras, números y espacios"),
   celular_caracteristica: z.string().min(1, "Ingresá la característica"),
   celular_numero: z.string().min(6, "Ingresá tu número"),
-  email: z.string().email("Ingresá un email válido").optional().or(z.literal("")),
+  email: z.string().email("Ingresá un email válido"),
 })
 
 type MiembroData = z.infer<typeof schemaMiembro>
@@ -453,7 +453,7 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Email</label>
+                  <label className="block text-sm font-medium mb-1">Email *</label>
                   <input {...formMiembro.register("email")} type="email" className="w-full border border-border rounded-md px-3 py-2 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary" placeholder="ejemplo@mail.com" />
                   {formMiembro.formState.errors.email && <p className="text-red-500 text-xs mt-1">{formMiembro.formState.errors.email.message}</p>}
                 </div>
@@ -486,7 +486,7 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
                   {(formInteresado.formState.errors.celular_caracteristica || formInteresado.formState.errors.celular_numero) && <p className="text-red-500 text-xs mt-1">Ingresá tu celular completo</p>}
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Email</label>
+                  <label className="block text-sm font-medium mb-1">Email *</label>
                   <input {...formInteresado.register("email")} type="email" className="w-full border border-border rounded-md px-3 py-2 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary" placeholder="ejemplo@mail.com" />
                   {formInteresado.formState.errors.email && <p className="text-red-500 text-xs mt-1">{formInteresado.formState.errors.email.message}</p>}
                 </div>

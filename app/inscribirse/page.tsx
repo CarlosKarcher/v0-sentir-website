@@ -3,6 +3,7 @@
 import { useState, useEffect, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import { supabase } from "@/lib/supabase-client"
+import { supabaseAuth } from "@/lib/supabase-auth-client"
 import { calcularPrecioFinal } from "@/types/database"
 import type { Taller } from "@/types/database"
 import { Header } from "@/components/header"
@@ -54,37 +55,30 @@ function InscribirseForm() {
   const [error, setError] = useState<string | null>(null)
   const [exito, setExito] = useState(false)
 
-  // Al montar: leer localStorage y buscar datos en DB
+  // Al montar: leer sesión de Supabase Auth y buscar datos en DB
   useEffect(() => {
-    const raw = localStorage.getItem("sentir_celular")
-    if (!raw) {
-      setEstadoUsuario("no_registrado")
-      return
-    }
-    let celular: { caracteristica?: string; numero?: string } = {}
-    try { celular = JSON.parse(raw) } catch { setEstadoUsuario("no_registrado"); return }
-
-    const caract = celular.caracteristica || ""
-    const num = celular.numero || ""
-    if (!caract || !num) { setEstadoUsuario("no_registrado"); return }
-
-    setCelularCaracteristica(caract)
-    setCelularNumero(num)
-    setTelefono(`${caract} ${num}`)
-
-    // Buscar datos en miembros / nomembros
-    supabase.rpc("buscar_persona_por_celular", {
-      p_caracteristica: caract,
-      p_numero: num,
-    }).then(({ data }) => {
-      if (!data || !data.encontrado) {
+    supabaseAuth.auth.getSession().then(({ data: { session } }) => {
+      if (!session?.user?.email) {
         setEstadoUsuario("no_registrado")
         return
       }
-      setNombre(data.nombre || "")
-      setApellido(data.apellido || "")
-      setEmail(data.email || "")
-      setEstadoUsuario("ok")
+      const emailUser = session.user.email.toLowerCase()
+      supabase.rpc("buscar_email_registrado", { p_email: emailUser }).then(({ data }) => {
+        if (!data?.encontrado) {
+          setEstadoUsuario("no_registrado")
+          return
+        }
+        const parts = (data.nombre_apellido || "").trim().split(" ")
+        setNombre(parts[0] || "")
+        setApellido(parts.slice(1).join(" ") || "")
+        setEmail(emailUser)
+        const caract = data.celular_caracteristica || ""
+        const num = data.celular_numero || ""
+        setCelularCaracteristica(caract)
+        setCelularNumero(num)
+        setTelefono(`${caract} ${num}`.trim())
+        setEstadoUsuario("ok")
+      })
     })
   }, [])
 
@@ -210,25 +204,20 @@ function InscribirseForm() {
       <main className="flex-1 flex items-center justify-center p-6">
         <div className="max-w-md w-full text-center space-y-6 py-12">
           <div className="text-6xl">🔒</div>
-          <h2 className="text-2xl font-bold">Primero necesitás registrarte</h2>
+          <h2 className="text-2xl font-bold">Necesitás ingresar primero</h2>
           <p className="text-muted-foreground">
-            Para inscribirte en un taller, primero tenés que registrarte en la comunidad Sentir.
+            Para inscribirte en un taller, ingresá con tu email desde la página principal.
           </p>
           <p className="text-muted-foreground text-sm">
-            Es rápido y gratuito. Hacé clic en <strong>"Registrate"</strong> en la página principal y completá tus datos.
+            Si ya sos parte de la comunidad, hacé clic en <strong>"Ingresá"</strong> arriba.<br />
+            Si es tu primera vez, registrate en la página principal.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <a
-              href="/#inicio"
+              href="/"
               className="inline-block bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 px-6 rounded-xl transition-colors"
             >
-              Ir a registrarse
-            </a>
-            <a
-              href="/"
-              className="inline-block border border-border hover:bg-muted font-medium py-3 px-6 rounded-xl transition-colors"
-            >
-              Volver al inicio
+              Ir al inicio
             </a>
           </div>
         </div>

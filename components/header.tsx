@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react"
 import { supabase } from "@/lib/supabase-client"
+import { supabaseAuth } from "@/lib/supabase-auth-client"
+import { LoginModal } from "@/components/login-modal"
 import { Button } from "@/components/ui/button"
 import { Menu } from "lucide-react"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
@@ -28,56 +30,43 @@ export function Header({ onAnotate }: HeaderProps) {
   const [esAdmin, setEsAdmin] = useState(false)
   const [adminPanelOpen, setAdminPanelOpen] = useState(false)
   const [adminCelular, setAdminCelular] = useState({ caracteristica: "", numero: "" })
+  const [loginOpen, setLoginOpen] = useState(false)
 
-  useEffect(() => {
-    const cargarNombre = async () => {
-      try {
-        const guardado = localStorage.getItem("sentir_celular")
-        if (!guardado) return
-        const { caracteristica, numero } = JSON.parse(guardado)
-        if (!caracteristica || !numero) return
-        const { data } = await supabase.rpc("verificar_celular_registrado", {
-          p_caracteristica: caracteristica,
-          p_numero: numero,
+  const cargarDatosUsuario = async (email: string) => {
+    const { data } = await supabase.rpc("buscar_email_registrado", { p_email: email.toLowerCase() })
+    if (data?.encontrado) {
+      const nombre = data.nombre_gafete || data.nombre_apellido?.split(" ")[0] || ""
+      setNombreUsuario(nombre || null)
+      setNroMiembro(data.numero ?? null)
+      if (data.es_admin) {
+        setEsAdmin(true)
+        setAdminCelular({
+          caracteristica: data.celular_caracteristica || "",
+          numero: data.celular_numero || "",
         })
-        if (data?.encontrado) {
-          const n = data.nombre_gafete || data.nombre_apellido?.split(" ")[0] || ""
-          const nro = data.numero ? Number(data.numero) : null
-          if (n) {
-            setNombreUsuario(n)
-            setNroMiembro(nro)
-            localStorage.setItem("sentir_celular", JSON.stringify({ caracteristica, numero, nombre: n, nroMiembro: nro }))
-          }
-          if (data.es_admin) {
-            setEsAdmin(true)
-            setAdminCelular({ caracteristica, numero })
-          }
-        } else {
-          localStorage.removeItem("sentir_celular")
-        }
-      } catch {}
-    }
-    cargarNombre()
-
-    const onUsuario = (e: Event) => {
-      const detail = (e as CustomEvent).detail
-      if (detail?.nombre) {
-        setNombreUsuario(detail.nombre)
-        setNroMiembro(detail.nroMiembro ?? null)
-        try {
-          const guardado = localStorage.getItem("sentir_celular")
-          if (guardado) {
-            const { caracteristica, numero } = JSON.parse(guardado)
-            if (detail.esAdmin) {
-              setEsAdmin(true)
-              setAdminCelular({ caracteristica, numero })
-            }
-          }
-        } catch {}
       }
     }
-    window.addEventListener("sentir_usuario", onUsuario)
-    return () => window.removeEventListener("sentir_usuario", onUsuario)
+  }
+
+  useEffect(() => {
+    // Cargar sesión existente al montar
+    supabaseAuth.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user?.email) cargarDatosUsuario(session.user.email)
+    })
+
+    // Escuchar cambios de sesión (login / logout)
+    const { data: { subscription } } = supabaseAuth.auth.onAuthStateChange((_event, session) => {
+      if (session?.user?.email) {
+        cargarDatosUsuario(session.user.email)
+      } else {
+        setNombreUsuario(null)
+        setNroMiembro(null)
+        setEsAdmin(false)
+        setAdminCelular({ caracteristica: "", numero: "" })
+      }
+    })
+
+    return () => subscription.unsubscribe()
   }, [])
 
   return (
@@ -314,6 +303,21 @@ export function Header({ onAnotate }: HeaderProps) {
               Admin
             </button>
           )}
+          {!nombreUsuario ? (
+            <button
+              onClick={() => setLoginOpen(true)}
+              className="hidden md:inline-flex items-center text-sm font-semibold bg-blue-900 hover:bg-blue-800 text-white px-4 py-1.5 rounded-lg transition-colors"
+            >
+              Ingresá
+            </button>
+          ) : (
+            <button
+              onClick={() => supabaseAuth.auth.signOut()}
+              className="hidden md:inline-flex items-center text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Salir
+            </button>
+          )}
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild className="md:hidden">
             <Button variant="ghost" size="icon">
@@ -429,6 +433,21 @@ export function Header({ onAnotate }: HeaderProps) {
                   Admin
                 </button>
               )}
+              {!nombreUsuario ? (
+                <button
+                  onClick={() => { setIsOpen(false); setLoginOpen(true) }}
+                  className="mt-2 w-full text-center text-lg font-bold text-white bg-blue-900 hover:bg-blue-800 px-4 py-3 rounded-lg transition-colors"
+                >
+                  Ingresá
+                </button>
+              ) : (
+                <button
+                  onClick={() => { setIsOpen(false); supabaseAuth.auth.signOut() }}
+                  className="mt-2 w-full text-center text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Cerrar sesión
+                </button>
+              )}
             </nav>
           </SheetContent>
         </Sheet>
@@ -443,6 +462,11 @@ export function Header({ onAnotate }: HeaderProps) {
         adminNumero={adminCelular.numero}
       />
     )}
+    <LoginModal
+      isOpen={loginOpen}
+      onClose={() => setLoginOpen(false)}
+      onLoginSuccess={() => setLoginOpen(false)}
+    />
   </>
   )
 }

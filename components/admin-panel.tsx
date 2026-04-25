@@ -163,7 +163,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
 
   return createPortal(
     <>
-      <div className="fixed inset-0 z-[9998] bg-black/80 backdrop-blur-sm" onClick={onClose} />
+      <div className="fixed inset-0 z-[9998] bg-black/80 backdrop-blur-sm" onClick={() => vista !== "menu" ? setVista("menu") : onClose()} />
       <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 pointer-events-none">
         <div
           className="relative bg-background rounded-xl shadow-2xl pointer-events-auto w-full max-w-6xl max-h-[90vh] flex flex-col"
@@ -226,7 +226,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                   <Download className="h-4 w-4" /> Exportar CSV
                 </Button>
               )}
-              <button onClick={onClose} className="p-1.5 rounded-full hover:bg-muted transition-colors">
+              <button onClick={() => vista !== "menu" ? setVista("menu") : onClose()} className="p-1.5 rounded-full hover:bg-muted transition-colors">
                 <X className="h-5 w-5" />
               </button>
             </div>

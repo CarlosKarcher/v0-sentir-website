@@ -235,99 +235,22 @@ export function Header({ onAnotate }: HeaderProps) {
               <NavigationMenuItem>
                 <NavigationMenuTrigger>Talleres y Sesiones</NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul className="grid w-[500px] gap-3 p-4">
-                    <li className="col-span-full flex gap-2 pb-2 border-b border-border">
+                  <ul className="flex flex-col w-[220px] gap-2 p-3">
+                    <li>
                       <a
                         href="#talleres"
-                        className="flex-1 text-center text-sm font-semibold px-4 py-2 rounded-lg border border-border hover:bg-muted transition-colors"
+                        className="block text-center text-sm font-semibold px-4 py-2.5 rounded-lg border border-border hover:bg-muted transition-colors"
                       >
                         Talleres y Sesiones
                       </a>
+                    </li>
+                    <li>
                       <button
                         onClick={() => onAnotate?.()}
-                        className="flex-1 text-center text-sm font-semibold px-4 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white transition-colors"
+                        className="w-full text-center text-sm font-semibold px-4 py-2.5 rounded-lg bg-green-600 hover:bg-green-700 text-white transition-colors"
                       >
                         Inscribir a talleres
                       </button>
-                    </li>
-                    <li className="row-span-3">
-                      <div className="mb-2 text-sm font-medium text-primary">Talleres de Liderazgo</div>
-                      <ul className="space-y-2">
-                        <li>
-                          <a
-                            href="#liderazgo"
-                            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                          >
-                            1. Autoconocimiento
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            href="#liderazgo"
-                            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                          >
-                            2. Transformación
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            href="#liderazgo"
-                            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                          >
-                            3. MyL de Metas y Logros
-                          </a>
-                        </li>
-                      </ul>
-                    </li>
-                    <li className="row-span-3">
-                      <div className="mb-2 text-sm font-medium text-primary">Otros Talleres</div>
-                      <ul className="space-y-2">
-                        <li>
-                          <a
-                            href="#otros-talleres"
-                            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                          >
-                            1. Camino del Guerrero
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            href="#otros-talleres"
-                            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                          >
-                            2. Sanando Niño Interior
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            href="#otros-talleres"
-                            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                          >
-                            3. Biodecodificación
-                          </a>
-                        </li>
-                      </ul>
-                    </li>
-                    <li className="row-span-2">
-                      <div className="mb-2 text-sm font-medium text-primary">Sesiones</div>
-                      <ul className="space-y-2">
-                        <li>
-                          <a
-                            href="#sesiones"
-                            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                          >
-                            Constelaciones Familiares
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            href="#sesiones"
-                            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                          >
-                            Sesiones de Coaching
-                          </a>
-                        </li>
-                      </ul>
                     </li>
                   </ul>
                 </NavigationMenuContent>

@@ -187,7 +187,7 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
         nombre,
         nroMiembro,
       }))
-      if (nombre) window.dispatchEvent(new CustomEvent("sentir_usuario", { detail: { nombre, nroMiembro } }))
+      if (nombre) window.dispatchEvent(new CustomEvent("sentir_usuario", { detail: { nombre, nroMiembro, esAdmin: verificacion.es_admin ?? false } }))
       setCelularRegistrado(`${data.celular_caracteristica.trim()} ${data.celular_numero.trim()}`)
       setStep("ya_registrado")
       setEnviando(false)

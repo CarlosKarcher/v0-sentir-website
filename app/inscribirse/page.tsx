@@ -78,7 +78,7 @@ function InscribirseForm() {
     }
 
     // Tiene sesión: cargar datos del miembro
-    supabase.rpc("buscar_email_registrado", { p_email: emailAuth.toLowerCase() }).then(async ({ data }) => {
+    supabase.rpc("buscar_email_registrado", { p_email: emailAuth.toLowerCase() }).then(({ data }) => {
       if (!data?.encontrado) {
         setEstadoUsuario(camposFijos ? "no_registrado" : "ok")
         return
@@ -91,26 +91,17 @@ function InscribirseForm() {
       setEmail(emailAuth)
       setTelefono(`${data.celular_caracteristica || ""} ${data.celular_numero || ""}`.trim())
 
-      // Verificar prerequisito y si ya realizó el taller
+      // Verificar prerequisito usando datos del RPC (evita problemas de RLS)
       const requisito = REQUISITOS_ESTRICTOS[tallerSlug]
       if (requisito) {
-        const columnas = requisito.campoPropio
-          ? `${requisito.campoDB}, ${requisito.campoPropio}`
-          : requisito.campoDB
-        const { data: miembro } = await supabase
-          .from("miembros")
-          .select(columnas)
-          .eq("email", emailAuth.toLowerCase())
-          .single()
-
         // Ya realizó este taller (solo aplica a Transformación)
-        if (requisito.campoPropio && miembro?.[requisito.campoPropio]) {
+        if (requisito.campoPropio && data[requisito.campoPropio]) {
           setEstadoUsuario("ya_realizado")
           return
         }
 
         // No tiene el prerequisito
-        if (!miembro || !miembro[requisito.campoDB]) {
+        if (!data[requisito.campoDB]) {
           setTallerFaltante(requisito.tallerNombre)
           setEstadoUsuario("sin_prerequisito")
           return

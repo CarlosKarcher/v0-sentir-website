@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { createPortal } from "react-dom"
 import { supabase } from "@/lib/supabase-client"
-import { X, Download, RefreshCw, ArrowLeft, Users, UserX, Filter, ClipboardList, DollarSign, Check, Ban } from "lucide-react"
+import { X, Download, RefreshCw, ArrowLeft, Users, UserX, Filter, ClipboardList, DollarSign, Check, Ban, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { calcularPrecioFinal } from "@/types/database"
 import type { Taller, InscripcionConTaller } from "@/types/database"
@@ -107,6 +107,18 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
   const cancelarInscripcion = async (id: string) => {
     setAccionInscripcion(id)
     await supabase.rpc("cancelar_inscripcion", {
+      p_admin_caracteristica: adminCaracteristica,
+      p_admin_numero: adminNumero,
+      p_inscripcion_id: id,
+    })
+    await cargarInscripciones()
+    setAccionInscripcion(null)
+  }
+
+  const eliminarInscripcion = async (id: string) => {
+    if (!confirm("¿Seguro que querés eliminar esta inscripción? Esta acción no se puede deshacer.")) return
+    setAccionInscripcion(id)
+    await supabase.rpc("eliminar_inscripcion", {
       p_admin_caracteristica: adminCaracteristica,
       p_admin_numero: adminNumero,
       p_inscripcion_id: id,
@@ -443,6 +455,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                         accionInscripcion={accionInscripcion}
                         onAprobar={aprobarInscripcion}
                         onCancelar={cancelarInscripcion}
+                        onEliminar={eliminarInscripcion}
                       />
                     )}
                   </div>
@@ -633,11 +646,13 @@ function TablaInscripciones({
   accionInscripcion,
   onAprobar,
   onCancelar,
+  onEliminar,
 }: {
   inscripciones: InscripcionConTaller[]
   accionInscripcion: string | null
   onAprobar: (id: string) => void
   onCancelar: (id: string) => void
+  onEliminar: (id: string) => void
 }) {
   const estadoBadge = (estado: string) => {
     if (estado === "confirmado") return "bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300"
@@ -676,13 +691,13 @@ function TablaInscripciones({
                 {new Date(ins.creado_en).toLocaleDateString("es-AR")}
               </td>
               <td className="px-2 py-2 text-center">
-                <div className="flex gap-1 justify-center">
+                <div className="flex gap-2 justify-center">
                   {ins.estado !== "confirmado" && ins.estado !== "cancelado" && (
                     <button
                       disabled={accionInscripcion === ins.id}
                       onClick={() => onAprobar(ins.id)}
                       title="Aprobar"
-                      className="p-1 rounded hover:bg-green-100 dark:hover:bg-green-900/40 text-green-700 disabled:opacity-50 transition-colors"
+                      className="w-8 h-8 rounded-full bg-green-500 hover:bg-green-600 text-white flex items-center justify-center disabled:opacity-50 transition-colors shadow-sm"
                     >
                       <Check className="h-4 w-4" />
                     </button>
@@ -691,12 +706,20 @@ function TablaInscripciones({
                     <button
                       disabled={accionInscripcion === ins.id}
                       onClick={() => onCancelar(ins.id)}
-                      title="Cancelar"
-                      className="p-1 rounded hover:bg-red-100 dark:hover:bg-red-900/40 text-red-700 disabled:opacity-50 transition-colors"
+                      title="Rechazar"
+                      className="w-8 h-8 rounded-full bg-orange-500 hover:bg-orange-600 text-white flex items-center justify-center disabled:opacity-50 transition-colors shadow-sm"
                     >
                       <Ban className="h-4 w-4" />
                     </button>
                   )}
+                  <button
+                    disabled={accionInscripcion === ins.id}
+                    onClick={() => onEliminar(ins.id)}
+                    title="Eliminar"
+                    className="w-8 h-8 rounded-full bg-red-700 hover:bg-red-800 text-white flex items-center justify-center disabled:opacity-50 transition-colors shadow-sm"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
                 </div>
               </td>
             </tr>

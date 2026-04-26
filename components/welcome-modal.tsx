@@ -14,8 +14,6 @@ export function WelcomeModal() {
 
   useEffect(() => {
     if (estado === "no_logueado") {
-      // Solo mostrar si no lo cerró en esta sesión
-      if (sessionStorage.getItem("sentir_welcome_cerrado")) return
       const t = setTimeout(() => setVisible(true), 800)
       return () => clearTimeout(t)
     } else {
@@ -80,10 +78,7 @@ export function WelcomeModal() {
             </button>
 
             <button
-              onClick={() => {
-                sessionStorage.setItem("sentir_welcome_cerrado", "1")
-                setVisible(false)
-              }}
+              onClick={() => setVisible(false)}
               className="w-full text-sm text-gray-400 hover:text-gray-600 transition-colors py-1"
             >
               Continuar sin ingresar

@@ -20,9 +20,9 @@ const TALLERES_LISTA = [
 ]
 
 // Talleres con prerequisito estricto: verifican columna en tabla miembros
-const REQUISITOS_ESTRICTOS: Record<string, { campoDB: string; tallerNombre: string }> = {
-  "transformacion": { campoDB: "taller_autoconocimiento", tallerNombre: "Taller de Autoconocimiento" },
-  "metas-y-logros": { campoDB: "taller_transformacion",   tallerNombre: "Taller de Transformación" },
+const REQUISITOS_ESTRICTOS: Record<string, { campoDB: string; tallerNombre: string; campoPropio: string }> = {
+  "transformacion": { campoDB: "taller_autoconocimiento", tallerNombre: "Taller de Autoconocimiento", campoPropio: "taller_transformacion" },
+  "metas-y-logros": { campoDB: "taller_transformacion",   tallerNombre: "Taller de Transformación",   campoPropio: "taller_myl" },
 }
 
 // Estos talleres bloquean los campos del usuario (deben coincidir con quien se logueó)
@@ -36,7 +36,7 @@ function InscribirseForm() {
   const { estado: estadoAuth, email: emailAuth } = useUser()
   const [loginOpen, setLoginOpen] = useState(false)
 
-  const [estadoUsuario, setEstadoUsuario] = useState<"cargando" | "no_registrado" | "sin_prerequisito" | "ok">("cargando")
+  const [estadoUsuario, setEstadoUsuario] = useState<"cargando" | "no_registrado" | "sin_prerequisito" | "ya_realizado" | "ok">("cargando")
   const [tallerFaltante, setTallerFaltante] = useState("")
 
   // Taller siempre fijo desde la URL
@@ -91,15 +91,22 @@ function InscribirseForm() {
       setEmail(emailAuth)
       setTelefono(`${data.celular_caracteristica || ""} ${data.celular_numero || ""}`.trim())
 
-      // Verificar prerequisito en tabla miembros
+      // Verificar prerequisito y si ya realizó el taller
       const requisito = REQUISITOS_ESTRICTOS[tallerSlug]
       if (requisito) {
         const { data: miembro } = await supabase
           .from("miembros")
-          .select(requisito.campoDB)
+          .select(`${requisito.campoDB}, ${requisito.campoPropio}`)
           .eq("email", emailAuth.toLowerCase())
           .single()
 
+        // Ya realizó este taller → no puede volver a inscribirse
+        if (miembro?.[requisito.campoPropio]) {
+          setEstadoUsuario("ya_realizado")
+          return
+        }
+
+        // No tiene el prerequisito
         if (!miembro || !miembro[requisito.campoDB]) {
           setTallerFaltante(requisito.tallerNombre)
           setEstadoUsuario("sin_prerequisito")
@@ -205,6 +212,26 @@ function InscribirseForm() {
             </a>
           </div>
           <LoginModal isOpen={loginOpen} onClose={() => setLoginOpen(false)} onLoginSuccess={() => setLoginOpen(false)} />
+        </div>
+      </main>
+    )
+  }
+
+  // Ya realizó este taller
+  if (estadoUsuario === "ya_realizado") {
+    return (
+      <main className="flex-1 flex items-center justify-center p-6">
+        <div className="max-w-md w-full text-center space-y-6 py-12">
+          <div className="text-6xl">✨</div>
+          <h2 className="text-2xl font-bold">
+            Tu{nombre ? `, ${nombre},` : ""} Ya Viviste esta hermosa Experiencia.
+          </h2>
+          <a
+            href="/"
+            className="inline-block bg-blue-900 hover:bg-blue-800 text-white font-semibold py-3 px-6 rounded-xl transition-colors"
+          >
+            Volver al inicio
+          </a>
         </div>
       </main>
     )

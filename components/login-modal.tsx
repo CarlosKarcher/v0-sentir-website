@@ -5,7 +5,7 @@ import { createPortal } from "react-dom"
 import { X, Mail, KeyRound, CheckCircle, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { supabase } from "@/lib/supabase-client"
-import { supabaseAuth } from "@/lib/supabase-auth-client"
+import { createClient } from "@/lib/supabase/client"
 
 type Step = "email" | "otp" | "no_encontrado" | "exito"
 
@@ -55,6 +55,7 @@ export function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginModalProps)
     }
 
     // 2. Enviar OTP a ese email
+    const supabaseAuth = createClient()
     const { error: otpError } = await supabaseAuth.auth.signInWithOtp({
       email: email.trim().toLowerCase(),
       options: { shouldCreateUser: true },
@@ -77,6 +78,7 @@ export function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginModalProps)
 
     setCargando(true)
 
+    const supabaseAuth = createClient()
     const { data: authData, error: verifyError } = await supabaseAuth.auth.verifyOtp({
       email: email.trim().toLowerCase(),
       token: otp.trim(),

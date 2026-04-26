@@ -10,6 +10,7 @@ import { CONTACT_PHONE_NUMBER, SECTION_IDS } from "@/lib/constants"
 import type { Event } from "@/lib/types"
 import { ImagePopup } from "@/components/ui/image-popup"
 import { useUser } from "@/lib/user-context"
+import { LoginModal } from "@/components/login-modal"
 
 // Función helper para generar enlace de WhatsApp
 const getWhatsAppLink = (phoneNumber: string) => {
@@ -18,7 +19,8 @@ const getWhatsAppLink = (phoneNumber: string) => {
 }
 
 function EventCard({ event }: { event: Event }) {
-  const { estado, login } = useUser()
+  const { estado } = useUser()
+  const [loginOpen, setLoginOpen] = useState(false)
   const [flyerOpen, setFlyerOpen] = useState(false)
   const [imageError, setImageError] = useState(false)
   const [imageSrc, setImageSrc] = useState(event.flyerImage || "/flyer-transformacion-rio-gallegos.jpg")
@@ -210,13 +212,16 @@ function EventCard({ event }: { event: Event }) {
                 Registrate para inscribirte
               </a>
             ) : estado === "no_logueado" ? (
-              <button
-                onClick={login}
-                className="flex items-center justify-center gap-2 w-full bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300 font-semibold py-2 px-4 rounded-lg transition-colors text-sm"
-              >
-                <Lock className="h-4 w-4" />
-                Ingresá para inscribirte
-              </button>
+              <>
+                <button
+                  onClick={() => setLoginOpen(true)}
+                  className="flex items-center justify-center gap-2 w-full bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300 font-semibold py-2 px-4 rounded-lg transition-colors text-sm"
+                >
+                  <Lock className="h-4 w-4" />
+                  Ingresá para inscribirte
+                </button>
+                <LoginModal isOpen={loginOpen} onClose={() => setLoginOpen(false)} onLoginSuccess={() => setLoginOpen(false)} />
+              </>
             ) : (
               <a
                 href={`/inscribirse?taller=${event.tallerSlug}&evento=${encodeURIComponent(`${event.title} — ${event.date} — ${event.location}`)}`}

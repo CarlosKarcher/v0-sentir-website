@@ -1,7 +1,7 @@
 "use client"
 
 import { createContext, useContext, useEffect, useState } from "react"
-import { supabaseAuth } from "@/lib/supabase-auth-client"
+import { createClient } from "@/lib/supabase/client"
 import { supabase } from "@/lib/supabase-client"
 
 export type EstadoUsuario = "cargando" | "no_logueado" | "sin_registro" | "registrado"
@@ -13,8 +13,6 @@ interface UserContextType {
   esAdmin: boolean
   adminCelular: { caracteristica: string; numero: string }
   email: string | null
-  loginWithToken: (token: string) => void
-  login: () => void
   logout: () => void
 }
 
@@ -25,8 +23,6 @@ const UserContext = createContext<UserContextType>({
   esAdmin: false,
   adminCelular: { caracteristica: "", numero: "" },
   email: null,
-  loginWithToken: () => {},
-  login: () => {},
   logout: () => {},
 })
 
@@ -70,6 +66,8 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   }
 
   useEffect(() => {
+    const supabaseAuth = createClient()
+
     supabaseAuth.auth.getSession().then(({ data: { session } }) => {
       if (session?.user?.email) {
         cargarUsuario(session.user.email)
@@ -89,34 +87,13 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     return () => subscription.unsubscribe()
   }, [])
 
-  const loginWithToken = async (token: string) => {
-    const { error } = await supabaseAuth.auth.signInWithIdToken({
-      provider: "google",
-      token,
-    })
-    if (error) {
-      alert("Error al iniciar sesión: " + error.message)
-    }
+  const logout = () => {
+    const supabaseAuth = createClient()
+    supabaseAuth.auth.signOut({ scope: "local" })
   }
-
-  const login = async () => {
-    if (typeof window === "undefined") return
-    const { error } = await supabaseAuth.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-        queryParams: { prompt: "select_account" },
-      },
-    })
-    if (error) {
-      alert("Error al iniciar sesión con Google: " + error.message)
-    }
-  }
-
-  const logout = () => supabaseAuth.auth.signOut({ scope: "local" })
 
   return (
-    <UserContext.Provider value={{ estado, nombre, nroMiembro, esAdmin, adminCelular, email, loginWithToken, login, logout }}>
+    <UserContext.Provider value={{ estado, nombre, nroMiembro, esAdmin, adminCelular, email, logout }}>
       {children}
     </UserContext.Provider>
   )

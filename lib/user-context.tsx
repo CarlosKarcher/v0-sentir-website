@@ -87,14 +87,17 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     return () => subscription.unsubscribe()
   }, [])
 
-  const login = () => {
+  const login = async () => {
     if (typeof window === "undefined") return
-    supabaseAuth.auth.signInWithOAuth({
+    const { error } = await supabaseAuth.auth.signInWithOAuth({
       provider: "google",
       options: {
         redirectTo: `${window.location.origin}/auth/callback`,
       },
     })
+    if (error) {
+      alert("Error al iniciar sesión con Google: " + error.message)
+    }
   }
 
   const logout = () => supabaseAuth.auth.signOut()

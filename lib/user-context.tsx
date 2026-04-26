@@ -27,22 +27,19 @@ const UserContext = createContext<UserContextType>({
   logout: () => {},
 })
 
-const COOKIE_NAME = "sentir_email"
-const COOKIE_DAYS = 365
+const STORAGE_KEY = "sentir_email"
 
-function getCookie(): string | null {
-  if (typeof document === "undefined") return null
-  const match = document.cookie.match(new RegExp("(^| )" + COOKIE_NAME + "=([^;]+)"))
-  return match ? decodeURIComponent(match[2]) : null
+function getSaved(): string | null {
+  if (typeof window === "undefined") return null
+  try { return localStorage.getItem(STORAGE_KEY) } catch { return null }
 }
 
-function saveCookie(email: string) {
-  const maxAge = COOKIE_DAYS * 24 * 60 * 60
-  document.cookie = `${COOKIE_NAME}=${encodeURIComponent(email)};max-age=${maxAge};path=/;SameSite=Lax`
+function saveSaved(email: string) {
+  try { localStorage.setItem(STORAGE_KEY, email) } catch {}
 }
 
-function clearCookie() {
-  document.cookie = `${COOKIE_NAME}=;max-age=0;path=/`
+function clearSaved() {
+  try { localStorage.removeItem(STORAGE_KEY) } catch {}
 }
 
 export function UserProvider({ children }: { children: React.ReactNode }) {
@@ -66,14 +63,14 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       setEmail(emailUser)
       setEstado("registrado")
     } else {
-      // Email en cookie pero no está en la BD (fue eliminado o es inválido)
-      clearCookie()
+      // Email guardado pero no está en la BD (fue eliminado o es inválido)
+      clearSaved()
       setEstado("no_logueado")
     }
   }
 
   useEffect(() => {
-    const saved = getCookie()
+    const saved = getSaved()
     if (saved) {
       cargarUsuario(saved)
     } else {
@@ -84,7 +81,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const loginWithEmail = async (emailUser: string): Promise<{ encontrado: boolean }> => {
     const { data } = await supabase.rpc("buscar_email_registrado", { p_email: emailUser.toLowerCase() })
     if (data?.encontrado) {
-      saveCookie(emailUser.toLowerCase())
+      saveSaved(emailUser.toLowerCase())
       setNombre(data.nombre_gafete || data.nombre_apellido?.split(" ")[0] || null)
       setNroMiembro(data.numero ?? null)
       setEsAdmin(data.es_admin ?? false)
@@ -101,7 +98,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   }
 
   const logout = () => {
-    clearCookie()
+    clearSaved()
     setEstado("no_logueado")
     setNombre(null)
     setNroMiembro(null)

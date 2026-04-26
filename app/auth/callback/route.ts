@@ -1,14 +1,7 @@
 import { NextResponse } from "next/server"
-import { createClient } from "@/lib/supabase/server"
 
+// Callback de OAuth — ya no se usa, redirige al inicio
 export async function GET(request: Request) {
-  const { searchParams, origin } = new URL(request.url)
-  const code = searchParams.get("code")
-
-  if (code) {
-    const supabase = await createClient()
-    await supabase.auth.exchangeCodeForSession(code)
-  }
-
+  const { origin } = new URL(request.url)
   return NextResponse.redirect(origin)
 }

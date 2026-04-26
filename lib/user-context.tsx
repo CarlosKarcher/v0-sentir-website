@@ -104,7 +104,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  const logout = () => supabaseAuth.auth.signOut()
+  const logout = () => supabaseAuth.auth.signOut({ scope: "local" })
 
   return (
     <UserContext.Provider value={{ estado, nombre, nroMiembro, esAdmin, adminCelular, email, login, logout }}>

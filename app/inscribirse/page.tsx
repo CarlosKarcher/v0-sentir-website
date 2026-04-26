@@ -8,6 +8,7 @@ import { calcularPrecioFinal } from "@/types/database"
 import type { Taller } from "@/types/database"
 import { Header } from "@/components/header"
 import { LoginModal } from "@/components/login-modal"
+import { X } from "lucide-react"
 
 const TALLERES_LISTA = [
   { slug: "autoconocimiento",         nombre: "Taller de Autoconocimiento" },
@@ -297,11 +298,20 @@ function InscribirseForm() {
   return (
     <main className="flex-1 py-12 px-4">
       <div className="max-w-2xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Inscribirse a un taller</h1>
-          {eventoParam && (
-            <p className="text-muted-foreground text-sm mt-1">{decodeURIComponent(eventoParam)}</p>
-          )}
+        <div className="mb-8 flex items-start justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold mb-2">Inscribirse a un taller</h1>
+            {eventoParam && (
+              <p className="text-muted-foreground text-sm mt-1">{decodeURIComponent(eventoParam)}</p>
+            )}
+          </div>
+          <a
+            href="/"
+            className="p-2 rounded-full hover:bg-muted transition-colors text-muted-foreground hover:text-foreground flex-shrink-0 mt-1"
+            title="Salir"
+          >
+            <X className="h-6 w-6" />
+          </a>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -526,6 +536,13 @@ function InscribirseForm() {
           >
             {enviando ? "Enviando inscripción..." : "Confirmar inscripción"}
           </button>
+
+          <a
+            href="/"
+            className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-6 rounded-xl transition-colors text-lg text-center block"
+          >
+            Regresar sin Inscribirte
+          </a>
         </form>
       </div>
     </main>

@@ -19,10 +19,14 @@ const TALLERES_LISTA = [
   { slug: "constelaciones-grupales",  nombre: "Constelaciones Grupales" },
 ]
 
-const PREREQUISITOS: Record<string, string> = {
-  "transformacion": "autoconocimiento",
-  "metas-y-logros": "transformacion",
+// Talleres con prerequisito estricto: verifican columna en tabla miembros
+const REQUISITOS_ESTRICTOS: Record<string, { campoDB: string; tallerNombre: string }> = {
+  "transformacion": { campoDB: "taller_autoconocimiento", tallerNombre: "Taller de Autoconocimiento" },
+  "metas-y-logros": { campoDB: "taller_transformacion",   tallerNombre: "Taller de Transformación" },
 }
+
+// Estos talleres bloquean los campos del usuario (deben coincidir con quien se logueó)
+const TALLERES_CAMPOS_FIJOS = new Set(["transformacion", "metas-y-logros"])
 
 function InscribirseForm() {
   const searchParams = useSearchParams()
@@ -32,12 +36,14 @@ function InscribirseForm() {
   const { estado: estadoAuth, email: emailAuth } = useUser()
   const [loginOpen, setLoginOpen] = useState(false)
 
-  // Estado de carga del usuario desde Supabase Auth + DB
-  const [estadoUsuario, setEstadoUsuario] = useState<"cargando" | "no_registrado" | "ok">("cargando")
-  const [celularCaracteristica, setCelularCaracteristica] = useState("")
-  const [celularNumero, setCelularNumero] = useState("")
+  const [estadoUsuario, setEstadoUsuario] = useState<"cargando" | "no_registrado" | "sin_prerequisito" | "ok">("cargando")
+  const [tallerFaltante, setTallerFaltante] = useState("")
 
-  const [tallerSlug, setTallerSlug] = useState(tallerSlugParam)
+  // Taller siempre fijo desde la URL
+  const tallerSlug = tallerSlugParam
+  const tallerNombreSeleccionado = TALLERES_LISTA.find(t => t.slug === tallerSlug)?.nombre || tallerSlug
+  const camposFijos = TALLERES_CAMPOS_FIJOS.has(tallerSlug)
+
   const [tallerData, setTallerData] = useState<Taller | null>(null)
   const [cargandoTaller, setCargandoTaller] = useState(false)
 
@@ -51,39 +57,61 @@ function InscribirseForm() {
   const [mensaje, setMensaje] = useState("")
   const [recomendadoPor, setRecomendadoPor] = useState("")
 
-  const [prerequisitoError, setPrerequisitoError] = useState<string | null>(null)
-  const [prerequisitoCumplido, setPrerequisitoCumplido] = useState<boolean | null>(null)
-  const [verificando, setVerificando] = useState(false)
-
   const [enviando, setEnviando] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [exito, setExito] = useState(false)
 
-  // Cuando el contexto resuelve, cargar datos del usuario
+  // Cargar datos del usuario y verificar prerequisitos
   useEffect(() => {
     if (estadoAuth === "cargando") return
-    if (estadoAuth === "no_logueado" || estadoAuth === "sin_registro") {
+
+    // Transformacion y MyL requieren login obligatorio
+    if (camposFijos && (estadoAuth === "no_logueado" || estadoAuth === "sin_registro" || !emailAuth)) {
       setEstadoUsuario("no_registrado")
       return
     }
-    if (!emailAuth) { setEstadoUsuario("no_registrado"); return }
 
-    supabase.rpc("buscar_email_registrado", { p_email: emailAuth.toLowerCase() }).then(({ data }) => {
-      if (!data?.encontrado) { setEstadoUsuario("no_registrado"); return }
+    // Otros talleres: puede continuar sin login
+    if (estadoAuth === "no_logueado" || estadoAuth === "sin_registro" || !emailAuth) {
+      setEstadoUsuario("ok")
+      return
+    }
+
+    // Tiene sesión: cargar datos del miembro
+    supabase.rpc("buscar_email_registrado", { p_email: emailAuth.toLowerCase() }).then(async ({ data }) => {
+      if (!data?.encontrado) {
+        setEstadoUsuario(camposFijos ? "no_registrado" : "ok")
+        return
+      }
+
+      // Pre-rellenar datos desde el registro
       const parts = (data.nombre_apellido || "").trim().split(" ")
       setNombre(parts[0] || "")
       setApellido(parts.slice(1).join(" ") || "")
       setEmail(emailAuth)
-      const caract = data.celular_caracteristica || ""
-      const num = data.celular_numero || ""
-      setCelularCaracteristica(caract)
-      setCelularNumero(num)
-      setTelefono(`${caract} ${num}`.trim())
+      setTelefono(`${data.celular_caracteristica || ""} ${data.celular_numero || ""}`.trim())
+
+      // Verificar prerequisito en tabla miembros
+      const requisito = REQUISITOS_ESTRICTOS[tallerSlug]
+      if (requisito) {
+        const { data: miembro } = await supabase
+          .from("miembros")
+          .select(requisito.campoDB)
+          .eq("email", emailAuth.toLowerCase())
+          .single()
+
+        if (!miembro || !miembro[requisito.campoDB]) {
+          setTallerFaltante(requisito.tallerNombre)
+          setEstadoUsuario("sin_prerequisito")
+          return
+        }
+      }
+
       setEstadoUsuario("ok")
     })
   }, [estadoAuth, emailAuth])
 
-  // Cargar precio del taller seleccionado
+  // Cargar precio del taller
   useEffect(() => {
     if (!tallerSlug) { setTallerData(null); return }
     setCargandoTaller(true)
@@ -99,40 +127,10 @@ function InscribirseForm() {
       })
   }, [tallerSlug])
 
-  const verificarPrerequisito = async () => {
-    const prereqSlug = PREREQUISITOS[tallerSlug]
-    if (!prereqSlug || !telefono.trim()) {
-      setPrerequisitoError(null)
-      setPrerequisitoCumplido(null)
-      return
-    }
-    setVerificando(true)
-    const { data } = await supabase.rpc("verificar_prerequisito_taller", {
-      p_celular: telefono.trim(),
-      p_taller_slug: prereqSlug,
-    })
-    setVerificando(false)
-    if (data === true) {
-      setPrerequisitoCumplido(true)
-      setPrerequisitoError(null)
-    } else {
-      setPrerequisitoCumplido(false)
-      const tallerNombre = TALLERES_LISTA.find(t => t.slug === prereqSlug)?.nombre || prereqSlug
-      setPrerequisitoError(`Para inscribirte en este taller necesitás haber realizado primero: ${tallerNombre}`)
-    }
-  }
-
-  const handleTallerChange = (slug: string) => {
-    setTallerSlug(slug)
-    setPrerequisitoError(null)
-    setPrerequisitoCumplido(null)
-  }
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!tallerSlug) { setError("Seleccioná un taller"); return }
+    if (!tallerSlug) { setError("No se especificó el taller"); return }
     if (!tallerData) { setError("No se pudo cargar el taller seleccionado"); return }
-    if (prerequisitoCumplido === false) { setError("No cumplís el prerequisito para este taller"); return }
 
     setEnviando(true)
     setError(null)
@@ -170,9 +168,10 @@ function InscribirseForm() {
   }
 
   const precios = tallerData ? calcularPrecioFinal(tallerData) : null
-  const tallerNombreSeleccionado = TALLERES_LISTA.find(t => t.slug === tallerSlug)?.nombre || ""
+  const inputFijo = "w-full border border-border rounded-md px-3 py-2 bg-muted/50 text-muted-foreground cursor-not-allowed"
+  const inputEditable = "w-full border border-border rounded-md px-3 py-2 bg-background focus:outline-none focus:ring-2 focus:ring-primary"
 
-  // Pantalla de carga inicial
+  // Pantalla de carga
   if (estadoUsuario === "cargando") {
     return (
       <main className="flex-1 flex items-center justify-center p-6">
@@ -184,7 +183,7 @@ function InscribirseForm() {
     )
   }
 
-  // Pantalla: no está registrado
+  // No registrado / no logueado
   if (estadoUsuario === "no_registrado") {
     return (
       <main className="flex-1 flex items-center justify-center p-6">
@@ -192,7 +191,7 @@ function InscribirseForm() {
           <div className="text-6xl">🔒</div>
           <h2 className="text-2xl font-bold">Necesitás ingresar primero</h2>
           <p className="text-muted-foreground">
-            Para inscribirte en un taller, ingresá con tu email.
+            Para inscribirte en este taller, ingresá con tu email registrado en Sentir.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <button
@@ -206,6 +205,28 @@ function InscribirseForm() {
             </a>
           </div>
           <LoginModal isOpen={loginOpen} onClose={() => setLoginOpen(false)} onLoginSuccess={() => setLoginOpen(false)} />
+        </div>
+      </main>
+    )
+  }
+
+  // Sin prerequisito
+  if (estadoUsuario === "sin_prerequisito") {
+    return (
+      <main className="flex-1 flex items-center justify-center p-6">
+        <div className="max-w-md w-full text-center space-y-6 py-12">
+          <div className="text-6xl">🚫</div>
+          <h2 className="text-2xl font-bold">No podés inscribirte aún</h2>
+          <p className="text-muted-foreground">
+            Para acceder al <strong>{tallerNombreSeleccionado}</strong> primero tenés que haber
+            realizado el <strong>{tallerFaltante}</strong>.
+          </p>
+          <a
+            href="/"
+            className="inline-block bg-blue-900 hover:bg-blue-800 text-white font-semibold py-3 px-6 rounded-xl transition-colors"
+          >
+            Volver al inicio
+          </a>
         </div>
       </main>
     )
@@ -264,20 +285,12 @@ function InscribirseForm() {
 
         <form onSubmit={handleSubmit} className="space-y-6">
 
-          {/* Selector de taller */}
+          {/* Taller — fijo, no editable */}
           <div className="space-y-1">
-            <label className="text-sm font-medium">Taller *</label>
-            <select
-              value={tallerSlug}
-              onChange={e => handleTallerChange(e.target.value)}
-              required
-              className="w-full border border-border rounded-md px-3 py-2 bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-            >
-              <option value="">— Seleccioná un taller —</option>
-              {TALLERES_LISTA.map(t => (
-                <option key={t.slug} value={t.slug}>{t.nombre}</option>
-              ))}
-            </select>
+            <label className="text-sm font-medium">Taller</label>
+            <div className="w-full border border-border rounded-md px-3 py-2 bg-muted/50 font-medium">
+              {tallerNombreSeleccionado || "—"}
+            </div>
           </div>
 
           {/* Precio del taller */}
@@ -309,7 +322,14 @@ function InscribirseForm() {
             </div>
           )}
 
-          {/* Nombre y Apellido — pre-rellenados desde DB, editables */}
+          {/* Aviso campos bloqueados */}
+          {camposFijos && (
+            <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-xl p-3 text-sm text-blue-700 dark:text-blue-300">
+              Tus datos se completaron automáticamente con tu registro en Sentir.
+            </div>
+          )}
+
+          {/* Nombre y Apellido */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1">
               <label className="text-sm font-medium">Nombre *</label>
@@ -317,9 +337,10 @@ function InscribirseForm() {
                 type="text"
                 required
                 value={nombre}
-                onChange={e => setNombre(e.target.value)}
+                onChange={e => !camposFijos && setNombre(e.target.value)}
+                readOnly={camposFijos}
                 placeholder="Tu nombre"
-                className="w-full border border-border rounded-md px-3 py-2 bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                className={camposFijos ? inputFijo : inputEditable}
               />
             </div>
             <div className="space-y-1">
@@ -328,57 +349,40 @@ function InscribirseForm() {
                 type="text"
                 required
                 value={apellido}
-                onChange={e => setApellido(e.target.value)}
+                onChange={e => !camposFijos && setApellido(e.target.value)}
+                readOnly={camposFijos}
                 placeholder="Tu apellido"
-                className="w-full border border-border rounded-md px-3 py-2 bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                className={camposFijos ? inputFijo : inputEditable}
               />
             </div>
           </div>
 
-          {/* Email — pre-rellenado desde DB */}
+          {/* Email */}
           <div className="space-y-1">
             <label className="text-sm font-medium">Email *</label>
             <input
               type="email"
               required
               value={email}
-              onChange={e => setEmail(e.target.value)}
+              onChange={e => !camposFijos && setEmail(e.target.value)}
+              readOnly={camposFijos}
               placeholder="tu@email.com"
-              className="w-full border border-border rounded-md px-3 py-2 bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+              className={camposFijos ? inputFijo : inputEditable}
             />
           </div>
 
-          {/* Teléfono — pre-rellenado desde localStorage */}
+          {/* Teléfono */}
           <div className="space-y-1">
             <label className="text-sm font-medium">Teléfono / Celular *</label>
             <input
               type="tel"
               required
               value={telefono}
-              onChange={e => {
-                setTelefono(e.target.value)
-                setPrerequisitoError(null)
-                setPrerequisitoCumplido(null)
-              }}
-              onBlur={verificarPrerequisito}
+              onChange={e => !camposFijos && setTelefono(e.target.value)}
+              readOnly={camposFijos}
               placeholder="Ej: 2966 123456"
-              className={`w-full border rounded-md px-3 py-2 bg-background focus:outline-none focus:ring-2 focus:ring-primary transition-colors ${
-                prerequisitoCumplido === false
-                  ? "border-red-500 focus:ring-red-500"
-                  : prerequisitoCumplido === true
-                  ? "border-green-500 focus:ring-green-500"
-                  : "border-border"
-              }`}
+              className={camposFijos ? inputFijo : inputEditable}
             />
-            {verificando && (
-              <p className="text-xs text-muted-foreground">Verificando prerequisito...</p>
-            )}
-            {prerequisitoCumplido === true && (
-              <p className="text-sm text-green-600 dark:text-green-400">✅ Prerequisito verificado</p>
-            )}
-            {prerequisitoError && (
-              <p className="text-sm text-red-600 dark:text-red-400">{prerequisitoError}</p>
-            )}
           </div>
 
           {/* DNI y Ciudad */}
@@ -390,7 +394,7 @@ function InscribirseForm() {
                 value={dni}
                 onChange={e => setDni(e.target.value)}
                 placeholder="Número de DNI"
-                className="w-full border border-border rounded-md px-3 py-2 bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                className={inputEditable}
               />
             </div>
             <div className="space-y-1">
@@ -400,7 +404,7 @@ function InscribirseForm() {
                 value={ciudad}
                 onChange={e => setCiudad(e.target.value)}
                 placeholder="Tu ciudad"
-                className="w-full border border-border rounded-md px-3 py-2 bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                className={inputEditable}
               />
             </div>
           </div>
@@ -412,7 +416,7 @@ function InscribirseForm() {
               type="date"
               value={fechaNacimiento}
               onChange={e => setFechaNacimiento(e.target.value)}
-              className="w-full border border-border rounded-md px-3 py-2 bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+              className={inputEditable}
             />
           </div>
 
@@ -425,7 +429,7 @@ function InscribirseForm() {
                 value={recomendadoPor}
                 onChange={e => setRecomendadoPor(e.target.value)}
                 placeholder="Nombre de quien te recomendó"
-                className="w-full border border-border rounded-md px-3 py-2 bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                className={inputEditable}
               />
             </div>
           )}
@@ -456,9 +460,7 @@ function InscribirseForm() {
             </p>
             <button
               type="button"
-              onClick={() => {
-                navigator.clipboard.writeText("Sentir.inscripciones@gmail.com")
-              }}
+              onClick={() => navigator.clipboard.writeText("Sentir.inscripciones@gmail.com")}
               className="text-xs text-muted-foreground hover:text-foreground underline transition-colors"
             >
               Copiar email
@@ -498,7 +500,7 @@ function InscribirseForm() {
 
           <button
             type="submit"
-            disabled={enviando || prerequisitoCumplido === false}
+            disabled={enviando}
             className="w-full bg-green-600 hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 px-6 rounded-xl transition-colors text-lg"
           >
             {enviando ? "Enviando inscripción..." : "Confirmar inscripción"}

@@ -13,6 +13,7 @@ interface UserContextType {
   esAdmin: boolean
   adminCelular: { caracteristica: string; numero: string }
   email: string | null
+  loginWithToken: (token: string) => void
   login: () => void
   logout: () => void
 }
@@ -24,6 +25,7 @@ const UserContext = createContext<UserContextType>({
   esAdmin: false,
   adminCelular: { caracteristica: "", numero: "" },
   email: null,
+  loginWithToken: () => {},
   login: () => {},
   logout: () => {},
 })
@@ -87,15 +89,23 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     return () => subscription.unsubscribe()
   }, [])
 
+  const loginWithToken = async (token: string) => {
+    const { error } = await supabaseAuth.auth.signInWithIdToken({
+      provider: "google",
+      token,
+    })
+    if (error) {
+      alert("Error al iniciar sesión: " + error.message)
+    }
+  }
+
   const login = async () => {
     if (typeof window === "undefined") return
     const { error } = await supabaseAuth.auth.signInWithOAuth({
       provider: "google",
       options: {
         redirectTo: `${window.location.origin}/auth/callback`,
-        queryParams: {
-          prompt: "select_account",
-        },
+        queryParams: { prompt: "select_account" },
       },
     })
     if (error) {
@@ -106,7 +116,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const logout = () => supabaseAuth.auth.signOut({ scope: "local" })
 
   return (
-    <UserContext.Provider value={{ estado, nombre, nroMiembro, esAdmin, adminCelular, email, login, logout }}>
+    <UserContext.Provider value={{ estado, nombre, nroMiembro, esAdmin, adminCelular, email, loginWithToken, login, logout }}>
       {children}
     </UserContext.Provider>
   )

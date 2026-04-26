@@ -20,9 +20,9 @@ const TALLERES_LISTA = [
 ]
 
 // Talleres con prerequisito estricto: verifican columna en tabla miembros
-const REQUISITOS_ESTRICTOS: Record<string, { campoDB: string; tallerNombre: string; campoPropio: string }> = {
+const REQUISITOS_ESTRICTOS: Record<string, { campoDB: string; tallerNombre: string; campoPropio?: string }> = {
   "transformacion": { campoDB: "taller_autoconocimiento", tallerNombre: "Taller de Autoconocimiento", campoPropio: "taller_transformacion" },
-  "metas-y-logros": { campoDB: "taller_transformacion",   tallerNombre: "Taller de Transformación",   campoPropio: "taller_myl" },
+  "metas-y-logros": { campoDB: "taller_transformacion",   tallerNombre: "Taller de Transformación" },
 }
 
 // Estos talleres bloquean los campos del usuario (deben coincidir con quien se logueó)
@@ -94,14 +94,17 @@ function InscribirseForm() {
       // Verificar prerequisito y si ya realizó el taller
       const requisito = REQUISITOS_ESTRICTOS[tallerSlug]
       if (requisito) {
+        const columnas = requisito.campoPropio
+          ? `${requisito.campoDB}, ${requisito.campoPropio}`
+          : requisito.campoDB
         const { data: miembro } = await supabase
           .from("miembros")
-          .select(`${requisito.campoDB}, ${requisito.campoPropio}`)
+          .select(columnas)
           .eq("email", emailAuth.toLowerCase())
           .single()
 
-        // Ya realizó este taller → no puede volver a inscribirse
-        if (miembro?.[requisito.campoPropio]) {
+        // Ya realizó este taller (solo aplica a Transformación)
+        if (requisito.campoPropio && miembro?.[requisito.campoPropio]) {
           setEstadoUsuario("ya_realizado")
           return
         }

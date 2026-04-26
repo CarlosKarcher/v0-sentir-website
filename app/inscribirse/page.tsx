@@ -243,7 +243,7 @@ function InscribirseForm() {
             Tu solicitud para <strong>{tallerNombreSeleccionado}</strong> fue registrada exitosamente.
           </p>
           <p className="text-muted-foreground">
-            En breve nos pondremos en contacto para confirmar tu lugar.
+            La inscripción está Pendiente hasta recibir el comprobante de la transferencia por Mail.
           </p>
           <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl p-4 text-sm text-left space-y-1">
             <p className="font-semibold text-amber-800 dark:text-amber-200">Datos de transferencia:</p>

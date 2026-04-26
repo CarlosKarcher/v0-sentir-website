@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { UserProvider } from "@/lib/user-context"
+import { WelcomeModal } from "@/components/welcome-modal"
 import "./globals.css"
 
 const _geist = Geist({ subsets: ["latin"] })
@@ -44,6 +45,7 @@ export default function RootLayout({
       <body className={`font-sans antialiased`}>
         <UserProvider>
           {children}
+          <WelcomeModal />
         </UserProvider>
         <Analytics />
       </body>

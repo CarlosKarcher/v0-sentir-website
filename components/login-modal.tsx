@@ -44,7 +44,9 @@ export function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginModalProps)
       setExito(true)
       setTimeout(() => { onLoginSuccess(); onClose() }, 1500)
     } else {
-      setError("Este email no está registrado en Sentir. Verificá que sea el correcto.")
+      // No está en la BD → ingresa como anónimo
+      onLoginSuccess()
+      onClose()
     }
   }
 

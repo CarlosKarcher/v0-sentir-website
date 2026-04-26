@@ -4,7 +4,6 @@ import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { UserProvider } from "@/lib/user-context"
 import { WelcomeModal } from "@/components/welcome-modal"
-import { GoogleOneTap } from "@/components/google-one-tap"
 import "./globals.css"
 
 const _geist = Geist({ subsets: ["latin"] })
@@ -47,7 +46,6 @@ export default function RootLayout({
         <UserProvider>
           {children}
           <WelcomeModal />
-          <GoogleOneTap />
         </UserProvider>
         <Analytics />
       </body>

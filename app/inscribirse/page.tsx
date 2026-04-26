@@ -47,9 +47,9 @@ function InscribirseForm() {
   const [telefono, setTelefono] = useState("")
   const [dni, setDni] = useState("")
   const [ciudad, setCiudad] = useState("")
+  const [fechaNacimiento, setFechaNacimiento] = useState("")
   const [mensaje, setMensaje] = useState("")
   const [recomendadoPor, setRecomendadoPor] = useState("")
-  const [comprobante, setComprobante] = useState<File | null>(null)
 
   const [prerequisitoError, setPrerequisitoError] = useState<string | null>(null)
   const [prerequisitoCumplido, setPrerequisitoCumplido] = useState<boolean | null>(null)
@@ -137,21 +137,6 @@ function InscribirseForm() {
     setEnviando(true)
     setError(null)
 
-    let comprobanteUrl: string | null = null
-    if (comprobante) {
-      const ext = comprobante.name.split(".").pop()
-      const filename = `${Date.now()}_${email.replace(/[^a-z0-9]/gi, "_")}.${ext}`
-      const { data: uploadData, error: uploadError } = await supabase.storage
-        .from("comprobantes")
-        .upload(filename, comprobante)
-      if (uploadError) {
-        setError("Error al subir el comprobante: " + uploadError.message)
-        setEnviando(false)
-        return
-      }
-      comprobanteUrl = uploadData.path
-    }
-
     const mensajeFinal = [
       mensaje.trim() || null,
       tallerSlug === "autoconocimiento" && recomendadoPor.trim()
@@ -167,7 +152,7 @@ function InscribirseForm() {
       telefono: telefono.trim(),
       dni: dni.trim() || null,
       ciudad: ciudad.trim() || null,
-      comprobante_url: comprobanteUrl,
+      fecha_nacimiento: fechaNacimiento || null,
       metodo_pago: "transferencia",
       estado: "pendiente",
       mensaje_inscripto: mensajeFinal,
@@ -420,6 +405,17 @@ function InscribirseForm() {
             </div>
           </div>
 
+          {/* Fecha de nacimiento */}
+          <div className="space-y-1">
+            <label className="text-sm font-medium">Fecha de nacimiento</label>
+            <input
+              type="date"
+              value={fechaNacimiento}
+              onChange={e => setFechaNacimiento(e.target.value)}
+              className="w-full border border-border rounded-md px-3 py-2 bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+            />
+          </div>
+
           {/* Campo especial Autoconocimiento */}
           {tallerSlug === "autoconocimiento" && (
             <div className="space-y-1">
@@ -447,32 +443,26 @@ function InscribirseForm() {
           </div>
 
           {/* Comprobante */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Comprobante de pago (opcional)</label>
-            <p className="text-xs text-muted-foreground">
-              Si ya realizaste la transferencia, podés adjuntar el comprobante.
+          <div className="space-y-1">
+            <p className="text-sm font-bold">Comprobante de pago</p>
+            <p className="text-sm text-muted-foreground">
+              Enviá el comprobante de transferencia a{" "}
+              <a
+                href="mailto:Sentir.inscripciones@gmail.com"
+                className="font-bold text-foreground underline hover:no-underline"
+              >
+                Sentir.inscripciones@gmail.com
+              </a>
             </p>
-            <div className="border border-dashed border-border rounded-xl p-4 text-center bg-muted/20">
-              <input
-                type="file"
-                accept="image/*,.pdf"
-                id="comprobante-input"
-                onChange={e => setComprobante(e.target.files?.[0] ?? null)}
-                className="hidden"
-              />
-              <label htmlFor="comprobante-input" className="cursor-pointer text-sm text-primary hover:underline">
-                {comprobante ? comprobante.name : "Seleccionar archivo (imagen o PDF)"}
-              </label>
-              {comprobante && (
-                <button
-                  type="button"
-                  onClick={() => setComprobante(null)}
-                  className="ml-3 text-xs text-muted-foreground hover:text-destructive"
-                >
-                  Quitar
-                </button>
-              )}
-            </div>
+            <button
+              type="button"
+              onClick={() => {
+                navigator.clipboard.writeText("Sentir.inscripciones@gmail.com")
+              }}
+              className="text-xs text-muted-foreground hover:text-foreground underline transition-colors"
+            >
+              Copiar email
+            </button>
           </div>
 
           {/* Datos de transferencia */}

@@ -669,6 +669,7 @@ function TablaInscripciones({
             <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Email</th>
             <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Teléfono</th>
             <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Ciudad</th>
+            <th className="text-right px-2 py-2 font-semibold whitespace-nowrap">Monto</th>
             <th className="text-center px-2 py-2 font-semibold whitespace-nowrap">Estado</th>
             <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Fecha</th>
             <th className="text-center px-2 py-2 font-semibold whitespace-nowrap">Acciones</th>
@@ -682,6 +683,13 @@ function TablaInscripciones({
               <td className="px-2 py-2 whitespace-nowrap text-xs text-muted-foreground">{ins.email}</td>
               <td className="px-2 py-2 whitespace-nowrap text-xs">{ins.telefono}</td>
               <td className="px-2 py-2 whitespace-nowrap text-xs text-muted-foreground">{ins.ciudad || "—"}</td>
+              <td className="px-2 py-2 whitespace-nowrap text-xs text-right font-medium">
+                {(() => {
+                  const taller = { precio: ins.taller_precio, descuento_tipo: ins.taller_descuento_tipo, descuento_valor: ins.taller_descuento_valor } as any
+                  const { precioFinal } = calcularPrecioFinal(taller)
+                  return precioFinal > 0 ? `$${precioFinal.toLocaleString("es-AR")} ${ins.taller_moneda}` : "—"
+                })()}
+              </td>
               <td className="px-2 py-2 text-center">
                 <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${estadoBadge(ins.estado)}`}>
                   {ins.estado}

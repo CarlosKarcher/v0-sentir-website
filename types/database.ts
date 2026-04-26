@@ -59,4 +59,10 @@ export interface Inscripcion {
 export interface InscripcionConTaller extends Inscripcion {
   taller_nombre: string
   taller_slug: string
+  taller_precio: number
+  taller_moneda: string
+  taller_descuento_tipo: "porcentaje" | "monto_fijo" | null
+  taller_descuento_valor: number | null
+  evento_descripcion: string | null
+  fecha_nacimiento: string | null
 }

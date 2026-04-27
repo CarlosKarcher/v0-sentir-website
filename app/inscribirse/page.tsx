@@ -58,6 +58,8 @@ function InscribirseForm() {
   const [fechaNacimiento, setFechaNacimiento] = useState("")
   const [mensaje, setMensaje] = useState("")
   const [recomendadoPor, setRecomendadoPor] = useState("")
+  const [modalidadPago, setModalidadPago] = useState<"total" | "sena">("total")
+  const [cuotas, setCuotas] = useState<2 | 3 | null>(null)
 
   const [enviando, setEnviando] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -170,7 +172,7 @@ function InscribirseForm() {
       ciudad: ciudad.trim() || null,
       fecha_nacimiento: fechaNacimiento || null,
       localidad_taller: localidadParam ? decodeURIComponent(localidadParam) : null,
-      metodo_pago: "transferencia",
+      metodo_pago: modalidadPago === "total" ? "transferencia_total" : cuotas ? `sena_${cuotas}_cuotas` : "sena",
       estado: "pendiente",
       mensaje_inscripto: mensajeFinal,
       evento_descripcion: eventoParam ? decodeURIComponent(eventoParam) : null,
@@ -500,6 +502,67 @@ function InscribirseForm() {
               placeholder="¿Algo que quieras comentarnos?"
               className="w-full border border-border rounded-md px-3 py-2 bg-background focus:outline-none focus:ring-2 focus:ring-primary resize-none"
             />
+          </div>
+
+          {/* Modalidad de pago */}
+          <div className="space-y-3">
+            <p className="text-sm font-bold">Modalidad de pago</p>
+            <div className="flex flex-wrap gap-3">
+              <button
+                type="button"
+                onClick={() => { setModalidadPago("total"); setCuotas(null) }}
+                className={`px-4 py-2 rounded-full border-2 font-semibold text-sm transition-colors ${
+                  modalidadPago === "total"
+                    ? "bg-blue-900 border-blue-900 text-white"
+                    : "bg-background border-border text-foreground hover:border-blue-900"
+                }`}
+              >
+                Pago total
+              </button>
+              <button
+                type="button"
+                onClick={() => setModalidadPago("sena")}
+                className={`px-4 py-2 rounded-full border-2 font-semibold text-sm transition-colors ${
+                  modalidadPago === "sena"
+                    ? "bg-blue-900 border-blue-900 text-white"
+                    : "bg-background border-border text-foreground hover:border-blue-900"
+                }`}
+              >
+                Seña
+              </button>
+            </div>
+
+            {modalidadPago === "sena" && (
+              <div className="space-y-3 pl-1">
+                <p className="text-sm text-amber-700 dark:text-amber-400 font-medium bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg px-3 py-2">
+                  Al enviar el comprobante de Seña, su Lugar está Reservado pero se debe abonar el valor total del taller antes de Concurrir al mismo.
+                </p>
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setCuotas(cuotas === 2 ? null : 2)}
+                    className={`px-4 py-2 rounded-full border-2 font-semibold text-sm transition-colors ${
+                      cuotas === 2
+                        ? "bg-orange-500 border-orange-500 text-white"
+                        : "bg-background border-border text-foreground hover:border-orange-500"
+                    }`}
+                  >
+                    2 cuotas
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setCuotas(cuotas === 3 ? null : 3)}
+                    className={`px-4 py-2 rounded-full border-2 font-semibold text-sm transition-colors ${
+                      cuotas === 3
+                        ? "bg-orange-500 border-orange-500 text-white"
+                        : "bg-background border-border text-foreground hover:border-orange-500"
+                    }`}
+                  >
+                    3 cuotas
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Comprobante */}

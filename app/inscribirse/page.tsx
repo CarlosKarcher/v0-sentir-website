@@ -131,12 +131,7 @@ function InscribirseForm() {
           .eq("sede", sede)
           .eq("activo", true)
           .maybeSingle()
-        if (data) {
-          setTallerData(data)
-          if (!data.acepta_tarjeta || !data.acepta_sena) setModalidadPago("total")
-          setCargandoTaller(false)
-          return
-        }
+        if (data) { setTallerData(data); setCargandoTaller(false); return }
       }
       // Fallback: precio genérico (sin sede)
       const { data } = await supabase
@@ -147,7 +142,6 @@ function InscribirseForm() {
         .eq("activo", true)
         .maybeSingle()
       setTallerData(data ?? null)
-      if (data && (!data.acepta_tarjeta || !data.acepta_sena)) setModalidadPago("total")
       setCargandoTaller(false)
     }
     buscar()
@@ -512,23 +506,26 @@ function InscribirseForm() {
 
           {/* Modalidad de pago */}
           {(() => {
+            const aceptaTransferencia = tallerData?.acepta_transferencia ?? true
             const aceptaTarjeta = tallerData?.acepta_tarjeta ?? true
             const aceptaSena = tallerData?.acepta_sena ?? true
             return (
           <div className="space-y-3">
             <p className="text-sm font-bold">Modalidad de pago</p>
             <div className="flex flex-wrap gap-3">
-              <button
-                type="button"
-                onClick={() => { setModalidadPago("total"); setCuotas(null) }}
-                className={`px-4 py-2 rounded-full border-2 font-semibold text-sm transition-colors ${
-                  modalidadPago === "total"
-                    ? "bg-blue-900 border-blue-900 text-white"
-                    : "bg-background border-border text-foreground hover:border-blue-900"
-                }`}
-              >
-                Pago total
-              </button>
+              {aceptaTransferencia && (
+                <button
+                  type="button"
+                  onClick={() => { setModalidadPago("total"); setCuotas(null) }}
+                  className={`px-4 py-2 rounded-full border-2 font-semibold text-sm transition-colors ${
+                    modalidadPago === "total"
+                      ? "bg-blue-900 border-blue-900 text-white"
+                      : "bg-background border-border text-foreground hover:border-blue-900"
+                  }`}
+                >
+                  Pago total
+                </button>
+              )}
               {aceptaTarjeta && (
                 <button
                   type="button"

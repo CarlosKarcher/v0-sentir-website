@@ -58,7 +58,7 @@ function InscribirseForm() {
   const [fechaNacimiento, setFechaNacimiento] = useState("")
   const [mensaje, setMensaje] = useState("")
   const [recomendadoPor, setRecomendadoPor] = useState("")
-  const [modalidadPago, setModalidadPago] = useState<"total" | "sena">("total")
+  const [modalidadPago, setModalidadPago] = useState<"total" | "tarjeta" | "sena">("total")
   const [cuotas, setCuotas] = useState<2 | 3 | null>(null)
 
   const [enviando, setEnviando] = useState(false)
@@ -172,7 +172,7 @@ function InscribirseForm() {
       ciudad: ciudad.trim() || null,
       fecha_nacimiento: fechaNacimiento || null,
       localidad_taller: localidadParam ? decodeURIComponent(localidadParam) : null,
-      metodo_pago: modalidadPago === "total" ? "transferencia_total" : cuotas ? `sena_${cuotas}_cuotas` : "sena",
+      metodo_pago: modalidadPago === "total" ? "transferencia_total" : modalidadPago === "tarjeta" ? "tarjeta_credito" : cuotas ? `sena_${cuotas}_cuotas` : "sena",
       estado: "pendiente",
       mensaje_inscripto: mensajeFinal,
       evento_descripcion: eventoParam ? decodeURIComponent(eventoParam) : null,
@@ -518,6 +518,17 @@ function InscribirseForm() {
                 }`}
               >
                 Pago total
+              </button>
+              <button
+                type="button"
+                onClick={() => { setModalidadPago("tarjeta"); setCuotas(null) }}
+                className={`px-4 py-2 rounded-full border-2 font-semibold text-sm transition-colors ${
+                  modalidadPago === "tarjeta"
+                    ? "bg-blue-900 border-blue-900 text-white"
+                    : "bg-background border-border text-foreground hover:border-blue-900"
+                }`}
+              >
+                Tarjeta de Crédito
               </button>
               <button
                 type="button"

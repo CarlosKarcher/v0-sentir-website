@@ -844,6 +844,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
 
 const METODO_PAGO_LABEL: Record<string, string> = {
   transferencia_total: "Pago total",
+  tarjeta_credito: "Tarjeta de Crédito",
   sena: "Seña",
   sena_2_cuotas: "Seña 2 cuotas",
   sena_3_cuotas: "Seña 3 cuotas",

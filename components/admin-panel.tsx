@@ -800,8 +800,13 @@ function TablaInscripciones({
   const guardarMonto = async (ins: InscripcionConTaller) => {
     const val = parseFloat(montosEdit[ins.id] ?? "")
     if (isNaN(val)) return
+    const taller = { precio: ins.taller_precio, descuento_tipo: ins.taller_descuento_tipo, descuento_valor: ins.taller_descuento_valor } as any
+    const { precioFinal } = calcularPrecioFinal(taller)
     setGuardandoMonto(ins.id)
     await onActualizarMonto(ins.id, val)
+    if (precioFinal > 0 && val >= precioFinal && ins.estado !== "confirmado") {
+      await onAprobar(ins.id)
+    }
     setGuardandoMonto(null)
   }
 
@@ -871,7 +876,11 @@ function TablaInscripciones({
                 </td>
                 <td className="px-2 py-2 text-center">
                   <div className="flex gap-2 justify-center">
-                    {ins.estado !== "confirmado" && ins.estado !== "cancelado" && (
+                    {ins.estado === "confirmado" ? (
+                      <div title="Confirmado" className="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center shadow-sm opacity-70">
+                        <Check className="h-4 w-4" />
+                      </div>
+                    ) : ins.estado !== "cancelado" && saldo <= 0 && precioFinal > 0 ? (
                       <button
                         disabled={accionInscripcion === ins.id}
                         onClick={() => onAprobar(ins.id)}
@@ -880,8 +889,8 @@ function TablaInscripciones({
                       >
                         <Check className="h-4 w-4" />
                       </button>
-                    )}
-                    {ins.estado !== "cancelado" && (
+                    ) : null}
+                    {ins.estado !== "confirmado" && ins.estado !== "cancelado" && (
                       <button
                         disabled={accionInscripcion === ins.id}
                         onClick={() => onCancelar(ins.id)}

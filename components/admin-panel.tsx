@@ -123,6 +123,16 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
     setAccionInscripcion(null)
   }
 
+  const actualizarMontoPagado = async (id: string, monto: number) => {
+    await supabase.rpc("actualizar_monto_pagado", {
+      p_admin_caracteristica: adminCaracteristica,
+      p_admin_numero: adminNumero,
+      p_inscripcion_id: id,
+      p_monto_pagado: monto,
+    })
+    setInscripciones(prev => prev.map(i => i.id === id ? { ...i, monto_pagado: monto } : i))
+  }
+
   const eliminarInscripcion = async (id: string) => {
     if (!confirm("¿Seguro que querés eliminar esta inscripción? Esta acción no se puede deshacer.")) return
     setAccionInscripcion(id)
@@ -485,6 +495,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                         onAprobar={aprobarInscripcion}
                         onCancelar={cancelarInscripcion}
                         onEliminar={eliminarInscripcion}
+                        onActualizarMonto={actualizarMontoPagado}
                       />
                     )}
                   </div>
@@ -754,27 +765,49 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
   )
 }
 
+const METODO_PAGO_LABEL: Record<string, string> = {
+  transferencia_total: "Pago total",
+  sena: "Seña",
+  sena_2_cuotas: "Seña 2 cuotas",
+  sena_3_cuotas: "Seña 3 cuotas",
+  transferencia: "Transferencia",
+}
+
 function TablaInscripciones({
   inscripciones,
   accionInscripcion,
   onAprobar,
   onCancelar,
   onEliminar,
+  onActualizarMonto,
 }: {
   inscripciones: InscripcionConTaller[]
   accionInscripcion: string | null
   onAprobar: (id: string) => void
   onCancelar: (id: string) => void
   onEliminar: (id: string) => void
+  onActualizarMonto: (id: string, monto: number) => Promise<void>
 }) {
+  const [montosEdit, setMontosEdit] = useState<Record<string, string>>({})
+  const [guardandoMonto, setGuardandoMonto] = useState<string | null>(null)
+
   const estadoBadge = (estado: string) => {
     if (estado === "confirmado") return "bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300"
     if (estado === "cancelado") return "bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300"
     return "bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300"
   }
+
+  const guardarMonto = async (ins: InscripcionConTaller) => {
+    const val = parseFloat(montosEdit[ins.id] ?? "")
+    if (isNaN(val)) return
+    setGuardandoMonto(ins.id)
+    await onActualizarMonto(ins.id, val)
+    setGuardandoMonto(null)
+  }
+
   return (
     <div className="overflow-x-auto">
-      <table className="w-full text-sm border-collapse min-w-[800px]">
+      <table className="w-full text-sm border-collapse min-w-[1100px]">
         <thead>
           <tr className="border-b-2 border-border bg-muted/50">
             <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Taller</th>
@@ -783,68 +816,94 @@ function TablaInscripciones({
             <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Teléfono</th>
             <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Sede</th>
             <th className="text-right px-2 py-2 font-semibold whitespace-nowrap">Monto</th>
+            <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Forma de pago</th>
+            <th className="text-right px-2 py-2 font-semibold whitespace-nowrap">Pagado</th>
+            <th className="text-right px-2 py-2 font-semibold whitespace-nowrap">Saldo</th>
             <th className="text-center px-2 py-2 font-semibold whitespace-nowrap">Estado</th>
             <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Fecha</th>
             <th className="text-center px-2 py-2 font-semibold whitespace-nowrap">Acciones</th>
           </tr>
         </thead>
         <tbody>
-          {inscripciones.map((ins, i) => (
-            <tr key={ins.id} className={`border-b border-border/50 hover:bg-muted/30 transition-colors ${i % 2 === 0 ? "" : "bg-muted/10"}`}>
-              <td className="px-2 py-2 whitespace-nowrap font-medium text-xs">{ins.taller_nombre}</td>
-              <td className="px-2 py-2 whitespace-nowrap">{ins.nombre} {ins.apellido}</td>
-              <td className="px-2 py-2 whitespace-nowrap text-xs text-muted-foreground">{ins.email}</td>
-              <td className="px-2 py-2 whitespace-nowrap text-xs">{ins.telefono}</td>
-              <td className="px-2 py-2 whitespace-nowrap text-xs text-muted-foreground">{ins.localidad_taller || "—"}</td>
-              <td className="px-2 py-2 whitespace-nowrap text-xs text-right font-medium">
-                {(() => {
-                  const taller = { precio: ins.taller_precio, descuento_tipo: ins.taller_descuento_tipo, descuento_valor: ins.taller_descuento_valor } as any
-                  const { precioFinal } = calcularPrecioFinal(taller)
-                  return precioFinal > 0 ? `$${precioFinal.toLocaleString("es-AR")} ${ins.taller_moneda}` : "—"
-                })()}
-              </td>
-              <td className="px-2 py-2 text-center">
-                <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${estadoBadge(ins.estado)}`}>
-                  {ins.estado}
-                </span>
-              </td>
-              <td className="px-2 py-2 whitespace-nowrap text-xs text-muted-foreground">
-                {new Date(ins.creado_en).toLocaleDateString("es-AR")}
-              </td>
-              <td className="px-2 py-2 text-center">
-                <div className="flex gap-2 justify-center">
-                  {ins.estado !== "confirmado" && ins.estado !== "cancelado" && (
+          {inscripciones.map((ins, i) => {
+            const taller = { precio: ins.taller_precio, descuento_tipo: ins.taller_descuento_tipo, descuento_valor: ins.taller_descuento_valor } as any
+            const { precioFinal } = calcularPrecioFinal(taller)
+            const montoEditVal = montosEdit[ins.id]
+            const montoPagado = montoEditVal !== undefined ? parseFloat(montoEditVal) || 0 : (ins.monto_pagado ?? 0)
+            const saldo = precioFinal > 0 ? precioFinal - montoPagado : 0
+            return (
+              <tr key={ins.id} className={`border-b border-border/50 hover:bg-muted/30 transition-colors ${i % 2 === 0 ? "" : "bg-muted/10"}`}>
+                <td className="px-2 py-2 whitespace-nowrap font-medium text-xs">{ins.taller_nombre}</td>
+                <td className="px-2 py-2 whitespace-nowrap">{ins.nombre} {ins.apellido}</td>
+                <td className="px-2 py-2 whitespace-nowrap text-xs text-muted-foreground">{ins.email}</td>
+                <td className="px-2 py-2 whitespace-nowrap text-xs">{ins.telefono}</td>
+                <td className="px-2 py-2 whitespace-nowrap text-xs text-muted-foreground">{ins.localidad_taller || "—"}</td>
+                <td className="px-2 py-2 whitespace-nowrap text-xs text-right font-medium">
+                  {precioFinal > 0 ? `$${precioFinal.toLocaleString("es-AR")} ${ins.taller_moneda}` : "—"}
+                </td>
+                <td className="px-2 py-2 whitespace-nowrap text-xs text-muted-foreground">
+                  {METODO_PAGO_LABEL[ins.metodo_pago] || ins.metodo_pago || "—"}
+                </td>
+                <td className="px-2 py-2 whitespace-nowrap text-xs text-right">
+                  <div className="flex items-center gap-1 justify-end">
+                    <input
+                      type="number"
+                      value={montoEditVal ?? (ins.monto_pagado ?? "")}
+                      onChange={e => setMontosEdit(p => ({ ...p, [ins.id]: e.target.value }))}
+                      onBlur={() => guardarMonto(ins)}
+                      disabled={guardandoMonto === ins.id}
+                      placeholder="0"
+                      className="w-24 border border-border rounded px-2 py-0.5 text-right bg-background text-xs focus:outline-none focus:ring-1 focus:ring-primary"
+                    />
+                    {guardandoMonto === ins.id && <span className="text-muted-foreground text-xs">...</span>}
+                  </div>
+                </td>
+                <td className={`px-2 py-2 whitespace-nowrap text-xs text-right font-semibold ${saldo > 0 ? "text-red-600 dark:text-red-400" : saldo === 0 && precioFinal > 0 ? "text-green-600 dark:text-green-400" : ""}`}>
+                  {precioFinal > 0 ? `$${saldo.toLocaleString("es-AR")}` : "—"}
+                </td>
+                <td className="px-2 py-2 text-center">
+                  <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${estadoBadge(ins.estado)}`}>
+                    {ins.estado}
+                  </span>
+                </td>
+                <td className="px-2 py-2 whitespace-nowrap text-xs text-muted-foreground">
+                  {new Date(ins.creado_en).toLocaleDateString("es-AR")}
+                </td>
+                <td className="px-2 py-2 text-center">
+                  <div className="flex gap-2 justify-center">
+                    {ins.estado !== "confirmado" && ins.estado !== "cancelado" && (
+                      <button
+                        disabled={accionInscripcion === ins.id}
+                        onClick={() => onAprobar(ins.id)}
+                        title="Aprobar"
+                        className="w-8 h-8 rounded-full bg-green-500 hover:bg-green-600 text-white flex items-center justify-center disabled:opacity-50 transition-colors shadow-sm"
+                      >
+                        <Check className="h-4 w-4" />
+                      </button>
+                    )}
+                    {ins.estado !== "cancelado" && (
+                      <button
+                        disabled={accionInscripcion === ins.id}
+                        onClick={() => onCancelar(ins.id)}
+                        title="Rechazar"
+                        className="w-8 h-8 rounded-full bg-orange-500 hover:bg-orange-600 text-white flex items-center justify-center disabled:opacity-50 transition-colors shadow-sm"
+                      >
+                        <Ban className="h-4 w-4" />
+                      </button>
+                    )}
                     <button
                       disabled={accionInscripcion === ins.id}
-                      onClick={() => onAprobar(ins.id)}
-                      title="Aprobar"
-                      className="w-8 h-8 rounded-full bg-green-500 hover:bg-green-600 text-white flex items-center justify-center disabled:opacity-50 transition-colors shadow-sm"
+                      onClick={() => onEliminar(ins.id)}
+                      title="Eliminar"
+                      className="w-8 h-8 rounded-full bg-red-700 hover:bg-red-800 text-white flex items-center justify-center disabled:opacity-50 transition-colors shadow-sm"
                     >
-                      <Check className="h-4 w-4" />
+                      <Trash2 className="h-4 w-4" />
                     </button>
-                  )}
-                  {ins.estado !== "cancelado" && (
-                    <button
-                      disabled={accionInscripcion === ins.id}
-                      onClick={() => onCancelar(ins.id)}
-                      title="Rechazar"
-                      className="w-8 h-8 rounded-full bg-orange-500 hover:bg-orange-600 text-white flex items-center justify-center disabled:opacity-50 transition-colors shadow-sm"
-                    >
-                      <Ban className="h-4 w-4" />
-                    </button>
-                  )}
-                  <button
-                    disabled={accionInscripcion === ins.id}
-                    onClick={() => onEliminar(ins.id)}
-                    title="Eliminar"
-                    className="w-8 h-8 rounded-full bg-red-700 hover:bg-red-800 text-white flex items-center justify-center disabled:opacity-50 transition-colors shadow-sm"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </button>
-                </div>
-              </td>
-            </tr>
-          ))}
+                  </div>
+                </td>
+              </tr>
+            )
+          })}
         </tbody>
       </table>
     </div>

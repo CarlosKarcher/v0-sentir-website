@@ -159,18 +159,19 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
 
   const guardarPrecio = async (tallerId: string) => {
     setGuardandoPrecio(true)
-    await supabase.rpc("actualizar_precio_taller", {
+    const { error } = await supabase.rpc("actualizar_precio_taller", {
       p_admin_caracteristica: adminCaracteristica,
       p_admin_numero: adminNumero,
       p_taller_id: tallerId,
       p_precio: parseFloat(precioEdit.precio) || 0,
-      p_descuento_tipo: precioEdit.descuento_tipo,
-      p_descuento_valor: parseFloat(precioEdit.descuento_valor) || null,
+      p_descuento_tipo: precioEdit.descuento_tipo ?? "",
+      p_descuento_valor: precioEdit.descuento_valor ? parseFloat(precioEdit.descuento_valor) : null,
       p_sede: precioEdit.sede || null,
       p_acepta_transferencia: precioEdit.acepta_transferencia,
       p_acepta_tarjeta: precioEdit.acepta_tarjeta,
       p_acepta_sena: precioEdit.acepta_sena,
     })
+    if (error) { alert(`Error al guardar: ${error.message}`); setGuardandoPrecio(false); return }
     await cargarTalleres()
     setEditandoPrecio(null)
     setGuardandoPrecio(false)

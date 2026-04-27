@@ -78,7 +78,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
   const [agregandoTaller, setAgregandoTaller] = useState(false)
   const [nuevoTaller, setNuevoTaller] = useState({ slug: "", nombre: "", sede: "", precio: "", descuento_tipo: "" as "porcentaje" | "monto_fijo" | "", descuento_valor: "" })
   const [accionInscripcion, setAccionInscripcion] = useState<string | null>(null) // inscripcion id en proceso
-  const [confirmDialog, setConfirmDialog] = useState<{ mensaje: string; onConfirm: () => void } | null>(null)
+  const [confirmDialog, setConfirmDialog] = useState<{ titulo: string; mensaje: string; tipo: "confirm" | "info"; onConfirm?: () => void } | null>(null)
   const [sedes, setSedes] = useState<string[]>([])
 
   const cargarSedes = async () => {
@@ -136,21 +136,39 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
     setInscripciones(prev => prev.map(i => i.id === id ? { ...i, monto_pagado: monto } : i))
   }
 
-  const eliminarInscripcion = async (id: string) => {
-    if (!confirm("¿Seguro que querés eliminar esta inscripción? Esta acción no se puede deshacer.")) return
-    setAccionInscripcion(id)
-    await supabase.rpc("eliminar_inscripcion", {
-      p_admin_caracteristica: adminCaracteristica,
-      p_admin_numero: adminNumero,
-      p_inscripcion_id: id,
+  const eliminarInscripcion = (id: string) => {
+    setConfirmDialog({
+      titulo: "Eliminar inscripción",
+      mensaje: "¿Seguro que querés eliminar esta inscripción?",
+      tipo: "confirm",
+      onConfirm: async () => {
+        setConfirmDialog(null)
+        setAccionInscripcion(id)
+        await supabase.rpc("eliminar_inscripcion", {
+          p_admin_caracteristica: adminCaracteristica,
+          p_admin_numero: adminNumero,
+          p_inscripcion_id: id,
+        })
+        await cargarInscripciones()
+        setAccionInscripcion(null)
+      },
     })
-    await cargarInscripciones()
-    setAccionInscripcion(null)
   }
 
   const eliminarTaller = (tallerId: string, nombreTaller: string) => {
+    const count = inscripciones.filter(i => i.taller_id === tallerId).length
+    if (count > 0) {
+      setConfirmDialog({
+        titulo: "No se puede eliminar",
+        mensaje: `"${nombreTaller}" tiene ${count} inscripción${count !== 1 ? "es" : ""} vinculada${count !== 1 ? "s" : ""}. Para eliminarlo, primero eliminá las inscripciones.`,
+        tipo: "info",
+      })
+      return
+    }
     setConfirmDialog({
+      titulo: "Confirmar eliminación",
       mensaje: `¿Seguro que querés eliminar "${nombreTaller}"?`,
+      tipo: "confirm",
       onConfirm: async () => {
         setConfirmDialog(null)
         const { data, error } = await supabase.rpc("eliminar_taller_admin", {
@@ -159,7 +177,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
           p_taller_id: tallerId,
         })
         if (error || data?.error) {
-          alert(data?.error || error?.message)
+          setConfirmDialog({ titulo: "Error al eliminar", mensaje: data?.error || error?.message || "No se pudo eliminar el taller.", tipo: "info" })
           return
         }
         setTalleresList(prev => prev.filter(t => t.id !== tallerId))
@@ -181,7 +199,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
       p_acepta_tarjeta: precioEdit.acepta_tarjeta,
       p_acepta_sena: precioEdit.acepta_sena,
     })
-    if (error) { alert(`Error al guardar: ${error.message}`); setGuardandoPrecio(false); return }
+    if (error) { setConfirmDialog({ titulo: "Error al guardar", mensaje: error.message, tipo: "info" }); setGuardandoPrecio(false); return }
     await cargarTalleres()
     setEditandoPrecio(null)
     setGuardandoPrecio(false)
@@ -888,24 +906,35 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
           </div>
         </div>
       </div>
-      {/* Diálogo de confirmación personalizado */}
+      {/* Diálogo personalizado (confirmación o información) */}
       {confirmDialog && (
         <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setConfirmDialog(null)} />
           <div className="relative bg-background rounded-2xl shadow-2xl p-6 max-w-sm w-full space-y-4 border border-border">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/40 flex items-center justify-center flex-shrink-0">
-                <Trash2 className="h-5 w-5 text-red-600 dark:text-red-400" />
+            <div className="flex items-start gap-3">
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${confirmDialog.tipo === "info" ? "bg-amber-100 dark:bg-amber-900/40" : "bg-red-100 dark:bg-red-900/40"}`}>
+                {confirmDialog.tipo === "info"
+                  ? <Ban className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+                  : <Trash2 className="h-5 w-5 text-red-600 dark:text-red-400" />
+                }
               </div>
               <div>
-                <p className="font-semibold text-base">Confirmar eliminación</p>
+                <p className="font-semibold text-base">{confirmDialog.titulo}</p>
                 <p className="text-sm text-muted-foreground mt-0.5">{confirmDialog.mensaje}</p>
-                <p className="text-xs text-red-600 dark:text-red-400 mt-1">Esta acción no se puede deshacer.</p>
+                {confirmDialog.tipo === "confirm" && (
+                  <p className="text-xs text-red-600 dark:text-red-400 mt-1">Esta acción no se puede deshacer.</p>
+                )}
               </div>
             </div>
             <div className="flex gap-3 justify-end">
-              <Button variant="outline" onClick={() => setConfirmDialog(null)}>Cancelar</Button>
-              <Button variant="destructive" onClick={confirmDialog.onConfirm}>Sí, eliminar</Button>
+              {confirmDialog.tipo === "confirm" ? (
+                <>
+                  <Button variant="outline" onClick={() => setConfirmDialog(null)}>Cancelar</Button>
+                  <Button variant="destructive" onClick={confirmDialog.onConfirm}>Sí, eliminar</Button>
+                </>
+              ) : (
+                <Button variant="outline" onClick={() => setConfirmDialog(null)}>Cerrar</Button>
+              )}
             </div>
           </div>
         </div>

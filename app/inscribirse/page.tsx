@@ -505,6 +505,9 @@ function InscribirseForm() {
           </div>
 
           {/* Modalidad de pago */}
+          {(() => {
+            const soloTransferencia = tallerSlugParam === "autoconocimiento" && decodeURIComponent(localidadParam) === "Río Gallegos"
+            return (
           <div className="space-y-3">
             <p className="text-sm font-bold">Modalidad de pago</p>
             <div className="flex flex-wrap gap-3">
@@ -519,28 +522,32 @@ function InscribirseForm() {
               >
                 Pago total
               </button>
-              <button
-                type="button"
-                onClick={() => { setModalidadPago("tarjeta"); setCuotas(null) }}
-                className={`px-4 py-2 rounded-full border-2 font-semibold text-sm transition-colors ${
-                  modalidadPago === "tarjeta"
-                    ? "bg-blue-900 border-blue-900 text-white"
-                    : "bg-background border-border text-foreground hover:border-blue-900"
-                }`}
-              >
-                Tarjeta de Crédito
-              </button>
-              <button
-                type="button"
-                onClick={() => setModalidadPago("sena")}
-                className={`px-4 py-2 rounded-full border-2 font-semibold text-sm transition-colors ${
-                  modalidadPago === "sena"
-                    ? "bg-blue-900 border-blue-900 text-white"
-                    : "bg-background border-border text-foreground hover:border-blue-900"
-                }`}
-              >
-                Seña
-              </button>
+              {!soloTransferencia && (
+                <button
+                  type="button"
+                  onClick={() => { setModalidadPago("tarjeta"); setCuotas(null) }}
+                  className={`px-4 py-2 rounded-full border-2 font-semibold text-sm transition-colors ${
+                    modalidadPago === "tarjeta"
+                      ? "bg-blue-900 border-blue-900 text-white"
+                      : "bg-background border-border text-foreground hover:border-blue-900"
+                  }`}
+                >
+                  Tarjeta de Crédito
+                </button>
+              )}
+              {!soloTransferencia && (
+                <button
+                  type="button"
+                  onClick={() => setModalidadPago("sena")}
+                  className={`px-4 py-2 rounded-full border-2 font-semibold text-sm transition-colors ${
+                    modalidadPago === "sena"
+                      ? "bg-blue-900 border-blue-900 text-white"
+                      : "bg-background border-border text-foreground hover:border-blue-900"
+                  }`}
+                >
+                  Seña
+                </button>
+              )}
               {modalidadPago === "sena" && precios && precios.precioFinal > 0 && (
                 <span className="text-sm font-semibold text-amber-700 dark:text-amber-400 self-center ml-2">
                   (${(Math.ceil(precios.precioFinal * 0.35 / 1000) * 1000).toLocaleString("es-AR")})
@@ -588,6 +595,8 @@ function InscribirseForm() {
               </div>
             )}
           </div>
+            )
+          })()}
 
           {/* Comprobante */}
           <div className="space-y-1">

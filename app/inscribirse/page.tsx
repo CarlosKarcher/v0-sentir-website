@@ -528,13 +528,17 @@ function InscribirseForm() {
                     : "bg-background border-border text-foreground hover:border-blue-900"
                 }`}
               >
-                Seña
+                Seña{precios && precios.precioFinal > 0 && (
+                  <span className={`ml-1 font-normal ${modalidadPago === "sena" ? "text-white" : "text-amber-700 dark:text-amber-400"}`}>
+                    (${(Math.ceil(precios.precioFinal * 0.35 / 1000) * 1000).toLocaleString("es-AR")})
+                  </span>
+                )}
               </button>
             </div>
 
             {modalidadPago === "sena" && (
               <div className="space-y-3 pl-1">
-                <p className="text-sm text-amber-700 dark:text-amber-400 font-medium bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg px-3 py-2">
+                <p className="text-base text-amber-700 dark:text-amber-400 font-medium bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg px-3 py-2">
                   Al enviar el comprobante de Seña, su Lugar está Reservado pero se debe abonar el valor total del taller antes de Concurrir al mismo.
                 </p>
                 <div className="flex gap-3">

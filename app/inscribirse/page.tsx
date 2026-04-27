@@ -611,7 +611,7 @@ function InscribirseForm() {
           </div>
 
           {/* Datos de transferencia */}
-          <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl p-4 text-sm space-y-1">
+          {modalidadPago !== "tarjeta" && <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl p-4 text-sm space-y-1">
             <p className="font-semibold text-amber-800 dark:text-amber-200">Datos para transferencia:</p>
             <p className="text-amber-700 dark:text-amber-300">Titular: <strong>Fernando Javier Cárcamo</strong></p>
             <p className="text-amber-700 dark:text-amber-300">Banco: <strong>Mercado Pago</strong></p>
@@ -633,7 +633,7 @@ function InscribirseForm() {
                 </>
               )
             })()}
-          </div>
+          </div>}
 
           {error && (
             <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-xl p-3 text-sm text-red-700 dark:text-red-300">

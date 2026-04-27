@@ -71,8 +71,10 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
   const [talleresList, setTalleresList] = useState<Taller[]>([])
   const [filtroEstado, setFiltroEstado] = useState<"todos" | "pendiente" | "confirmado" | "cancelado">("todos")
   const [editandoPrecio, setEditandoPrecio] = useState<string | null>(null) // taller id
-  const [precioEdit, setPrecioEdit] = useState({ precio: "", descuento_tipo: "porcentaje" as "porcentaje" | "monto_fijo" | null, descuento_valor: "" })
+  const [precioEdit, setPrecioEdit] = useState({ precio: "", sede: "", descuento_tipo: "porcentaje" as "porcentaje" | "monto_fijo" | null, descuento_valor: "" })
   const [guardandoPrecio, setGuardandoPrecio] = useState(false)
+  const [agregandoTaller, setAgregandoTaller] = useState(false)
+  const [nuevoTaller, setNuevoTaller] = useState({ slug: "", nombre: "", sede: "", precio: "", descuento_tipo: "" as "porcentaje" | "monto_fijo" | "", descuento_valor: "" })
   const [accionInscripcion, setAccionInscripcion] = useState<string | null>(null) // inscripcion id en proceso
 
   const cargarInscripciones = async () => {
@@ -136,9 +138,29 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
       p_precio: parseFloat(precioEdit.precio) || 0,
       p_descuento_tipo: precioEdit.descuento_tipo,
       p_descuento_valor: parseFloat(precioEdit.descuento_valor) || null,
+      p_sede: precioEdit.sede || null,
     })
     await cargarTalleres()
     setEditandoPrecio(null)
+    setGuardandoPrecio(false)
+  }
+
+  const guardarNuevoTaller = async () => {
+    if (!nuevoTaller.slug || !nuevoTaller.nombre) return
+    setGuardandoPrecio(true)
+    await supabase.rpc("insertar_taller_admin", {
+      p_admin_caracteristica: adminCaracteristica,
+      p_admin_numero: adminNumero,
+      p_slug: nuevoTaller.slug,
+      p_nombre: nuevoTaller.nombre,
+      p_sede: nuevoTaller.sede || null,
+      p_precio: parseFloat(nuevoTaller.precio) || 0,
+      p_descuento_tipo: nuevoTaller.descuento_tipo || null,
+      p_descuento_valor: parseFloat(nuevoTaller.descuento_valor) || null,
+    })
+    await cargarTalleres()
+    setAgregandoTaller(false)
+    setNuevoTaller({ slug: "", nombre: "", sede: "", precio: "", descuento_tipo: "", descuento_valor: "" })
     setGuardandoPrecio(false)
   }
 
@@ -464,6 +486,11 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                 {/* Tab Precios */}
                 {!cargando && inscripcionesTab === "precios" && (
                   <div className="space-y-3">
+                    <div className="flex justify-end">
+                      <Button size="sm" onClick={() => setAgregandoTaller(true)} disabled={agregandoTaller} className="gap-2">
+                        + Agregar taller
+                      </Button>
+                    </div>
                     {talleresList.length === 0 ? (
                       <p className="text-center text-muted-foreground py-8">Cargando talleres...</p>
                     ) : (
@@ -479,15 +506,99 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                           </tr>
                         </thead>
                         <tbody>
+                          {/* Fila para agregar nuevo taller */}
+                          {agregandoTaller && (
+                            <tr className="border-b border-border/50 bg-blue-50 dark:bg-blue-950/20">
+                              <td className="px-3 py-2">
+                                <select
+                                  value={nuevoTaller.slug}
+                                  onChange={e => {
+                                    const slug = e.target.value
+                                    const nombre = { "autoconocimiento": "Autoconocimiento", "transformacion": "Transformación", "metas-y-logros": "Metas & Logros", "camino-del-guerrero": "El Camino del Guerrero", "biodecodificacion": "Biodecodificación", "sanando-mi-nino-interior": "Sanando mi Niño Interior", "constelaciones-grupales": "Constelaciones Grupales" }[slug] || ""
+                                    setNuevoTaller(p => ({ ...p, slug, nombre }))
+                                  }}
+                                  className="border border-border rounded px-2 py-1 text-sm bg-background w-full"
+                                >
+                                  <option value="">— Taller —</option>
+                                  <option value="autoconocimiento">Autoconocimiento</option>
+                                  <option value="transformacion">Transformación</option>
+                                  <option value="metas-y-logros">Metas & Logros</option>
+                                  <option value="camino-del-guerrero">El Camino del Guerrero</option>
+                                  <option value="biodecodificacion">Biodecodificación</option>
+                                  <option value="sanando-mi-nino-interior">Sanando mi Niño Interior</option>
+                                  <option value="constelaciones-grupales">Constelaciones Grupales</option>
+                                </select>
+                              </td>
+                              <td className="px-3 py-2">
+                                <input
+                                  type="text"
+                                  value={nuevoTaller.sede}
+                                  onChange={e => setNuevoTaller(p => ({ ...p, sede: e.target.value }))}
+                                  placeholder="Ej: Punta Arenas"
+                                  className="border border-border rounded px-2 py-1 text-sm bg-background w-32"
+                                />
+                              </td>
+                              <td className="px-3 py-2">
+                                <input
+                                  type="number"
+                                  value={nuevoTaller.precio}
+                                  onChange={e => setNuevoTaller(p => ({ ...p, precio: e.target.value }))}
+                                  placeholder="Precio"
+                                  className="w-28 border border-border rounded px-2 py-1 text-right bg-background text-sm"
+                                />
+                              </td>
+                              <td className="px-3 py-2">
+                                <div className="flex gap-1 items-center">
+                                  <select
+                                    value={nuevoTaller.descuento_tipo}
+                                    onChange={e => setNuevoTaller(p => ({ ...p, descuento_tipo: e.target.value as any }))}
+                                    className="border border-border rounded px-1 py-1 text-xs bg-background"
+                                  >
+                                    <option value="">Sin desc.</option>
+                                    <option value="porcentaje">%</option>
+                                    <option value="monto_fijo">$</option>
+                                  </select>
+                                  {nuevoTaller.descuento_tipo && (
+                                    <input
+                                      type="number"
+                                      value={nuevoTaller.descuento_valor}
+                                      onChange={e => setNuevoTaller(p => ({ ...p, descuento_valor: e.target.value }))}
+                                      placeholder="Valor"
+                                      className="w-20 border border-border rounded px-2 py-1 text-right bg-background text-sm"
+                                    />
+                                  )}
+                                </div>
+                              </td>
+                              <td className="px-3 py-2 text-right text-muted-foreground text-xs">—</td>
+                              <td className="px-3 py-2 text-center">
+                                <div className="flex gap-1 justify-center">
+                                  <Button size="sm" variant="default" disabled={guardandoPrecio} onClick={guardarNuevoTaller} className="h-7 px-2 text-xs">
+                                    {guardandoPrecio ? "..." : "Guardar"}
+                                  </Button>
+                                  <Button size="sm" variant="outline" onClick={() => setAgregandoTaller(false)} className="h-7 px-2 text-xs">
+                                    Cancelar
+                                  </Button>
+                                </div>
+                              </td>
+                            </tr>
+                          )}
                           {talleresList.map((t, i) => {
                             const precios = calcularPrecioFinal(t)
                             const editando = editandoPrecio === t.id
                             return (
                               <tr key={t.id} className={`border-b border-border/50 ${i % 2 === 0 ? "" : "bg-muted/10"}`}>
                                 <td className="px-3 py-2 font-medium whitespace-nowrap">{t.nombre}</td>
-                                <td className="px-3 py-2 text-sm text-muted-foreground whitespace-nowrap">{t.sede || <span className="italic">General</span>}</td>
                                 {editando ? (
                                   <>
+                                    <td className="px-3 py-2">
+                                      <input
+                                        type="text"
+                                        value={precioEdit.sede}
+                                        onChange={e => setPrecioEdit(p => ({ ...p, sede: e.target.value }))}
+                                        placeholder="Sede (vacío = General)"
+                                        className="border border-border rounded px-2 py-1 text-sm bg-background w-32"
+                                      />
+                                    </td>
                                     <td className="px-3 py-2">
                                       <input
                                         type="number"
@@ -522,21 +633,10 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                                     <td className="px-3 py-2 text-right text-muted-foreground text-xs">— calcular al guardar —</td>
                                     <td className="px-3 py-2 text-center">
                                       <div className="flex gap-1 justify-center">
-                                        <Button
-                                          size="sm"
-                                          variant="default"
-                                          disabled={guardandoPrecio}
-                                          onClick={() => guardarPrecio(t.id)}
-                                          className="h-7 px-2 text-xs"
-                                        >
+                                        <Button size="sm" variant="default" disabled={guardandoPrecio} onClick={() => guardarPrecio(t.id)} className="h-7 px-2 text-xs">
                                           {guardandoPrecio ? "..." : "Guardar"}
                                         </Button>
-                                        <Button
-                                          size="sm"
-                                          variant="outline"
-                                          onClick={() => setEditandoPrecio(null)}
-                                          className="h-7 px-2 text-xs"
-                                        >
+                                        <Button size="sm" variant="outline" onClick={() => setEditandoPrecio(null)} className="h-7 px-2 text-xs">
                                           Cancelar
                                         </Button>
                                       </div>
@@ -544,6 +644,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                                   </>
                                 ) : (
                                   <>
+                                    <td className="px-3 py-2 text-sm text-muted-foreground whitespace-nowrap">{t.sede || <span className="italic">General</span>}</td>
                                     <td className="px-3 py-2 text-right">${precios.precioReal.toLocaleString("es-AR")} {t.moneda}</td>
                                     <td className="px-3 py-2 text-right text-sm text-muted-foreground">
                                       {t.descuento_tipo === "porcentaje" ? `${t.descuento_valor}%` :
@@ -561,6 +662,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                                           setEditandoPrecio(t.id)
                                           setPrecioEdit({
                                             precio: t.precio.toString(),
+                                            sede: t.sede || "",
                                             descuento_tipo: t.descuento_tipo ?? null,
                                             descuento_valor: t.descuento_valor?.toString() ?? "",
                                           })

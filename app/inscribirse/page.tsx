@@ -131,7 +131,12 @@ function InscribirseForm() {
           .eq("sede", sede)
           .eq("activo", true)
           .maybeSingle()
-        if (data) { setTallerData(data); setCargandoTaller(false); return }
+        if (data) {
+          setTallerData(data)
+          if (!data.acepta_tarjeta || !data.acepta_sena) setModalidadPago("total")
+          setCargandoTaller(false)
+          return
+        }
       }
       // Fallback: precio genérico (sin sede)
       const { data } = await supabase
@@ -142,6 +147,7 @@ function InscribirseForm() {
         .eq("activo", true)
         .maybeSingle()
       setTallerData(data ?? null)
+      if (data && (!data.acepta_tarjeta || !data.acepta_sena)) setModalidadPago("total")
       setCargandoTaller(false)
     }
     buscar()
@@ -506,7 +512,8 @@ function InscribirseForm() {
 
           {/* Modalidad de pago */}
           {(() => {
-            const soloTransferencia = tallerSlugParam === "autoconocimiento" && decodeURIComponent(localidadParam) === "Río Gallegos"
+            const aceptaTarjeta = tallerData?.acepta_tarjeta ?? true
+            const aceptaSena = tallerData?.acepta_sena ?? true
             return (
           <div className="space-y-3">
             <p className="text-sm font-bold">Modalidad de pago</p>
@@ -522,7 +529,7 @@ function InscribirseForm() {
               >
                 Pago total
               </button>
-              {!soloTransferencia && (
+              {aceptaTarjeta && (
                 <button
                   type="button"
                   onClick={() => { setModalidadPago("tarjeta"); setCuotas(null) }}
@@ -535,7 +542,7 @@ function InscribirseForm() {
                   Tarjeta de Crédito
                 </button>
               )}
-              {!soloTransferencia && (
+              {aceptaSena && (
                 <button
                   type="button"
                   onClick={() => setModalidadPago("sena")}

@@ -147,6 +147,16 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
     setAccionInscripcion(null)
   }
 
+  const eliminarTaller = async (tallerId: string, nombreTaller: string) => {
+    if (!confirm(`¿Seguro que querés eliminar "${nombreTaller}"? Esta acción no se puede deshacer.`)) return
+    await supabase.rpc("eliminar_taller_admin", {
+      p_admin_caracteristica: adminCaracteristica,
+      p_admin_numero: adminNumero,
+      p_taller_id: tallerId,
+    })
+    await cargarTalleres()
+  }
+
   const guardarPrecio = async (tallerId: string) => {
     setGuardandoPrecio(true)
     await supabase.rpc("actualizar_precio_taller", {
@@ -705,6 +715,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                                     <td className="px-3 py-2 text-center text-lg">{t.acepta_tarjeta ? "✅" : "❌"}</td>
                                     <td className="px-3 py-2 text-center text-lg">{t.acepta_sena ? "✅" : "❌"}</td>
                                     <td className="px-3 py-2 text-center">
+                                      <div className="flex gap-1 justify-center items-center">
                                       <Button
                                         size="sm"
                                         variant="outline"
@@ -724,6 +735,14 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                                       >
                                         <DollarSign className="h-3 w-3 mr-1" /> Editar
                                       </Button>
+                                      <button
+                                        onClick={() => eliminarTaller(t.id, `${t.nombre}${t.sede ? ` — ${t.sede}` : ""}`)}
+                                        title="Eliminar taller"
+                                        className="w-7 h-7 rounded-full bg-red-700 hover:bg-red-800 text-white flex items-center justify-center transition-colors shadow-sm"
+                                      >
+                                        <Trash2 className="h-3 w-3" />
+                                      </button>
+                                      </div>
                                     </td>
                                   </>
                                 )}

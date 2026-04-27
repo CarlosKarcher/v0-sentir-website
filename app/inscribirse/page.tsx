@@ -548,6 +548,14 @@ function InscribirseForm() {
               )}
             </div>
 
+            {modalidadPago === "tarjeta" && (
+              <div className="pl-1">
+                <p className="text-base font-medium text-blue-800 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg px-3 py-2">
+                  Una vez confirmada tu inscripción, te enviaremos un <strong>link de pago con Tarjeta de Crédito</strong> al email que registraste.
+                </p>
+              </div>
+            )}
+
             {modalidadPago === "sena" && (
               <div className="space-y-3 pl-1">
                 <p className="text-base text-amber-700 dark:text-amber-400 font-medium bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg px-3 py-2">

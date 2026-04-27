@@ -751,8 +751,8 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                                   <>
                                     <td className="px-3 py-2 text-sm text-muted-foreground whitespace-nowrap">
                                       {t.fecha_inicio
-                                        ? new Date(t.fecha_inicio + "T00:00:00").toLocaleDateString("es-AR", { day: "2-digit", month: "2-digit", year: "numeric" })
-                                        : <span className="italic text-muted-foreground">—</span>}
+                                        ? (() => { const [y, m, d] = t.fecha_inicio.split("-"); return `${d}/${m}/${y}` })()
+                                        : <span className="italic">—</span>}
                                     </td>
                                     <td className="px-3 py-2 text-sm text-muted-foreground whitespace-nowrap">{t.sede || <span className="italic">General</span>}</td>
                                     <td className="px-3 py-2 text-right">${precios.precioReal.toLocaleString("es-AR")} {t.moneda}</td>

@@ -73,10 +73,10 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
   const [filtroTallerSlug, setFiltroTallerSlug] = useState<string>("")
   const [filtroSede, setFiltroSede] = useState<string>("")
   const [editandoPrecio, setEditandoPrecio] = useState<string | null>(null) // taller id
-  const [precioEdit, setPrecioEdit] = useState({ precio: "", sede: "", descuento_tipo: "porcentaje" as "porcentaje" | "monto_fijo" | null, descuento_valor: "", acepta_transferencia: true, acepta_tarjeta: true, acepta_sena: true })
+  const [precioEdit, setPrecioEdit] = useState({ precio: "", sede: "", descuento_tipo: "porcentaje" as "porcentaje" | "monto_fijo" | null, descuento_valor: "", acepta_transferencia: true, acepta_tarjeta: true, acepta_sena: true, fecha_inicio: "" })
   const [guardandoPrecio, setGuardandoPrecio] = useState(false)
   const [agregandoTaller, setAgregandoTaller] = useState(false)
-  const [nuevoTaller, setNuevoTaller] = useState({ slug: "", nombre: "", sede: "", precio: "", descuento_tipo: "" as "porcentaje" | "monto_fijo" | "", descuento_valor: "" })
+  const [nuevoTaller, setNuevoTaller] = useState({ slug: "", nombre: "", sede: "", precio: "", descuento_tipo: "" as "porcentaje" | "monto_fijo" | "", descuento_valor: "", fecha_inicio: "" })
   const [accionInscripcion, setAccionInscripcion] = useState<string | null>(null) // inscripcion id en proceso
   const [confirmDialog, setConfirmDialog] = useState<{ titulo: string; mensaje: string; tipo: "confirm" | "info"; onConfirm?: () => void } | null>(null)
   const [sedes, setSedes] = useState<string[]>([])
@@ -198,6 +198,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
       p_acepta_transferencia: precioEdit.acepta_transferencia,
       p_acepta_tarjeta: precioEdit.acepta_tarjeta,
       p_acepta_sena: precioEdit.acepta_sena,
+      p_fecha_inicio: precioEdit.fecha_inicio || null,
     })
     if (error) { setConfirmDialog({ titulo: "Error al guardar", mensaje: error.message, tipo: "info" }); setGuardandoPrecio(false); return }
     await cargarTalleres()
@@ -217,10 +218,11 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
       p_precio: parseFloat(nuevoTaller.precio) || 0,
       p_descuento_tipo: nuevoTaller.descuento_tipo || null,
       p_descuento_valor: parseFloat(nuevoTaller.descuento_valor) || null,
+      p_fecha_inicio: nuevoTaller.fecha_inicio || null,
     })
     await cargarTalleres()
     setAgregandoTaller(false)
-    setNuevoTaller({ slug: "", nombre: "", sede: "", precio: "", descuento_tipo: "", descuento_valor: "" })
+    setNuevoTaller({ slug: "", nombre: "", sede: "", precio: "", descuento_tipo: "", descuento_valor: "", fecha_inicio: "" })
     setGuardandoPrecio(false)
   }
 
@@ -570,6 +572,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                         <thead>
                           <tr className="border-b-2 border-border bg-muted/50">
                             <th className="text-left px-3 py-2 font-semibold">Taller</th>
+                            <th className="text-left px-3 py-2 font-semibold whitespace-nowrap">Fecha Inicio</th>
                             <th className="text-left px-3 py-2 font-semibold">Sede</th>
                             <th className="text-right px-3 py-2 font-semibold whitespace-nowrap">Precio Real</th>
                             <th className="text-right px-3 py-2 font-semibold whitespace-nowrap">Descuento</th>
@@ -603,6 +606,14 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                                   <option value="sanando-mi-nino-interior">Sanando mi Niño Interior</option>
                                   <option value="constelaciones-grupales">Constelaciones Grupales</option>
                                 </select>
+                              </td>
+                              <td className="px-3 py-2">
+                                <input
+                                  type="date"
+                                  value={nuevoTaller.fecha_inicio ?? ""}
+                                  onChange={e => setNuevoTaller(p => ({ ...p, fecha_inicio: e.target.value }))}
+                                  className="border border-border rounded px-2 py-1 text-sm bg-background w-36"
+                                />
                               </td>
                               <td className="px-3 py-2">
                                 <select
@@ -667,6 +678,14 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                                 {editando ? (
                                   <>
                                     <td className="px-3 py-2">
+                                      <input
+                                        type="date"
+                                        value={precioEdit.fecha_inicio}
+                                        onChange={e => setPrecioEdit(p => ({ ...p, fecha_inicio: e.target.value }))}
+                                        className="border border-border rounded px-2 py-1 text-sm bg-background w-36"
+                                      />
+                                    </td>
+                                    <td className="px-3 py-2">
                                       <select
                                         value={precioEdit.sede}
                                         onChange={e => setPrecioEdit(p => ({ ...p, sede: e.target.value }))}
@@ -730,6 +749,11 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                                   </>
                                 ) : (
                                   <>
+                                    <td className="px-3 py-2 text-sm text-muted-foreground whitespace-nowrap">
+                                      {t.fecha_inicio
+                                        ? new Date(t.fecha_inicio + "T00:00:00").toLocaleDateString("es-AR", { day: "2-digit", month: "2-digit", year: "numeric" })
+                                        : <span className="italic text-muted-foreground">—</span>}
+                                    </td>
                                     <td className="px-3 py-2 text-sm text-muted-foreground whitespace-nowrap">{t.sede || <span className="italic">General</span>}</td>
                                     <td className="px-3 py-2 text-right">${precios.precioReal.toLocaleString("es-AR")} {t.moneda}</td>
                                     <td className="px-3 py-2 text-right text-sm text-muted-foreground">
@@ -758,6 +782,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                                             acepta_transferencia: t.acepta_transferencia ?? true,
                                             acepta_tarjeta: t.acepta_tarjeta ?? true,
                                             acepta_sena: t.acepta_sena ?? true,
+                                            fecha_inicio: t.fecha_inicio ?? "",
                                           })
                                         }}
                                         className="h-7 px-2 text-xs"

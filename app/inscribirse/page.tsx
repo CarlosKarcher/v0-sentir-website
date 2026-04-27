@@ -505,11 +505,11 @@ function InscribirseForm() {
           {/* Comprobante */}
           <div className="space-y-1">
             <p className="text-sm font-bold">Comprobante de pago</p>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-base text-foreground">
               Enviá el comprobante de transferencia a{" "}
               <a
                 href="mailto:Sentir.inscripciones@gmail.com"
-                className="font-bold text-foreground underline hover:no-underline"
+                className="font-bold underline hover:no-underline"
               >
                 Sentir.inscripciones@gmail.com
               </a>

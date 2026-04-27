@@ -5,6 +5,7 @@ export interface Taller {
   id: string
   slug: string
   nombre: string
+  sede: string | null
   descripcion: string | null
   descripcion_corta: string | null
   precio: number

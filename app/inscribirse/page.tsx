@@ -114,21 +114,36 @@ function InscribirseForm() {
     })
   }, [estadoAuth, emailAuth])
 
-  // Cargar precio del taller
+  // Cargar precio del taller — primero busca por slug+sede, si no hay cae al genérico (sede=null)
   useEffect(() => {
     if (!tallerSlug) { setTallerData(null); return }
     setCargandoTaller(true)
-    supabase
-      .from("talleres")
-      .select("*")
-      .eq("slug", tallerSlug)
-      .eq("activo", true)
-      .single()
-      .then(({ data }) => {
-        setTallerData(data ?? null)
-        setCargandoTaller(false)
-      })
-  }, [tallerSlug])
+    const sede = localidadParam ? decodeURIComponent(localidadParam) : null
+    const buscar = async () => {
+      // Intentar con sede específica
+      if (sede) {
+        const { data } = await supabase
+          .from("talleres")
+          .select("*")
+          .eq("slug", tallerSlug)
+          .eq("sede", sede)
+          .eq("activo", true)
+          .maybeSingle()
+        if (data) { setTallerData(data); setCargandoTaller(false); return }
+      }
+      // Fallback: precio genérico (sin sede)
+      const { data } = await supabase
+        .from("talleres")
+        .select("*")
+        .eq("slug", tallerSlug)
+        .is("sede", null)
+        .eq("activo", true)
+        .maybeSingle()
+      setTallerData(data ?? null)
+      setCargandoTaller(false)
+    }
+    buscar()
+  }, [tallerSlug, localidadParam])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

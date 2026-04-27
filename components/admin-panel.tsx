@@ -471,6 +471,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                         <thead>
                           <tr className="border-b-2 border-border bg-muted/50">
                             <th className="text-left px-3 py-2 font-semibold">Taller</th>
+                            <th className="text-left px-3 py-2 font-semibold">Sede</th>
                             <th className="text-right px-3 py-2 font-semibold whitespace-nowrap">Precio Real</th>
                             <th className="text-right px-3 py-2 font-semibold whitespace-nowrap">Descuento</th>
                             <th className="text-right px-3 py-2 font-semibold whitespace-nowrap">Precio Final</th>
@@ -484,6 +485,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                             return (
                               <tr key={t.id} className={`border-b border-border/50 ${i % 2 === 0 ? "" : "bg-muted/10"}`}>
                                 <td className="px-3 py-2 font-medium whitespace-nowrap">{t.nombre}</td>
+                                <td className="px-3 py-2 text-sm text-muted-foreground whitespace-nowrap">{t.sede || <span className="italic">General</span>}</td>
                                 {editando ? (
                                   <>
                                     <td className="px-3 py-2">

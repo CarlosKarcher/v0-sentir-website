@@ -154,6 +154,7 @@ function InscribirseForm() {
       dni: dni.trim() || null,
       ciudad: ciudad.trim() || null,
       fecha_nacimiento: fechaNacimiento || null,
+      localidad_taller: localidadParam ? decodeURIComponent(localidadParam) : null,
       metodo_pago: "transferencia",
       estado: "pendiente",
       mensaje_inscripto: mensajeFinal,

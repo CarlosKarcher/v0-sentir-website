@@ -592,23 +592,23 @@ function InscribirseForm() {
             <p className="text-amber-700 dark:text-amber-300">Titular: <strong>Fernando Javier Cárcamo</strong></p>
             <p className="text-amber-700 dark:text-amber-300">Banco: <strong>Mercado Pago</strong></p>
             <p className="text-amber-700 dark:text-amber-300">Alias: <strong>coach.fercarcamo.mp</strong></p>
-            {precios && precios.precioFinal > 0 && (
-              <p className="text-amber-700 dark:text-amber-300">
-                Monto a transferir:{" "}
-                <strong>
-                  {precios.descuentoMonto > 0 ? (
-                    <>
-                      <span className="line-through font-normal mr-1">
-                        ${precios.precioReal.toLocaleString("es-AR")}
-                      </span>
-                      ${precios.precioFinal.toLocaleString("es-AR")} {tallerData?.moneda}
-                    </>
-                  ) : (
-                    `$${precios.precioFinal.toLocaleString("es-AR")} ${tallerData?.moneda}`
-                  )}
-                </strong>
-              </p>
-            )}
+            {precios && precios.precioFinal > 0 && (() => {
+              const montoSena = Math.ceil(precios.precioFinal * 0.35 / 1000) * 1000
+              const montoMostrar = modalidadPago === "sena" ? montoSena : precios.precioFinal
+              return (
+                <>
+                  <p className="text-amber-700 dark:text-amber-300">
+                    Monto a transferir:{" "}
+                    <strong>
+                      ${montoMostrar.toLocaleString("es-AR")} {tallerData?.moneda}
+                    </strong>
+                    {modalidadPago === "sena" && (
+                      <span className="ml-2 font-normal text-xs">(seña 35% — total: ${precios.precioFinal.toLocaleString("es-AR")})</span>
+                    )}
+                  </p>
+                </>
+              )
+            })()}
           </div>
 
           {error && (

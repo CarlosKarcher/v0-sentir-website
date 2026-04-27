@@ -37,7 +37,7 @@ type Nomembro = {
 }
 
 type Vista = "menu" | "inscripciones" | "miembros" | "nomembros" | "taller"
-type InscripcionesTab = "inscriptos" | "precios"
+type InscripcionesTab = "inscriptos" | "precios" | "por_taller"
 
 const TALLERES = [
   { key: "taller_autoconocimiento" as const, label: "Autoconocimiento" },
@@ -70,6 +70,8 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
   const [inscripciones, setInscripciones] = useState<InscripcionConTaller[]>([])
   const [talleresList, setTalleresList] = useState<Taller[]>([])
   const [filtroEstado, setFiltroEstado] = useState<"todos" | "pendiente" | "confirmado" | "cancelado">("todos")
+  const [filtroTallerSlug, setFiltroTallerSlug] = useState<string>("")
+  const [filtroSede, setFiltroSede] = useState<string>("")
   const [editandoPrecio, setEditandoPrecio] = useState<string | null>(null) // taller id
   const [precioEdit, setPrecioEdit] = useState({ precio: "", sede: "", descuento_tipo: "porcentaje" as "porcentaje" | "monto_fijo" | null, descuento_valor: "" })
   const [guardandoPrecio, setGuardandoPrecio] = useState(false)
@@ -461,6 +463,16 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                   >
                     Precios
                   </button>
+                  <button
+                    onClick={() => setInscripcionesTab("por_taller")}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      inscripcionesTab === "por_taller"
+                        ? "bg-primary text-primary-foreground"
+                        : "hover:bg-muted"
+                    }`}
+                  >
+                    Filtro por Taller-Sede
+                  </button>
                 </div>
 
                 {cargando && (
@@ -702,6 +714,65 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                     )}
                   </div>
                 )}
+
+                {/* Tab Filtro por Taller-Sede */}
+                {!cargando && inscripcionesTab === "por_taller" && (() => {
+                  // Opciones únicas de taller y sede desde las inscripciones cargadas
+                  const talleresUnicos = Array.from(new Map(inscripciones.map(i => [i.taller_slug, i.taller_nombre])).entries())
+                  const sedesUnicas = Array.from(new Set(inscripciones.map(i => i.localidad_taller).filter(Boolean))) as string[]
+
+                  const filtradas = inscripciones
+                    .filter(i => (!filtroTallerSlug || i.taller_slug === filtroTallerSlug) && (!filtroSede || i.localidad_taller === filtroSede))
+                    .sort((a, b) => {
+                      const orden: Record<string, number> = { confirmado: 0, pendiente: 1, cancelado: 2 }
+                      return (orden[a.estado] ?? 3) - (orden[b.estado] ?? 3)
+                    })
+
+                  return (
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-3 flex-wrap">
+                        <div className="flex items-center gap-2">
+                          <label className="text-sm font-medium whitespace-nowrap">Taller:</label>
+                          <select
+                            value={filtroTallerSlug}
+                            onChange={e => setFiltroTallerSlug(e.target.value)}
+                            className="border border-border rounded-md px-3 py-1.5 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                          >
+                            <option value="">Todos</option>
+                            {talleresUnicos.map(([slug, nombre]) => (
+                              <option key={slug} value={slug}>{nombre}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <label className="text-sm font-medium whitespace-nowrap">Sede:</label>
+                          <select
+                            value={filtroSede}
+                            onChange={e => setFiltroSede(e.target.value)}
+                            className="border border-border rounded-md px-3 py-1.5 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                          >
+                            <option value="">Todas</option>
+                            {sedesUnicas.map(s => <option key={s} value={s}>{s}</option>)}
+                          </select>
+                        </div>
+                        <span className="text-xs text-muted-foreground">{filtradas.length} inscripciones</span>
+                      </div>
+
+                      {filtradas.length === 0 ? (
+                        <p className="text-center text-muted-foreground py-8">No hay inscripciones para este filtro.</p>
+                      ) : (
+                        <TablaInscripciones
+                          inscripciones={filtradas}
+                          accionInscripcion={accionInscripcion}
+                          onAprobar={aprobarInscripcion}
+                          onCancelar={cancelarInscripcion}
+                          onEliminar={eliminarInscripcion}
+                          onActualizarMonto={actualizarMontoPagado}
+                        />
+                      )}
+                    </div>
+                  )
+                })()}
               </div>
             )}
 

@@ -73,7 +73,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
   const [filtroTallerSlug, setFiltroTallerSlug] = useState<string>("")
   const [filtroSede, setFiltroSede] = useState<string>("")
   const [editandoPrecio, setEditandoPrecio] = useState<string | null>(null) // taller id
-  const [precioEdit, setPrecioEdit] = useState({ precio: "", sede: "", descuento_tipo: "porcentaje" as "porcentaje" | "monto_fijo" | null, descuento_valor: "" })
+  const [precioEdit, setPrecioEdit] = useState({ precio: "", sede: "", descuento_tipo: "porcentaje" as "porcentaje" | "monto_fijo" | null, descuento_valor: "", acepta_transferencia: true, acepta_tarjeta: true, acepta_sena: true })
   const [guardandoPrecio, setGuardandoPrecio] = useState(false)
   const [agregandoTaller, setAgregandoTaller] = useState(false)
   const [nuevoTaller, setNuevoTaller] = useState({ slug: "", nombre: "", sede: "", precio: "", descuento_tipo: "" as "porcentaje" | "monto_fijo" | "", descuento_valor: "" })
@@ -157,6 +157,9 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
       p_descuento_tipo: precioEdit.descuento_tipo,
       p_descuento_valor: parseFloat(precioEdit.descuento_valor) || null,
       p_sede: precioEdit.sede || null,
+      p_acepta_transferencia: precioEdit.acepta_transferencia,
+      p_acepta_tarjeta: precioEdit.acepta_tarjeta,
+      p_acepta_sena: precioEdit.acepta_sena,
     })
     await cargarTalleres()
     setEditandoPrecio(null)
@@ -532,6 +535,9 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                             <th className="text-right px-3 py-2 font-semibold whitespace-nowrap">Precio Real</th>
                             <th className="text-right px-3 py-2 font-semibold whitespace-nowrap">Descuento</th>
                             <th className="text-right px-3 py-2 font-semibold whitespace-nowrap">Precio Final</th>
+                            <th className="text-center px-3 py-2 font-semibold whitespace-nowrap">Transfer.</th>
+                            <th className="text-center px-3 py-2 font-semibold whitespace-nowrap">Tarjeta</th>
+                            <th className="text-center px-3 py-2 font-semibold whitespace-nowrap">Seña</th>
                             <th className="text-center px-3 py-2 font-semibold">Acciones</th>
                           </tr>
                         </thead>
@@ -664,6 +670,15 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                                     </td>
                                     <td className="px-3 py-2 text-right text-muted-foreground text-xs">— calcular al guardar —</td>
                                     <td className="px-3 py-2 text-center">
+                                      <input type="checkbox" checked={precioEdit.acepta_transferencia} onChange={e => setPrecioEdit(p => ({ ...p, acepta_transferencia: e.target.checked }))} className="w-4 h-4 accent-green-600 cursor-pointer" title="Transferencia" />
+                                    </td>
+                                    <td className="px-3 py-2 text-center">
+                                      <input type="checkbox" checked={precioEdit.acepta_tarjeta} onChange={e => setPrecioEdit(p => ({ ...p, acepta_tarjeta: e.target.checked }))} className="w-4 h-4 accent-green-600 cursor-pointer" title="Tarjeta" />
+                                    </td>
+                                    <td className="px-3 py-2 text-center">
+                                      <input type="checkbox" checked={precioEdit.acepta_sena} onChange={e => setPrecioEdit(p => ({ ...p, acepta_sena: e.target.checked }))} className="w-4 h-4 accent-green-600 cursor-pointer" title="Seña" />
+                                    </td>
+                                    <td className="px-3 py-2 text-center">
                                       <div className="flex gap-1 justify-center">
                                         <Button size="sm" variant="default" disabled={guardandoPrecio} onClick={() => guardarPrecio(t.id)} className="h-7 px-2 text-xs">
                                           {guardandoPrecio ? "..." : "Guardar"}
@@ -686,6 +701,9 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                                     <td className={`px-3 py-2 text-right font-semibold ${precios.descuentoMonto > 0 ? "text-green-600 dark:text-green-400" : ""}`}>
                                       ${precios.precioFinal.toLocaleString("es-AR")} {t.moneda}
                                     </td>
+                                    <td className="px-3 py-2 text-center text-lg">{t.acepta_transferencia ? "✅" : "❌"}</td>
+                                    <td className="px-3 py-2 text-center text-lg">{t.acepta_tarjeta ? "✅" : "❌"}</td>
+                                    <td className="px-3 py-2 text-center text-lg">{t.acepta_sena ? "✅" : "❌"}</td>
                                     <td className="px-3 py-2 text-center">
                                       <Button
                                         size="sm"
@@ -697,6 +715,9 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                                             sede: t.sede || "",
                                             descuento_tipo: t.descuento_tipo ?? null,
                                             descuento_valor: t.descuento_valor?.toString() ?? "",
+                                            acepta_transferencia: t.acepta_transferencia ?? true,
+                                            acepta_tarjeta: t.acepta_tarjeta ?? true,
+                                            acepta_sena: t.acepta_sena ?? true,
                                           })
                                         }}
                                         className="h-7 px-2 text-xs"

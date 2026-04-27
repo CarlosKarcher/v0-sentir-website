@@ -20,6 +20,9 @@ export interface Taller {
   activo: boolean
   orden: number
   creado_en: string
+  acepta_transferencia: boolean
+  acepta_tarjeta: boolean
+  acepta_sena: boolean
 }
 
 export function calcularPrecioFinal(taller: Pick<Taller, 'precio' | 'descuento_tipo' | 'descuento_valor'>) {

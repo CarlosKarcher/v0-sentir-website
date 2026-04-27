@@ -197,7 +197,7 @@ function EventCard({ event }: { event: Event }) {
           <div className="pt-3">
             {estado === "registrado" ? (
               <a
-                href={`/inscribirse?taller=${event.tallerSlug}&localidad=${encodeURIComponent(event.location)}&evento=${encodeURIComponent(`${event.title} — ${event.date} — ${event.location}`)}`}
+                href={`/inscribirse?taller=${event.tallerSlug}&localidad=${encodeURIComponent(event.sede || event.location)}&evento=${encodeURIComponent(`${event.title} — ${event.date} — ${event.location}`)}`}
                 className="flex items-center justify-center gap-2 w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-sm"
               >
                 <ClipboardList className="h-4 w-4" />
@@ -224,7 +224,7 @@ function EventCard({ event }: { event: Event }) {
               </>
             ) : (
               <a
-                href={`/inscribirse?taller=${event.tallerSlug}&localidad=${encodeURIComponent(event.location)}&evento=${encodeURIComponent(`${event.title} — ${event.date} — ${event.location}`)}`}
+                href={`/inscribirse?taller=${event.tallerSlug}&localidad=${encodeURIComponent(event.sede || event.location)}&evento=${encodeURIComponent(`${event.title} — ${event.date} — ${event.location}`)}`}
                 className="flex items-center justify-center gap-2 w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-sm"
               >
                 <ClipboardList className="h-4 w-4" />
@@ -394,6 +394,7 @@ export function Events() {
       level: "1er Nivel",
       contactPhone: "+54 9 2966 595803",
       tallerSlug: "autoconocimiento",
+      sede: "Río Gallegos",
     },
     {
       title: "Las 7 Leyes Universales",
@@ -436,6 +437,7 @@ export function Events() {
       flyerImageAlt: "/images/El-guerrero-mayo-gallegos.jpeg",
       contactPhone: "+54 9 2966 595803",
       tallerSlug: "camino-del-guerrero",
+      sede: "Río Gallegos",
     },
     {
       title: "Sanando mi Niño Interior - Punta Arenas",
@@ -450,6 +452,7 @@ export function Events() {
       flyerImageAlt: "/images/nino-mayo-punta-arenas.jpeg",
       contactPhone: "+56 9 6113 0835",
       tallerSlug: "sanando-mi-nino-interior",
+      sede: "Punta Arenas",
     },
     {
       title: "El Camino del Guerrero - Punta Arenas",
@@ -464,6 +467,7 @@ export function Events() {
       flyerImageAlt: "/images/El-guerrero-mayo-punta-arenas.jpeg",
       contactPhone: "+56 9 6113 0835",
       tallerSlug: "camino-del-guerrero",
+      sede: "Punta Arenas",
     },
     {
       title: "Taller de Biodecodificación: \"Tu cuerpo tiene algo que contarte.\" - Río Gallegos",
@@ -478,6 +482,7 @@ export function Events() {
       flyerImageAlt: "/images/bio-13-06-2026.jpeg",
       contactPhone: "+54 9 2966 211547",
       tallerSlug: "biodecodificacion",
+      sede: "Río Gallegos",
     },
     {
       title: "Taller: \"Sanando mi Niño Interior.\" - Río Gallegos",
@@ -492,6 +497,7 @@ export function Events() {
       flyerImageAlt: "/images/sanando-14-06-2026.jpeg",
       contactPhone: "+54 9 2966 595803",
       tallerSlug: "sanando-mi-nino-interior",
+      sede: "Río Gallegos",
     },
     {
       title: "Taller de Transformación - Río Gallegos",
@@ -507,6 +513,7 @@ export function Events() {
       level: "2do Nivel",
       contactPhone: "+54 9 2966 595803",
       tallerSlug: "transformacion",
+      sede: "Río Gallegos",
     },
     {
       title: "Taller de MyL 7 - 1ra, Sala.",
@@ -520,6 +527,7 @@ export function Events() {
       level: "3er Nivel",
       contactPhone: "+54 9 2966 595803",
       tallerSlug: "metas-y-logros",
+      sede: "Río Gallegos",
     },
     {
       title: "Taller de MyL 7 - 2da Sala.",
@@ -533,6 +541,7 @@ export function Events() {
       level: "3er Nivel",
       contactPhone: "+54 9 2966 595803",
       tallerSlug: "metas-y-logros",
+      sede: "Río Gallegos",
     },
     {
       title: "Taller de Autoconocimiento - Córdoba",
@@ -548,6 +557,7 @@ export function Events() {
       level: "1er Nivel",
       contactPhone: "+54 9 2966 595803",
       tallerSlug: "autoconocimiento",
+      sede: "Córdoba",
     },
     {
       title: "Taller de Autoconocimiento - El Calafate",
@@ -563,6 +573,7 @@ export function Events() {
       level: "1er Nivel",
       contactPhone: "+54 9 2966 595803",
       tallerSlug: "autoconocimiento",
+      sede: "El Calafate",
     },
     {
       title: "Taller de MyL 7 - Campamento y Cierre.",
@@ -589,6 +600,7 @@ export function Events() {
       flyerImageAlt: "/images/El Guerrero Necochea.jpeg",
       contactPhone: "+54 11 6706 6630",
       tallerSlug: "camino-del-guerrero",
+      sede: "Quequén-Neco",
     },
     {
       title: "Taller de Autoconocimiento - Quequén/Necochea",
@@ -604,6 +616,7 @@ export function Events() {
       level: "1er Nivel",
       contactPhone: "+54 11 6706 6630",
       tallerSlug: "autoconocimiento",
+      sede: "Quequén-Neco",
     },
   ]
 

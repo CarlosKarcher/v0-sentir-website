@@ -18,6 +18,7 @@ export interface Event {
   level?: string
   contactPhone?: string
   tallerSlug?: string  // slug del taller en DB para inscripción
+  sede?: string        // ciudad/sede del taller (de sedes_sentir)
 }
 
 export interface WrittenTestimonial {

@@ -333,7 +333,7 @@ function InscribirseForm() {
 
         <form onSubmit={handleSubmit} className="space-y-6">
 
-          {/* Taller y Localidad — fijos, no editables */}
+          {/* Taller y Sede — fijos, no editables */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1">
               <label className="text-sm font-medium">Taller</label>
@@ -342,7 +342,7 @@ function InscribirseForm() {
               </div>
             </div>
             <div className="space-y-1">
-              <label className="text-sm font-medium">Localidad</label>
+              <label className="text-sm font-medium">Sede</label>
               <div className="w-full border border-border rounded-md px-3 py-2 bg-muted/50 font-medium">
                 {localidadParam ? decodeURIComponent(localidadParam) : "—"}
               </div>

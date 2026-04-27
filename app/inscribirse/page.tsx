@@ -528,12 +528,13 @@ function InscribirseForm() {
                     : "bg-background border-border text-foreground hover:border-blue-900"
                 }`}
               >
-                Seña{precios && precios.precioFinal > 0 && (
-                  <span className={`ml-1 font-normal ${modalidadPago === "sena" ? "text-white" : "text-amber-700 dark:text-amber-400"}`}>
-                    (${(Math.ceil(precios.precioFinal * 0.35 / 1000) * 1000).toLocaleString("es-AR")})
-                  </span>
-                )}
+                Seña
               </button>
+              {modalidadPago === "sena" && precios && precios.precioFinal > 0 && (
+                <span className="text-sm font-semibold text-amber-700 dark:text-amber-400 self-center ml-2">
+                  (${(Math.ceil(precios.precioFinal * 0.35 / 1000) * 1000).toLocaleString("es-AR")})
+                </span>
+              )}
             </div>
 
             {modalidadPago === "sena" && (

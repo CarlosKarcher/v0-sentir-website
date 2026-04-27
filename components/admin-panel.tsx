@@ -153,12 +153,16 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
       mensaje: `¿Seguro que querés eliminar "${nombreTaller}"?`,
       onConfirm: async () => {
         setConfirmDialog(null)
-        await supabase.rpc("eliminar_taller_admin", {
+        const { data, error } = await supabase.rpc("eliminar_taller_admin", {
           p_admin_caracteristica: adminCaracteristica,
           p_admin_numero: adminNumero,
           p_taller_id: tallerId,
         })
-        await cargarTalleres()
+        if (error || data?.error) {
+          alert(data?.error || error?.message)
+          return
+        }
+        setTalleresList(prev => prev.filter(t => t.id !== tallerId))
       },
     })
   }

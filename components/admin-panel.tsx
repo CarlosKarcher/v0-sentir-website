@@ -755,7 +755,13 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                             {sedesUnicas.map(s => <option key={s} value={s}>{s}</option>)}
                           </select>
                         </div>
-                        <span className="text-xs text-muted-foreground">{filtradas.length} inscripciones</span>
+                        <span className="text-xs text-muted-foreground">
+                          {filtradas.length} inscripciones
+                          {"  "}
+                          <span className="font-semibold text-green-700 dark:text-green-400">
+                            ${filtradas.reduce((acc, i) => acc + (i.monto_pagado ?? 0), 0).toLocaleString("es-AR")} recaudado
+                          </span>
+                        </span>
                       </div>
 
                       {filtradas.length === 0 ? (

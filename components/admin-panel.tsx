@@ -76,6 +76,12 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
   const [agregandoTaller, setAgregandoTaller] = useState(false)
   const [nuevoTaller, setNuevoTaller] = useState({ slug: "", nombre: "", sede: "", precio: "", descuento_tipo: "" as "porcentaje" | "monto_fijo" | "", descuento_valor: "" })
   const [accionInscripcion, setAccionInscripcion] = useState<string | null>(null) // inscripcion id en proceso
+  const [sedes, setSedes] = useState<string[]>([])
+
+  const cargarSedes = async () => {
+    const { data } = await supabase.from("sedes_sentir").select("nombre").eq("activo", true).order("orden")
+    if (Array.isArray(data)) setSedes(data.map((s: { nombre: string }) => s.nombre))
+  }
 
   const cargarInscripciones = async () => {
     setCargando(true)
@@ -189,6 +195,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
     if (v === "inscripciones") {
       if (inscripciones.length === 0) cargarInscripciones()
       if (talleresList.length === 0) cargarTalleres()
+      if (sedes.length === 0) cargarSedes()
     }
     if (v === "miembros" && miembros.length === 0) cargarMiembros()
     if (v === "nomembros" && nomembros.length === 0) cargarNomembros()
@@ -530,13 +537,14 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                                 </select>
                               </td>
                               <td className="px-3 py-2">
-                                <input
-                                  type="text"
+                                <select
                                   value={nuevoTaller.sede}
                                   onChange={e => setNuevoTaller(p => ({ ...p, sede: e.target.value }))}
-                                  placeholder="Ej: Punta Arenas"
-                                  className="border border-border rounded px-2 py-1 text-sm bg-background w-32"
-                                />
+                                  className="border border-border rounded px-2 py-1 text-sm bg-background w-36"
+                                >
+                                  <option value="">General</option>
+                                  {sedes.map(s => <option key={s} value={s}>{s}</option>)}
+                                </select>
                               </td>
                               <td className="px-3 py-2">
                                 <input
@@ -591,13 +599,14 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                                 {editando ? (
                                   <>
                                     <td className="px-3 py-2">
-                                      <input
-                                        type="text"
+                                      <select
                                         value={precioEdit.sede}
                                         onChange={e => setPrecioEdit(p => ({ ...p, sede: e.target.value }))}
-                                        placeholder="Sede (vacío = General)"
-                                        className="border border-border rounded px-2 py-1 text-sm bg-background w-32"
-                                      />
+                                        className="border border-border rounded px-2 py-1 text-sm bg-background w-36"
+                                      >
+                                        <option value="">General</option>
+                                        {sedes.map(s => <option key={s} value={s}>{s}</option>)}
+                                      </select>
                                     </td>
                                     <td className="px-3 py-2">
                                       <input

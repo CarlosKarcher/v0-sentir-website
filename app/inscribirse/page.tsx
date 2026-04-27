@@ -33,6 +33,7 @@ function InscribirseForm() {
   const searchParams = useSearchParams()
   const tallerSlugParam = searchParams.get("taller") || ""
   const eventoParam = searchParams.get("evento") || ""
+  const localidadParam = searchParams.get("localidad") || ""
 
   const { estado: estadoAuth, email: emailAuth } = useUser()
   const [loginOpen, setLoginOpen] = useState(false)
@@ -316,11 +317,19 @@ function InscribirseForm() {
 
         <form onSubmit={handleSubmit} className="space-y-6">
 
-          {/* Taller — fijo, no editable */}
-          <div className="space-y-1">
-            <label className="text-sm font-medium">Taller</label>
-            <div className="w-full border border-border rounded-md px-3 py-2 bg-muted/50 font-medium">
-              {tallerNombreSeleccionado || "—"}
+          {/* Taller y Localidad — fijos, no editables */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-1">
+              <label className="text-sm font-medium">Taller</label>
+              <div className="w-full border border-border rounded-md px-3 py-2 bg-muted/50 font-medium">
+                {tallerNombreSeleccionado || "—"}
+              </div>
+            </div>
+            <div className="space-y-1">
+              <label className="text-sm font-medium">Localidad</label>
+              <div className="w-full border border-border rounded-md px-3 py-2 bg-muted/50 font-medium">
+                {localidadParam ? decodeURIComponent(localidadParam) : "—"}
+              </div>
             </div>
           </div>
 

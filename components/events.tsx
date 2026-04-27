@@ -197,7 +197,7 @@ function EventCard({ event }: { event: Event }) {
           <div className="pt-3">
             {estado === "registrado" ? (
               <a
-                href={`/inscribirse?taller=${event.tallerSlug}&evento=${encodeURIComponent(`${event.title} — ${event.date} — ${event.location}`)}`}
+                href={`/inscribirse?taller=${event.tallerSlug}&localidad=${encodeURIComponent(event.location)}&evento=${encodeURIComponent(`${event.title} — ${event.date} — ${event.location}`)}`}
                 className="flex items-center justify-center gap-2 w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-sm"
               >
                 <ClipboardList className="h-4 w-4" />
@@ -224,7 +224,7 @@ function EventCard({ event }: { event: Event }) {
               </>
             ) : (
               <a
-                href={`/inscribirse?taller=${event.tallerSlug}&evento=${encodeURIComponent(`${event.title} — ${event.date} — ${event.location}`)}`}
+                href={`/inscribirse?taller=${event.tallerSlug}&localidad=${encodeURIComponent(event.location)}&evento=${encodeURIComponent(`${event.title} — ${event.date} — ${event.location}`)}`}
                 className="flex items-center justify-center gap-2 w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-sm"
               >
                 <ClipboardList className="h-4 w-4" />

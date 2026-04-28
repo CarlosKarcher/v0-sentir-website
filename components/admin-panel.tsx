@@ -751,7 +751,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                                   <>
                                     <td className="px-3 py-2 text-sm text-muted-foreground whitespace-nowrap">
                                       {t.fecha_inicio
-                                        ? (() => { const [y, m, d] = t.fecha_inicio.split("-"); return `${d}/${m}/${y}` })()
+                                        ? (() => { const [y, m, d] = t.fecha_inicio.slice(0, 10).split("-"); return `${d}/${m}/${y}` })()
                                         : <span className="italic">—</span>}
                                     </td>
                                     <td className="px-3 py-2 text-sm text-muted-foreground whitespace-nowrap">{t.sede || <span className="italic">General</span>}</td>
@@ -782,7 +782,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                                             acepta_transferencia: t.acepta_transferencia ?? true,
                                             acepta_tarjeta: t.acepta_tarjeta ?? true,
                                             acepta_sena: t.acepta_sena ?? true,
-                                            fecha_inicio: t.fecha_inicio ?? "",
+                                            fecha_inicio: (t.fecha_inicio ?? "").slice(0, 10),
                                           })
                                         }}
                                         className="h-7 px-2 text-xs"

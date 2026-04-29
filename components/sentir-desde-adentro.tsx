@@ -104,7 +104,7 @@ export function SentirDesdeAdentro() {
               <CardContent className="p-0">
                 <div className="relative w-full" style={{ aspectRatio: "16/9" }}>
                   <video
-                    src="/Video-transfor-abril-2026.mp4"
+                    src="/Cual es tu mejor Terapia..mp4"
                     controls
                     className="w-full h-full object-contain mx-auto block"
                     preload="metadata"
@@ -119,7 +119,7 @@ export function SentirDesdeAdentro() {
               <CardContent className="p-0">
                 <div className="relative w-full" style={{ aspectRatio: "16/9" }}>
                   <video
-                    src="/video-transfor-abril-2026-2.mp4"
+                    src="/circulo-auto-general.mp4"
                     controls
                     className="w-full h-full object-contain mx-auto block"
                     preload="metadata"

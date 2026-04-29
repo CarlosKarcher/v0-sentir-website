@@ -287,15 +287,15 @@ export function Header({ onAnotate }: HeaderProps) {
 
       {/* Barra WhatsApp Consultas */}
       <div className="w-full border-t border-border/30 bg-background/95">
-        <div className="w-full max-w-7xl mx-auto flex justify-end px-4 py-1">
+        <div className="w-full max-w-7xl mx-auto flex justify-end pr-2 py-1">
           <a
             href="https://wa.me/542966211547"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-xs font-medium text-green-700 hover:text-green-800 transition-colors"
+            className="inline-flex items-center gap-2 text-green-700 hover:text-green-800 transition-colors"
           >
-            <MessageCircle className="h-3.5 w-3.5 text-green-600" />
-            Consultas: +54 2966 211547
+            <span className="text-sm font-bold">Consultas</span>
+            <MessageCircle className="h-5 w-5 text-green-600" />
           </a>
         </div>
       </div>

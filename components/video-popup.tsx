@@ -7,11 +7,12 @@ import { Button } from "@/components/ui/button"
 export function VideoPopup() {
   const [isOpen, setIsOpen] = React.useState(true)
   const [muted, setMuted] = React.useState(true)
-  const videoRef = React.useRef<HTMLVideoElement>(null)
+  const video1Ref = React.useRef<HTMLVideoElement>(null)
+  const video2Ref = React.useRef<HTMLVideoElement>(null)
 
-  // Autorun al montar (muted para que el navegador lo permita)
+  // Autorun video 1 al montar (muted para que el navegador lo permita)
   React.useEffect(() => {
-    const v = videoRef.current
+    const v = video1Ref.current
     if (!v) return
     v.muted = true
     const tryPlay = () => { v.play().catch(() => {}) }
@@ -20,13 +21,23 @@ export function VideoPopup() {
     return () => v.removeEventListener("loadedmetadata", tryPlay)
   }, [])
 
-  // Sincronizar mute/unmute
+  // Sincronizar mute/unmute en ambos videos
   React.useEffect(() => {
-    if (videoRef.current) videoRef.current.muted = muted
+    if (video1Ref.current) video1Ref.current.muted = muted
+    if (video2Ref.current) video2Ref.current.muted = muted
   }, [muted])
 
+  // Cuando termina video 1 → autorun video 2
+  const handleVideo1Ended = () => {
+    const v = video2Ref.current
+    if (!v) return
+    v.muted = muted
+    v.play().catch(() => {})
+  }
+
   const handleClose = () => {
-    videoRef.current?.pause()
+    video1Ref.current?.pause()
+    video2Ref.current?.pause()
     setIsOpen(false)
   }
 
@@ -42,7 +53,7 @@ export function VideoPopup() {
       />
       <div style={{ position: "fixed", inset: 0, zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: "8px" }}>
         <div
-          style={{ position: "relative", background: "#000", borderRadius: "12px", overflow: "hidden", width: "min(480px, 96vw)", maxHeight: "90vh" }}
+          style={{ position: "relative", background: "#000", borderRadius: "12px", overflow: "hidden", width: "min(920px, 98vw)", maxHeight: "90vh" }}
           onClick={(e) => e.stopPropagation()}
         >
           {/* Botón cerrar */}
@@ -69,14 +80,26 @@ export function VideoPopup() {
             {muted ? <VolumeX style={{ width: 20, height: 20 }} /> : <Volume2 style={{ width: 20, height: 20 }} />}
           </Button>
 
-          <video
-            ref={videoRef}
-            src="/auto-Mayo-2026.mp4"
-            playsInline
-            controls
-            preload="auto"
-            style={{ width: "100%", minHeight: "300px", maxHeight: "88vh", display: "block", background: "#000" }}
-          />
+          {/* Dos videos lado a lado */}
+          <div style={{ display: "flex", flexDirection: "row", gap: "1cm" }}>
+            <video
+              ref={video1Ref}
+              src="/auto-Mayo-2026.mp4"
+              playsInline
+              controls
+              preload="auto"
+              onEnded={handleVideo1Ended}
+              style={{ flex: 1, minWidth: 0, minHeight: "300px", maxHeight: "88vh", display: "block", background: "#000" }}
+            />
+            <video
+              ref={video2Ref}
+              src="/Guerrero-gallegos-Mayo-2026.mp4"
+              playsInline
+              controls
+              preload="auto"
+              style={{ flex: 1, minWidth: 0, minHeight: "300px", maxHeight: "88vh", display: "block", background: "#000" }}
+            />
+          </div>
         </div>
       </div>
     </>

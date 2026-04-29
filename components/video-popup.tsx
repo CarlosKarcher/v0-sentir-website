@@ -74,8 +74,8 @@ export function VideoPopup() {
             src="/auto-Mayo-2026.mp4"
             playsInline
             controls
-            preload="metadata"
-            style={{ width: "100%", maxHeight: "88vh", display: "block", background: "#000" }}
+            preload="auto"
+            style={{ width: "100%", minHeight: "300px", maxHeight: "88vh", display: "block", background: "#000" }}
           />
         </div>
       </div>

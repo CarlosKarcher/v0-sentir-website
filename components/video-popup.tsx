@@ -81,7 +81,7 @@ export function VideoPopup() {
           </Button>
 
           {/* Dos videos lado a lado */}
-          <div style={{ display: "flex", flexDirection: "row", gap: "1cm" }}>
+          <div style={{ display: "flex", flexDirection: "row", gap: "1.5cm", padding: "0 0.5cm" }}>
             <video
               ref={video1Ref}
               src="/auto-Mayo-2026.mp4"

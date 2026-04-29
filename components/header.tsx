@@ -4,7 +4,7 @@ import { useState } from "react"
 import { useUser } from "@/lib/user-context"
 import { LoginModal } from "@/components/login-modal"
 import { Button } from "@/components/ui/button"
-import { Menu } from "lucide-react"
+import { Menu, MessageCircle } from "lucide-react"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import {
   NavigationMenu,
@@ -282,6 +282,21 @@ export function Header({ onAnotate }: HeaderProps) {
               </nav>
             </SheetContent>
           </Sheet>
+        </div>
+      </div>
+
+      {/* Barra WhatsApp Consultas */}
+      <div className="w-full border-t border-border/30 bg-background/95">
+        <div className="w-full max-w-7xl mx-auto flex justify-end px-4 py-1">
+          <a
+            href="https://wa.me/542966211547"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-xs font-medium text-green-700 hover:text-green-800 transition-colors"
+          >
+            <MessageCircle className="h-3.5 w-3.5 text-green-600" />
+            Consultas: +54 2966 211547
+          </a>
         </div>
       </div>
 

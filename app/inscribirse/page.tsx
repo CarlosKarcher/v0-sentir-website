@@ -163,6 +163,16 @@ function InscribirseForm() {
         : null,
     ].filter(Boolean).join("\n\n") || null
 
+    // Buscar nombre del miembro si está logueado
+    let nombreMiembro: string | null = null
+    if (emailAuth) {
+      const { data: miembroData } = await supabase
+        .rpc("buscar_email_registrado", { p_email: emailAuth.toLowerCase() })
+      if (miembroData?.encontrado) {
+        nombreMiembro = miembroData.nombre_apellido || null
+      }
+    }
+
     const { error: insertError } = await supabase.from("inscripciones").insert({
       taller_id: tallerData.id,
       nombre: nombre.trim(),
@@ -177,6 +187,7 @@ function InscribirseForm() {
       estado: "pendiente",
       mensaje_inscripto: mensajeFinal,
       evento_descripcion: eventoParam ? decodeURIComponent(eventoParam) : null,
+      nombre_miembro: nombreMiembro,
     })
 
     if (insertError) {

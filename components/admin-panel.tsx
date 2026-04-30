@@ -1188,11 +1188,11 @@ function TablaMiembros({ miembros }: { miembros: Miembro[] }) {
           <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Nombre</th>
           <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Gafete</th>
           <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Celular</th>
+          <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Fecha Nac.</th>
           <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Email</th>
           <th className="text-center px-2 py-2 font-semibold whitespace-nowrap">Auto</th>
           <th className="text-center px-2 py-2 font-semibold whitespace-nowrap">Transf</th>
           <th className="text-center px-2 py-2 font-semibold whitespace-nowrap">MyL</th>
-          <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Fecha Nac.</th>
           <th className="text-center px-2 py-2 font-semibold whitespace-nowrap">Guerrero</th>
           <th className="text-center px-2 py-2 font-semibold whitespace-nowrap">Biodec</th>
           <th className="text-center px-2 py-2 font-semibold whitespace-nowrap">Niño Int</th>
@@ -1207,13 +1207,13 @@ function TablaMiembros({ miembros }: { miembros: Miembro[] }) {
             <td className="px-2 py-2 whitespace-nowrap">{m.nombre_apellido.trim()}</td>
             <td className="px-2 py-2 whitespace-nowrap">{m.nombre_gafete?.trim()}</td>
             <td className="px-2 py-2 whitespace-nowrap">{m.celular_caracteristica} {m.celular_numero}</td>
+            <td className="px-2 py-2 whitespace-nowrap text-xs text-muted-foreground">
+              {m.fecha_nacimiento ? (() => { const [y,mo,d] = m.fecha_nacimiento!.slice(0,10).split("-"); return `${d}/${mo}/${y}` })() : "—"}
+            </td>
             <td className="px-2 py-2 whitespace-nowrap text-xs text-muted-foreground">{m.email || "—"}</td>
             <td className="text-center px-2 py-2">{t(m.taller_autoconocimiento)}</td>
             <td className="text-center px-2 py-2">{t(m.taller_transformacion)}</td>
             <td className="text-center px-2 py-2">{t(m.taller_myl)}</td>
-            <td className="px-2 py-2 whitespace-nowrap text-xs text-muted-foreground">
-              {m.fecha_nacimiento ? (() => { const [y,mo,d] = m.fecha_nacimiento!.slice(0,10).split("-"); return `${d}/${mo}/${y}` })() : "—"}
-            </td>
             <td className="text-center px-2 py-2">{t(m.taller_guerrero)}</td>
             <td className="text-center px-2 py-2">{t(m.taller_biodecodificacion)}</td>
             <td className="text-center px-2 py-2">{t(m.taller_nino_interior)}</td>

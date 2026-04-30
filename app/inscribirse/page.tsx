@@ -95,6 +95,7 @@ function InscribirseForm() {
       setApellido(parts.slice(1).join(" ") || "")
       setEmail(emailAuth)
       setTelefono(`${data.celular_caracteristica || ""} ${data.celular_numero || ""}`.trim())
+      if (data.fecha_nacimiento) setFechaNacimiento(data.fecha_nacimiento.slice(0, 10))
 
       // Verificar prerequisito usando datos del RPC (evita problemas de RLS)
       const requisito = REQUISITOS_ESTRICTOS[tallerSlug]
@@ -163,13 +164,19 @@ function InscribirseForm() {
         : null,
     ].filter(Boolean).join("\n\n") || null
 
-    // Buscar nombre del miembro si está logueado
+    // Buscar nombre del miembro si está logueado y guardar fecha de nacimiento
     let nombreMiembro: string | null = null
     if (emailAuth) {
       const { data: miembroData } = await supabase
         .rpc("buscar_email_registrado", { p_email: emailAuth.toLowerCase() })
       if (miembroData?.encontrado) {
         nombreMiembro = miembroData.nombre_apellido || null
+        if (fechaNacimiento && miembroData.origen === "miembro") {
+          await supabase.rpc("actualizar_fecha_nacimiento_miembro", {
+            p_email: emailAuth.toLowerCase(),
+            p_fecha_nacimiento: fechaNacimiento,
+          })
+        }
       }
     }
 

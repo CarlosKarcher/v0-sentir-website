@@ -1022,6 +1022,8 @@ function TablaInscripciones({
           <tr className="border-b-2 border-border bg-muted/50">
             <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Taller</th>
             <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Nombre</th>
+            <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Miembro</th>
+            <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Enrolador</th>
             <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Email</th>
             <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Teléfono</th>
             <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Sede</th>
@@ -1045,6 +1047,12 @@ function TablaInscripciones({
               <tr key={ins.id} className={`border-b border-border/50 hover:bg-muted/30 transition-colors ${i % 2 === 0 ? "" : "bg-muted/10"}`}>
                 <td className="px-2 py-2 whitespace-nowrap font-medium text-xs">{ins.taller_nombre}</td>
                 <td className="px-2 py-2 whitespace-nowrap">{ins.nombre} {ins.apellido}</td>
+                <td className="px-2 py-2 whitespace-nowrap text-xs text-muted-foreground">{ins.nombre_miembro || "—"}</td>
+                <td className="px-2 py-2 whitespace-nowrap text-xs text-muted-foreground">
+                  {ins.mensaje_inscripto?.startsWith("Recomendado por:")
+                    ? ins.mensaje_inscripto.replace("Recomendado por:", "").trim()
+                    : "—"}
+                </td>
                 <td className="px-2 py-2 whitespace-nowrap text-xs text-muted-foreground">{ins.email}</td>
                 <td className="px-2 py-2 whitespace-nowrap text-xs">{ins.telefono}</td>
                 <td className="px-2 py-2 whitespace-nowrap text-xs text-muted-foreground">{ins.localidad_taller || "—"}</td>

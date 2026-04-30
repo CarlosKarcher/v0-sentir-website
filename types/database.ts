@@ -70,4 +70,5 @@ export interface InscripcionConTaller extends Inscripcion {
   evento_descripcion: string | null
   fecha_nacimiento: string | null
   localidad_taller: string | null
+  nombre_miembro: string | null
 }

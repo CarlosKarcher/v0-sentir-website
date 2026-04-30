@@ -1134,7 +1134,52 @@ function TablaInscripciones({
 
 function TablaMiembros({ miembros }: { miembros: Miembro[] }) {
   const t = (v: boolean) => v ? "✅" : "❌"
+  const [orden, setOrden] = useState<"numero" | "nombre" | "talleres">("numero")
+  const [dir, setDir] = useState<"asc" | "desc">("asc")
+
+  const totalTalleres = (m: Miembro) =>
+    [m.taller_autoconocimiento, m.taller_transformacion, m.taller_myl,
+     m.taller_guerrero, m.taller_biodecodificacion, m.taller_nino_interior, m.taller_constelaciones]
+    .filter(Boolean).length
+
+  const talleresLiderazgo = (m: Miembro) =>
+    [m.taller_autoconocimiento, m.taller_transformacion, m.taller_myl].filter(Boolean).length
+
+  const sorted = [...miembros].sort((a, b) => {
+    let cmp = 0
+    if (orden === "nombre") {
+      cmp = a.nombre_apellido.trim().localeCompare(b.nombre_apellido.trim(), "es")
+    } else if (orden === "talleres") {
+      const ta = totalTalleres(a), tb = totalTalleres(b)
+      if (ta !== tb) cmp = tb - ta
+      else cmp = talleresLiderazgo(b) - talleresLiderazgo(a)
+    } else {
+      cmp = a.numero - b.numero
+    }
+    return dir === "asc" ? cmp : -cmp
+  })
+
+  const toggleOrden = (nuevo: typeof orden) => {
+    if (orden === nuevo) setDir(d => d === "asc" ? "desc" : "asc")
+    else { setOrden(nuevo); setDir(nuevo === "talleres" ? "desc" : "asc") }
+  }
+
+  const arrow = (col: typeof orden) => orden === col ? (dir === "asc" ? " ▲" : " ▼") : ""
+
   return (
+    <div className="space-y-3">
+      <div className="flex items-center gap-2 flex-wrap">
+        <span className="text-sm font-medium">Ordenar por:</span>
+        <button onClick={() => toggleOrden("numero")} className={`px-3 py-1 rounded-full text-xs font-semibold border transition-colors ${orden === "numero" ? "bg-blue-900 text-white border-blue-900" : "border-border hover:border-blue-900"}`}>
+          Nº{arrow("numero")}
+        </button>
+        <button onClick={() => toggleOrden("nombre")} className={`px-3 py-1 rounded-full text-xs font-semibold border transition-colors ${orden === "nombre" ? "bg-blue-900 text-white border-blue-900" : "border-border hover:border-blue-900"}`}>
+          Nombre{arrow("nombre")}
+        </button>
+        <button onClick={() => toggleOrden("talleres")} className={`px-3 py-1 rounded-full text-xs font-semibold border transition-colors ${orden === "talleres" ? "bg-blue-900 text-white border-blue-900" : "border-border hover:border-blue-900"}`}>
+          Talleres hechos{arrow("talleres")}
+        </button>
+      </div>
     <table className="w-full text-sm border-collapse">
       <thead>
         <tr className="border-b-2 border-border bg-muted/50">
@@ -1150,10 +1195,11 @@ function TablaMiembros({ miembros }: { miembros: Miembro[] }) {
           <th className="text-center px-2 py-2 font-semibold whitespace-nowrap">Biodec</th>
           <th className="text-center px-2 py-2 font-semibold whitespace-nowrap">Niño Int</th>
           <th className="text-center px-2 py-2 font-semibold whitespace-nowrap">Constel</th>
+          <th className="text-center px-2 py-2 font-semibold whitespace-nowrap">Total</th>
         </tr>
       </thead>
       <tbody>
-        {miembros.map((m, i) => (
+        {sorted.map((m, i) => (
           <tr key={m.numero} className={`border-b border-border/50 hover:bg-muted/30 transition-colors ${i % 2 === 0 ? "" : "bg-muted/10"}`}>
             <td className="px-2 py-2 font-medium">{m.numero}</td>
             <td className="px-2 py-2 whitespace-nowrap">{m.nombre_apellido.trim()}</td>
@@ -1167,10 +1213,12 @@ function TablaMiembros({ miembros }: { miembros: Miembro[] }) {
             <td className="text-center px-2 py-2">{t(m.taller_biodecodificacion)}</td>
             <td className="text-center px-2 py-2">{t(m.taller_nino_interior)}</td>
             <td className="text-center px-2 py-2">{t(m.taller_constelaciones)}</td>
+            <td className="text-center px-2 py-2 font-semibold text-blue-900 dark:text-blue-300">{totalTalleres(m)}/7</td>
           </tr>
         ))}
       </tbody>
     </table>
+    </div>
   )
 }
 

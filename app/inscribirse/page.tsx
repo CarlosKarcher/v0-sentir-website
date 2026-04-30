@@ -58,6 +58,7 @@ function InscribirseForm() {
   const [fechaNacimiento, setFechaNacimiento] = useState("")
   const [mensaje, setMensaje] = useState("")
   const [recomendadoPor, setRecomendadoPor] = useState("")
+  const [telefonoRecomendado, setTelefonoRecomendado] = useState("")
   const [modalidadPago, setModalidadPago] = useState<"total" | "tarjeta" | "sena">("total")
   const [cuotas, setCuotas] = useState<2 | 3 | null>(null)
 
@@ -158,7 +159,7 @@ function InscribirseForm() {
     const mensajeFinal = [
       mensaje.trim() || null,
       tallerSlug === "autoconocimiento" && recomendadoPor.trim()
-        ? `¿Quién te recomendó?: ${recomendadoPor.trim()}`
+        ? `Recomendado por: ${recomendadoPor.trim()}${telefonoRecomendado.trim() ? ` — Tel: ${telefonoRecomendado.trim()}` : ""}`
         : null,
     ].filter(Boolean).join("\n\n") || null
 
@@ -480,15 +481,27 @@ function InscribirseForm() {
 
           {/* Campo especial Autoconocimiento */}
           {tallerSlug === "autoconocimiento" && (
-            <div className="space-y-1">
-              <label className="text-sm font-medium">¿Quién te recomendó?</label>
-              <input
-                type="text"
-                value={recomendadoPor}
-                onChange={e => setRecomendadoPor(e.target.value)}
-                placeholder="Nombre de quien te recomendó"
-                className={inputEditable}
-              />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1">
+                <label className="text-sm font-medium">Nombre de quien te recomendó</label>
+                <input
+                  type="text"
+                  value={recomendadoPor}
+                  onChange={e => setRecomendadoPor(e.target.value)}
+                  placeholder="Nombre y apellido"
+                  className={inputEditable}
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="text-sm font-medium">Teléfono de quien te recomendó</label>
+                <input
+                  type="tel"
+                  value={telefonoRecomendado}
+                  onChange={e => setTelefonoRecomendado(e.target.value)}
+                  placeholder="Ej: 2966 123456"
+                  className={inputEditable}
+                />
+              </div>
             </div>
           )}
 

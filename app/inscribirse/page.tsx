@@ -157,12 +157,7 @@ function InscribirseForm() {
     setEnviando(true)
     setError(null)
 
-    const mensajeFinal = [
-      mensaje.trim() || null,
-      tallerSlug === "autoconocimiento" && recomendadoPor.trim()
-        ? `Recomendado por: ${recomendadoPor.trim()}${telefonoRecomendado.trim() ? ` — Tel: ${telefonoRecomendado.trim()}` : ""}`
-        : null,
-    ].filter(Boolean).join("\n\n") || null
+    const mensajeFinal = mensaje.trim() || null
 
     // Buscar nombre del miembro si está logueado y guardar fecha de nacimiento
     let nombreMiembro: string | null = null
@@ -196,6 +191,8 @@ function InscribirseForm() {
       evento_descripcion: eventoParam ? decodeURIComponent(eventoParam) : null,
       nombre_miembro: nombreMiembro,
       precio_inscripto: precios?.precioFinal ?? null,
+      enrolador_nombre: tallerSlug === "autoconocimiento" && recomendadoPor.trim() ? recomendadoPor.trim() : null,
+      enrolador_telefono: tallerSlug === "autoconocimiento" && telefonoRecomendado.trim() ? telefonoRecomendado.trim() : null,
     })
 
     if (insertError) {

@@ -72,4 +72,6 @@ export interface InscripcionConTaller extends Inscripcion {
   localidad_taller: string | null
   nombre_miembro: string | null
   precio_inscripto: number | null
+  enrolador_nombre: string | null
+  enrolador_telefono: string | null
 }

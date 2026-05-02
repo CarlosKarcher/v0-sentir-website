@@ -1048,8 +1048,8 @@ function TablaInscripciones({
                 <td className="px-2 py-2 whitespace-nowrap">{ins.nombre} {ins.apellido}</td>
                 <td className="px-2 py-2 whitespace-nowrap text-xs text-muted-foreground">{ins.nombre_miembro || "—"}</td>
                 <td className="px-2 py-2 whitespace-nowrap text-xs text-muted-foreground">
-                  {ins.mensaje_inscripto?.startsWith("Recomendado por:")
-                    ? ins.mensaje_inscripto.replace("Recomendado por:", "").trim()
+                  {ins.enrolador_nombre
+                    ? `${ins.enrolador_nombre}${ins.enrolador_telefono ? ` — ${ins.enrolador_telefono}` : ""}`
                     : "—"}
                 </td>
                 <td className="px-2 py-2 whitespace-nowrap text-xs text-muted-foreground">{ins.email}</td>

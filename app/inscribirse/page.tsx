@@ -409,7 +409,7 @@ function InscribirseForm() {
           {/* Nombre y Apellido */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1">
-              <label className="text-sm font-medium">Nombre del Participante *</label>
+              <label className="text-sm font-medium">Nombre <span className="text-green-600">del Participante</span> *</label>
               <input
                 type="text"
                 required
@@ -421,7 +421,7 @@ function InscribirseForm() {
               />
             </div>
             <div className="space-y-1">
-              <label className="text-sm font-medium">Apellido del Participante *</label>
+              <label className="text-sm font-medium">Apellido <span className="text-green-600">del Participante</span> *</label>
               <input
                 type="text"
                 required
@@ -436,7 +436,7 @@ function InscribirseForm() {
 
           {/* Email */}
           <div className="space-y-1">
-            <label className="text-sm font-medium">Email del Participante *</label>
+            <label className="text-sm font-medium">Email <span className="text-green-600">del Participante</span> *</label>
             <input
               type="email"
               required
@@ -450,7 +450,7 @@ function InscribirseForm() {
 
           {/* Teléfono */}
           <div className="space-y-1">
-            <label className="text-sm font-medium">Teléfono / Celular del Participante *</label>
+            <label className="text-sm font-medium">Teléfono / Celular <span className="text-green-600">del Participante</span> *</label>
             <input
               type="tel"
               required
@@ -465,7 +465,7 @@ function InscribirseForm() {
           {/* DNI y Ciudad */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1">
-              <label className="text-sm font-medium">DNI del Participante</label>
+              <label className="text-sm font-medium">DNI <span className="text-green-600">del Participante</span></label>
               <input
                 type="text"
                 value={dni}
@@ -488,7 +488,7 @@ function InscribirseForm() {
 
           {/* Fecha de nacimiento */}
           <div className="space-y-1">
-            <label className="text-sm font-medium">Fecha de nacimiento del Participante</label>
+            <label className="text-sm font-medium">Fecha de nacimiento <span className="text-green-600">del Participante</span></label>
             <input
               type="date"
               value={fechaNacimiento}

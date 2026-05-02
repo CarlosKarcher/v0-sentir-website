@@ -1006,8 +1006,7 @@ function TablaInscripciones({
   const guardarMonto = async (ins: InscripcionConTaller) => {
     const val = parseFloat(montosEdit[ins.id] ?? "")
     if (isNaN(val)) return
-    const taller = { precio: ins.taller_precio, descuento_tipo: ins.taller_descuento_tipo, descuento_valor: ins.taller_descuento_valor } as any
-    const { precioFinal } = calcularPrecioFinal(taller)
+    const precioFinal = ins.precio_inscripto ?? calcularPrecioFinal({ precio: ins.taller_precio, descuento_tipo: ins.taller_descuento_tipo, descuento_valor: ins.taller_descuento_valor }).precioFinal
     setGuardandoMonto(ins.id)
     await onActualizarMonto(ins.id, val)
     if (precioFinal > 0 && val >= precioFinal && ins.estado !== "confirmado") {
@@ -1039,8 +1038,7 @@ function TablaInscripciones({
         </thead>
         <tbody>
           {inscripciones.map((ins, i) => {
-            const taller = { precio: ins.taller_precio, descuento_tipo: ins.taller_descuento_tipo, descuento_valor: ins.taller_descuento_valor } as any
-            const { precioFinal } = calcularPrecioFinal(taller)
+            const precioFinal = ins.precio_inscripto ?? calcularPrecioFinal({ precio: ins.taller_precio, descuento_tipo: ins.taller_descuento_tipo, descuento_valor: ins.taller_descuento_valor }).precioFinal
             const montoEditVal = montosEdit[ins.id]
             const montoPagado = montoEditVal !== undefined ? parseFloat(montoEditVal) || 0 : (ins.monto_pagado ?? 0)
             const saldo = precioFinal > 0 ? precioFinal - montoPagado : 0

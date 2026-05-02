@@ -195,6 +195,7 @@ function InscribirseForm() {
       mensaje_inscripto: mensajeFinal,
       evento_descripcion: eventoParam ? decodeURIComponent(eventoParam) : null,
       nombre_miembro: nombreMiembro,
+      precio_inscripto: precios?.precioFinal ?? null,
     })
 
     if (insertError) {

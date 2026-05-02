@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { createPortal } from "react-dom"
+import * as XLSX from "xlsx"
 import { supabase } from "@/lib/supabase-client"
 import { X, Download, RefreshCw, ArrowLeft, Users, UserX, Filter, ClipboardList, DollarSign, Check, Ban, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -275,17 +276,11 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
     }
   }, [isOpen])
 
-  const descargarCSV = (headers: string[], rows: (string | number)[][], filename: string) => {
-    const csvContent = [headers, ...rows]
-      .map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(","))
-      .join("\n")
-    const blob = new Blob(["\uFEFF" + csvContent], { type: "text/csv;charset=utf-8;" })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement("a")
-    a.href = url
-    a.download = filename
-    a.click()
-    URL.revokeObjectURL(url)
+  const descargarExcel = (headers: string[], rows: (string | number)[][], filename: string) => {
+    const ws = XLSX.utils.aoa_to_sheet([headers, ...rows])
+    const wb = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(wb, ws, "Datos")
+    XLSX.writeFile(wb, filename)
   }
 
   const exportarCSVMiembros = (data: Miembro[], filename: string) => {
@@ -306,7 +301,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
       m.comentario?.trim() || "",
       new Date(m.created_at).toLocaleDateString("es-AR"),
     ])
-    descargarCSV(headers, rows, filename)
+    descargarExcel(headers, rows, filename.replace(".csv", ".xlsx"))
   }
 
   const exportarCSVNomembros = () => {
@@ -319,7 +314,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
       n.recibir_informacion ? "SI" : "NO",
       new Date(n.created_at).toLocaleDateString("es-AR"),
     ])
-    descargarCSV(headers, rows, `nomembros_sentir_${new Date().toISOString().slice(0, 10)}.csv`)
+    descargarExcel(headers, rows, `nomembros_sentir_${new Date().toISOString().slice(0, 10)}.xlsx`)
   }
 
   if (!isOpen) return null
@@ -331,23 +326,28 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
   const tallerLabel = TALLERES.find(t => t.key === tallerFiltro)?.label || ""
 
   const exportarCSVInscripciones = (data: InscripcionConTaller[]) => {
-    const headers = ["Taller", "Evento", "Nombre", "Apellido", "Email", "Teléfono", "DNI", "Ciudad", "Estado", "Método Pago", "Monto Pagado", "Mensaje", "Fecha"]
+    const headers = ["Taller", "Evento", "Nombre", "Apellido", "Email", "Teléfono", "DNI", "Ciudad", "F. Nacimiento", "Miembro", "Enrolador", "Tel. Enrolador", "Estado", "Método Pago", "Precio Inscripto", "Monto Pagado", "Mensaje", "Fecha"]
     const rows = data.map(i => [
       i.taller_nombre,
-      (i as any).evento_descripcion || "",
+      i.evento_descripcion || "",
       i.nombre,
       i.apellido,
       i.email,
       i.telefono,
       i.dni || "",
       i.ciudad || "",
+      i.fecha_nacimiento ? new Date(i.fecha_nacimiento).toLocaleDateString("es-AR") : "",
+      i.nombre_miembro || "",
+      i.enrolador_nombre || "",
+      i.enrolador_telefono || "",
       i.estado,
       i.metodo_pago,
+      i.precio_inscripto ?? "",
       i.monto_pagado ?? "",
       i.mensaje_inscripto || "",
       new Date(i.creado_en).toLocaleDateString("es-AR"),
     ])
-    descargarCSV(headers, rows, `inscripciones_sentir_${new Date().toISOString().slice(0, 10)}.csv`)
+    descargarExcel(headers, rows, `inscripciones_sentir_${new Date().toISOString().slice(0, 10)}.xlsx`)
   }
 
   const titulos: Record<Vista, string> = {
@@ -1135,6 +1135,7 @@ function TablaMiembros({ miembros }: { miembros: Miembro[] }) {
   const t = (v: boolean) => v ? "✅" : "❌"
   const [orden, setOrden] = useState<"numero" | "nombre" | "talleres">("numero")
   const [dir, setDir] = useState<"asc" | "desc">("asc")
+  const [busqueda, setBusqueda] = useState("")
 
   const totalTalleres = (m: Miembro) =>
     [m.taller_autoconocimiento, m.taller_transformacion, m.taller_myl,
@@ -1144,7 +1145,11 @@ function TablaMiembros({ miembros }: { miembros: Miembro[] }) {
   const talleresLiderazgo = (m: Miembro) =>
     [m.taller_autoconocimiento, m.taller_transformacion, m.taller_myl].filter(Boolean).length
 
-  const sorted = [...miembros].sort((a, b) => {
+  const filtrados = busqueda.trim()
+    ? miembros.filter(m => m.nombre_apellido.toLowerCase().includes(busqueda.toLowerCase()))
+    : miembros
+
+  const sorted = [...filtrados].sort((a, b) => {
     let cmp = 0
     if (orden === "nombre") {
       cmp = a.nombre_apellido.trim().localeCompare(b.nombre_apellido.trim(), "es")
@@ -1167,6 +1172,21 @@ function TablaMiembros({ miembros }: { miembros: Miembro[] }) {
 
   return (
     <div className="space-y-3">
+      <div className="flex items-center gap-2">
+        <input
+          type="text"
+          value={busqueda}
+          onChange={e => setBusqueda(e.target.value)}
+          placeholder="Buscar por nombre..."
+          className="border border-border rounded-md px-3 py-1.5 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary w-64"
+        />
+        {busqueda && (
+          <button onClick={() => setBusqueda("")} className="text-xs text-muted-foreground hover:text-foreground underline">
+            Limpiar
+          </button>
+        )}
+        {busqueda && <span className="text-xs text-muted-foreground">{sorted.length} resultado{sorted.length !== 1 ? "s" : ""}</span>}
+      </div>
       <div className="flex items-center gap-2 flex-wrap">
         <span className="text-sm font-medium">Ordenar por:</span>
         <button onClick={() => toggleOrden("numero")} className={`px-3 py-1 rounded-full text-xs font-semibold border transition-colors ${orden === "numero" ? "bg-blue-900 text-white border-blue-900" : "border-border hover:border-blue-900"}`}>

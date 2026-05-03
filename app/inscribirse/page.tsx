@@ -583,7 +583,7 @@ function InscribirseForm() {
               )}
               {modalidadPago === "sena" && precios && precios.precioFinal > 0 && (
                 <span className="text-sm font-semibold text-amber-700 dark:text-amber-400 self-center ml-2">
-                  (${(Math.ceil(precios.precioFinal * 0.35 / 1000) * 1000).toLocaleString("es-AR")})
+                  (${(Math.ceil(precios.precioFinal * 0.35 / 1000) * 1000).toLocaleString("es-AR")}) 35% del valor del taller.
                 </span>
               )}
             </div>

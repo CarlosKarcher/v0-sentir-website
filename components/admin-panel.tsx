@@ -138,6 +138,16 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
     setInscripciones(prev => prev.map(i => i.id === id ? { ...i, monto_pagado: monto } : i))
   }
 
+  const actualizarPrecioInscripto = async (id: string, precio: number) => {
+    await supabase.rpc("actualizar_precio_inscripto", {
+      p_admin_caracteristica: adminCaracteristica,
+      p_admin_numero: adminNumero,
+      p_inscripcion_id: id,
+      p_precio_inscripto: precio,
+    })
+    setInscripciones(prev => prev.map(i => i.id === id ? { ...i, precio_inscripto: precio } : i))
+  }
+
   const eliminarInscripcion = (id: string) => {
     setConfirmDialog({
       titulo: "Eliminar inscripción",
@@ -553,6 +563,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                         onCancelar={cancelarInscripcion}
                         onEliminar={eliminarInscripcion}
                         onActualizarMonto={actualizarMontoPagado}
+                        onActualizarPrecio={actualizarPrecioInscripto}
                       />
                     )}
                   </div>
@@ -869,6 +880,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                           onCancelar={cancelarInscripcion}
                           onEliminar={eliminarInscripcion}
                           onActualizarMonto={actualizarMontoPagado}
+                          onActualizarPrecio={actualizarPrecioInscripto}
                         />
                       )}
                     </div>
@@ -986,6 +998,7 @@ function TablaInscripciones({
   onCancelar,
   onEliminar,
   onActualizarMonto,
+  onActualizarPrecio,
 }: {
   inscripciones: InscripcionConTaller[]
   accionInscripcion: string | null
@@ -993,9 +1006,12 @@ function TablaInscripciones({
   onCancelar: (id: string) => void
   onEliminar: (id: string) => void
   onActualizarMonto: (id: string, monto: number) => Promise<void>
+  onActualizarPrecio: (id: string, precio: number) => Promise<void>
 }) {
   const [montosEdit, setMontosEdit] = useState<Record<string, string>>({})
   const [guardandoMonto, setGuardandoMonto] = useState<string | null>(null)
+  const [preciosEdit, setPreciosEdit] = useState<Record<string, string>>({})
+  const [guardandoPrecioInsc, setGuardandoPrecioInsc] = useState<string | null>(null)
 
   const estadoBadge = (estado: string) => {
     if (estado === "confirmado") return "bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300"
@@ -1003,15 +1019,36 @@ function TablaInscripciones({
     return "bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300"
   }
 
+  const getPrecioEfectivo = (ins: InscripcionConTaller) => {
+    const editado = parseFloat(preciosEdit[ins.id] ?? "")
+    if (!isNaN(editado)) return editado
+    return ins.precio_inscripto ?? calcularPrecioFinal({ precio: ins.taller_precio, descuento_tipo: ins.taller_descuento_tipo, descuento_valor: ins.taller_descuento_valor }).precioFinal
+  }
+
+  const checkAutoConfirmar = async (ins: InscripcionConTaller, precio: number, montoPagado: number) => {
+    if (ins.estado !== "confirmado" && (precio === 0 || montoPagado >= precio)) {
+      await onAprobar(ins.id)
+    }
+  }
+
+  const guardarPrecioInscripto = async (ins: InscripcionConTaller) => {
+    const val = parseFloat(preciosEdit[ins.id] ?? "")
+    if (isNaN(val)) return
+    setGuardandoPrecioInsc(ins.id)
+    await onActualizarPrecio(ins.id, val)
+    const montoPagadoEdited = parseFloat(montosEdit[ins.id] ?? "")
+    const montoPagado = isNaN(montoPagadoEdited) ? (ins.monto_pagado ?? 0) : montoPagadoEdited
+    await checkAutoConfirmar(ins, val, montoPagado)
+    setGuardandoPrecioInsc(null)
+  }
+
   const guardarMonto = async (ins: InscripcionConTaller) => {
     const val = parseFloat(montosEdit[ins.id] ?? "")
     if (isNaN(val)) return
-    const precioFinal = ins.precio_inscripto ?? calcularPrecioFinal({ precio: ins.taller_precio, descuento_tipo: ins.taller_descuento_tipo, descuento_valor: ins.taller_descuento_valor }).precioFinal
+    const precioEfectivo = getPrecioEfectivo(ins)
     setGuardandoMonto(ins.id)
     await onActualizarMonto(ins.id, val)
-    if (precioFinal > 0 && val >= precioFinal && ins.estado !== "confirmado") {
-      await onAprobar(ins.id)
-    }
+    await checkAutoConfirmar(ins, precioEfectivo, val)
     setGuardandoMonto(null)
   }
 
@@ -1038,10 +1075,11 @@ function TablaInscripciones({
         </thead>
         <tbody>
           {inscripciones.map((ins, i) => {
-            const precioFinal = ins.precio_inscripto ?? calcularPrecioFinal({ precio: ins.taller_precio, descuento_tipo: ins.taller_descuento_tipo, descuento_valor: ins.taller_descuento_valor }).precioFinal
+            const precioEfectivo = getPrecioEfectivo(ins)
+            const precioEditVal = preciosEdit[ins.id]
             const montoEditVal = montosEdit[ins.id]
             const montoPagado = montoEditVal !== undefined ? parseFloat(montoEditVal) || 0 : (ins.monto_pagado ?? 0)
-            const saldo = precioFinal > 0 ? precioFinal - montoPagado : 0
+            const saldo = precioEfectivo > 0 ? precioEfectivo - montoPagado : 0
             return (
               <tr key={ins.id} className={`border-b border-border/50 hover:bg-muted/30 transition-colors ${i % 2 === 0 ? "" : "bg-muted/10"}`}>
                 <td className="px-2 py-2 whitespace-nowrap font-medium text-xs">{ins.taller_nombre}</td>
@@ -1055,8 +1093,19 @@ function TablaInscripciones({
                 <td className="px-2 py-2 whitespace-nowrap text-xs text-muted-foreground">{ins.email}</td>
                 <td className="px-2 py-2 whitespace-nowrap text-xs">{ins.telefono}</td>
                 <td className="px-2 py-2 whitespace-nowrap text-xs text-muted-foreground">{ins.localidad_taller || "—"}</td>
-                <td className="px-2 py-2 whitespace-nowrap text-xs text-right font-medium">
-                  {precioFinal > 0 ? `$${precioFinal.toLocaleString("es-AR")} ${ins.taller_moneda}` : "—"}
+                <td className="px-2 py-2 whitespace-nowrap text-xs text-right">
+                  <div className="flex items-center gap-1 justify-end">
+                    <input
+                      type="number"
+                      value={precioEditVal ?? (ins.precio_inscripto ?? "")}
+                      onChange={e => setPreciosEdit(p => ({ ...p, [ins.id]: e.target.value }))}
+                      onBlur={() => guardarPrecioInscripto(ins)}
+                      disabled={guardandoPrecioInsc === ins.id}
+                      placeholder="0"
+                      className="w-24 border border-border rounded px-2 py-0.5 text-right bg-background text-xs focus:outline-none focus:ring-1 focus:ring-primary"
+                    />
+                    {guardandoPrecioInsc === ins.id && <span className="text-muted-foreground text-xs">...</span>}
+                  </div>
                 </td>
                 <td className="px-2 py-2 whitespace-nowrap text-xs text-muted-foreground">
                   {METODO_PAGO_LABEL[ins.metodo_pago] || ins.metodo_pago || "—"}
@@ -1075,8 +1124,8 @@ function TablaInscripciones({
                     {guardandoMonto === ins.id && <span className="text-muted-foreground text-xs">...</span>}
                   </div>
                 </td>
-                <td className={`px-2 py-2 whitespace-nowrap text-xs text-right font-semibold ${saldo > 0 ? "text-red-600 dark:text-red-400" : saldo === 0 && precioFinal > 0 ? "text-green-600 dark:text-green-400" : ""}`}>
-                  {precioFinal > 0 ? `$${saldo.toLocaleString("es-AR")}` : "—"}
+                <td className={`px-2 py-2 whitespace-nowrap text-xs text-right font-semibold ${saldo > 0 ? "text-red-600 dark:text-red-400" : saldo === 0 && precioEfectivo > 0 ? "text-green-600 dark:text-green-400" : ""}`}>
+                  {precioEfectivo > 0 ? `$${saldo.toLocaleString("es-AR")}` : "—"}
                 </td>
                 <td className="px-2 py-2 text-center">
                   <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${estadoBadge(ins.estado)}`}>
@@ -1092,7 +1141,7 @@ function TablaInscripciones({
                       <div title="Confirmado" className="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center shadow-sm opacity-70">
                         <Check className="h-4 w-4" />
                       </div>
-                    ) : ins.estado !== "cancelado" && saldo <= 0 && precioFinal > 0 ? (
+                    ) : ins.estado !== "cancelado" && saldo <= 0 && precioEfectivo > 0 ? (
                       <button
                         disabled={accionInscripcion === ins.id}
                         onClick={() => onAprobar(ins.id)}

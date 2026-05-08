@@ -1108,13 +1108,13 @@ function TablaInscripciones({
                   </div>
                 </td>
                 <td className="px-2 py-2 whitespace-nowrap text-xs text-muted-foreground">
-                  {METODO_PAGO_LABEL[ins.metodo_pago] || ins.metodo_pago || "—"}
+                  {precioEfectivo === 0 ? "Gratuito" : (METODO_PAGO_LABEL[ins.metodo_pago] || ins.metodo_pago || "—")}
                 </td>
                 <td className="px-2 py-2 whitespace-nowrap text-xs text-right">
                   <div className="flex items-center gap-1 justify-end">
                     <input
                       type="number"
-                      value={montoEditVal ?? (ins.monto_pagado ?? "")}
+                      value={montoEditVal ?? (precioEfectivo === 0 ? 0 : (ins.monto_pagado ?? ""))}
                       onChange={e => setMontosEdit(p => ({ ...p, [ins.id]: e.target.value }))}
                       onBlur={() => guardarMonto(ins)}
                       disabled={guardandoMonto === ins.id}
@@ -1124,8 +1124,8 @@ function TablaInscripciones({
                     {guardandoMonto === ins.id && <span className="text-muted-foreground text-xs">...</span>}
                   </div>
                 </td>
-                <td className={`px-2 py-2 whitespace-nowrap text-xs text-right font-semibold ${saldo > 0 ? "text-red-600 dark:text-red-400" : saldo === 0 && precioEfectivo > 0 ? "text-green-600 dark:text-green-400" : ""}`}>
-                  {precioEfectivo > 0 ? `$${saldo.toLocaleString("es-AR")}` : "—"}
+                <td className={`px-2 py-2 whitespace-nowrap text-xs text-right font-semibold ${saldo > 0 ? "text-red-600 dark:text-red-400" : "text-green-600 dark:text-green-400"}`}>
+                  {precioEfectivo > 0 ? `$${saldo.toLocaleString("es-AR")}` : "$0"}
                 </td>
                 <td className="px-2 py-2 text-center">
                   <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${estadoBadge(ins.estado)}`}>

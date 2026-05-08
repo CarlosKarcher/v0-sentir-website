@@ -186,7 +186,7 @@ function InscribirseForm() {
       fecha_nacimiento: fechaNacimiento || null,
       localidad_taller: localidadParam ? decodeURIComponent(localidadParam) : null,
       metodo_pago: modalidadPago === "total" ? "transferencia_total" : modalidadPago === "tarjeta" ? "tarjeta_credito" : cuotas ? `sena_${cuotas}_cuotas` : "sena",
-      estado: "pendiente",
+      estado: (precios?.precioFinal ?? 1) === 0 ? "confirmado" : "pendiente",
       mensaje_inscripto: mensajeFinal,
       evento_descripcion: eventoParam ? decodeURIComponent(eventoParam) : null,
       nombre_miembro: nombreMiembro,
@@ -300,9 +300,15 @@ function InscribirseForm() {
           <p className="text-muted-foreground text-lg">
             Tu solicitud para <strong>{tallerNombreSeleccionado}</strong> fue registrada exitosamente.
           </p>
-          <p className="text-muted-foreground">
-            La inscripción está Pendiente hasta recibir el comprobante de la transferencia por Mail.
-          </p>
+          {(precios?.precioFinal ?? 1) > 0 ? (
+            <p className="text-muted-foreground">
+              La inscripción está Pendiente hasta recibir el comprobante de la transferencia por Mail.
+            </p>
+          ) : (
+            <p className="text-muted-foreground">
+              Tu inscripción fue <strong>Confirmada</strong> automáticamente ya que el taller no tiene costo.
+            </p>
+          )}
           <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl p-4 text-sm text-left space-y-1">
             <p className="font-semibold text-amber-800 dark:text-amber-200">Datos de transferencia:</p>
             <p className="text-amber-700 dark:text-amber-300">Titular: <strong>Fernando Javier Cárcamo</strong></p>

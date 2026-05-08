@@ -540,19 +540,31 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                 {/* Tab Inscriptos */}
                 {!cargando && inscripcionesTab === "inscriptos" && (
                   <div className="space-y-3">
-                    <div className="flex items-center gap-3 flex-wrap">
-                      <label className="text-sm font-medium">Filtrar por estado:</label>
-                      <select
-                        value={filtroEstado}
-                        onChange={e => setFiltroEstado(e.target.value as typeof filtroEstado)}
-                        className="border border-border rounded-md px-3 py-1.5 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-                      >
-                        <option value="todos">Todos</option>
-                        <option value="pendiente">Pendiente</option>
-                        <option value="confirmado">Confirmado</option>
-                        <option value="cancelado">Cancelado</option>
-                      </select>
-                    </div>
+                    {(() => {
+                      const inscFiltradas = filtroEstado === "todos" ? inscripciones : inscripciones.filter(i => i.estado === filtroEstado)
+                      const totalPagado = inscFiltradas.reduce((acc, i) => acc + (i.monto_pagado ?? 0), 0)
+                      return (
+                        <div className="flex items-center gap-6 flex-wrap">
+                          <div className="flex items-center gap-3">
+                            <label className="text-sm font-medium">Filtrar por estado:</label>
+                            <select
+                              value={filtroEstado}
+                              onChange={e => setFiltroEstado(e.target.value as typeof filtroEstado)}
+                              className="border border-border rounded-md px-3 py-1.5 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                            >
+                              <option value="todos">Todos</option>
+                              <option value="pendiente">Pendiente</option>
+                              <option value="confirmado">Confirmado</option>
+                              <option value="cancelado">Cancelado</option>
+                            </select>
+                          </div>
+                          <div className="flex items-center gap-2 bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-lg px-4 py-1.5">
+                            <span className="text-sm text-green-700 dark:text-green-300 font-medium">Total recaudado:</span>
+                            <span className="text-sm font-bold text-green-800 dark:text-green-200">${totalPagado.toLocaleString("es-AR")} ARS</span>
+                          </div>
+                        </div>
+                      )
+                    })()}
                     {inscripciones.length === 0 ? (
                       <p className="text-center text-muted-foreground py-8">No hay inscripciones registradas.</p>
                     ) : (

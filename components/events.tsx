@@ -410,6 +410,8 @@ export function Events() {
       flyerImage: "/las-7-leyes-universales.jpeg",
       flyerImageAlt: "/images/las-7-leyes-universales.jpeg",
       contactPhone: "+54 9 2966 595803",
+      tallerSlug: "7-leyes-universales",
+      sede: "Virtual",
     },
     {
       title: "CURSO ONLINE de ORATORIA 🗣️🧠",
@@ -423,6 +425,8 @@ export function Events() {
       flyerImage: "/Flayer-Oratoria.jpeg",
       flyerImageAlt: "/images/Flayer-Oratoria.jpeg",
       contactPhone: "+54 9 2966 595803",
+      tallerSlug: "oratoria",
+      sede: "Online",
     },
     {
       title: "El Camino del Guerrero - Río Gallegos",
@@ -544,6 +548,7 @@ export function Events() {
       tallerSlug: "metas-y-logros",
       sede: "Río Gallegos",
     },
+
     {
       title: "Taller de Autoconocimiento - Córdoba",
       date: "25, 26 y 27 de Septiembre 2026",
@@ -587,6 +592,8 @@ export function Events() {
       hasFlyer: false,
       level: "3er Nivel",
       contactPhone: "+54 9 2966 595803",
+      tallerSlug: "metas-y-logros",
+      sede: "Río Gallegos",
     },
     {
       title: "El Camino del Guerrero - Quequén/Necochea",

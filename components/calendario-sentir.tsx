@@ -111,6 +111,11 @@ const CALENDAR_EVENTS: DayEvent[] = [
   { month: 3, day: 18, type: "autoconocimiento", label: "Autocon. – Necochea" },
   { month: 3, day: 19, type: "autoconocimiento", label: "Autocon. – Necochea" },
 
+  // Mayo — Autoconocimiento Río Gallegos (realizado)
+  { month: 4, day: 8, type: "autoconocimiento", label: "Autocon. – Río Gallegos" },
+  { month: 4, day: 9, type: "autoconocimiento", label: "Autocon. – Río Gallegos" },
+  { month: 4, day: 10, type: "autoconocimiento", label: "Autocon. – Río Gallegos" },
+
   // ── PRÓXIMOS EVENTOS ────────────────────────────────────────
 
   // Marzo — Autoconocimiento Punta Arenas
@@ -123,11 +128,6 @@ const CALENDAR_EVENTS: DayEvent[] = [
   { month: 3, day: 3, type: "transformacion", label: "Transfor. – Río Gallegos" },
   { month: 3, day: 4, type: "transformacion", label: "Transfor. – Río Gallegos" },
   { month: 3, day: 5, type: "transformacion", label: "Transfor. – Río Gallegos" },
-
-  // Mayo — Autoconocimiento Río Gallegos
-  { month: 4, day: 8, type: "autoconocimiento", label: "Autocon. – Río Gallegos" },
-  { month: 4, day: 9, type: "autoconocimiento", label: "Autocon. – Río Gallegos" },
-  { month: 4, day: 10, type: "autoconocimiento", label: "Autocon. – Río Gallegos" },
 
   // Mayo — Las 7 Leyes Universales
   { month: 4, day: 11, type: "leyes", label: "Las 7 Leyes Universales" },

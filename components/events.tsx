@@ -408,8 +408,6 @@ export function Events() {
       flyerImage: "/las-7-leyes-universales.jpeg",
       flyerImageAlt: "/images/las-7-leyes-universales.jpeg",
       contactPhone: "+54 9 2966 595803",
-      tallerSlug: "7-leyes-universales",
-      sede: "Virtual",
     },
     {
       title: "CURSO ONLINE de ORATORIA 🗣️🧠",
@@ -423,8 +421,6 @@ export function Events() {
       flyerImage: "/Flayer-Oratoria.jpeg",
       flyerImageAlt: "/images/Flayer-Oratoria.jpeg",
       contactPhone: "+54 9 2966 595803",
-      tallerSlug: "oratoria",
-      sede: "Online",
     },
     {
       title: "El Camino del Guerrero - Río Gallegos",

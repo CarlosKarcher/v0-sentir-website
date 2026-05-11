@@ -38,7 +38,7 @@ type Nomembro = {
   created_at: string
 }
 
-type Vista = "menu" | "inscripciones" | "miembros" | "nomembros" | "taller"
+type Vista = "menu" | "inscripciones" | "miembros" | "nomembros" | "taller" | "realizados"
 type InscripcionesTab = "inscriptos" | "precios" | "por_taller"
 
 const TALLERES = [
@@ -70,6 +70,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
   // Inscripciones
   const [inscripcionesTab, setInscripcionesTab] = useState<InscripcionesTab>("inscriptos")
   const [inscripciones, setInscripciones] = useState<InscripcionConTaller[]>([])
+  const [inscripcionesRealizadas, setInscripcionesRealizadas] = useState<InscripcionConTaller[]>([])
   const [talleresList, setTalleresList] = useState<Taller[]>([])
   const [filtroEstado, setFiltroEstado] = useState<"todos" | "pendiente" | "confirmado" | "cancelado">("todos")
   const [filtroTallerSlug, setFiltroTallerSlug] = useState<string>("")
@@ -95,6 +96,22 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
       p_admin_numero: adminNumero,
     })
     if (Array.isArray(data)) setInscripciones(data as InscripcionConTaller[])
+    setCargando(false)
+  }
+
+  const cargarInscripcionesRealizadas = async () => {
+    setCargando(true)
+    const { data } = await supabase
+      .from("inscripciones_realizadas")
+      .select("*, talleres(nombre, slug)")
+      .order("creado_en", { ascending: false })
+    if (Array.isArray(data)) {
+      setInscripcionesRealizadas(data.map((r: any) => ({
+        ...r,
+        taller_nombre: r.talleres?.nombre ?? "",
+        taller_slug: r.talleres?.slug ?? "",
+      })) as InscripcionConTaller[])
+    }
     setCargando(false)
   }
 
@@ -265,6 +282,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
       if (talleresList.length === 0) cargarTalleres()
       if (sedes.length === 0) cargarSedes()
     }
+    if (v === "realizados" && inscripcionesRealizadas.length === 0) cargarInscripcionesRealizadas()
     if (v === "miembros" && miembros.length === 0) cargarMiembros()
     if (v === "nomembros" && nomembros.length === 0) cargarNomembros()
     if (v === "taller" && miembros.length === 0) cargarMiembros()
@@ -272,6 +290,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
 
   const recargar = () => {
     if (vista === "inscripciones") { cargarInscripciones(); cargarTalleres() }
+    if (vista === "realizados") cargarInscripcionesRealizadas()
     if (vista === "miembros" || vista === "taller") cargarMiembros()
     if (vista === "nomembros") cargarNomembros()
   }
@@ -282,6 +301,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
       setMiembros([])
       setNomembros([])
       setInscripciones([])
+      setInscripcionesRealizadas([])
       setTalleresList([])
     }
   }, [isOpen])
@@ -363,6 +383,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
   const titulos: Record<Vista, string> = {
     menu: "Panel Administrador",
     inscripciones: "Inscripciones",
+    realizados: "Talleres Realizados",
     miembros: "Miembros de Sentir",
     nomembros: "No Miembros",
     taller: "Filtrar por Taller",
@@ -465,6 +486,14 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                   <ClipboardList className="h-10 w-10 text-green-700 group-hover:scale-110 transition-transform" />
                   <span className="font-bold text-lg">Inscripciones</span>
                   <span className="text-sm text-muted-foreground text-center">Gestionar inscriptos y precios de talleres</span>
+                </button>
+                <button
+                  onClick={() => irA("realizados")}
+                  className="flex flex-col items-center gap-3 p-6 rounded-xl border-2 border-border hover:border-purple-600 hover:bg-purple-50 dark:hover:bg-purple-950/30 transition-all group"
+                >
+                  <Check className="h-10 w-10 text-purple-700 group-hover:scale-110 transition-transform" />
+                  <span className="font-bold text-lg">Talleres Realizados</span>
+                  <span className="text-sm text-muted-foreground text-center">Historial de inscriptos en talleres ya realizados</span>
                 </button>
                 <button
                   onClick={() => irA("miembros")}
@@ -906,6 +935,74 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
               <div className="text-center py-12">
                 <div className="w-10 h-10 border-4 border-blue-900 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
                 <p className="text-sm text-muted-foreground">Cargando...</p>
+              </div>
+            )}
+
+            {/* Vista Talleres Realizados */}
+            {vista === "realizados" && (
+              <div className="space-y-4">
+                {cargando && (
+                  <div className="text-center py-8">
+                    <div className="w-8 h-8 border-4 border-purple-700 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+                    <p className="text-sm text-muted-foreground">Cargando...</p>
+                  </div>
+                )}
+                {!cargando && inscripcionesRealizadas.length === 0 && (
+                  <p className="text-center text-muted-foreground py-8">No hay inscripciones realizadas.</p>
+                )}
+                {!cargando && inscripcionesRealizadas.length > 0 && (
+                  <>
+                    <div className="flex items-center gap-4 flex-wrap">
+                      <span className="text-sm text-muted-foreground">{inscripcionesRealizadas.length} inscripciones realizadas</span>
+                      <div className="flex items-center gap-2 bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800 rounded-lg px-4 py-1.5">
+                        <span className="text-sm text-purple-700 dark:text-purple-300 font-medium">Total recaudado:</span>
+                        <span className="text-sm font-bold text-purple-800 dark:text-purple-200">
+                          ${inscripcionesRealizadas.reduce((acc, i) => acc + (i.monto_pagado ?? 0), 0).toLocaleString("es-AR")} ARS
+                        </span>
+                      </div>
+                      <Button
+                        onClick={() => exportarCSVInscripciones(inscripcionesRealizadas)}
+                        variant="outline" size="sm" className="gap-2"
+                      >
+                        <Download className="h-4 w-4" /> Exportar CSV
+                      </Button>
+                    </div>
+                    <div className="overflow-x-auto rounded-lg border border-border">
+                      <table className="w-full text-sm">
+                        <thead>
+                          <tr className="bg-muted/50 border-b border-border">
+                            <th className="text-left px-3 py-2 font-semibold">Taller</th>
+                            <th className="text-left px-3 py-2 font-semibold">Nombre</th>
+                            <th className="text-left px-3 py-2 font-semibold">Apellido</th>
+                            <th className="text-left px-3 py-2 font-semibold">Email</th>
+                            <th className="text-left px-3 py-2 font-semibold">Teléfono</th>
+                            <th className="text-left px-3 py-2 font-semibold">Sede</th>
+                            <th className="text-right px-3 py-2 font-semibold">Monto Pagado</th>
+                            <th className="text-left px-3 py-2 font-semibold">Fecha</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {inscripcionesRealizadas.map((ins, i) => (
+                            <tr key={ins.id} className={`border-b border-border/50 hover:bg-muted/30 transition-colors ${i % 2 === 0 ? "" : "bg-muted/10"}`}>
+                              <td className="px-3 py-2 font-medium">{ins.taller_nombre}</td>
+                              <td className="px-3 py-2">{ins.nombre}</td>
+                              <td className="px-3 py-2">{ins.apellido}</td>
+                              <td className="px-3 py-2 text-xs">{ins.email}</td>
+                              <td className="px-3 py-2">{ins.telefono}</td>
+                              <td className="px-3 py-2">{ins.localidad_taller || "-"}</td>
+                              <td className="px-3 py-2 text-right font-semibold text-green-700 dark:text-green-400">
+                                {ins.monto_pagado != null ? `$${ins.monto_pagado.toLocaleString("es-AR")}` : "-"}
+                              </td>
+                              <td className="px-3 py-2 text-xs text-muted-foreground">
+                                {new Date(ins.creado_en).toLocaleDateString("es-AR")}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </>
+                )}
               </div>
             )}
 

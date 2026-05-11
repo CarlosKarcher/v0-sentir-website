@@ -243,6 +243,20 @@ export function Events() {
 
   const pastEvents = [
     {
+      title: "Taller de Autoconocimiento - Río Gallegos",
+      date: "8, 9 y 10 de Mayo 2026",
+      time: "Inicio Viernes 8 de Mayo a las 17 Hs",
+      location: "A confirmar.",
+      type: "Taller de Liderazgo",
+      available: false,
+      availabilityText: "Evento Realizado",
+      hasFlyer: true,
+      flyerImage: "/auto-mayo-2026.jpeg",
+      flyerImageAlt: "/images/auto-mayo-2026.jpeg",
+      level: "1er Nivel",
+      contactPhone: "+54 9 2966 595803",
+    },
+    {
       title: "Taller de Autoconocimiento - Necochea (Buenos Aires)",
       date: "17, 18 y 19 de Abril, 2026",
       time: "Inicio: Viernes 17, 17 Horas",
@@ -380,22 +394,6 @@ export function Events() {
   ]
 
   const events = [
-    {
-      title: "Taller de Autoconocimiento - Río Gallegos",
-      date: "8, 9 y 10 de Mayo 2026",
-      time: "Inicio Viernes 8 de Mayo a las 17 Hs",
-      location: "A confirmar.",
-      type: "Taller de Liderazgo",
-      available: true,
-      availabilityText: "Cupos disponibles",
-      hasFlyer: true,
-      flyerImage: "/auto-mayo-2026.jpeg",
-      flyerImageAlt: "/images/auto-mayo-2026.jpeg",
-      level: "1er Nivel",
-      contactPhone: "+54 9 2966 595803",
-      tallerSlug: "autoconocimiento",
-      sede: "Río Gallegos",
-    },
     {
       title: "Las 7 Leyes Universales",
       subtitle: "Virtual y Gratuito",

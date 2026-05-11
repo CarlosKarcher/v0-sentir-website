@@ -71,13 +71,6 @@ const team = [
     phone: "5492966232480",
   },
   {
-    name: "Natali Maresca",
-    role: "Community Manager",
-    specialties: ["Representante de Sentir en Tandil, Prov. de Buenos Aires", "Staff de Sentir"],
-    image: "/natali maresca tandil.jpg",
-    phone: "5492494622736",
-  },
-  {
     name: "Jimena Natalia Catrihuala",
     role: "Terapias Holísticas - Master Reiki - Masajista Profesional.",
     specialties: ["Staff de Sentir"],

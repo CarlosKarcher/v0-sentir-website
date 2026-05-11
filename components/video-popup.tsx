@@ -84,7 +84,7 @@ export function VideoPopup() {
           <div style={{ display: "flex", flexDirection: "row", gap: "1.5cm", padding: "0 0.5cm" }}>
             <video
               ref={video1Ref}
-              src="/auto-Mayo-2026.mp4"
+              src="/Auto-10-05-2026-primero.mp4"
               playsInline
               controls
               preload="auto"
@@ -93,7 +93,7 @@ export function VideoPopup() {
             />
             <video
               ref={video2Ref}
-              src="/Guerrero-gallegos-Mayo-2026.mp4"
+              src="/Auto-10-05-2026-segundo.mp4"
               playsInline
               controls
               preload="auto"

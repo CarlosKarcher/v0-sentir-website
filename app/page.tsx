@@ -14,6 +14,7 @@ import { Merchandising } from "@/components/merchandising"
 import { MusicaSentir } from "@/components/musica-sentir"
 import { SentirDesdeAdentro } from "@/components/sentir-desde-adentro"
 import { AnotateModal } from "@/components/anotate"
+import { VideoPopup } from "@/components/video-popup"
 import { Footer } from "@/components/footer"
 export default function Page() {
   const [showAnotate, setShowAnotate] = useState(false)
@@ -34,6 +35,7 @@ export default function Page() {
   return (
     <main className="min-h-screen">
       <AnotateModal isOpen={showAnotate} onClose={() => setShowAnotate(false)} />
+      <VideoPopup />
       <Header onAnotate={() => setShowAnotate(true)} />
       <Hero onAnotate={() => setShowAnotate(true)} />
       <About />

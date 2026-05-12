@@ -82,8 +82,53 @@ export function PresentationVideos() {
             <img src="/fuego-de-sentir.png" alt="" className="h-7 w-auto" />
           </div>
 
-          {/* Video */}
-          <div className="bg-black">
+          {/* Video + Cartel oferta animado encima */}
+          <div className="bg-black" style={{ position: "relative" }}>
+            <style>{`
+              @keyframes bgShift {
+                0% { background-position: 0% 0%; }
+                100% { background-position: 200% 0%; }
+              }
+              @keyframes marqueeOferta {
+                0% { transform: translateX(100%); }
+                100% { transform: translateX(-100%); }
+              }
+            `}</style>
+
+            {/* Cartel marquee sobre el video */}
+            <div
+              style={{
+                position: "absolute",
+                top: "12px",
+                left: 0,
+                right: 0,
+                zIndex: 20,
+                pointerEvents: "none",
+                overflow: "hidden",
+                padding: "10px 0",
+                background: "linear-gradient(90deg, #7f1d1d, #dc2626, #fbbf24, #dc2626, #7f1d1d)",
+                backgroundSize: "200% 100%",
+                animation: "bgShift 2s linear infinite",
+                boxShadow: "0 4px 24px rgba(0,0,0,0.7)",
+              }}
+            >
+              <div
+                style={{
+                  display: "inline-block",
+                  whiteSpace: "nowrap",
+                  animation: "marqueeOferta 8s linear infinite",
+                  fontSize: "1.25rem",
+                  fontWeight: 900,
+                  color: "#fff",
+                  letterSpacing: "0.06em",
+                  textShadow: "0 2px 10px rgba(0,0,0,0.9), 0 0 20px #fbbf24",
+                  padding: "0 2rem",
+                }}
+              >
+                🔥 SOLO POR HOY — OFERTA en el Camino del Guerrero 🔥 &nbsp;&nbsp;&nbsp;&nbsp; 🔥 SOLO POR HOY — OFERTA en el Camino del Guerrero 🔥
+              </div>
+            </div>
+
             <video
               ref={videoRef}
               src={VIDEO}

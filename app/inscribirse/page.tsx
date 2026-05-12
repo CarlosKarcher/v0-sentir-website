@@ -304,13 +304,13 @@ function InscribirseForm() {
             Tu solicitud para <strong>{tallerNombreSeleccionado}</strong> fue registrada exitosamente.
           </p>
           <div className="flex flex-col items-center gap-2">
-            <p className="text-muted-foreground text-sm">
+            <p className="text-muted-foreground text-base">
               Enviar Comprobante de Transferencia al mail:
             </p>
             <div className="flex items-center gap-2 flex-wrap justify-center">
               <a
                 href="mailto:Sentir.inscripciones@gmail.com"
-                className="text-primary underline hover:no-underline font-medium text-sm"
+                className="text-primary underline hover:no-underline font-medium text-base"
               >
                 Sentir.inscripciones@gmail.com
               </a>
@@ -321,7 +321,7 @@ function InscribirseForm() {
                   setMailCopiado(true)
                   setTimeout(() => setMailCopiado(false), 2000)
                 }}
-                className="text-xs px-3 py-1 rounded-full border border-border bg-muted hover:bg-muted/70 transition-colors"
+                className="text-sm px-3 py-1 rounded-full border border-border bg-muted hover:bg-muted/70 transition-colors"
               >
                 {mailCopiado ? "¡Copiado!" : "Copiar"}
               </button>
@@ -336,7 +336,7 @@ function InscribirseForm() {
               Tu inscripción fue <strong>Confirmada</strong> automáticamente ya que el taller no tiene costo.
             </p>
           )}
-          <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl p-4 text-sm text-left space-y-1">
+          <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl p-4 text-base text-left space-y-1">
             <p className="font-semibold text-amber-800 dark:text-amber-200">Datos de transferencia:</p>
             <p className="text-amber-700 dark:text-amber-300">Titular: <strong>Fernando Javier Cárcamo</strong></p>
             <p className="text-amber-700 dark:text-amber-300">Banco: <strong>Mercado Pago</strong></p>

@@ -65,6 +65,7 @@ function InscribirseForm() {
   const [enviando, setEnviando] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [exito, setExito] = useState(false)
+  const [mailCopiado, setMailCopiado] = useState(false)
 
   // Cargar datos del usuario y verificar prerequisitos
   useEffect(() => {
@@ -300,12 +301,30 @@ function InscribirseForm() {
           <p className="text-muted-foreground text-lg">
             Tu solicitud para <strong>{tallerNombreSeleccionado}</strong> fue registrada exitosamente.
           </p>
-          <p className="text-muted-foreground text-sm">
-            Enviar Comprobante de Transferencia al mail:{" "}
-            <a href="mailto:Sentir.inscripciones@gmail.com" className="text-primary underline hover:no-underline">
-              Sentir.inscripciones@gmail.com
-            </a>
-          </p>
+          <div className="flex flex-col items-center gap-2">
+            <p className="text-muted-foreground text-sm">
+              Enviar Comprobante de Transferencia al mail:
+            </p>
+            <div className="flex items-center gap-2 flex-wrap justify-center">
+              <a
+                href="mailto:Sentir.inscripciones@gmail.com"
+                className="text-primary underline hover:no-underline font-medium text-sm"
+              >
+                Sentir.inscripciones@gmail.com
+              </a>
+              <button
+                type="button"
+                onClick={() => {
+                  navigator.clipboard.writeText("Sentir.inscripciones@gmail.com")
+                  setMailCopiado(true)
+                  setTimeout(() => setMailCopiado(false), 2000)
+                }}
+                className="text-xs px-3 py-1 rounded-full border border-border bg-muted hover:bg-muted/70 transition-colors"
+              >
+                {mailCopiado ? "¡Copiado!" : "Copiar"}
+              </button>
+            </div>
+          </div>
           {(precios?.precioFinal ?? 1) > 0 ? (
             <p className="text-muted-foreground">
               La inscripción está Pendiente hasta recibir el comprobante de la transferencia por Mail.

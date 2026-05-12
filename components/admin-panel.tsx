@@ -1194,7 +1194,7 @@ function TablaInscripciones({
             return (
               <tr key={ins.id} className={`border-b border-border/50 hover:bg-muted/30 transition-colors ${i % 2 === 0 ? "" : "bg-muted/10"}`}>
                 <td className="px-2 py-2 whitespace-nowrap font-medium text-xs">{ins.taller_nombre}</td>
-                <td className="px-2 py-2 whitespace-nowrap">{ins.nombre} {ins.apellido}</td>
+                <td className={`px-2 py-2 whitespace-nowrap font-medium ${ins.metodo_pago === "tarjeta_credito" ? "text-green-600 dark:text-green-400" : ""}`}>{ins.nombre} {ins.apellido}</td>
                 <td className="px-2 py-2 whitespace-nowrap text-xs text-muted-foreground">{ins.nombre_miembro || "—"}</td>
                 <td className="px-2 py-2 whitespace-nowrap text-xs text-muted-foreground">
                   {ins.enrolador_nombre
@@ -1218,7 +1218,7 @@ function TablaInscripciones({
                     {guardandoPrecioInsc === ins.id && <span className="text-muted-foreground text-xs">...</span>}
                   </div>
                 </td>
-                <td className="px-2 py-2 whitespace-nowrap text-xs text-muted-foreground">
+                <td className={`px-2 py-2 whitespace-nowrap text-xs font-semibold ${ins.metodo_pago === "tarjeta_credito" ? "text-green-600 dark:text-green-400" : "text-muted-foreground"}`}>
                   {precioEfectivo === 0 ? "Gratuito" : (METODO_PAGO_LABEL[ins.metodo_pago] || ins.metodo_pago || "—")}
                 </td>
                 <td className="px-2 py-2 whitespace-nowrap text-xs text-right">

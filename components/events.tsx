@@ -25,6 +25,7 @@ function EventCard({ event }: { event: Event }) {
   const [imageError, setImageError] = useState(false)
   const [imageSrc, setImageSrc] = useState(event.flyerImage || "/flyer-transformacion-rio-gallegos.jpg")
   const [attemptedPaths, setAttemptedPaths] = useState<string[]>([])
+  const [mailCopiado, setMailCopiado] = useState(false)
   
   // Resetear el estado cuando se abre el modal
   const handleOpenChange = (open: boolean) => {
@@ -231,6 +232,29 @@ function EventCard({ event }: { event: Event }) {
                 Inscribirme
               </a>
             )}
+            {/* Comprobante de inscripción */}
+            <div className="mt-3 flex flex-col items-center gap-1">
+              <p className="text-xs text-muted-foreground">Comprobante de inscripción:</p>
+              <div className="flex items-center gap-2 flex-wrap justify-center">
+                <a
+                  href="mailto:Sentir.inscripciones@gmail.com"
+                  className="text-xs text-primary underline hover:no-underline"
+                >
+                  Sentir.inscripciones@gmail.com
+                </a>
+                <button
+                  type="button"
+                  onClick={() => {
+                    navigator.clipboard.writeText("Sentir.inscripciones@gmail.com")
+                    setMailCopiado(true)
+                    setTimeout(() => setMailCopiado(false), 2000)
+                  }}
+                  className="text-xs px-2 py-0.5 rounded-full border border-border bg-muted hover:bg-muted/70 transition-colors"
+                >
+                  {mailCopiado ? "¡Copiado!" : "Copiar"}
+                </button>
+              </div>
+            </div>
           </div>
         )}
       </CardContent>

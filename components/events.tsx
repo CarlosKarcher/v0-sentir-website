@@ -234,11 +234,11 @@ function EventCard({ event }: { event: Event }) {
             )}
             {/* Comprobante de inscripción */}
             <div className="mt-3 flex flex-col items-center gap-1">
-              <p className="text-xs text-muted-foreground">Comprobante de inscripción:</p>
+              <p className="text-sm text-muted-foreground">Comprobante de inscripción:</p>
               <div className="flex items-center gap-2 flex-wrap justify-center">
                 <a
                   href="mailto:Sentir.inscripciones@gmail.com"
-                  className="text-xs text-primary underline hover:no-underline"
+                  className="text-sm text-primary underline hover:no-underline"
                 >
                   Sentir.inscripciones@gmail.com
                 </a>

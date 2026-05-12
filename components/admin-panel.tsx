@@ -590,6 +590,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                           <div className="flex items-center gap-2 bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-lg px-4 py-1.5">
                             <span className="text-sm text-green-700 dark:text-green-300 font-medium">Total recaudado:</span>
                             <span className="text-sm font-bold text-green-800 dark:text-green-200">${totalPagado.toLocaleString("es-AR")} ARS</span>
+                            <span className="text-sm text-green-600 dark:text-green-400">— Page: ${Math.round(totalPagado * 0.07).toLocaleString("es-AR")} ARS</span>
                           </div>
                         </div>
                       )
@@ -906,7 +907,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                           {filtradas.length} inscripciones
                           {"  "}
                           <span className="font-semibold text-green-700 dark:text-green-400">
-                            ${filtradas.reduce((acc, i) => acc + (i.monto_pagado ?? 0), 0).toLocaleString("es-AR")} recaudado
+                            ${filtradas.reduce((acc, i) => acc + (i.monto_pagado ?? 0), 0).toLocaleString("es-AR")} recaudado — Page: ${Math.round(filtradas.reduce((acc, i) => acc + (i.monto_pagado ?? 0), 0) * 0.07).toLocaleString("es-AR")} ARS
                           </span>
                         </span>
                       </div>
@@ -959,6 +960,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                         <span className="text-sm font-bold text-purple-800 dark:text-purple-200">
                           ${inscripcionesRealizadas.reduce((acc, i) => acc + (i.monto_pagado ?? 0), 0).toLocaleString("es-AR")} ARS
                         </span>
+                        <span className="text-sm text-purple-600 dark:text-purple-400">— Page: ${Math.round(inscripcionesRealizadas.reduce((acc, i) => acc + (i.monto_pagado ?? 0), 0) * 0.07).toLocaleString("es-AR")} ARS</span>
                       </div>
                       <Button
                         onClick={() => exportarCSVInscripciones(inscripcionesRealizadas)}

@@ -34,6 +34,8 @@ function InscribirseForm() {
   const tallerSlugParam = searchParams.get("taller") || ""
   const eventoParam = searchParams.get("evento") || ""
   const localidadParam = searchParams.get("localidad") || ""
+  const backParam = searchParams.get("back") || ""
+  const backUrl = backParam ? `/#${backParam}` : "/"
 
   const { estado: estadoAuth, email: emailAuth } = useUser()
   const [loginOpen, setLoginOpen] = useState(false)
@@ -239,7 +241,7 @@ function InscribirseForm() {
             >
               Ingresar con mi email
             </button>
-            <a href="/" className="inline-block border border-border hover:bg-muted font-medium py-3 px-6 rounded-xl transition-colors text-center">
+            <a href={backUrl} className="inline-block border border-border hover:bg-muted font-medium py-3 px-6 rounded-xl transition-colors text-center">
               Volver al inicio
             </a>
           </div>
@@ -259,7 +261,7 @@ function InscribirseForm() {
             Tu{nombre ? `, ${nombre},` : ""} Ya Viviste esta hermosa Experiencia.
           </h2>
           <a
-            href="/"
+            href={backUrl}
             className="inline-block bg-blue-900 hover:bg-blue-800 text-white font-semibold py-3 px-6 rounded-xl transition-colors"
           >
             Volver al inicio
@@ -281,7 +283,7 @@ function InscribirseForm() {
             realizado el <strong>{tallerFaltante}</strong>.
           </p>
           <a
-            href="/"
+            href={backUrl}
             className="inline-block bg-blue-900 hover:bg-blue-800 text-white font-semibold py-3 px-6 rounded-xl transition-colors"
           >
             Volver al inicio
@@ -353,7 +355,7 @@ function InscribirseForm() {
               </p>
             )}
           </div>
-          <a href="/" className="inline-block text-primary underline hover:no-underline text-sm">
+          <a href={backUrl} className="inline-block text-primary underline hover:no-underline text-sm">
             Volver al inicio
           </a>
         </div>
@@ -373,7 +375,7 @@ function InscribirseForm() {
             )}
           </div>
           <a
-            href="/"
+            href={backUrl}
             className="p-2 rounded-full hover:bg-muted transition-colors text-muted-foreground hover:text-foreground flex-shrink-0 mt-1"
             title="Salir"
           >
@@ -723,7 +725,7 @@ function InscribirseForm() {
           </button>
 
           <a
-            href="/"
+            href={backUrl}
             className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-6 rounded-xl transition-colors text-lg text-center block"
           >
             Regresar sin Inscribirte

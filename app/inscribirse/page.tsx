@@ -300,6 +300,12 @@ function InscribirseForm() {
           <p className="text-muted-foreground text-lg">
             Tu solicitud para <strong>{tallerNombreSeleccionado}</strong> fue registrada exitosamente.
           </p>
+          <p className="text-muted-foreground text-sm">
+            Enviar Comprobante de Transferencia al mail:{" "}
+            <a href="mailto:Sentir.inscripciones@gmail.com" className="text-primary underline hover:no-underline">
+              Sentir.inscripciones@gmail.com
+            </a>
+          </p>
           {(precios?.precioFinal ?? 1) > 0 ? (
             <p className="text-muted-foreground">
               La inscripción está Pendiente hasta recibir el comprobante de la transferencia por Mail.

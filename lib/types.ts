@@ -17,6 +17,7 @@ export interface Event {
   flyerImageAlt?: string
   level?: string
   contactPhone?: string
+  contactWhatsappOnly?: boolean  // mostrar solo icono WhatsApp, sin texto ni número
   tallerSlug?: string  // slug del taller en DB para inscripción
   sede?: string        // ciudad/sede del taller (de sedes_sentir)
 }

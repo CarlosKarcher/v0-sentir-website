@@ -195,6 +195,11 @@ const CALENDAR_EVENTS: DayEvent[] = [
   { month: 10, day: 13, type: "autoconocimiento", label: "Autocon. – Quequén/Necochea" },
   { month: 10, day: 14, type: "autoconocimiento", label: "Autocon. – Quequén/Necochea" },
   { month: 10, day: 15, type: "autoconocimiento", label: "Autocon. – Quequén/Necochea" },
+
+  // Diciembre — Autoconocimiento CABA
+  { month: 11, day: 4, type: "autoconocimiento", label: "Autocon. – CABA" },
+  { month: 11, day: 5, type: "autoconocimiento", label: "Autocon. – CABA" },
+  { month: 11, day: 6, type: "autoconocimiento", label: "Autocon. – CABA" },
 ]
 
 function getFirstWeekday(year: number, month: number): number {

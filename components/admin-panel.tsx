@@ -238,17 +238,18 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
   const guardarNuevoTaller = async () => {
     if (!nuevoTaller.slug || !nuevoTaller.nombre) return
     setGuardandoPrecio(true)
-    const { error } = await supabase.from("talleres").insert({
-      slug: nuevoTaller.slug,
-      nombre: nuevoTaller.nombre,
-      sede: nuevoTaller.sede || null,
-      precio: parseFloat(nuevoTaller.precio) || 0,
-      descuento_tipo: nuevoTaller.descuento_tipo || null,
-      descuento_valor: parseFloat(nuevoTaller.descuento_valor) || null,
-      fecha_inicio: nuevoTaller.fecha_inicio || null,
-      activo: true,
+    const { data, error } = await supabase.rpc("insertar_taller_admin", {
+      p_admin_caracteristica: adminCaracteristica,
+      p_admin_numero: adminNumero,
+      p_slug: nuevoTaller.slug,
+      p_nombre: nuevoTaller.nombre,
+      p_sede: nuevoTaller.sede || null,
+      p_precio: parseFloat(nuevoTaller.precio) || 0,
+      p_descuento_tipo: nuevoTaller.descuento_tipo || null,
+      p_descuento_valor: parseFloat(nuevoTaller.descuento_valor) || null,
+      p_fecha_inicio: nuevoTaller.fecha_inicio || null,
     })
-    if (error) { setConfirmDialog({ titulo: "Error al guardar", mensaje: error.message, tipo: "info" }); setGuardandoPrecio(false); return }
+    if (error || data?.error) { setConfirmDialog({ titulo: "Error al guardar", mensaje: error?.message || data?.error, tipo: "info" }); setGuardandoPrecio(false); return }
     await cargarTalleres()
     setAgregandoTaller(false)
     setNuevoTaller({ slug: "", nombre: "", sede: "", precio: "", descuento_tipo: "", descuento_valor: "", fecha_inicio: "" })

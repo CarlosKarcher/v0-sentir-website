@@ -211,7 +211,15 @@ function EventCard({ event }: { event: Event }) {
         )}
         {event.tallerSlug && event.available && (
           <div className="pt-3">
-            {estado === "registrado" ? (
+            {event.sede === "Punta Arenas" ? (
+              <button
+                disabled
+                className="flex items-center justify-center gap-2 w-full bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500 font-semibold py-2 px-4 rounded-lg text-sm cursor-not-allowed"
+              >
+                <ClipboardList className="h-4 w-4" />
+                Inscripción no disponible
+              </button>
+            ) : estado === "registrado" ? (
               <a
                 href={`/inscribirse?taller=${event.tallerSlug}&localidad=${encodeURIComponent(event.sede || event.location)}&evento=${encodeURIComponent(`${event.title} — ${event.date} — ${event.location}`)}&back=proximos-eventos`}
                 className="flex items-center justify-center gap-2 w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-sm"

@@ -177,6 +177,11 @@ const CALENDAR_EVENTS: DayEvent[] = [
   // Junio — Niño Interior
   { month: 5, day: 14, type: "nino", label: "Taller Sanando mi Niño Interior" },
 
+  // Junio — Autoconocimiento Río Gallegos
+  { month: 5, day: 19, type: "autoconocimiento", label: "Autocon. – Río Gallegos" },
+  { month: 5, day: 20, type: "autoconocimiento", label: "Autocon. – Río Gallegos" },
+  { month: 5, day: 21, type: "autoconocimiento", label: "Autocon. – Río Gallegos" },
+
   // Julio — Transformación
   { month: 6, day: 9, type: "transformacion", label: "Transfor." },
   { month: 6, day: 10, type: "transformacion", label: "Transfor." },

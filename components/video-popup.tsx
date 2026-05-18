@@ -71,7 +71,7 @@ export function VideoPopup() {
 
           <video
             ref={videoRef}
-            src="/Video-guerrero-mayo-rio-gallegos.MP4"
+            src="/video-guerrero-mayo-rio-gallegos.mp4"
             playsInline
             controls
             preload="auto"

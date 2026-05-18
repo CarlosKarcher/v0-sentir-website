@@ -723,7 +723,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                               </td>
                             </tr>
                           )}
-                          {talleresList.map((t, i) => {
+                          {talleresList.filter(t => !t.fecha_inicio || t.fecha_inicio.slice(0, 10) >= new Date().toISOString().slice(0, 10)).map((t, i) => {
                             const precios = calcularPrecioFinal(t)
                             const editando = editandoPrecio === t.id
                             return (

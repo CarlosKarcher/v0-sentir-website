@@ -238,54 +238,18 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
   const guardarNuevoTaller = async () => {
     if (!nuevoTaller.slug || !nuevoTaller.nombre) return
     setGuardandoPrecio(true)
-
-    // Buscar si ya existe un taller con el mismo slug+sede
-    const sede = nuevoTaller.sede || null
-    const { data: existente } = await supabase
-      .from("talleres")
-      .select("id")
-      .eq("slug", nuevoTaller.slug)
-      .eq("activo", true)
-      .then(res => {
-        if (!res.data) return res
-        const filtrado = sede
-          ? res.data.filter((t: any) => t.sede === sede)
-          : res.data.filter((t: any) => !t.sede)
-        return { ...res, data: filtrado[0] ?? null }
-      })
-
-    if (existente?.id) {
-      // Ya existe → actualizar con los nuevos datos
-      const { error } = await supabase.rpc("actualizar_precio_taller", {
-        p_admin_caracteristica: adminCaracteristica,
-        p_admin_numero: adminNumero,
-        p_taller_id: existente.id,
-        p_precio: parseFloat(nuevoTaller.precio) || 0,
-        p_descuento_tipo: nuevoTaller.descuento_tipo || null,
-        p_descuento_valor: parseFloat(nuevoTaller.descuento_valor) || null,
-        p_sede: sede,
-        p_acepta_transferencia: true,
-        p_acepta_tarjeta: true,
-        p_acepta_sena: true,
-        p_fecha_inicio: nuevoTaller.fecha_inicio || null,
-      })
-      if (error) { setConfirmDialog({ titulo: "Error al guardar", mensaje: error.message, tipo: "info" }); setGuardandoPrecio(false); return }
-    } else {
-      // No existe → insertar
-      const { data, error } = await supabase.rpc("insertar_taller_admin", {
-        p_admin_caracteristica: adminCaracteristica,
-        p_admin_numero: adminNumero,
-        p_slug: nuevoTaller.slug,
-        p_nombre: nuevoTaller.nombre,
-        p_sede: sede,
-        p_precio: parseFloat(nuevoTaller.precio) || 0,
-        p_descuento_tipo: nuevoTaller.descuento_tipo || null,
-        p_descuento_valor: parseFloat(nuevoTaller.descuento_valor) || null,
-        p_fecha_inicio: nuevoTaller.fecha_inicio || null,
-      })
-      if (error || data?.error) { setConfirmDialog({ titulo: "Error al guardar", mensaje: error?.message || data?.error, tipo: "info" }); setGuardandoPrecio(false); return }
-    }
-
+    const { data, error } = await supabase.rpc("insertar_taller_admin", {
+      p_admin_caracteristica: adminCaracteristica,
+      p_admin_numero: adminNumero,
+      p_slug: nuevoTaller.slug,
+      p_nombre: nuevoTaller.nombre,
+      p_sede: nuevoTaller.sede || null,
+      p_precio: parseFloat(nuevoTaller.precio) || 0,
+      p_descuento_tipo: nuevoTaller.descuento_tipo || null,
+      p_descuento_valor: parseFloat(nuevoTaller.descuento_valor) || null,
+      p_fecha_inicio: nuevoTaller.fecha_inicio || null,
+    })
+    if (error || data?.error) { setConfirmDialog({ titulo: "Error al guardar", mensaje: error?.message || data?.error, tipo: "info" }); setGuardandoPrecio(false); return }
     await cargarTalleres()
     setAgregandoTaller(false)
     setNuevoTaller({ slug: "", nombre: "", sede: "", precio: "", descuento_tipo: "", descuento_valor: "", fecha_inicio: "" })

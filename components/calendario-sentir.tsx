@@ -67,6 +67,18 @@ const EVENT_TYPES: Record<string, EventTypeConfig> = {
     dotBg: "bg-amber-800",
     label: "MyL 7",
   },
+  vitamina: {
+    bg: "bg-yellow-400",
+    text: "text-black",
+    dotBg: "bg-yellow-400",
+    label: "Encuentro Vitamina",
+  },
+  feria: {
+    bg: "bg-yellow-400",
+    text: "text-black",
+    dotBg: "bg-yellow-400",
+    label: "Feria Sentir",
+  },
 }
 
 type EventType = keyof typeof EVENT_TYPES
@@ -152,6 +164,12 @@ const CALENDAR_EVENTS: DayEvent[] = [
   // Mayo — Camino del Guerrero Punta Arenas
   { month: 4, day: 23, type: "guerrero", label: "Camino del Guerrero – Punta Arenas" },
   { month: 4, day: 24, type: "guerrero", label: "Camino del Guerrero – Punta Arenas" },
+
+  // Mayo — Encuentro Vitamina
+  { month: 4, day: 31, type: "vitamina", label: "Encuentro Vitamina" },
+
+  // Junio — Feria Sentir
+  { month: 5, day: 7, type: "feria", label: "Feria Sentir" },
 
   // Junio — Biodecodificación
   { month: 5, day: 13, type: "biodecodificacion", label: "Taller de Biodecodificación" },

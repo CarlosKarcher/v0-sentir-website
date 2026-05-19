@@ -425,8 +425,9 @@ function InscribirseForm() {
                     {tallerData.descuento_hasta && (() => {
                       const [y, m, d] = tallerData.descuento_hasta.slice(0, 10).split("-")
                       return (
-                        <span className="text-sm font-bold text-red-600 dark:text-red-400">
-                          hasta el {d}/{m}/{y}
+                        <span className="flex flex-col items-center leading-tight text-red-600 dark:text-red-400">
+                          <span className="text-xs font-semibold uppercase tracking-wide">Hasta</span>
+                          <span className="text-2xl font-bold">!!{d}/{m}/{y}!!</span>
                         </span>
                       )
                     })()}

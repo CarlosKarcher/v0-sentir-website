@@ -712,13 +712,15 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                                     />
                                   )}
                                   {nuevoTaller.descuento_tipo && (
-                                    <input
-                                      type="date"
-                                      value={nuevoTaller.descuento_hasta}
-                                      onChange={e => setNuevoTaller(p => ({ ...p, descuento_hasta: e.target.value }))}
-                                      className="border border-border rounded px-2 py-1 bg-background text-xs"
-                                      title="Oferta válida hasta"
-                                    />
+                                    <label className="flex items-center gap-1 text-xs text-red-500 font-medium">
+                                      Hasta:
+                                      <input
+                                        type="date"
+                                        value={nuevoTaller.descuento_hasta}
+                                        onChange={e => setNuevoTaller(p => ({ ...p, descuento_hasta: e.target.value }))}
+                                        className="border border-red-400 rounded px-2 py-1 bg-background text-xs"
+                                      />
+                                    </label>
                                   )}
                                 </div>
                               </td>
@@ -791,13 +793,15 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                                           />
                                         )}
                                         {precioEdit.descuento_tipo && (
-                                          <input
-                                            type="date"
-                                            value={precioEdit.descuento_hasta}
-                                            onChange={e => setPrecioEdit(p => ({ ...p, descuento_hasta: e.target.value }))}
-                                            className="border border-border rounded px-2 py-1 bg-background text-xs"
-                                            title="Oferta válida hasta"
-                                          />
+                                          <label className="flex items-center gap-1 text-xs text-red-500 font-medium">
+                                            Hasta:
+                                            <input
+                                              type="date"
+                                              value={precioEdit.descuento_hasta}
+                                              onChange={e => setPrecioEdit(p => ({ ...p, descuento_hasta: e.target.value }))}
+                                              className="border border-red-400 rounded px-2 py-1 bg-background text-xs"
+                                            />
+                                          </label>
                                         )}
                                       </div>
                                     </td>
@@ -832,9 +836,15 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                                     <td className="px-3 py-2 text-sm text-muted-foreground whitespace-nowrap">{t.sede || <span className="italic">General</span>}</td>
                                     <td className="px-3 py-2 text-right">${precios.precioReal.toLocaleString("es-AR")} {t.moneda}</td>
                                     <td className="px-3 py-2 text-right text-sm text-muted-foreground">
-                                      {t.descuento_tipo === "porcentaje" ? `${t.descuento_valor}%` :
-                                       t.descuento_tipo === "monto_fijo" ? `-$${t.descuento_valor?.toLocaleString("es-AR")}` :
-                                       "—"}
+                                      <div>
+                                        {t.descuento_tipo === "porcentaje" ? `${t.descuento_valor}%` :
+                                         t.descuento_tipo === "monto_fijo" ? `-$${t.descuento_valor?.toLocaleString("es-AR")}` :
+                                         "—"}
+                                      </div>
+                                      {(t as any).descuento_hasta && (() => {
+                                        const [y, m, d] = (t as any).descuento_hasta.slice(0, 10).split("-")
+                                        return <div className="text-xs text-red-500 font-medium">hasta {d}/{m}/{y}</div>
+                                      })()}
                                     </td>
                                     <td className={`px-3 py-2 text-right font-semibold ${precios.descuentoMonto > 0 ? "text-green-600 dark:text-green-400" : ""}`}>
                                       ${precios.precioFinal.toLocaleString("es-AR")} {t.moneda}

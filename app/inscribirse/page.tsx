@@ -409,19 +409,29 @@ function InscribirseForm() {
             <div className="bg-muted/50 rounded-xl p-4 border border-border">
               <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">Precio del taller</p>
               {precios.descuentoMonto > 0 ? (
-                <div className="flex items-baseline gap-3 flex-wrap">
-                  <span className="line-through text-muted-foreground text-xl">
-                    ${precios.precioReal.toLocaleString("es-AR")} {tallerData.moneda}
-                  </span>
-                  <span className="text-2xl font-bold text-green-600 dark:text-green-400">
-                    ${precios.precioFinal.toLocaleString("es-AR")} {tallerData.moneda}
-                  </span>
-                  <span className="text-sm text-green-600 dark:text-green-400 font-medium">
-                    {tallerData.descuento_tipo === "porcentaje"
-                      ? `${tallerData.descuento_valor}% off`
-                      : `-$${tallerData.descuento_valor?.toLocaleString("es-AR")}`}
-                  </span>
-                </div>
+                <>
+                  <div className="flex items-baseline gap-3 flex-wrap">
+                    <span className="line-through text-muted-foreground text-xl">
+                      ${precios.precioReal.toLocaleString("es-AR")} {tallerData.moneda}
+                    </span>
+                    <span className="text-2xl font-bold text-green-600 dark:text-green-400">
+                      ${precios.precioFinal.toLocaleString("es-AR")} {tallerData.moneda}
+                    </span>
+                    <span className="text-sm text-green-600 dark:text-green-400 font-medium">
+                      {tallerData.descuento_tipo === "porcentaje"
+                        ? `${tallerData.descuento_valor}% off`
+                        : `-$${tallerData.descuento_valor?.toLocaleString("es-AR")}`}
+                    </span>
+                  </div>
+                  {tallerData.descuento_hasta && (() => {
+                    const [y, m, d] = tallerData.descuento_hasta.slice(0, 10).split("-")
+                    return (
+                      <p className="text-xs text-amber-600 dark:text-amber-400 font-medium mt-1">
+                        Oferta válida hasta el {d}/{m}/{y}
+                      </p>
+                    )
+                  })()}
+                </>
               ) : (
                 <p className="text-2xl font-bold">
                   ${precios.precioFinal.toLocaleString("es-AR")} {tallerData.moneda}

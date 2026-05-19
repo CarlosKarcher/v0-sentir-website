@@ -76,10 +76,10 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
   const [filtroTallerSlug, setFiltroTallerSlug] = useState<string>("")
   const [filtroSede, setFiltroSede] = useState<string>("")
   const [editandoPrecio, setEditandoPrecio] = useState<string | null>(null) // taller id
-  const [precioEdit, setPrecioEdit] = useState({ precio: "", sede: "", descuento_tipo: "porcentaje" as "porcentaje" | "monto_fijo" | null, descuento_valor: "", acepta_transferencia: true, acepta_tarjeta: true, acepta_sena: true, fecha_inicio: "" })
+  const [precioEdit, setPrecioEdit] = useState({ precio: "", sede: "", descuento_tipo: "porcentaje" as "porcentaje" | "monto_fijo" | null, descuento_valor: "", descuento_hasta: "", acepta_transferencia: true, acepta_tarjeta: true, acepta_sena: true, fecha_inicio: "" })
   const [guardandoPrecio, setGuardandoPrecio] = useState(false)
   const [agregandoTaller, setAgregandoTaller] = useState(false)
-  const [nuevoTaller, setNuevoTaller] = useState({ slug: "", nombre: "", sede: "", precio: "", descuento_tipo: "" as "porcentaje" | "monto_fijo" | "", descuento_valor: "", fecha_inicio: "" })
+  const [nuevoTaller, setNuevoTaller] = useState({ slug: "", nombre: "", sede: "", precio: "", descuento_tipo: "" as "porcentaje" | "monto_fijo" | "", descuento_valor: "", descuento_hasta: "", fecha_inicio: "" })
   const [accionInscripcion, setAccionInscripcion] = useState<string | null>(null) // inscripcion id en proceso
   const [confirmDialog, setConfirmDialog] = useState<{ titulo: string; mensaje: string; tipo: "confirm" | "info"; onConfirm?: () => void } | null>(null)
   const [sedes, setSedes] = useState<string[]>([])
@@ -223,6 +223,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
       p_precio: parseFloat(precioEdit.precio) || 0,
       p_descuento_tipo: precioEdit.descuento_tipo ?? "",
       p_descuento_valor: precioEdit.descuento_valor ? parseFloat(precioEdit.descuento_valor) : null,
+      p_descuento_hasta: precioEdit.descuento_hasta || null,
       p_sede: precioEdit.sede || null,
       p_acepta_transferencia: precioEdit.acepta_transferencia,
       p_acepta_tarjeta: precioEdit.acepta_tarjeta,
@@ -247,12 +248,13 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
       p_precio: parseFloat(nuevoTaller.precio) || 0,
       p_descuento_tipo: nuevoTaller.descuento_tipo || null,
       p_descuento_valor: parseFloat(nuevoTaller.descuento_valor) || null,
+      p_descuento_hasta: nuevoTaller.descuento_hasta || null,
       p_fecha_inicio: nuevoTaller.fecha_inicio || null,
     })
     if (error || data?.error) { setConfirmDialog({ titulo: "Error al guardar", mensaje: error?.message || data?.error, tipo: "info" }); setGuardandoPrecio(false); return }
     await cargarTalleres()
     setAgregandoTaller(false)
-    setNuevoTaller({ slug: "", nombre: "", sede: "", precio: "", descuento_tipo: "", descuento_valor: "", fecha_inicio: "" })
+    setNuevoTaller({ slug: "", nombre: "", sede: "", precio: "", descuento_tipo: "", descuento_valor: "", descuento_hasta: "", fecha_inicio: "" })
     setGuardandoPrecio(false)
   }
 
@@ -709,6 +711,15 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                                       className="w-20 border border-border rounded px-2 py-1 text-right bg-background text-sm"
                                     />
                                   )}
+                                  {nuevoTaller.descuento_tipo && (
+                                    <input
+                                      type="date"
+                                      value={nuevoTaller.descuento_hasta}
+                                      onChange={e => setNuevoTaller(p => ({ ...p, descuento_hasta: e.target.value }))}
+                                      className="border border-border rounded px-2 py-1 bg-background text-xs"
+                                      title="Oferta válida hasta"
+                                    />
+                                  )}
                                 </div>
                               </td>
                               <td className="px-3 py-2 text-right text-muted-foreground text-xs">—</td>
@@ -779,6 +790,15 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                                             placeholder="Valor"
                                           />
                                         )}
+                                        {precioEdit.descuento_tipo && (
+                                          <input
+                                            type="date"
+                                            value={precioEdit.descuento_hasta}
+                                            onChange={e => setPrecioEdit(p => ({ ...p, descuento_hasta: e.target.value }))}
+                                            className="border border-border rounded px-2 py-1 bg-background text-xs"
+                                            title="Oferta válida hasta"
+                                          />
+                                        )}
                                       </div>
                                     </td>
                                     <td className="px-3 py-2 text-right text-muted-foreground text-xs">— calcular al guardar —</td>
@@ -834,6 +854,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                                             sede: t.sede || "",
                                             descuento_tipo: t.descuento_tipo ?? null,
                                             descuento_valor: t.descuento_valor?.toString() ?? "",
+                                            descuento_hasta: (t.descuento_hasta ?? "").slice(0, 10),
                                             acepta_transferencia: t.acepta_transferencia ?? true,
                                             acepta_tarjeta: t.acepta_tarjeta ?? true,
                                             acepta_sena: t.acepta_sena ?? true,

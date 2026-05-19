@@ -12,6 +12,7 @@ export interface Taller {
   moneda: string
   descuento_tipo: DescuentoTipo
   descuento_valor: number | null
+  descuento_hasta: string | null
   duracion: string | null
   modalidad: string | null
   fecha_inicio: string | null

@@ -290,6 +290,19 @@ export function Events() {
 
   const pastEvents = [
     {
+      title: "El Camino del Guerrero - Río Gallegos",
+      date: "16 y 17 de Mayo 2026",
+      time: "Inicio: Sábado 16 de Mayo, 15 Horas",
+      location: "Río Gallegos",
+      type: "Otro Taller",
+      available: false,
+      availabilityText: "Evento Realizado",
+      hasFlyer: true,
+      flyerImage: "/El-guerrero-mayo-gallegos.jpeg",
+      flyerImageAlt: "/images/El-guerrero-mayo-gallegos.jpeg",
+      contactPhone: "+54 9 2966 595803",
+    },
+    {
       title: "Las 7 Leyes Universales",
       subtitle: "Virtual y Gratuito",
       subtitleHighlight: true,
@@ -469,21 +482,6 @@ export function Events() {
   ]
 
   const events = [
-    {
-      title: "El Camino del Guerrero - Río Gallegos",
-      date: "16 y 17 de Mayo 2026",
-      time: "Inicio: Sábado 16 de Mayo, 15 Horas",
-      location: "Río Gallegos",
-      type: "Otro Taller",
-      available: true,
-      availabilityText: "Cupos disponibles",
-      hasFlyer: true,
-      flyerImage: "/El-guerrero-mayo-gallegos.jpeg",
-      flyerImageAlt: "/images/El-guerrero-mayo-gallegos.jpeg",
-      contactPhone: "+54 9 2966 595803",
-      tallerSlug: "camino-del-guerrero",
-      sede: "Río Gallegos",
-    },
     {
       title: "Sanando mi Niño Interior - Punta Arenas",
       date: "22 de Mayo 2026",

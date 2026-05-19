@@ -422,15 +422,15 @@ function InscribirseForm() {
                         ? `${tallerData.descuento_valor}% off`
                         : `-$${tallerData.descuento_valor?.toLocaleString("es-AR")}`}
                     </span>
+                    {tallerData.descuento_hasta && (() => {
+                      const [y, m, d] = tallerData.descuento_hasta.slice(0, 10).split("-")
+                      return (
+                        <span className="text-sm font-bold text-red-600 dark:text-red-400">
+                          hasta el {d}/{m}/{y}
+                        </span>
+                      )
+                    })()}
                   </div>
-                  {tallerData.descuento_hasta && (() => {
-                    const [y, m, d] = tallerData.descuento_hasta.slice(0, 10).split("-")
-                    return (
-                      <p className="text-xs text-amber-600 dark:text-amber-400 font-medium mt-1">
-                        Oferta válida hasta el {d}/{m}/{y}
-                      </p>
-                    )
-                  })()}
                 </>
               ) : (
                 <p className="text-2xl font-bold">

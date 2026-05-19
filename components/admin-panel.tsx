@@ -281,7 +281,6 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
   const irA = (v: Vista) => {
     setVista(v)
     if (v === "inscripciones") {
-      // inscripciones ya se cargan al abrir el panel; solo recargar si vacías
       if (inscripciones.length === 0) cargarInscripciones()
       if (talleresList.length === 0) cargarTalleres()
       if (sedes.length === 0) cargarSedes()
@@ -307,10 +306,6 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
       setInscripciones([])
       setInscripcionesRealizadas([])
       setTalleresList([])
-    } else {
-      // Cargar inscripciones al abrir el panel para mostrar resumen en el menú
-      cargarInscripciones()
-      if (sedes.length === 0) cargarSedes()
     }
   }, [isOpen])
 
@@ -493,23 +488,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                 >
                   <ClipboardList className="h-10 w-10 text-green-700 group-hover:scale-110 transition-transform" />
                   <span className="font-bold text-lg">Inscripciones</span>
-                  {cargando ? (
-                    <span className="text-xs text-muted-foreground">Cargando...</span>
-                  ) : inscripciones.length > 0 ? (
-                    <div className="text-center space-y-0.5">
-                      <div className="text-sm font-semibold text-green-700 dark:text-green-400">{inscripciones.length} inscriptos</div>
-                      <div className="flex gap-2 text-xs justify-center flex-wrap">
-                        <span className="bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300 px-2 py-0.5 rounded-full font-medium">
-                          ✅ {inscripciones.filter(i => i.estado === "confirmado").length} confirmados
-                        </span>
-                        <span className="bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-300 px-2 py-0.5 rounded-full font-medium">
-                          ⏳ {inscripciones.filter(i => i.estado === "pendiente").length} pendientes
-                        </span>
-                      </div>
-                    </div>
-                  ) : (
-                    <span className="text-sm text-muted-foreground text-center">Gestionar inscriptos y precios de talleres</span>
-                  )}
+                  <span className="text-sm text-muted-foreground text-center">Gestionar inscriptos y precios de talleres</span>
                 </button>
                 <button
                   onClick={() => irA("realizados")}

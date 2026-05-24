@@ -89,10 +89,9 @@ export function VideoPopup() {
             <X style={{ width: 20, height: 20 }} />
           </Button>
 
-          {/* Dos videos lado a lado */}
+          {/* Video biodecodificación */}
           <div style={{ display: "flex", height: "min(480px, 80vh)" }}>
             <VideoPlayer src="/video-bio-promocion.mp4" autoPlay />
-            <VideoPlayer src="/video-guerrero-mayo-rio-gallegos.mp4" />
           </div>
         </div>
       </div>

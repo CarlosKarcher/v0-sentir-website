@@ -161,10 +161,6 @@ const CALENDAR_EVENTS: DayEvent[] = [
   { month: 4, day: 16, type: "guerrero", label: "Camino del Guerrero – Río Gallegos" },
   { month: 4, day: 17, type: "guerrero", label: "Camino del Guerrero – Río Gallegos" },
 
-  // Mayo — Camino del Guerrero Punta Arenas
-  { month: 4, day: 23, type: "guerrero", label: "Camino del Guerrero – Punta Arenas" },
-  { month: 4, day: 24, type: "guerrero", label: "Camino del Guerrero – Punta Arenas" },
-
   // Mayo — Encuentro Vitamina
   { month: 4, day: 31, type: "vitamina", label: "Encuentro Vitamina" },
 

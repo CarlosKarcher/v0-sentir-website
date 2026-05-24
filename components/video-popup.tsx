@@ -72,7 +72,7 @@ export function VideoPopup() {
             background: "#000",
             borderRadius: "12px",
             overflow: "hidden",
-            width: "min(1060px, 98vw)",
+            width: "min(360px, 98vw)",
             maxHeight: "90vh",
           }}
           onClick={(e) => e.stopPropagation()}
@@ -90,7 +90,7 @@ export function VideoPopup() {
           </Button>
 
           {/* Video biodecodificación */}
-          <div style={{ display: "flex", height: "min(480px, 80vh)" }}>
+          <div style={{ display: "flex", justifyContent: "center" }}>
             <VideoPlayer src="/video-bio-promocion.mp4" autoPlay />
           </div>
         </div>

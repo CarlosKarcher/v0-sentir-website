@@ -62,7 +62,7 @@ export function SentirDesdeAdentro() {
           <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-6 text-center text-balance">
             Autoconocimiento y El Camino del Guerrero — Mayo 2026
           </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             <Card className="overflow-hidden">
               <CardContent className="p-0">
                 <div className="relative w-full" style={{ aspectRatio: "16/9" }}>
@@ -83,6 +83,21 @@ export function SentirDesdeAdentro() {
                 <div className="relative w-full" style={{ aspectRatio: "16/9" }}>
                   <video
                     src="/Guerrero-gallegos-Mayo-2026.mp4"
+                    controls
+                    className="w-full h-full object-contain mx-auto block"
+                    preload="metadata"
+                    playsInline
+                  >
+                    Tu navegador no soporta el elemento de video.
+                  </video>
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="overflow-hidden">
+              <CardContent className="p-0">
+                <div className="relative w-full" style={{ aspectRatio: "16/9" }}>
+                  <video
+                    src="/video-guerrero-mayo-rio-gallegos.mp4"
                     controls
                     className="w-full h-full object-contain mx-auto block"
                     preload="metadata"

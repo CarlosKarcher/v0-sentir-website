@@ -1223,9 +1223,6 @@ function TablaInscripciones({
 
               {/* Contenido */}
               <div className="flex flex-col items-center text-center px-8 py-10 gap-4">
-                {/* Logo fueguito */}
-                <img src="/fuego-de-sentir.png" alt="Sentir" className="h-14 w-auto" />
-
                 {/* Nombre cliente */}
                 <div>
                   <p className="text-white/70 text-sm uppercase tracking-widest mb-1">Para</p>

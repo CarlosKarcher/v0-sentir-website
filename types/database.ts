@@ -75,4 +75,5 @@ export interface InscripcionConTaller extends Inscripcion {
   precio_inscripto: number | null
   enrolador_nombre: string | null
   enrolador_telefono: string | null
+  taller_fecha_inicio: string | null
 }

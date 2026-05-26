@@ -1155,6 +1155,7 @@ function TablaInscripciones({
   const [guardandoMonto, setGuardandoMonto] = useState<string | null>(null)
   const [preciosEdit, setPreciosEdit] = useState<Record<string, string>>({})
   const [guardandoPrecioInsc, setGuardandoPrecioInsc] = useState<string | null>(null)
+  const [inscripcionConfirmada, setInscripcionConfirmada] = useState<InscripcionConTaller | null>(null)
 
   const estadoBadge = (estado: string) => {
     if (estado === "confirmado") return "bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300"
@@ -1196,6 +1197,79 @@ function TablaInscripciones({
   }
 
   return (
+    <>
+      {/* Tarjeta de confirmación */}
+      {inscripcionConfirmada && (
+        <>
+          <div
+            className="fixed inset-0 z-[9998] bg-black/70 backdrop-blur-sm"
+            onClick={() => setInscripcionConfirmada(null)}
+          />
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+            <div
+              className="relative rounded-2xl shadow-2xl overflow-hidden"
+              style={{ width: "min(420px, 96vw)", background: "linear-gradient(160deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)" }}
+              onClick={e => e.stopPropagation()}
+            >
+              {/* Botón cerrar */}
+              <button
+                onClick={() => setInscripcionConfirmada(null)}
+                className="absolute top-3 right-3 text-white/60 hover:text-white z-10"
+                type="button"
+                aria-label="Cerrar"
+              >
+                <X className="h-5 w-5" />
+              </button>
+
+              {/* Contenido */}
+              <div className="flex flex-col items-center text-center px-8 py-10 gap-4">
+                {/* Logo fueguito */}
+                <img src="/fuego-de-sentir.png" alt="Sentir" className="h-14 w-auto" />
+
+                {/* Nombre cliente */}
+                <div>
+                  <p className="text-white/70 text-sm uppercase tracking-widest mb-1">Para</p>
+                  <h2 className="text-white text-2xl font-bold">{inscripcionConfirmada.nombre} {inscripcionConfirmada.apellido}</h2>
+                </div>
+
+                {/* Taller */}
+                <div className="bg-white/10 rounded-xl px-6 py-3 w-full">
+                  <p className="text-white/60 text-xs uppercase tracking-wider mb-1">Taller</p>
+                  <p className="text-white font-semibold text-lg">{inscripcionConfirmada.taller_nombre}</p>
+                </div>
+
+                {/* Mensaje confirmación */}
+                <div className="flex flex-col items-center gap-1">
+                  <div className="flex items-center gap-2">
+                    <Check className="h-6 w-6 text-green-400" />
+                    <span className="text-green-400 text-xl font-extrabold tracking-wide">Tu lugar está CONFIRMADO</span>
+                    <Check className="h-6 w-6 text-green-400" />
+                  </div>
+                  <p className="text-white text-lg font-semibold">¡Te esperamos!</p>
+                </div>
+
+                {/* Fecha inicio */}
+                {inscripcionConfirmada.taller_fecha_inicio && (
+                  <div className="bg-white/10 rounded-xl px-6 py-3 w-full">
+                    <p className="text-white/60 text-xs uppercase tracking-wider mb-1">Fecha de inicio</p>
+                    <p className="text-white font-semibold text-base">
+                      {new Date(inscripcionConfirmada.taller_fecha_inicio + "T12:00:00").toLocaleDateString("es-AR", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
+                    </p>
+                  </div>
+                )}
+
+                {/* Cierre */}
+                <div className="flex items-center gap-2 mt-2">
+                  <p className="text-white/80 text-base font-medium">Gracias.</p>
+                  <span className="text-white font-bold text-base">Sentir</span>
+                  <img src="/fuego-de-sentir.png" alt="" className="h-5 w-auto" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
     <div className="overflow-x-auto">
       <table className="w-full text-sm border-collapse min-w-[1100px]">
         <thead>
@@ -1287,7 +1361,7 @@ function TablaInscripciones({
                     ) : ins.estado !== "cancelado" && saldo <= 0 && precioEfectivo > 0 ? (
                       <button
                         disabled={accionInscripcion === ins.id}
-                        onClick={() => onAprobar(ins.id)}
+                        onClick={() => { setInscripcionConfirmada(ins); onAprobar(ins.id) }}
                         title="Aprobar"
                         className="w-8 h-8 rounded-full bg-green-500 hover:bg-green-600 text-white flex items-center justify-center disabled:opacity-50 transition-colors shadow-sm"
                       >
@@ -1320,6 +1394,7 @@ function TablaInscripciones({
         </tbody>
       </table>
     </div>
+    </>
   )
 }
 

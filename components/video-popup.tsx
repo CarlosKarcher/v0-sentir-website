@@ -58,7 +58,7 @@ export function VideoPopup() {
           {/* Video biodecodificación */}
           <video
             ref={videoRef}
-            src="/video-bio-promocion.mp4"
+            src="/cierre-7ma-conferencia.mp4"
             playsInline
             controls
             preload="auto"

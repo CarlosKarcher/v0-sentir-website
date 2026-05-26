@@ -1250,7 +1250,14 @@ function TablaInscripciones({
                   <div className="bg-white/10 rounded-xl px-6 py-3 w-full">
                     <p className="text-white/60 text-xs uppercase tracking-wider mb-1">Fecha de inicio</p>
                     <p className="text-white font-semibold text-base">
-                      {new Date(inscripcionConfirmada.taller_fecha_inicio + "T12:00:00").toLocaleDateString("es-AR", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
+                      {(() => {
+                        const raw = inscripcionConfirmada.taller_fecha_inicio!
+                        const dateStr = raw.includes("T") ? raw : raw + "T12:00:00"
+                        const d = new Date(dateStr)
+                        return isNaN(d.getTime())
+                          ? raw
+                          : d.toLocaleDateString("es-AR", { weekday: "long", day: "numeric", month: "long", year: "numeric" })
+                      })()}
                     </p>
                   </div>
                 )}

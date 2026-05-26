@@ -1352,9 +1352,14 @@ function TablaInscripciones({
                 <td className="px-2 py-2 text-center">
                   <div className="flex gap-2 justify-center">
                     {ins.estado === "confirmado" ? (
-                      <div title="Confirmado" className="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center shadow-sm opacity-70">
+                      <button
+                        onClick={() => setInscripcionConfirmada(ins)}
+                        title="Ver cartel de confirmación"
+                        className="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center shadow-sm hover:bg-green-600 transition-colors"
+                        type="button"
+                      >
                         <Check className="h-4 w-4" />
-                      </div>
+                      </button>
                     ) : ins.estado !== "cancelado" && saldo <= 0 && precioEfectivo > 0 ? (
                       <button
                         disabled={accionInscripcion === ins.id}

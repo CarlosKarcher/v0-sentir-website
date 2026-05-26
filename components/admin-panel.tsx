@@ -1252,11 +1252,12 @@ function TablaInscripciones({
                     <p className="text-white font-semibold text-base">
                       {(() => {
                         const raw = inscripcionConfirmada.taller_fecha_inicio!
-                        const dateStr = raw.includes("T") ? raw : raw + "T12:00:00"
-                        const d = new Date(dateStr)
-                        return isNaN(d.getTime())
+                        const datePart = raw.split("T")[0]
+                        const [y, m, d] = datePart.split("-").map(Number)
+                        const fecha = new Date(y, m - 1, d)
+                        return isNaN(fecha.getTime())
                           ? raw
-                          : d.toLocaleDateString("es-AR", { weekday: "long", day: "numeric", month: "long", year: "numeric" })
+                          : fecha.toLocaleDateString("es-AR", { weekday: "long", day: "numeric", month: "long", year: "numeric" })
                       })()}
                     </p>
                   </div>

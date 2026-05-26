@@ -4,7 +4,7 @@ import * as React from "react"
 import { X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
-const VIDEO = "/auto-Mayo-2026.mp4"
+const VIDEO = "/cierre-7ma-conferencia.mp4"
 
 export function PresentationVideos() {
   const [isOpen, setIsOpen] = React.useState(true)

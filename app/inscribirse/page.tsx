@@ -103,8 +103,8 @@ function InscribirseForm() {
       // Verificar prerequisito usando datos del RPC (evita problemas de RLS)
       const requisito = REQUISITOS_ESTRICTOS[tallerSlug]
       if (requisito) {
-        // Ya realizó este taller (solo aplica a Transformación)
-        if (requisito.campoPropio && data[requisito.campoPropio]) {
+        // Ya realizó este taller (solo aplica a Transformación) — admins pueden igualmente inscribirse
+        if (requisito.campoPropio && data[requisito.campoPropio] && !data.es_admin) {
           setEstadoUsuario("ya_realizado")
           return
         }

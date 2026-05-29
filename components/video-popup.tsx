@@ -4,7 +4,7 @@ import * as React from "react"
 import { X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
-const DURATION = 30
+const DURATION = 20
 
 // Posiciones que va rotando el contador para no tapar el flyer
 const POSITIONS = [
@@ -30,7 +30,7 @@ export function VideoPopup() {
   // Mueve el contador de esquina cada 7 segundos
   React.useEffect(() => {
     if (!isOpen) return
-    const t = setInterval(() => setPosIdx((i) => (i + 1) % POSITIONS.length), 7000)
+    const t = setInterval(() => setPosIdx((i) => (i + 1) % POSITIONS.length), 5000)
     return () => clearInterval(t)
   }, [isOpen])
 

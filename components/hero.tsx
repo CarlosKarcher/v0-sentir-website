@@ -143,6 +143,14 @@ export function Hero({ onAnotate }: { onAnotate?: () => void }) {
             Registrate
           </Button>
         </div>
+        <div className="mt-3 sm:mt-4 px-4 flex justify-center">
+          <a
+            href="#proximos-eventos"
+            className="inline-block text-sm sm:text-base bg-green-700 hover:bg-green-600 text-white font-bold px-8 py-3 rounded-md transition-colors"
+          >
+            Inscribirse!!!!
+          </a>
+        </div>
       </div>
     </section>
   )

@@ -49,10 +49,10 @@ function InscribirseForm() {
   const camposFijos = TALLERES_CAMPOS_FIJOS.has(tallerSlug)
 
   // Datos de transferencia según el evento
-  const esBiodeco13Jun = tallerSlug === "biodecodificacion" && eventoParam.toLowerCase().includes("junio")
-  const transferTitular = esBiodeco13Jun ? "Carlos Karcher" : "Fernando Javier Cárcamo"
-  const transferBanco   = esBiodeco13Jun ? "MercadoPago" : "Mercado Pago"
-  const transferAlias   = esBiodeco13Jun ? "ckarcher.mp" : "coach.fercarcamo.mp"
+  const esBiodecodificacion = tallerSlug === "biodecodificacion"
+  const transferTitular = esBiodecodificacion ? "Carlos Karcher" : "Fernando Javier Cárcamo"
+  const transferBanco   = esBiodecodificacion ? "MercadoPago" : "Mercado Pago"
+  const transferAlias   = esBiodecodificacion ? "ckarcher.mp" : "coach.fercarcamo.mp"
 
   const [tallerData, setTallerData] = useState<Taller | null>(null)
   const [cargandoTaller, setCargandoTaller] = useState(false)

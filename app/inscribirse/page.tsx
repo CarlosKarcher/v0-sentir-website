@@ -48,6 +48,12 @@ function InscribirseForm() {
   const tallerNombreSeleccionado = TALLERES_LISTA.find(t => t.slug === tallerSlug)?.nombre || tallerSlug
   const camposFijos = TALLERES_CAMPOS_FIJOS.has(tallerSlug)
 
+  // Datos de transferencia según el evento
+  const esBiodeco13Jun = tallerSlug === "biodecodificacion" && eventoParam.includes("13/06")
+  const transferTitular = esBiodeco13Jun ? "Carlos Karcher" : "Fernando Javier Cárcamo"
+  const transferBanco   = esBiodeco13Jun ? "MercadoPago" : "Mercado Pago"
+  const transferAlias   = esBiodeco13Jun ? "ckarcher.mp" : "coach.fercarcamo.mp"
+
   const [tallerData, setTallerData] = useState<Taller | null>(null)
   const [cargandoTaller, setCargandoTaller] = useState(false)
 
@@ -338,9 +344,9 @@ function InscribirseForm() {
           )}
           <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl p-4 text-base text-left space-y-1">
             <p className="font-semibold text-amber-800 dark:text-amber-200">Datos de transferencia:</p>
-            <p className="text-amber-700 dark:text-amber-300">Titular: <strong>Fernando Javier Cárcamo</strong></p>
-            <p className="text-amber-700 dark:text-amber-300">Banco: <strong>Mercado Pago</strong></p>
-            <p className="text-amber-700 dark:text-amber-300">Alias: <strong>coach.fercarcamo.mp</strong></p>
+            <p className="text-amber-700 dark:text-amber-300">Titular: <strong>{transferTitular}</strong></p>
+            <p className="text-amber-700 dark:text-amber-300">Banco: <strong>{transferBanco}</strong></p>
+            <p className="text-amber-700 dark:text-amber-300">Alias: <strong>{transferAlias}</strong></p>
             {precios && precios.precioFinal > 0 && (
               <p className="text-amber-700 dark:text-amber-300">
                 Monto:{" "}
@@ -699,9 +705,9 @@ function InscribirseForm() {
           {/* Datos de transferencia */}
           {modalidadPago !== "tarjeta" && <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl p-4 text-sm space-y-1">
             <p className="font-semibold text-amber-800 dark:text-amber-200">Datos para transferencia:</p>
-            <p className="text-amber-700 dark:text-amber-300">Titular: <strong>Fernando Javier Cárcamo</strong></p>
-            <p className="text-amber-700 dark:text-amber-300">Banco: <strong>Mercado Pago</strong></p>
-            <p className="text-amber-700 dark:text-amber-300">Alias: <strong>coach.fercarcamo.mp</strong></p>
+            <p className="text-amber-700 dark:text-amber-300">Titular: <strong>{transferTitular}</strong></p>
+            <p className="text-amber-700 dark:text-amber-300">Banco: <strong>{transferBanco}</strong></p>
+            <p className="text-amber-700 dark:text-amber-300">Alias: <strong>{transferAlias}</strong></p>
             {precios && precios.precioFinal > 0 && (() => {
               const montoSena = Math.ceil(precios.precioFinal * 0.35 / 1000) * 1000
               const montoMostrar = modalidadPago === "sena" ? montoSena : precios.precioFinal

@@ -49,7 +49,7 @@ function InscribirseForm() {
   const camposFijos = TALLERES_CAMPOS_FIJOS.has(tallerSlug)
 
   // Datos de transferencia según el evento
-  const esBiodeco13Jun = tallerSlug === "biodecodificacion" && eventoParam.includes("13/06")
+  const esBiodeco13Jun = tallerSlug === "biodecodificacion" && eventoParam.toLowerCase().includes("junio")
   const transferTitular = esBiodeco13Jun ? "Carlos Karcher" : "Fernando Javier Cárcamo"
   const transferBanco   = esBiodeco13Jun ? "MercadoPago" : "Mercado Pago"
   const transferAlias   = esBiodeco13Jun ? "ckarcher.mp" : "coach.fercarcamo.mp"

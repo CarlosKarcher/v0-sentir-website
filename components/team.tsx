@@ -88,7 +88,7 @@ const team = [
     name: "Sofía Martín",
     role: "Reiki usui - Limpieza Energética con Péndulo",
     specialties: ["Staff de Sentir"],
-    image: "/Sofy-Martin.jpeg",
+    image: "/sofy-06-2026.jpeg",
     phone: "5492966714217",
   },
   {

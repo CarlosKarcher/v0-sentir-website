@@ -575,6 +575,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                     {(() => {
                       const inscFiltradas = filtroEstado === "todos" ? inscripciones : inscripciones.filter(i => i.estado === filtroEstado)
                       const totalPagado = inscFiltradas.reduce((acc, i) => acc + (i.monto_pagado ?? 0), 0)
+                      const totalARecaudar = inscFiltradas.filter(i => i.estado !== "cancelado").reduce((acc, i) => acc + (i.precio_inscripto ?? i.taller_precio ?? 0), 0)
                       return (
                         <div className="flex items-center gap-6 flex-wrap">
                           <div className="flex items-center gap-3">
@@ -589,6 +590,10 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                               <option value="confirmado">Confirmado</option>
                               <option value="cancelado">Cancelado</option>
                             </select>
+                          </div>
+                          <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg px-4 py-1.5">
+                            <span className="text-sm text-blue-700 dark:text-blue-300 font-medium">Total a Rec:</span>
+                            <span className="text-sm font-bold text-blue-800 dark:text-blue-200">${totalARecaudar.toLocaleString("es-AR")} ARS</span>
                           </div>
                           <div className="flex items-center gap-2 bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-lg px-4 py-1.5">
                             <span className="text-sm text-green-700 dark:text-green-300 font-medium">Total recaudado:</span>
@@ -987,6 +992,12 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                   <>
                     <div className="flex items-center gap-4 flex-wrap">
                       <span className="text-sm text-muted-foreground">{inscripcionesRealizadas.length} inscripciones realizadas</span>
+                      <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg px-4 py-1.5">
+                        <span className="text-sm text-blue-700 dark:text-blue-300 font-medium">Total a Rec:</span>
+                        <span className="text-sm font-bold text-blue-800 dark:text-blue-200">
+                          ${inscripcionesRealizadas.filter(i => i.estado !== "cancelado").reduce((acc, i) => acc + (i.precio_inscripto ?? i.taller_precio ?? 0), 0).toLocaleString("es-AR")} ARS
+                        </span>
+                      </div>
                       <div className="flex items-center gap-2 bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800 rounded-lg px-4 py-1.5">
                         <span className="text-sm text-purple-700 dark:text-purple-300 font-medium">Total recaudado:</span>
                         <span className="text-sm font-bold text-purple-800 dark:text-purple-200">

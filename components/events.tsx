@@ -18,9 +18,13 @@ const getWhatsAppLink = (phoneNumber: string) => {
   return `https://wa.me/${cleanNumber}`
 }
 
+// Talleres que requieren login obligatorio para inscribirse
+const TALLERES_REQUIEREN_LOGIN = new Set(["transformacion", "metas-y-logros"])
+
 function EventCard({ event }: { event: Event }) {
   const { estado } = useUser()
   const [loginOpen, setLoginOpen] = useState(false)
+  const requiereLogin = TALLERES_REQUIEREN_LOGIN.has(event.tallerSlug || "")
   const [flyerOpen, setFlyerOpen] = useState(false)
   const [imageError, setImageError] = useState(false)
   const [imageSrc, setImageSrc] = useState(event.flyerImage || "/flyer-transformacion-rio-gallegos.jpg")
@@ -227,7 +231,7 @@ function EventCard({ event }: { event: Event }) {
                 <ClipboardList className="h-4 w-4" />
                 Inscribirme
               </a>
-            ) : estado === "sin_registro" ? (
+            ) : estado === "sin_registro" && requiereLogin ? (
               <a
                 href="#inicio"
                 className="flex items-center justify-center gap-2 w-full bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300 font-semibold py-2 px-4 rounded-lg transition-colors text-sm"
@@ -235,7 +239,7 @@ function EventCard({ event }: { event: Event }) {
                 <Lock className="h-4 w-4" />
                 Registrate para inscribirte
               </a>
-            ) : estado === "no_logueado" ? (
+            ) : estado === "no_logueado" && requiereLogin ? (
               <>
                 <button
                   onClick={() => setLoginOpen(true)}

@@ -133,26 +133,43 @@ function InscribirseForm() {
     setCargandoTaller(true)
     const sede = localidadParam ? decodeURIComponent(localidadParam) : null
     const buscar = async () => {
-      // Intentar con sede específica
+      // Intentar con sede específica — si hay varios eventos del mismo slug+sede, tomar el próximo
       if (sede) {
-        const { data } = await supabase
+        const hoy = new Date().toISOString()
+        const { data: rows } = await supabase
           .from("talleres")
           .select("*")
           .eq("slug", tallerSlug)
           .eq("sede", sede)
           .eq("activo", true)
-          .maybeSingle()
+          .gte("fecha_inicio", hoy)
+          .order("fecha_inicio", { ascending: true })
+          .limit(1)
+        const data = rows?.[0] ?? null
         if (data) { setTallerData(data); setCargandoTaller(false); return }
+        // Si no hay eventos futuros, tomar el más reciente pasado
+        const { data: rowsPast } = await supabase
+          .from("talleres")
+          .select("*")
+          .eq("slug", tallerSlug)
+          .eq("sede", sede)
+          .eq("activo", true)
+          .order("fecha_inicio", { ascending: false })
+          .limit(1)
+        const dataPast = rowsPast?.[0] ?? null
+        if (dataPast) { setTallerData(dataPast); setCargandoTaller(false); return }
       }
       // Fallback: precio genérico (sin sede)
-      const { data } = await supabase
+      const { data: rowsGen } = await supabase
         .from("talleres")
         .select("*")
         .eq("slug", tallerSlug)
         .is("sede", null)
         .eq("activo", true)
-        .maybeSingle()
-      setTallerData(data ?? null)
+        .order("fecha_inicio", { ascending: true })
+        .limit(1)
+      const data = rowsGen?.[0] ?? null
+      setTallerData(data)
       setCargandoTaller(false)
     }
     buscar()

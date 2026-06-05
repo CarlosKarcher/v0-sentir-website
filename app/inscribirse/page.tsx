@@ -32,6 +32,7 @@ const TALLERES_CAMPOS_FIJOS = new Set(["transformacion", "metas-y-logros"])
 function InscribirseForm() {
   const searchParams = useSearchParams()
   const tallerSlugParam = searchParams.get("taller") || ""
+  const tallerIdParam = searchParams.get("id") || ""
   const eventoParam = searchParams.get("evento") || ""
   const localidadParam = searchParams.get("localidad") || ""
   const backParam = searchParams.get("back") || ""
@@ -127,13 +128,22 @@ function InscribirseForm() {
     })
   }, [estadoAuth, emailAuth])
 
-  // Cargar precio del taller — primero busca por slug+sede, si no hay cae al genérico (sede=null)
+  // Cargar precio del taller — 1) por UUID exacto si viene en URL, 2) por slug+sede, 3) genérico sin sede
   useEffect(() => {
     if (!tallerSlug) { setTallerData(null); return }
     setCargandoTaller(true)
     const sede = localidadParam ? decodeURIComponent(localidadParam) : null
     const buscar = async () => {
-      // Intentar con sede específica — si hay varios eventos del mismo slug+sede, tomar el próximo
+      // Opción 1: ID exacto (evita ambigüedad cuando hay varios eventos mismo slug+sede)
+      if (tallerIdParam) {
+        const { data } = await supabase
+          .from("talleres")
+          .select("*")
+          .eq("id", tallerIdParam)
+          .maybeSingle()
+        if (data) { setTallerData(data); setCargandoTaller(false); return }
+      }
+      // Opción 2: slug + sede — si hay varios, tomar el próximo evento futuro
       if (sede) {
         const hoy = new Date().toISOString()
         const { data: rows } = await supabase
@@ -147,7 +157,7 @@ function InscribirseForm() {
           .limit(1)
         const data = rows?.[0] ?? null
         if (data) { setTallerData(data); setCargandoTaller(false); return }
-        // Si no hay eventos futuros, tomar el más reciente pasado
+        // Si no hay futuros, tomar el más reciente pasado
         const { data: rowsPast } = await supabase
           .from("talleres")
           .select("*")
@@ -159,7 +169,7 @@ function InscribirseForm() {
         const dataPast = rowsPast?.[0] ?? null
         if (dataPast) { setTallerData(dataPast); setCargandoTaller(false); return }
       }
-      // Fallback: precio genérico (sin sede)
+      // Opción 3: precio genérico sin sede
       const { data: rowsGen } = await supabase
         .from("talleres")
         .select("*")
@@ -173,7 +183,7 @@ function InscribirseForm() {
       setCargandoTaller(false)
     }
     buscar()
-  }, [tallerSlug, localidadParam])
+  }, [tallerSlug, tallerIdParam, localidadParam])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

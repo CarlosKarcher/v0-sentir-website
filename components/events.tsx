@@ -225,7 +225,7 @@ function EventCard({ event }: { event: Event }) {
               </button>
             ) : estado === "registrado" ? (
               <a
-                href={`/inscribirse?taller=${event.tallerSlug}&localidad=${encodeURIComponent(event.sede || event.location)}&evento=${encodeURIComponent(`${event.title} — ${event.date} — ${event.location}`)}&back=proximos-eventos`}
+                href={`/inscribirse?taller=${event.tallerSlug}${event.tallerId ? `&id=${event.tallerId}` : ""}&localidad=${encodeURIComponent(event.sede || event.location)}&evento=${encodeURIComponent(`${event.title} — ${event.date} — ${event.location}`)}&back=proximos-eventos`}
                 className="flex items-center justify-center gap-2 w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-sm"
               >
                 <ClipboardList className="h-4 w-4" />
@@ -252,7 +252,7 @@ function EventCard({ event }: { event: Event }) {
               </>
             ) : (
               <a
-                href={`/inscribirse?taller=${event.tallerSlug}&localidad=${encodeURIComponent(event.sede || event.location)}&evento=${encodeURIComponent(`${event.title} — ${event.date} — ${event.location}`)}&back=proximos-eventos`}
+                href={`/inscribirse?taller=${event.tallerSlug}${event.tallerId ? `&id=${event.tallerId}` : ""}&localidad=${encodeURIComponent(event.sede || event.location)}&evento=${encodeURIComponent(`${event.title} — ${event.date} — ${event.location}`)}&back=proximos-eventos`}
                 className="flex items-center justify-center gap-2 w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-sm"
               >
                 <ClipboardList className="h-4 w-4" />
@@ -499,6 +499,7 @@ export function Events() {
       flyerImageAlt: "/images/bio-13-06-2026.jpeg",
       contactPhone: "+54 9 2966 211547",
       tallerSlug: "biodecodificacion",
+      tallerId: "833faea0-2735-40c1-a2d7-b73ffb874f68",
       sede: "Río Gallegos",
     },
     {
@@ -514,6 +515,7 @@ export function Events() {
       flyerImageAlt: "/images/sanando-14-06-2026.jpeg",
       contactPhone: "+54 9 2966 595803",
       tallerSlug: "sanando-mi-nino-interior",
+      tallerId: "a63f3b45-c0f6-4db3-9c6d-6e5281af4841",
       sede: "Río Gallegos",
     },
     {
@@ -527,6 +529,7 @@ export function Events() {
       hasFlyer: false,
       contactPhone: "+54 9 2966 595803",
       tallerSlug: "autoconocimiento",
+      tallerId: "9a45a2ae-ec59-41ea-befb-a28c7c59c87d",
       sede: "Río Gallegos",
     },
     {
@@ -543,6 +546,7 @@ export function Events() {
       level: "2do Nivel",
       contactPhone: "+54 9 2966 595803",
       tallerSlug: "transformacion",
+      tallerId: "2ecd2571-70d4-401c-9a40-56f0a3ab589c",
       sede: "Río Gallegos",
     },
     {
@@ -558,6 +562,7 @@ export function Events() {
       level: "3er Nivel",
       contactPhone: "+54 9 2966 595803",
       tallerSlug: "metas-y-logros",
+      tallerId: "893c6f59-783e-45ae-bb45-282216b1f616",
       sede: "Río Gallegos",
     },
     {
@@ -634,6 +639,7 @@ export function Events() {
       flyerImageAlt: "/images/El Guerrero Necochea.jpeg",
       contactPhone: "+54 11 6706 6630",
       tallerSlug: "camino-del-guerrero",
+      tallerId: "82cac61c-8f4b-4316-bdd0-126994ed6a81",
       sede: "Quequén-Neco",
     },
     {

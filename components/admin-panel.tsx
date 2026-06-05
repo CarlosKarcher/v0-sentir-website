@@ -1167,6 +1167,7 @@ function TablaInscripciones({
   const [preciosEdit, setPreciosEdit] = useState<Record<string, string>>({})
   const [guardandoPrecioInsc, setGuardandoPrecioInsc] = useState<string | null>(null)
   const [inscripcionConfirmada, setInscripcionConfirmada] = useState<InscripcionConTaller | null>(null)
+  const [inscripcionMensaje, setInscripcionMensaje] = useState<InscripcionConTaller | null>(null)
 
   const estadoBadge = (estado: string) => {
     if (estado === "confirmado") return "bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300"
@@ -1197,18 +1198,18 @@ function TablaInscripciones({
     setGuardandoPrecioInsc(null)
   }
 
-  const generarMensajeWA = (ins: InscripcionConTaller) => {
+  const formatFechaTaller = (taller_fecha_inicio: string | null | undefined) => {
+    if (!taller_fecha_inicio) return ""
+    const datePart = taller_fecha_inicio.split("T")[0]
+    const [y, m, d] = datePart.split("-").map(Number)
+    const fecha = new Date(y, m - 1, d)
+    return isNaN(fecha.getTime()) ? taller_fecha_inicio : fecha.toLocaleDateString("es-AR", { weekday: "long", day: "numeric", month: "long", year: "numeric" })
+  }
+
+  const enviarMensajeWA = (ins: InscripcionConTaller) => {
     const nombreCliente = `${ins.nombre} ${ins.apellido}`.trim()
     const fechaInscripcion = new Date(ins.creado_en).toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" })
-    let fechaTaller = ""
-    if (ins.taller_fecha_inicio) {
-      const raw = ins.taller_fecha_inicio
-      const datePart = raw.split("T")[0]
-      const [y, m, d] = datePart.split("-").map(Number)
-      const fecha = new Date(y, m - 1, d)
-      if (!isNaN(fecha.getTime()))
-        fechaTaller = fecha.toLocaleDateString("es-AR", { weekday: "long", day: "numeric", month: "long", year: "numeric" })
-    }
+    const fechaTaller = formatFechaTaller(ins.taller_fecha_inicio)
     const sede = ins.localidad_taller || ""
     const lineas = [
       `Hola ${nombreCliente}! 🌟`,
@@ -1227,8 +1228,7 @@ function TablaInscripciones({
     ].filter(l => l !== undefined)
     const mensaje = lineas.join("\n")
     const telefono = (ins.telefono || "").replace(/\D/g, "")
-    const url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`
-    window.open(url, "_blank")
+    window.open(`https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`, "_blank")
   }
 
   const guardarMonto = async (ins: InscripcionConTaller) => {
@@ -1314,6 +1314,84 @@ function TablaInscripciones({
                   <span className="text-white font-bold text-base">Sentir</span>
                   <img src="/fuego-de-sentir.png" alt="" className="h-5 w-auto" />
                 </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Cartelito de mensaje de seña */}
+      {inscripcionMensaje && (
+        <>
+          <div
+            className="fixed inset-0 z-[9998] bg-black/70 backdrop-blur-sm"
+            onClick={() => setInscripcionMensaje(null)}
+          />
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+            <div
+              className="relative rounded-2xl shadow-2xl overflow-hidden"
+              style={{ width: "min(420px, 96vw)", background: "linear-gradient(160deg, #0d2b1e 0%, #0f3d2a 50%, #145c3b 100%)" }}
+              onClick={e => e.stopPropagation()}
+            >
+              <button
+                onClick={() => setInscripcionMensaje(null)}
+                className="absolute top-3 right-3 text-white/60 hover:text-white z-10"
+                type="button"
+                aria-label="Cerrar"
+              >
+                <X className="h-5 w-5" />
+              </button>
+
+              <div className="flex flex-col items-center text-center px-8 py-10 gap-4">
+                {/* Encabezado */}
+                <div>
+                  <p className="text-white/60 text-xs uppercase tracking-widest mb-1">Mensaje para</p>
+                  <h2 className="text-white text-2xl font-bold">{inscripcionMensaje.nombre} {inscripcionMensaje.apellido}</h2>
+                  {inscripcionMensaje.telefono && (
+                    <p className="text-white/50 text-sm mt-1">{inscripcionMensaje.telefono}</p>
+                  )}
+                </div>
+
+                {/* Taller + sede */}
+                <div className="bg-white/10 rounded-xl px-6 py-3 w-full">
+                  <p className="text-white/60 text-xs uppercase tracking-wider mb-1">Registramos tu Seña en</p>
+                  <p className="text-white font-semibold text-lg">{inscripcionMensaje.taller_nombre}</p>
+                  {inscripcionMensaje.localidad_taller && (
+                    <p className="text-white/70 text-sm mt-1">📍 {inscripcionMensaje.localidad_taller}</p>
+                  )}
+                  {inscripcionMensaje.taller_fecha_inicio && (
+                    <p className="text-white/70 text-sm mt-1">📅 {formatFechaTaller(inscripcionMensaje.taller_fecha_inicio)}</p>
+                  )}
+                </div>
+
+                {/* Fecha seña */}
+                <div className="bg-white/10 rounded-xl px-6 py-3 w-full">
+                  <p className="text-white/60 text-xs uppercase tracking-wider mb-1">Fecha de inscripción</p>
+                  <p className="text-white font-semibold text-base">
+                    {new Date(inscripcionMensaje.creado_en).toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" })}
+                  </p>
+                </div>
+
+                {/* Cierre */}
+                <div className="flex flex-col items-center gap-1 mt-1">
+                  <p className="text-white text-base font-semibold">Gracias, te Esperamos.!!</p>
+                  <div className="flex items-center gap-2 mt-1">
+                    <span className="text-white font-bold text-base">Sentir</span>
+                    <img src="/fuego-de-sentir.png" alt="" className="h-5 w-auto" />
+                  </div>
+                </div>
+
+                {/* Botón enviar */}
+                <button
+                  onClick={() => enviarMensajeWA(inscripcionMensaje)}
+                  className="mt-2 flex items-center gap-2 bg-green-500 hover:bg-green-400 text-white font-bold px-6 py-3 rounded-xl transition-colors shadow-lg text-base"
+                  type="button"
+                >
+                  <svg viewBox="0 0 24 24" className="h-5 w-5 fill-white flex-shrink-0" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                  </svg>
+                  Enviar por WhatsApp
+                </button>
               </div>
             </div>
           </div>
@@ -1424,8 +1502,8 @@ function TablaInscripciones({
                       </button>
                     ) : null}
                     <button
-                      onClick={() => generarMensajeWA(ins)}
-                      title="Enviar mensaje de seña por WhatsApp"
+                      onClick={() => setInscripcionMensaje(ins)}
+                      title="Ver y enviar mensaje de seña por WhatsApp"
                       className="w-8 h-8 rounded-full bg-teal-600 hover:bg-teal-700 text-white flex items-center justify-center transition-colors shadow-sm"
                       type="button"
                     >

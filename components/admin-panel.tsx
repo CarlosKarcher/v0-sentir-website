@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { createPortal } from "react-dom"
 import * as XLSX from "xlsx"
 import { supabase } from "@/lib/supabase-client"
-import { X, Download, RefreshCw, ArrowLeft, Users, UserX, Filter, ClipboardList, DollarSign, Check, Ban, Trash2 } from "lucide-react"
+import { X, Download, RefreshCw, ArrowLeft, Users, UserX, Filter, ClipboardList, DollarSign, Check, Ban, Trash2, MessageCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { calcularPrecioFinal } from "@/types/database"
 import type { Taller, InscripcionConTaller } from "@/types/database"
@@ -1197,6 +1197,40 @@ function TablaInscripciones({
     setGuardandoPrecioInsc(null)
   }
 
+  const generarMensajeWA = (ins: InscripcionConTaller) => {
+    const nombreCliente = `${ins.nombre} ${ins.apellido}`.trim()
+    const fechaInscripcion = new Date(ins.creado_en).toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" })
+    let fechaTaller = ""
+    if (ins.taller_fecha_inicio) {
+      const raw = ins.taller_fecha_inicio
+      const datePart = raw.split("T")[0]
+      const [y, m, d] = datePart.split("-").map(Number)
+      const fecha = new Date(y, m - 1, d)
+      if (!isNaN(fecha.getTime()))
+        fechaTaller = fecha.toLocaleDateString("es-AR", { weekday: "long", day: "numeric", month: "long", year: "numeric" })
+    }
+    const sede = ins.localidad_taller || ""
+    const lineas = [
+      `Hola ${nombreCliente}! 🌟`,
+      ``,
+      `Registramos tu Seña en:`,
+      ``,
+      `*${ins.taller_nombre || "Taller"}*`,
+      sede ? `📍 ${sede}` : "",
+      fechaTaller ? `📅 ${fechaTaller}` : "",
+      ``,
+      `Fecha de inscripción: ${fechaInscripcion}`,
+      ``,
+      `Gracias, te Esperamos.!!`,
+      ``,
+      `*Sentir* 🔥`,
+    ].filter(l => l !== undefined)
+    const mensaje = lineas.join("\n")
+    const telefono = (ins.telefono || "").replace(/\D/g, "")
+    const url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`
+    window.open(url, "_blank")
+  }
+
   const guardarMonto = async (ins: InscripcionConTaller) => {
     const val = parseFloat(montosEdit[ins.id] ?? "")
     if (isNaN(val)) return
@@ -1389,6 +1423,14 @@ function TablaInscripciones({
                         <Check className="h-4 w-4" />
                       </button>
                     ) : null}
+                    <button
+                      onClick={() => generarMensajeWA(ins)}
+                      title="Enviar mensaje de seña por WhatsApp"
+                      className="w-8 h-8 rounded-full bg-teal-600 hover:bg-teal-700 text-white flex items-center justify-center transition-colors shadow-sm"
+                      type="button"
+                    >
+                      <MessageCircle className="h-4 w-4" />
+                    </button>
                     {ins.estado !== "confirmado" && ins.estado !== "cancelado" && (
                       <button
                         disabled={accionInscripcion === ins.id}

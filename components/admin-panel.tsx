@@ -1518,14 +1518,16 @@ function TablaInscripciones({
                         <Check className="h-4 w-4" />
                       </button>
                     ) : null}
-                    <button
-                      onClick={() => setInscripcionMensaje(ins)}
-                      title="Ver y enviar mensaje de seña por WhatsApp"
-                      className="w-8 h-8 rounded-full bg-teal-600 hover:bg-teal-700 text-white flex items-center justify-center transition-colors shadow-sm"
-                      type="button"
-                    >
-                      <MessageCircle className="h-4 w-4" />
-                    </button>
+                    {ins.estado !== "confirmado" && (
+                      <button
+                        onClick={() => setInscripcionMensaje(ins)}
+                        title="Ver y enviar mensaje de seña por WhatsApp"
+                        className="w-8 h-8 rounded-full bg-teal-600 hover:bg-teal-700 text-white flex items-center justify-center transition-colors shadow-sm"
+                        type="button"
+                      >
+                        <MessageCircle className="h-4 w-4" />
+                      </button>
+                    )}
                     {ins.estado !== "confirmado" && ins.estado !== "cancelado" && (
                       <button
                         disabled={accionInscripcion === ins.id}

@@ -1222,6 +1222,8 @@ function TablaInscripciones({
       ``,
       `Fecha de inscripción: ${fechaInscripcion}`,
       ``,
+      (() => { const precio = ins.precio_inscripto ?? ins.taller_precio ?? 0; const saldo = precio - (ins.monto_pagado ?? 0); return precio > 0 ? `Tu saldo a pagar es: $${saldo.toLocaleString("es-AR")}` : "" })(),
+      ``,
       `Gracias, te Esperamos.!!`,
       ``,
       `*Sentir* 🔥`,
@@ -1370,6 +1372,22 @@ function TablaInscripciones({
                     {new Date(inscripcionMensaje.creado_en).toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" })}
                   </p>
                 </div>
+
+                {/* Saldo */}
+                {(() => {
+                  const precio = inscripcionMensaje.precio_inscripto ?? inscripcionMensaje.taller_precio ?? 0
+                  const pagado = inscripcionMensaje.monto_pagado ?? 0
+                  const saldo = precio - pagado
+                  if (precio <= 0) return null
+                  return (
+                    <div className="bg-white/10 rounded-xl px-6 py-3 w-full">
+                      <p className="text-white/60 text-xs uppercase tracking-wider mb-1">Tu saldo a pagar es</p>
+                      <p className={`font-bold text-xl ${saldo > 0 ? "text-yellow-300" : "text-green-400"}`}>
+                        ${saldo.toLocaleString("es-AR")}
+                      </p>
+                    </div>
+                  )
+                })()}
 
                 {/* Cierre */}
                 <div className="flex flex-col items-center gap-1 mt-1">

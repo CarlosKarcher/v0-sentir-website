@@ -1168,8 +1168,6 @@ function TablaInscripciones({
   const [guardandoPrecioInsc, setGuardandoPrecioInsc] = useState<string | null>(null)
   const [inscripcionConfirmada, setInscripcionConfirmada] = useState<InscripcionConTaller | null>(null)
   const [inscripcionMensaje, setInscripcionMensaje] = useState<InscripcionConTaller | null>(null)
-  const scrollTableRef = useRef<HTMLDivElement>(null)
-  const scrollTopRef = useRef<HTMLDivElement>(null)
 
   const estadoBadge = (estado: string) => {
     if (estado === "confirmado") return "bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300"
@@ -1417,19 +1415,9 @@ function TablaInscripciones({
         </>
       )}
 
-    {/* Barra de scroll horizontal superior */}
-    <div
-      ref={scrollTopRef}
-      style={{ overflowX: "scroll", overflowY: "hidden", height: 16 }}
-      onScroll={() => { if (scrollTableRef.current && scrollTopRef.current) scrollTableRef.current.scrollLeft = scrollTopRef.current.scrollLeft }}
-    >
-      <div style={{ minWidth: 1100, height: 1 }} />
-    </div>
-    <div
-      ref={scrollTableRef}
-      style={{ overflowX: "auto" }}
-      onScroll={() => { if (scrollTableRef.current && scrollTopRef.current) scrollTopRef.current.scrollLeft = scrollTableRef.current.scrollLeft }}
-    >
+    {/* Barra de scroll arriba: rotateX voltea la barra de abajo hacia arriba */}
+    <div style={{ overflowX: "auto", transform: "rotateX(180deg)" }}>
+      <div style={{ transform: "rotateX(180deg)" }}>
       <table className="w-full text-sm border-collapse min-w-[1100px]">
         <thead>
           <tr className="border-b-2 border-border bg-muted/50">
@@ -1567,6 +1555,7 @@ function TablaInscripciones({
           })}
         </tbody>
       </table>
+      </div>
     </div>
     </>
   )

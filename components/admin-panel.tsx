@@ -1214,9 +1214,9 @@ function TablaInscripciones({
     const lineas = [
       `Hola ${nombreCliente}! 🌟`,
       ``,
-      `Registramos tu Seña en:`,
+      `Registramos tu Seña${ins.monto_pagado ? ` de: $${Number(ins.monto_pagado).toLocaleString("es-AR")}` : ""} en:`,
       ``,
-      `*${ins.taller_nombre || "Taller"}*`,
+      `Para el Taller de: *${ins.taller_nombre || "Taller"}*`,
       sede ? `📍 ${sede}` : "",
       fechaTaller ? `📅 ${fechaTaller}` : "",
       ``,
@@ -1343,18 +1343,17 @@ function TablaInscripciones({
               </button>
 
               <div className="flex flex-col items-center text-center px-8 py-10 gap-4">
-                {/* Encabezado */}
+                {/* Encabezado — solo nombre */}
                 <div>
-                  <p className="text-white/60 text-xs uppercase tracking-widest mb-1">Mensaje para</p>
                   <h2 className="text-white text-2xl font-bold">{inscripcionMensaje.nombre} {inscripcionMensaje.apellido}</h2>
-                  {inscripcionMensaje.telefono && (
-                    <p className="text-white/50 text-sm mt-1">{inscripcionMensaje.telefono}</p>
-                  )}
                 </div>
 
                 {/* Taller + sede */}
                 <div className="bg-white/10 rounded-xl px-6 py-3 w-full">
-                  <p className="text-white/60 text-xs uppercase tracking-wider mb-1">Registramos tu Seña en</p>
+                  <p className="text-white/60 text-xs uppercase tracking-wider mb-1">
+                    Registramos tu Seña{inscripcionMensaje.monto_pagado ? ` de: $${Number(inscripcionMensaje.monto_pagado).toLocaleString("es-AR")}` : ""}
+                  </p>
+                  <p className="text-white/60 text-xs uppercase tracking-wider mb-1">Para el Taller de:</p>
                   <p className="text-white font-semibold text-lg">{inscripcionMensaje.taller_nombre}</p>
                   {inscripcionMensaje.localidad_taller && (
                     <p className="text-white/70 text-sm mt-1">📍 {inscripcionMensaje.localidad_taller}</p>

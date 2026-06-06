@@ -1420,15 +1420,14 @@ function TablaInscripciones({
     {/* Barra de scroll horizontal superior */}
     <div
       ref={scrollTopRef}
-      className="overflow-x-auto"
-      style={{ height: 12 }}
+      style={{ overflowX: "scroll", overflowY: "hidden", height: 16 }}
       onScroll={() => { if (scrollTableRef.current && scrollTopRef.current) scrollTableRef.current.scrollLeft = scrollTopRef.current.scrollLeft }}
     >
       <div style={{ minWidth: 1100, height: 1 }} />
     </div>
     <div
       ref={scrollTableRef}
-      className="overflow-x-auto"
+      style={{ overflowX: "auto" }}
       onScroll={() => { if (scrollTableRef.current && scrollTopRef.current) scrollTopRef.current.scrollLeft = scrollTableRef.current.scrollLeft }}
     >
       <table className="w-full text-sm border-collapse min-w-[1100px]">

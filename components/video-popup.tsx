@@ -43,8 +43,8 @@ export function VideoPopup() {
             overflow: "hidden",
             width: "min(860px, 96vw)",
             maxHeight: "92vh",
-            display: "flex",
-            flexDirection: "row",
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
             gap: 4,
           }}
           onClick={(e) => e.stopPropagation()}
@@ -66,7 +66,7 @@ export function VideoPopup() {
             playsInline
             controls
             preload="auto"
-            style={{ flex: 1, display: "block", maxHeight: "92vh" }}
+            style={{ display: "block", width: "100%", maxHeight: "92vh", objectFit: "contain" }}
           />
 
           <video
@@ -75,7 +75,7 @@ export function VideoPopup() {
             playsInline
             controls
             preload="auto"
-            style={{ flex: 1, display: "block", maxHeight: "92vh" }}
+            style={{ display: "block", width: "100%", maxHeight: "92vh", objectFit: "contain" }}
           />
         </div>
       </div>

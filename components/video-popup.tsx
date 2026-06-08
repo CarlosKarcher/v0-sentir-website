@@ -4,35 +4,30 @@ import * as React from "react"
 import { X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
-const VIDEOS = [
-  "/video-sanando-junio-2026.mp4",
-  "/video-bio-promocion.mp4",
-]
-
 export function VideoPopup() {
   const [isOpen, setIsOpen] = React.useState(true)
-  const [current, setCurrent] = React.useState(0)
-  const videoRef = React.useRef<HTMLVideoElement>(null)
+  const video1Ref = React.useRef<HTMLVideoElement>(null)
+  const video2Ref = React.useRef<HTMLVideoElement>(null)
 
   React.useEffect(() => {
-    const v = videoRef.current
-    if (!v) return
-    v.muted = true
-    const tryPlay = () => { v.play().catch(() => {}) }
-    if (v.readyState >= 1) tryPlay()
-    else v.addEventListener("loadedmetadata", tryPlay, { once: true })
-  }, [current])
+    const v1 = video1Ref.current
+    if (!v1) return
+    v1.muted = true
+    const tryPlay = () => { v1.play().catch(() => {}) }
+    if (v1.readyState >= 1) tryPlay()
+    else v1.addEventListener("loadedmetadata", tryPlay, { once: true })
+  }, [])
 
-  const handleEnded = () => {
-    if (current < VIDEOS.length - 1) {
-      setCurrent(current + 1)
-    } else {
-      setIsOpen(false)
-    }
+  const handleVideo1Ended = () => {
+    const v2 = video2Ref.current
+    if (!v2) return
+    v2.muted = true
+    v2.play().catch(() => {})
   }
 
   const handleClose = () => {
-    videoRef.current?.pause()
+    video1Ref.current?.pause()
+    video2Ref.current?.pause()
     setIsOpen(false)
   }
 
@@ -51,8 +46,11 @@ export function VideoPopup() {
             background: "#000",
             borderRadius: "12px",
             overflow: "hidden",
-            width: "min(480px, 96vw)",
+            width: "min(860px, 96vw)",
             maxHeight: "92vh",
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: 4,
           }}
           onClick={(e) => e.stopPropagation()}
         >
@@ -68,13 +66,21 @@ export function VideoPopup() {
           </Button>
 
           <video
-            key={current}
-            ref={videoRef}
-            src={VIDEOS[current]}
+            ref={video1Ref}
+            src="/video-sanando-junio-2026.mp4"
             playsInline
             controls
             preload="auto"
-            onEnded={handleEnded}
+            onEnded={handleVideo1Ended}
+            style={{ display: "block", width: "100%", maxHeight: "92vh", objectFit: "contain" }}
+          />
+
+          <video
+            ref={video2Ref}
+            src="/video-bio-promocion.mp4"
+            playsInline
+            controls
+            preload="auto"
             style={{ display: "block", width: "100%", maxHeight: "92vh", objectFit: "contain" }}
           />
         </div>

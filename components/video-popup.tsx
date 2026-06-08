@@ -41,9 +41,11 @@ export function VideoPopup() {
             background: "#000",
             borderRadius: "12px",
             overflow: "hidden",
-            width: "min(420px, 96vw)",
+            width: "min(860px, 96vw)",
             maxHeight: "92vh",
-            overflowY: "auto",
+            display: "flex",
+            flexDirection: "row",
+            gap: 4,
           }}
           onClick={(e) => e.stopPropagation()}
         >
@@ -64,10 +66,8 @@ export function VideoPopup() {
             playsInline
             controls
             preload="auto"
-            style={{ width: "100%", display: "block" }}
+            style={{ flex: 1, display: "block", maxHeight: "92vh" }}
           />
-
-          <div style={{ height: 4, background: "#222" }} />
 
           <video
             ref={video2Ref}
@@ -75,7 +75,7 @@ export function VideoPopup() {
             playsInline
             controls
             preload="auto"
-            style={{ width: "100%", display: "block" }}
+            style={{ flex: 1, display: "block", maxHeight: "92vh" }}
           />
         </div>
       </div>

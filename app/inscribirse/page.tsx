@@ -211,6 +211,21 @@ function InscribirseForm() {
       }
     }
 
+    // Verificar si ya existe una inscripción para este taller con el mismo email
+    const { data: inscripcionExistente } = await supabase
+      .from("inscripciones")
+      .select("id")
+      .eq("taller_id", tallerData.id)
+      .ilike("email", email.trim())
+      .neq("estado", "cancelado")
+      .maybeSingle()
+
+    if (inscripcionExistente) {
+      setError("Ya tenés una inscripción registrada para este taller.")
+      setEnviando(false)
+      return
+    }
+
     const { error: insertError } = await supabase.from("inscripciones").insert({
       taller_id: tallerData.id,
       nombre: nombre.trim(),

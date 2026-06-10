@@ -252,6 +252,32 @@ function InscribirseForm() {
       return
     }
 
+    // Enviar email de confirmación al cliente
+    try {
+      await fetch("/api/send-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nombre: nombre.trim(),
+          apellido: apellido.trim(),
+          email: email.trim().toLowerCase(),
+          tallerNombre: tallerNombreSeleccionado,
+          localidad: localidadParam ? decodeURIComponent(localidadParam) : null,
+          eventoDescripcion: eventoParam ? decodeURIComponent(eventoParam) : null,
+          precioFinal: precios?.precioFinal ?? 0,
+          moneda: tallerData?.moneda ?? "ARS",
+          modalidadPago,
+          cuotas,
+          transferTitular,
+          transferBanco,
+          transferAlias,
+          esPrecioGratis: (precios?.precioFinal ?? 1) === 0,
+        }),
+      })
+    } catch {
+      // El email falla silenciosamente — la inscripción ya se guardó
+    }
+
     setExito(true)
     setEnviando(false)
   }

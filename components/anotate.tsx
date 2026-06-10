@@ -146,7 +146,8 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
       p_caracteristica: data.celular_caracteristica.trim(),
       p_numero: data.celular_numero.trim(),
     })
-    if (verificacion?.encontrado) {
+    // Solo bloquear si ya es miembro (tiene numero asignado). Si es nomembro, se permite registrar como miembro.
+    if (verificacion?.encontrado && verificacion?.numero) {
       setCelularRegistrado(`${data.celular_caracteristica.trim()} ${data.celular_numero.trim()}`)
       setStep("ya_registrado")
       setEnviando(false)

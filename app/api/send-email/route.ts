@@ -47,6 +47,7 @@ export async function POST(req: NextRequest) {
     const { error } = await resend.emails.send({
       from: "Sentir <onboarding@resend.dev>",
       to: [email],
+      replyTo: "Sentir.inscripciones@gmail.com",
       subject: `✅ Inscripción recibida — ${tallerNombre}`,
       html: `
         <!DOCTYPE html>

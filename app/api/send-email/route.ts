@@ -3,6 +3,14 @@ import { Resend } from "resend"
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
+const METODO_PAGO_LABEL: Record<string, string> = {
+  transferencia_total: "Transferencia — Pago Total",
+  tarjeta_credito:     "Tarjeta de Crédito",
+  sena:                "Seña",
+  sena_2_cuotas:       "Seña + 2 cuotas",
+  sena_3_cuotas:       "Seña + 3 cuotas",
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
@@ -12,62 +20,86 @@ export async function POST(req: NextRequest) {
       email,
       tallerNombre,
       localidad,
-      eventoDescripcion,
       precioFinal,
       moneda,
       modalidadPago,
       cuotas,
-      transferTitular,
-      transferBanco,
-      transferAlias,
+      fechaInicioTaller,
       esPrecioGratis,
     } = body
 
-    const montoSena = precioFinal ? Math.ceil(precioFinal * 0.35 / 1000) * 1000 : 0
-    const montoTransferencia = modalidadPago === "sena" ? montoSena : precioFinal
+    const fechaInscripcion = new Date().toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" })
 
-    const detallesPago = esPrecioGratis
-      ? `<p>Tu inscripción fue <strong>confirmada automáticamente</strong> ya que el taller no tiene costo.</p>`
-      : `
-        <div style="background:#fffbeb;border:1px solid #fcd34d;border-radius:12px;padding:16px;margin:16px 0;">
-          <p style="font-weight:bold;color:#92400e;margin:0 0 8px;">Datos para transferencia:</p>
-          <p style="color:#b45309;margin:4px 0;">Titular: <strong>${transferTitular}</strong></p>
-          <p style="color:#b45309;margin:4px 0;">Banco: <strong>${transferBanco}</strong></p>
-          <p style="color:#b45309;margin:4px 0;">Alias: <strong>${transferAlias}</strong></p>
-          ${precioFinal > 0 ? `<p style="color:#b45309;margin:4px 0;">Monto a transferir: <strong>$${montoTransferencia.toLocaleString("es-AR")} ${moneda}</strong>${modalidadPago === "sena" ? ` <span style="font-size:12px;">(seña 35% — total: $${precioFinal.toLocaleString("es-AR")})</span>` : ""}</p>` : ""}
-        </div>
-        ${modalidadPago === "tarjeta"
-          ? `<p style="color:#1e40af;background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:12px;">Te enviaremos un <strong>link de pago con Tarjeta de Crédito</strong> a la brevedad.</p>`
-          : modalidadPago === "sena"
-          ? `<p style="color:#b45309;background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;padding:12px;">Al enviar el comprobante de seña, tu lugar queda <strong>reservado</strong>. Debés abonar el total antes del taller.${cuotas ? ` (${cuotas} cuotas)` : ""}</p>`
-          : `<p>Enviá el comprobante de transferencia a <a href="mailto:Sentir.inscripciones@gmail.com" style="color:#1d4ed8;">Sentir.inscripciones@gmail.com</a></p>`
-        }
-      `
+    const montoSena = precioFinal ? Math.ceil(precioFinal * 0.35 / 1000) * 1000 : 0
+    const montoAcordado = modalidadPago === "sena" ? montoSena : precioFinal
+
+    const metodoPagoLabel = cuotas
+      ? METODO_PAGO_LABEL[`sena_${cuotas}_cuotas`] ?? "Seña en cuotas"
+      : METODO_PAGO_LABEL[modalidadPago === "total" ? "transferencia_total" : modalidadPago === "tarjeta" ? "tarjeta_credito" : "sena"] ?? modalidadPago
+
+    const fechaTallerStr = fechaInicioTaller
+      ? (() => {
+          const [y, m, d] = fechaInicioTaller.slice(0, 10).split("-").map(Number)
+          return new Date(y, m - 1, d).toLocaleDateString("es-AR", { weekday: "long", day: "numeric", month: "long", year: "numeric" })
+        })()
+      : null
 
     const { error } = await resend.emails.send({
       from: "Sentir <inscripciones@sentir.fun>",
       to: [email],
       replyTo: "Sentir.inscripciones@gmail.com",
-      subject: `✅ Inscripción recibida — ${tallerNombre}`,
+      subject: `📋 Inscripción recibida — ${tallerNombre}`,
       html: `
         <!DOCTYPE html>
         <html lang="es">
         <head><meta charset="UTF-8" /></head>
-        <body style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:24px;color:#1f2937;">
-          <div style="text-align:center;margin-bottom:24px;">
-            <h1 style="color:#1e3a5f;font-size:28px;margin:0;">🎉 ¡Inscripción recibida!</h1>
+        <body style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:0;background:#f3f4f6;">
+          <div style="background:#78350f;border-radius:16px;padding:32px;margin:24px auto;color:white;text-align:center;">
+
+            <h1 style="font-size:22px;font-weight:bold;margin:0 0 24px;">${nombre} ${apellido}</h1>
+
+            <div style="background:rgba(255,255,255,0.15);border-radius:12px;padding:12px 24px;margin-bottom:12px;">
+              <p style="color:rgba(255,255,255,0.7);font-size:11px;text-transform:uppercase;letter-spacing:1px;margin:0 0 4px;">INSCRIPCIÓN RECIBIDA — TALLER</p>
+              <p style="font-size:20px;font-weight:bold;margin:0;">${tallerNombre}</p>
+              ${localidad ? `<p style="font-size:14px;margin:4px 0 0;">📍 ${localidad}</p>` : ""}
+            </div>
+
+            <div style="background:rgba(255,255,255,0.15);border-radius:12px;padding:12px 24px;margin-bottom:12px;">
+              <p style="color:rgba(255,255,255,0.7);font-size:11px;text-transform:uppercase;letter-spacing:1px;margin:0 0 4px;">FECHA DE INSCRIPCIÓN</p>
+              <p style="font-size:16px;font-weight:600;margin:0;">${fechaInscripcion}</p>
+            </div>
+
+            ${fechaTallerStr ? `
+            <div style="background:rgba(255,255,255,0.15);border-radius:12px;padding:12px 24px;margin-bottom:12px;">
+              <p style="color:rgba(255,255,255,0.7);font-size:11px;text-transform:uppercase;letter-spacing:1px;margin:0 0 4px;">📅 INICIO DEL TALLER</p>
+              <p style="font-size:16px;font-weight:600;margin:0;">${fechaTallerStr}</p>
+            </div>
+            ` : ""}
+
+            <div style="background:rgba(255,255,255,0.15);border-radius:12px;padding:12px 24px;margin-bottom:12px;">
+              <p style="color:rgba(255,255,255,0.7);font-size:11px;text-transform:uppercase;letter-spacing:1px;margin:0 0 4px;">FORMA DE PAGO</p>
+              <p style="font-size:16px;font-weight:600;margin:0;">${metodoPagoLabel}</p>
+            </div>
+
+            ${!esPrecioGratis && precioFinal > 0 ? `
+            <div style="background:rgba(255,255,255,0.15);border-radius:12px;padding:12px 24px;margin-bottom:24px;">
+              <p style="color:rgba(255,255,255,0.7);font-size:11px;text-transform:uppercase;letter-spacing:1px;margin:0 0 4px;">MONTO ACORDADO</p>
+              <p style="font-size:22px;font-weight:bold;margin:0;">$${montoAcordado.toLocaleString("es-AR")} ${moneda}</p>
+              ${modalidadPago === "sena" ? `<p style="font-size:12px;color:rgba(255,255,255,0.6);margin:4px 0 0;">(total del taller: $${precioFinal.toLocaleString("es-AR")})</p>` : ""}
+            </div>
+            ` : ""}
+
+            <div style="background:rgba(255,255,255,0.2);border-radius:12px;padding:12px 24px;margin-bottom:24px;">
+              <p style="font-size:15px;font-weight:bold;margin:0;">⏳ Estado: PENDIENTE</p>
+              <p style="font-size:13px;color:rgba(255,255,255,0.8);margin:6px 0 0;">Tu inscripción quedará confirmada una vez que recibamos el pago acordado.</p>
+            </div>
+
+            <p style="font-size:16px;font-weight:bold;margin:0 0 4px;">Gracias, te Esperamos.!!</p>
+            <p style="font-size:16px;font-weight:bold;margin:0;">Sentir 🔥</p>
           </div>
-
-          <p>Hola <strong>${nombre} ${apellido}</strong>,</p>
-          <p>Tu inscripción al <strong>${tallerNombre}</strong>${localidad ? ` en <strong>${localidad}</strong>` : ""} fue registrada exitosamente.</p>
-          ${eventoDescripcion ? `<p style="color:#6b7280;">${eventoDescripcion}</p>` : ""}
-
-          ${detallesPago}
-
-          <hr style="border:none;border-top:1px solid #e5e7eb;margin:24px 0;" />
-          <p style="font-size:13px;color:#9ca3af;text-align:center;">
-            Este es un mensaje automático de <strong>Sentir</strong>.<br/>
-            Ante cualquier consulta escribinos a <a href="mailto:Sentir.inscripciones@gmail.com" style="color:#1d4ed8;">Sentir.inscripciones@gmail.com</a>
+          <p style="font-size:12px;color:#9ca3af;text-align:center;padding-bottom:16px;">
+            Ante cualquier consulta respondé este email o escribinos a
+            <a href="mailto:Sentir.inscripciones@gmail.com" style="color:#1d4ed8;">Sentir.inscripciones@gmail.com</a>
           </p>
         </body>
         </html>

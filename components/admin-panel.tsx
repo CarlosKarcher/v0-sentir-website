@@ -123,13 +123,39 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
     if (Array.isArray(data)) setTalleresList(data as Taller[])
   }
 
-  const aprobarInscripcion = async (id: string) => {
+  const enviarEmailPago = async (ins: InscripcionConTaller, tipo: "parcial" | "confirmado", montoPagado: number) => {
+    try {
+      const precioEfectivo = getPrecioEfectivo(ins)
+      const saldo = precioEfectivo - montoPagado
+      await fetch("/api/send-email-pago", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          tipo,
+          nombre: ins.nombre,
+          apellido: ins.apellido,
+          email: ins.email,
+          tallerNombre: ins.taller_nombre,
+          localidad: ins.localidad_taller,
+          fechaInscripcion: new Date(ins.creado_en).toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" }),
+          montoPagado,
+          saldo,
+          precioTotal: precioEfectivo,
+        }),
+      })
+    } catch { /* silencioso */ }
+  }
+
+  const aprobarInscripcion = async (id: string, ins?: InscripcionConTaller, montoPagado?: number) => {
     setAccionInscripcion(id)
     await supabase.rpc("aprobar_inscripcion", {
       p_admin_caracteristica: adminCaracteristica,
       p_admin_numero: adminNumero,
       p_inscripcion_id: id,
     })
+    if (ins) {
+      await enviarEmailPago(ins, "confirmado", montoPagado ?? ins.monto_pagado ?? 0)
+    }
     await cargarInscripciones()
     setAccionInscripcion(null)
   }
@@ -614,6 +640,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                         onEliminar={eliminarInscripcion}
                         onActualizarMonto={actualizarMontoPagado}
                         onActualizarPrecio={actualizarPrecioInscripto}
+                        onEnviarEmailPago={enviarEmailPago}
                       />
                     )}
                   </div>
@@ -960,6 +987,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                           onEliminar={eliminarInscripcion}
                           onActualizarMonto={actualizarMontoPagado}
                           onActualizarPrecio={actualizarPrecioInscripto}
+                          onEnviarEmailPago={enviarEmailPago}
                         />
                       )}
                     </div>
@@ -1153,14 +1181,16 @@ function TablaInscripciones({
   onEliminar,
   onActualizarMonto,
   onActualizarPrecio,
+  onEnviarEmailPago,
 }: {
   inscripciones: InscripcionConTaller[]
   accionInscripcion: string | null
-  onAprobar: (id: string) => void
+  onAprobar: (id: string, ins?: InscripcionConTaller, montoPagado?: number) => void
   onCancelar: (id: string) => void
   onEliminar: (id: string) => void
   onActualizarMonto: (id: string, monto: number) => Promise<void>
   onActualizarPrecio: (id: string, precio: number) => Promise<void>
+  onEnviarEmailPago: (ins: InscripcionConTaller, tipo: "parcial" | "confirmado", montoPagado: number) => Promise<void>
 }) {
   const [montosEdit, setMontosEdit] = useState<Record<string, string>>({})
   const [guardandoMonto, setGuardandoMonto] = useState<string | null>(null)
@@ -1183,7 +1213,7 @@ function TablaInscripciones({
 
   const checkAutoConfirmar = async (ins: InscripcionConTaller, precio: number, montoPagado: number) => {
     if (ins.estado !== "confirmado" && (precio === 0 || montoPagado >= precio)) {
-      await onAprobar(ins.id)
+      await onAprobar(ins.id, ins, montoPagado)
     }
   }
 
@@ -1237,8 +1267,13 @@ function TablaInscripciones({
     const val = parseFloat(montosEdit[ins.id] ?? "")
     if (isNaN(val)) return
     const precioEfectivo = getPrecioEfectivo(ins)
+    const saldo = precioEfectivo - val
     setGuardandoMonto(ins.id)
     await onActualizarMonto(ins.id, val)
+    if (saldo > 0) {
+      // Pago parcial — enviar email verde
+      await onEnviarEmailPago(ins, "parcial", val)
+    }
     await checkAutoConfirmar(ins, precioEfectivo, val)
     setGuardandoMonto(null)
   }
@@ -1513,7 +1548,7 @@ function TablaInscripciones({
                     ) : ins.estado !== "cancelado" && saldo <= 0 && precioEfectivo > 0 ? (
                       <button
                         disabled={accionInscripcion === ins.id}
-                        onClick={() => { setInscripcionConfirmada(ins); onAprobar(ins.id) }}
+                        onClick={() => { setInscripcionConfirmada(ins); onAprobar(ins.id, ins, montoPagado) }}
                         title="Aprobar"
                         className="w-8 h-8 rounded-full bg-green-500 hover:bg-green-600 text-white flex items-center justify-center disabled:opacity-50 transition-colors shadow-sm"
                       >

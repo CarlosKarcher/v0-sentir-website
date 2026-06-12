@@ -51,7 +51,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const [email, setEmail] = useState<string | null>(null)
 
   const cargarUsuario = async (emailUser: string) => {
-    const { data } = await supabase.rpc("buscar_email_registrado", { p_email: emailUser.toLowerCase() })
+    const { data, error } = await supabase.rpc("buscar_email_registrado", { p_email: emailUser.toLowerCase() })
     if (data?.encontrado) {
       setNombre(data.nombre_gafete || data.nombre_apellido?.split(" ")[0] || null)
       setNroMiembro(data.numero ?? null)
@@ -62,6 +62,9 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       })
       setEmail(emailUser)
       setEstado("registrado")
+    } else if (error) {
+      // Error de red o servidor — no borrar el email guardado, reintentar en la próxima visita
+      setEstado("no_logueado")
     } else {
       // Email guardado pero no está en la BD (fue eliminado o es inválido)
       clearSaved()

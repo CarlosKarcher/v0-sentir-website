@@ -63,34 +63,19 @@ export async function POST(req: NextRequest) {
               ${localidad ? `<p style="font-size:14px;margin:4px 0 0;">📍 ${localidad}</p>` : ""}
             </div>
 
-            <div style="background:rgba(255,255,255,0.15);border-radius:12px;padding:12px 24px;margin-bottom:12px;">
-              <p style="color:rgba(255,255,255,0.7);font-size:11px;text-transform:uppercase;letter-spacing:1px;margin:0 0 4px;">FECHA DE INSCRIPCIÓN</p>
-              <p style="font-size:16px;font-weight:600;margin:0;">${fechaInscripcion}</p>
+            <div style="background:rgba(255,255,255,0.15);border-radius:12px;padding:10px 24px;margin-bottom:6px;">
+              <p style="color:rgba(255,255,255,0.7);font-size:11px;text-transform:uppercase;letter-spacing:1px;margin:0 2px;">FECHA DE INSCRIPCIÓN &nbsp;·&nbsp; <span style="color:white;font-weight:600;">${fechaInscripcion}</span>${fechaTallerStr ? `&nbsp;&nbsp;&nbsp;INICIO DEL TALLER &nbsp;·&nbsp; <span style="color:white;font-weight:600;">${fechaTallerStr}</span>` : ""}</p>
             </div>
 
-            ${fechaTallerStr ? `
-            <div style="background:rgba(255,255,255,0.15);border-radius:12px;padding:12px 24px;margin-bottom:12px;">
-              <p style="color:rgba(255,255,255,0.7);font-size:11px;text-transform:uppercase;letter-spacing:1px;margin:0 0 4px;">📅 INICIO DEL TALLER</p>
-              <p style="font-size:16px;font-weight:600;margin:0;">${fechaTallerStr}</p>
-            </div>
-            ` : ""}
-
-            <div style="background:rgba(255,255,255,0.15);border-radius:12px;padding:12px 24px;margin-bottom:12px;">
+            <div style="background:rgba(255,255,255,0.15);border-radius:12px;padding:10px 24px;margin-bottom:6px;">
               <p style="color:rgba(255,255,255,0.7);font-size:11px;text-transform:uppercase;letter-spacing:1px;margin:0 0 4px;">FORMA DE PAGO</p>
-              <p style="font-size:16px;font-weight:600;margin:0;">${metodoPagoLabel}</p>
+              <p style="font-size:15px;font-weight:600;margin:0;">${metodoPagoLabel}${!esPrecioGratis && precioFinal > 0 ? `&emsp;<span style="font-size:18px;font-weight:bold;">$${montoAcordado.toLocaleString("es-AR")} ${moneda}</span>${modalidadPago === "sena" ? `&emsp;<span style="font-size:12px;color:rgba(255,255,255,0.6);">(total: $${precioFinal.toLocaleString("es-AR")})</span>` : ""}` : ""}</p>
             </div>
 
-            ${!esPrecioGratis && precioFinal > 0 ? `
-            <div style="background:rgba(255,255,255,0.15);border-radius:12px;padding:12px 24px;margin-bottom:24px;">
-              <p style="color:rgba(255,255,255,0.7);font-size:11px;text-transform:uppercase;letter-spacing:1px;margin:0 0 4px;">MONTO ACORDADO</p>
-              <p style="font-size:22px;font-weight:bold;margin:0;">$${montoAcordado.toLocaleString("es-AR")} ${moneda}</p>
-              ${modalidadPago === "sena" ? `<p style="font-size:12px;color:rgba(255,255,255,0.6);margin:4px 0 0;">(total del taller: $${precioFinal.toLocaleString("es-AR")})</p>` : ""}
-            </div>
-            ` : ""}
-
-            <div style="background:rgba(255,255,255,0.2);border-radius:12px;padding:12px 24px;margin-bottom:24px;">
-              <p style="font-size:15px;font-weight:bold;margin:0;">⏳ Estado: PENDIENTE</p>
-              <p style="font-size:13px;color:rgba(255,255,255,0.8);margin:6px 0 0;">Tu inscripción quedará confirmada una vez que recibamos el pago acordado.</p>
+            <div style="background:rgba(255,255,255,0.2);border-radius:12px;padding:10px 24px;margin-bottom:16px;">
+              <p style="font-size:14px;font-weight:bold;margin:0 0 4px;">⏳ Estado: PENDIENTE hasta el pago</p>
+              <p style="font-size:13px;color:rgba(255,255,255,0.85);margin:0;">Para confirmar tu lugar, respondé este mismo mail y envianos el comprobante de pago a</p>
+              <p style="font-size:13px;font-weight:bold;margin:4px 0 0;">Sentir.inscripciones@gmail.com</p>
             </div>
 
             <p style="font-size:16px;font-weight:bold;margin:0 0 4px;">Gracias, te Esperamos.!!</p>

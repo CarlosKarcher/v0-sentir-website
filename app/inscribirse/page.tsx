@@ -254,7 +254,7 @@ function InscribirseForm() {
 
     // Enviar email de confirmación al cliente
     try {
-      await fetch("/api/send-email", {
+      const emailRes = await fetch("/api/send-email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -271,8 +271,12 @@ function InscribirseForm() {
           esPrecioGratis: (precios?.precioFinal ?? 1) === 0,
         }),
       })
-    } catch {
-      // El email falla silenciosamente — la inscripción ya se guardó
+      const emailData = await emailRes.json()
+      if (!emailData.ok) {
+        console.error("Error al enviar email:", emailData.error)
+      }
+    } catch (emailErr) {
+      console.error("Error de red al enviar email:", emailErr)
     }
 
     setExito(true)

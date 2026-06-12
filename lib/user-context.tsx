@@ -51,8 +51,13 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const [email, setEmail] = useState<string | null>(null)
 
   const cargarUsuario = async (emailUser: string) => {
-    const { data } = await supabase.rpc("buscar_email_registrado", { p_email: emailUser.toLowerCase() })
-    if (data?.encontrado) {
+    const { data, error } = await supabase.rpc("buscar_email_registrado", { p_email: emailUser.toLowerCase() })
+    if (error || !data) {
+      // Error de red o Supabase — NO borrar sesión, volver a pedir email
+      setEstado("no_logueado")
+      return
+    }
+    if (data.encontrado) {
       setNombre(data.nombre_gafete || data.nombre_apellido?.split(" ")[0] || null)
       setNroMiembro(data.numero ?? null)
       setEsAdmin(data.es_admin ?? false)
@@ -63,7 +68,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       setEmail(emailUser)
       setEstado("registrado")
     } else {
-      // Email guardado pero no está en la BD (fue eliminado o es inválido)
+      // El email no existe en la BD — sí borrar sesión
       clearSaved()
       setEstado("no_logueado")
     }

@@ -29,20 +29,39 @@ const UserContext = createContext<UserContextType>({
 
 const STORAGE_KEY = "sentir_email"
 const CACHE_KEY = "sentir_user_cache"
+const COOKIE_NAME = "sentir_email"
 
 function getSaved(): string | null {
   if (typeof window === "undefined") return null
-  try { return localStorage.getItem(STORAGE_KEY) } catch { return null }
+  // Intentar localStorage primero
+  try {
+    const ls = localStorage.getItem(STORAGE_KEY)
+    if (ls) return ls
+  } catch {}
+  // Fallback: leer de cookie
+  try {
+    const match = document.cookie.match(new RegExp("(^| )" + COOKIE_NAME + "=([^;]+)"))
+    if (match) return decodeURIComponent(match[2])
+  } catch {}
+  return null
 }
 
 function saveSaved(email: string) {
   try { localStorage.setItem(STORAGE_KEY, email) } catch {}
+  // También guardar en cookie como respaldo (365 días)
+  try {
+    const maxAge = 365 * 24 * 60 * 60
+    document.cookie = `${COOKIE_NAME}=${encodeURIComponent(email)};max-age=${maxAge};path=/;SameSite=Lax`
+  } catch {}
 }
 
 function clearSaved() {
   try {
     localStorage.removeItem(STORAGE_KEY)
     localStorage.removeItem(CACHE_KEY)
+  } catch {}
+  try {
+    document.cookie = `${COOKIE_NAME}=;max-age=0;path=/`
   } catch {}
 }
 

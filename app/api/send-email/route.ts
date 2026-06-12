@@ -81,10 +81,6 @@ export async function POST(req: NextRequest) {
             <p style="font-size:16px;font-weight:bold;margin:0 0 4px;">Gracias, te Esperamos.!!</p>
             <p style="font-size:16px;font-weight:bold;margin:0;">Sentir 🔥</p>
           </div>
-          <p style="font-size:12px;color:#9ca3af;text-align:center;padding-bottom:16px;">
-            Ante cualquier consulta respondé este email o escribinos a
-            <a href="mailto:Sentir.inscripciones@gmail.com" style="color:#1d4ed8;">Sentir.inscripciones@gmail.com</a>
-          </p>
         </body>
         </html>
       `,

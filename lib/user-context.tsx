@@ -74,7 +74,9 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const [email, setEmail] = useState<string | null>(null)
 
   const cargarUsuario = async (emailUser: string) => {
+    console.log("[Auth] cargarUsuario →", emailUser)
     const { data, error } = await supabase.rpc("buscar_email_registrado", { p_email: emailUser.toLowerCase() })
+    console.log("[Auth] RPC result →", { data, error })
     if (data?.encontrado) {
       const userData: CachedUser = {
         nombre: data.nombre_gafete || data.nombre_apellido?.split(" ")[0] || null,
@@ -114,6 +116,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const saved = getSaved()
+    console.log("[Auth] localStorage sentir_email →", saved)
     if (saved) {
       cargarUsuario(saved)
     } else {

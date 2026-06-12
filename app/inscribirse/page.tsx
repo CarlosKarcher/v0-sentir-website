@@ -253,6 +253,7 @@ function InscribirseForm() {
     }
 
     // Enviar email de confirmación al cliente
+    console.log("📧 Iniciando envío de email a:", email.trim().toLowerCase())
     try {
       const emailRes = await fetch("/api/send-email", {
         method: "POST",
@@ -272,11 +273,14 @@ function InscribirseForm() {
         }),
       })
       const emailData = await emailRes.json()
+      console.log("📧 Respuesta del servidor de email:", emailData)
       if (!emailData.ok) {
-        console.error("Error al enviar email:", emailData.error)
+        console.error("❌ Error al enviar email:", emailData.error)
+      } else {
+        console.log("✅ Email enviado correctamente")
       }
     } catch (emailErr) {
-      console.error("Error de red al enviar email:", emailErr)
+      console.error("❌ Error de red al enviar email:", emailErr)
     }
 
     setExito(true)

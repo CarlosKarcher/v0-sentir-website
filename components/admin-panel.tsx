@@ -125,7 +125,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
 
   const enviarEmailPago = async (ins: InscripcionConTaller, tipo: "parcial" | "confirmado", montoPagado: number) => {
     try {
-      const precioEfectivo = getPrecioEfectivo(ins)
+      const precioEfectivo = ins.precio_inscripto ?? calcularPrecioFinal({ precio: ins.taller_precio, descuento_tipo: ins.taller_descuento_tipo, descuento_valor: ins.taller_descuento_valor }).precioFinal
       const saldo = precioEfectivo - montoPagado
       await fetch("/api/send-email-pago", {
         method: "POST",

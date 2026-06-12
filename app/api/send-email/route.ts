@@ -75,7 +75,7 @@ export async function POST(req: NextRequest) {
             <div style="background:rgba(255,255,255,0.2);border-radius:12px;padding:10px 24px;margin-bottom:16px;">
               <p style="font-size:14px;font-weight:bold;margin:0 0 4px;">⏳ Estado: PENDIENTE hasta el pago</p>
               <p style="font-size:13px;color:rgba(255,255,255,0.85);margin:0;">Para confirmar tu lugar, respondé este mismo mail y envianos el comprobante de pago a</p>
-              <p style="font-size:13px;font-weight:bold;margin:4px 0 0;">Sentir.inscripciones@gmail.com</p>
+              <p style="font-size:14px;font-weight:bold;margin:4px 0 0;color:white;">Sentir.inscripciones@gmail.com</p>
             </div>
 
             <p style="font-size:16px;font-weight:bold;margin:0 0 4px;">Gracias, te Esperamos.!!</p>

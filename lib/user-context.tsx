@@ -28,6 +28,7 @@ const UserContext = createContext<UserContextType>({
 })
 
 const STORAGE_KEY = "sentir_email"
+const CACHE_KEY = "sentir_user_cache"
 
 function getSaved(): string | null {
   if (typeof window === "undefined") return null
@@ -39,7 +40,29 @@ function saveSaved(email: string) {
 }
 
 function clearSaved() {
-  try { localStorage.removeItem(STORAGE_KEY) } catch {}
+  try {
+    localStorage.removeItem(STORAGE_KEY)
+    localStorage.removeItem(CACHE_KEY)
+  } catch {}
+}
+
+interface CachedUser {
+  nombre: string | null
+  nroMiembro: number | null
+  esAdmin: boolean
+  adminCelular: { caracteristica: string; numero: string }
+}
+
+function getCachedUser(): CachedUser | null {
+  if (typeof window === "undefined") return null
+  try {
+    const raw = localStorage.getItem(CACHE_KEY)
+    return raw ? JSON.parse(raw) : null
+  } catch { return null }
+}
+
+function saveCachedUser(data: CachedUser) {
+  try { localStorage.setItem(CACHE_KEY, JSON.stringify(data)) } catch {}
 }
 
 export function UserProvider({ children }: { children: React.ReactNode }) {
@@ -53,20 +76,37 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const cargarUsuario = async (emailUser: string) => {
     const { data, error } = await supabase.rpc("buscar_email_registrado", { p_email: emailUser.toLowerCase() })
     if (data?.encontrado) {
-      setNombre(data.nombre_gafete || data.nombre_apellido?.split(" ")[0] || null)
-      setNroMiembro(data.numero ?? null)
-      setEsAdmin(data.es_admin ?? false)
-      setAdminCelular({
-        caracteristica: data.celular_caracteristica || "",
-        numero: data.celular_numero || "",
-      })
+      const userData: CachedUser = {
+        nombre: data.nombre_gafete || data.nombre_apellido?.split(" ")[0] || null,
+        nroMiembro: data.numero ?? null,
+        esAdmin: data.es_admin ?? false,
+        adminCelular: {
+          caracteristica: data.celular_caracteristica || "",
+          numero: data.celular_numero || "",
+        },
+      }
+      saveCachedUser(userData)
+      setNombre(userData.nombre)
+      setNroMiembro(userData.nroMiembro)
+      setEsAdmin(userData.esAdmin)
+      setAdminCelular(userData.adminCelular)
       setEmail(emailUser)
       setEstado("registrado")
     } else if (error) {
-      // Error de red o servidor — no borrar el email guardado, reintentar en la próxima visita
-      setEstado("no_logueado")
+      // Error de red — usar datos cacheados si existen para no perder la sesión
+      const cached = getCachedUser()
+      if (cached) {
+        setNombre(cached.nombre)
+        setNroMiembro(cached.nroMiembro)
+        setEsAdmin(cached.esAdmin)
+        setAdminCelular(cached.adminCelular)
+        setEmail(emailUser)
+        setEstado("registrado")
+      } else {
+        setEstado("no_logueado")
+      }
     } else {
-      // Email guardado pero no está en la BD (fue eliminado o es inválido)
+      // Email no está en la BD (fue eliminado o es inválido)
       clearSaved()
       setEstado("no_logueado")
     }
@@ -84,14 +124,21 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const loginWithEmail = async (emailUser: string): Promise<{ encontrado: boolean }> => {
     const { data } = await supabase.rpc("buscar_email_registrado", { p_email: emailUser.toLowerCase() })
     if (data?.encontrado) {
+      const userData: CachedUser = {
+        nombre: data.nombre_gafete || data.nombre_apellido?.split(" ")[0] || null,
+        nroMiembro: data.numero ?? null,
+        esAdmin: data.es_admin ?? false,
+        adminCelular: {
+          caracteristica: data.celular_caracteristica || "",
+          numero: data.celular_numero || "",
+        },
+      }
       saveSaved(emailUser.toLowerCase())
-      setNombre(data.nombre_gafete || data.nombre_apellido?.split(" ")[0] || null)
-      setNroMiembro(data.numero ?? null)
-      setEsAdmin(data.es_admin ?? false)
-      setAdminCelular({
-        caracteristica: data.celular_caracteristica || "",
-        numero: data.celular_numero || "",
-      })
+      saveCachedUser(userData)
+      setNombre(userData.nombre)
+      setNroMiembro(userData.nroMiembro)
+      setEsAdmin(userData.esAdmin)
+      setAdminCelular(userData.adminCelular)
       setEmail(emailUser.toLowerCase())
       setEstado("registrado")
       return { encontrado: true }

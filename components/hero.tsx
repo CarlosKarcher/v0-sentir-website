@@ -143,13 +143,31 @@ export function Hero({ onAnotate }: { onAnotate?: () => void }) {
             Registrate
           </Button>
         </div>
-        <div className="mt-3 sm:mt-4 px-4 flex justify-center">
+        <div className="mt-5 sm:mt-6 px-4 flex justify-center">
           <a
             href="/talleres-inscripcion"
-            className="text-sm sm:text-base bg-green-700 hover:bg-green-600 text-white font-bold px-8 py-3 rounded-md transition-colors"
+            style={{
+              display: "inline-block",
+              padding: "18px 56px",
+              fontSize: "1.25rem",
+              fontWeight: 900,
+              color: "#fff",
+              borderRadius: "14px",
+              textDecoration: "none",
+              letterSpacing: "0.04em",
+              animation: "pulsarVerde 2s ease-in-out infinite",
+              boxShadow: "0 0 32px 8px rgba(34,197,94,0.5)",
+            }}
           >
-            Inscribirse!!!!
+            Inscribite Aquí.!!
           </a>
+          <style>{`
+            @keyframes pulsarVerde {
+              0%   { background-color: #15803d; box-shadow: 0 0 24px 4px rgba(34,197,94,0.4); }
+              50%  { background-color: #22c55e; box-shadow: 0 0 48px 16px rgba(34,197,94,0.85); }
+              100% { background-color: #15803d; box-shadow: 0 0 24px 4px rgba(34,197,94,0.4); }
+            }
+          `}</style>
         </div>
       </div>
     </section>

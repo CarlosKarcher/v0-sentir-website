@@ -38,22 +38,8 @@ const heroImages = [
   },
 ]
 
-const TALLERES_DISPONIBLES = [
-  { title: "Taller de Autoconocimiento — Río Gallegos", date: "19, 20 y 21 de Junio 2026", slug: "autoconocimiento", id: "9a45a2ae-ec59-41ea-befb-a28c7c59c87d", sede: "Río Gallegos", location: "Henry Williams Jamieson 548 - Jubilados Legislativos" },
-  { title: "Taller de Transformación — Río Gallegos", date: "9, 10, 11 y 12 de Julio 2026", slug: "transformacion", id: "2ecd2571-70d4-401c-9a40-56f0a3ab589c", sede: "Río Gallegos", location: "Lugar a Confirmar" },
-  { title: "Taller de MyL 7 — 1ra Sala — Río Gallegos", date: "8 y 9 de Agosto 2026", slug: "metas-y-logros", id: "893c6f59-783e-45ae-bb45-282216b1f616", sede: "Río Gallegos", location: "Río Gallegos" },
-  { title: "Taller de MyL 7 — 2da Sala — Río Gallegos", date: "29 y 30 de Agosto 2026", slug: "metas-y-logros", id: "", sede: "Río Gallegos", location: "Río Gallegos" },
-  { title: "Taller de Autoconocimiento — Córdoba", date: "25, 26 y 27 de Septiembre 2026", slug: "autoconocimiento", id: "", sede: "Córdoba", location: "Córdoba" },
-  { title: "Taller de Autoconocimiento — El Calafate", date: "9, 10 y 11 de Octubre 2026", slug: "autoconocimiento", id: "", sede: "El Calafate", location: "Lugar a Designar" },
-  { title: "Taller de MyL 7 — Campamento y Cierre — Río Gallegos", date: "31 de Octubre y 1 de Noviembre 2026", slug: "metas-y-logros", id: "", sede: "Río Gallegos", location: "Río Gallegos" },
-  { title: "El Camino del Guerrero — Quequén/Necochea", date: "7 y 8 de Noviembre 2026", slug: "camino-del-guerrero", id: "82cac61c-8f4b-4316-bdd0-126994ed6a81", sede: "Quequén-Neco", location: "A Confirmar" },
-  { title: "Taller de Autoconocimiento — Quequén/Necochea", date: "13, 14 y 15 de Noviembre 2026", slug: "autoconocimiento", id: "", sede: "Quequén-Neco", location: "A Confirmar" },
-  { title: "Taller de Autoconocimiento — Ciudad de Buenos Aires", date: "4, 5 y 6 de Diciembre 2026", slug: "autoconocimiento", id: "", sede: "CABA", location: "Ciudad de Buenos Aires" },
-]
-
 export function Hero({ onAnotate }: { onAnotate?: () => void }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
-  const [showTalleres, setShowTalleres] = useState(false)
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -157,37 +143,13 @@ export function Hero({ onAnotate }: { onAnotate?: () => void }) {
             Registrate
           </Button>
         </div>
-        <div className="mt-3 sm:mt-4 px-4 flex justify-center relative">
-          <button
+        <div className="mt-3 sm:mt-4 px-4 flex justify-center">
+          <a
+            href="/talleres-inscripcion"
             className="text-sm sm:text-base bg-green-700 hover:bg-green-600 text-white font-bold px-8 py-3 rounded-md transition-colors"
-            onClick={() => setShowTalleres((v) => !v)}
           >
             Inscribirse!!!!
-          </button>
-          {showTalleres && (
-            <>
-              <div className="fixed inset-0 z-40" onClick={() => setShowTalleres(false)} />
-              <div className="absolute top-full mt-2 z-50 bg-white rounded-xl shadow-2xl border border-gray-200 w-[min(420px,90vw)] text-left overflow-hidden">
-                <p className="px-4 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider bg-gray-50 border-b">
-                  Elegí tu taller
-                </p>
-                {TALLERES_DISPONIBLES.map((t, i) => {
-                  const url = `/inscribirse?taller=${t.slug}${t.id ? `&id=${t.id}` : ""}&localidad=${encodeURIComponent(t.sede)}&evento=${encodeURIComponent(`${t.title} — ${t.date} — ${t.location}`)}&back=proximos-eventos`
-                  return (
-                    <a
-                      key={i}
-                      href={url}
-                      className="block px-4 py-3 hover:bg-green-50 border-b border-gray-100 last:border-0"
-                      onClick={() => setShowTalleres(false)}
-                    >
-                      <p className="font-semibold text-sm text-gray-800">{t.title}</p>
-                      <p className="text-xs text-gray-500 mt-0.5">{t.date}</p>
-                    </a>
-                  )
-                })}
-              </div>
-            </>
-          )}
+          </a>
         </div>
       </div>
     </section>

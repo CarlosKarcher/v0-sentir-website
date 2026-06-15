@@ -6,28 +6,19 @@ import { Button } from "@/components/ui/button"
 
 export function VideoPopup() {
   const [isOpen, setIsOpen] = React.useState(true)
-  const video1Ref = React.useRef<HTMLVideoElement>(null)
-  const video2Ref = React.useRef<HTMLVideoElement>(null)
+  const videoRef = React.useRef<HTMLVideoElement>(null)
 
   React.useEffect(() => {
-    const v1 = video1Ref.current
-    if (!v1) return
-    v1.muted = true
-    const tryPlay = () => { v1.play().catch(() => {}) }
-    if (v1.readyState >= 1) tryPlay()
-    else v1.addEventListener("loadedmetadata", tryPlay, { once: true })
+    const v = videoRef.current
+    if (!v) return
+    v.muted = true
+    const tryPlay = () => { v.play().catch(() => {}) }
+    if (v.readyState >= 1) tryPlay()
+    else v.addEventListener("loadedmetadata", tryPlay, { once: true })
   }, [])
 
-  const handleVideo1Ended = () => {
-    const v2 = video2Ref.current
-    if (!v2) return
-    v2.muted = true
-    v2.play().catch(() => {})
-  }
-
   const handleClose = () => {
-    video1Ref.current?.pause()
-    video2Ref.current?.pause()
+    videoRef.current?.pause()
     setIsOpen(false)
   }
 
@@ -46,11 +37,8 @@ export function VideoPopup() {
             background: "#000",
             borderRadius: "12px",
             overflow: "hidden",
-            width: "min(860px, 96vw)",
+            width: "min(480px, 96vw)",
             maxHeight: "92vh",
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: 4,
           }}
           onClick={(e) => e.stopPropagation()}
         >
@@ -66,18 +54,8 @@ export function VideoPopup() {
           </Button>
 
           <video
-            ref={video1Ref}
-            src="/video-sanando-junio-2026.mp4"
-            playsInline
-            controls
-            preload="auto"
-            onEnded={handleVideo1Ended}
-            style={{ display: "block", width: "100%", maxHeight: "92vh", objectFit: "contain" }}
-          />
-
-          <video
-            ref={video2Ref}
-            src="/video-bio-promocion.mp4"
+            ref={videoRef}
+            src="/promo-mundial-auto.mp4"
             playsInline
             controls
             preload="auto"

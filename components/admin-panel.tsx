@@ -1638,6 +1638,24 @@ function TablaMiembros({ miembros, adminCaracteristica, adminNumero, onRefresh }
   const [form, setForm] = useState<Miembro | null>(null)
   const [guardando, setGuardando] = useState(false)
   const [guardadoOk, setGuardadoOk] = useState(false)
+  const topScrollRef = React.useRef<HTMLDivElement>(null)
+  const tableWrapRef = React.useRef<HTMLDivElement>(null)
+
+  React.useEffect(() => {
+    const top = topScrollRef.current
+    const bottom = tableWrapRef.current
+    if (!top || !bottom) return
+    const syncFromTop = () => { bottom.scrollLeft = top.scrollLeft }
+    const syncFromBottom = () => { top.scrollLeft = bottom.scrollLeft }
+    top.addEventListener("scroll", syncFromTop)
+    bottom.addEventListener("scroll", syncFromBottom)
+    const inner = top.firstElementChild as HTMLElement
+    if (inner) inner.style.width = bottom.scrollWidth + "px"
+    return () => {
+      top.removeEventListener("scroll", syncFromTop)
+      bottom.removeEventListener("scroll", syncFromBottom)
+    }
+  }, [sorted])
 
   const totalTalleres = (m: Miembro) =>
     [m.taller_autoconocimiento, m.taller_transformacion, m.taller_myl,
@@ -1744,14 +1762,16 @@ function TablaMiembros({ miembros, adminCaracteristica, adminNumero, onRefresh }
           Talleres hechos{arrow("talleres")}
         </button>
       </div>
-    {/* Barra de scroll arriba: rotateX voltea la barra de abajo hacia arriba */}
-    <div style={{ overflowX: "auto", transform: "rotateX(180deg)" }}>
-      <div style={{ transform: "rotateX(180deg)" }}>
+    {/* Barra de scroll superior sincronizada */}
+    <div ref={topScrollRef} style={{ overflowX: "auto", overflowY: "hidden", height: 12 }}>
+      <div style={{ height: 1 }} />
+    </div>
+    <div ref={tableWrapRef} style={{ overflowX: "auto" }}>
     <table className="w-full text-sm border-collapse">
-      <thead>
-        <tr className="border-b-2 border-border bg-muted/50">
-          <th className="text-left px-2 py-2 font-semibold whitespace-nowrap sticky left-0 z-10 bg-background border-r border-border/30">Nº</th>
-          <th className="text-left px-2 py-2 font-semibold whitespace-nowrap sticky left-8 z-10 bg-background border-r border-border/40">Nombre</th>
+      <thead className="sticky top-0 z-20">
+        <tr className="border-b-2 border-border bg-background">
+          <th className="text-left px-2 py-2 font-semibold whitespace-nowrap sticky left-0 z-30 bg-background border-r border-border/30">Nº</th>
+          <th className="text-left px-2 py-2 font-semibold whitespace-nowrap sticky left-8 z-30 bg-background border-r border-border/40">Nombre</th>
           <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Gafete</th>
           <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Celular</th>
           <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Fecha Nac.</th>
@@ -1799,7 +1819,6 @@ function TablaMiembros({ miembros, adminCaracteristica, adminNumero, onRefresh }
         ))}
       </tbody>
     </table>
-    </div>
     </div>
 
     {/* Modal de edición */}

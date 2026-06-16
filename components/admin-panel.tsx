@@ -1744,12 +1744,14 @@ function TablaMiembros({ miembros, adminCaracteristica, adminNumero, onRefresh }
           Talleres hechos{arrow("talleres")}
         </button>
       </div>
-    <div className="overflow-x-auto">
+    {/* Barra de scroll arriba: rotateX voltea la barra de abajo hacia arriba */}
+    <div style={{ overflowX: "auto", transform: "rotateX(180deg)" }}>
+      <div style={{ transform: "rotateX(180deg)" }}>
     <table className="w-full text-sm border-collapse">
       <thead>
         <tr className="border-b-2 border-border bg-muted/50">
-          <th className="text-left px-2 py-2 font-semibold whitespace-nowrap sticky left-0 z-10 bg-muted/50">Nº</th>
-          <th className="text-left px-2 py-2 font-semibold whitespace-nowrap sticky left-8 z-10 bg-muted/50">Nombre</th>
+          <th className="text-left px-2 py-2 font-semibold whitespace-nowrap sticky left-0 z-10 bg-background border-r border-border/30">Nº</th>
+          <th className="text-left px-2 py-2 font-semibold whitespace-nowrap sticky left-8 z-10 bg-background border-r border-border/40">Nombre</th>
           <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Gafete</th>
           <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Celular</th>
           <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Fecha Nac.</th>
@@ -1768,8 +1770,8 @@ function TablaMiembros({ miembros, adminCaracteristica, adminNumero, onRefresh }
       <tbody>
         {sorted.map((m, i) => (
           <tr key={m.numero} className={`border-b border-border/50 hover:bg-muted/30 transition-colors ${i % 2 === 0 ? "" : "bg-muted/10"}`}>
-            <td className="px-2 py-2 font-medium sticky left-0 z-[1] bg-inherit">{m.numero}</td>
-            <td className="px-2 py-2 whitespace-nowrap sticky left-8 z-[1] bg-inherit">{m.nombre_apellido.trim()}</td>
+            <td className="px-2 py-2 font-medium sticky left-0 z-[1] bg-background border-r border-border/30">{m.numero}</td>
+            <td className="px-2 py-2 whitespace-nowrap sticky left-8 z-[1] bg-background border-r border-border/40">{m.nombre_apellido.trim()}</td>
             <td className="px-2 py-2 whitespace-nowrap">{m.nombre_gafete?.trim()}</td>
             <td className="px-2 py-2 whitespace-nowrap">{m.celular_caracteristica} {m.celular_numero}</td>
             <td className="px-2 py-2 whitespace-nowrap text-xs text-muted-foreground">
@@ -1797,6 +1799,7 @@ function TablaMiembros({ miembros, adminCaracteristica, adminNumero, onRefresh }
         ))}
       </tbody>
     </table>
+    </div>
     </div>
 
     {/* Modal de edición */}

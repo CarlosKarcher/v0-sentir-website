@@ -1672,7 +1672,7 @@ function TablaMiembros({ miembros, adminCaracteristica, adminNumero, onRefresh }
     if (!top || !bottom) return
     const inner = top.firstElementChild as HTMLElement
     if (inner) inner.style.width = bottom.scrollWidth + "px"
-  }, [sorted.length])
+  }, [miembros.length, busqueda, orden, dir])
 
   const totalTalleres = (m: Miembro) =>
     [m.taller_autoconocimiento, m.taller_transformacion, m.taller_myl,

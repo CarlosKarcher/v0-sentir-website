@@ -1641,21 +1641,38 @@ function TablaMiembros({ miembros, adminCaracteristica, adminNumero, onRefresh }
   const topScrollRef = React.useRef<HTMLDivElement>(null)
   const tableWrapRef = React.useRef<HTMLDivElement>(null)
 
+  // Sync scroll: flag para evitar loop infinito
   React.useEffect(() => {
     const top = topScrollRef.current
     const bottom = tableWrapRef.current
     if (!top || !bottom) return
-    const syncFromTop = () => { bottom.scrollLeft = top.scrollLeft }
-    const syncFromBottom = () => { top.scrollLeft = bottom.scrollLeft }
+    let syncing = false
+    const syncFromTop = () => {
+      if (syncing) return; syncing = true
+      bottom.scrollLeft = top.scrollLeft
+      syncing = false
+    }
+    const syncFromBottom = () => {
+      if (syncing) return; syncing = true
+      top.scrollLeft = bottom.scrollLeft
+      syncing = false
+    }
     top.addEventListener("scroll", syncFromTop)
     bottom.addEventListener("scroll", syncFromBottom)
-    const inner = top.firstElementChild as HTMLElement
-    if (inner) inner.style.width = bottom.scrollWidth + "px"
     return () => {
       top.removeEventListener("scroll", syncFromTop)
       bottom.removeEventListener("scroll", syncFromBottom)
     }
-  }, [sorted])
+  }, [])
+
+  // Actualizar ancho del scrollbar superior cuando cambian los datos
+  React.useEffect(() => {
+    const top = topScrollRef.current
+    const bottom = tableWrapRef.current
+    if (!top || !bottom) return
+    const inner = top.firstElementChild as HTMLElement
+    if (inner) inner.style.width = bottom.scrollWidth + "px"
+  }, [sorted.length])
 
   const totalTalleres = (m: Miembro) =>
     [m.taller_autoconocimiento, m.taller_transformacion, m.taller_myl,

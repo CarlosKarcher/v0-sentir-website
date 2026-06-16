@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react"
 import { createPortal } from "react-dom"
 import * as XLSX from "xlsx"
 import { supabase } from "@/lib/supabase-client"
-import { X, Download, RefreshCw, ArrowLeft, Users, UserX, Filter, ClipboardList, DollarSign, Check, Ban, Trash2, MessageCircle } from "lucide-react"
+import { X, Download, RefreshCw, ArrowLeft, Users, UserX, Filter, ClipboardList, DollarSign, Check, Ban, Trash2, MessageCircle, Pencil } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { calcularPrecioFinal } from "@/types/database"
 import type { Taller, InscripcionConTaller } from "@/types/database"
@@ -17,12 +17,26 @@ type Miembro = {
   celular_numero: string
   email: string | null
   taller_autoconocimiento: boolean
+  autoconocimiento_mes: number | null
+  autoconocimiento_anio: number | null
   taller_transformacion: boolean
+  transformacion_mes: number | null
+  transformacion_anio: number | null
   taller_myl: boolean
+  myl_mes: number | null
+  myl_anio: number | null
   taller_guerrero: boolean
+  guerrero_mes: number | null
+  guerrero_anio: number | null
   taller_biodecodificacion: boolean
+  biodecodificacion_mes: number | null
+  biodecodificacion_anio: number | null
   taller_nino_interior: boolean
+  nino_interior_mes: number | null
+  nino_interior_anio: number | null
   taller_constelaciones: boolean
+  constelaciones_mes: number | null
+  constelaciones_anio: number | null
   comentario: string | null
   fecha_nacimiento: string | null
   created_at: string
@@ -1083,7 +1097,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
             {!cargando && vista === "miembros" && (
               miembros.length === 0
                 ? <p className="text-center text-muted-foreground py-8">No hay miembros registrados.</p>
-                : <TablaMiembros miembros={miembros} />
+                : <TablaMiembros miembros={miembros} adminCaracteristica={adminCaracteristica} adminNumero={adminNumero} onRefresh={cargarMiembros} />
             )}
 
             {/* Vista No Miembros */}
@@ -1118,7 +1132,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                   ? <p className="text-center text-muted-foreground py-8">Cargando miembros...</p>
                   : miembrosFiltrados.length === 0
                     ? <p className="text-center text-muted-foreground py-8">Todos los miembros realizaron este taller. ✅</p>
-                    : <TablaMiembros miembros={miembrosFiltrados} />
+                    : <TablaMiembros miembros={miembrosFiltrados} adminCaracteristica={adminCaracteristica} adminNumero={adminNumero} onRefresh={cargarMiembros} />
                 }
               </div>
             )}
@@ -1596,11 +1610,34 @@ function TablaInscripciones({
   )
 }
 
-function TablaMiembros({ miembros }: { miembros: Miembro[] }) {
+const MESES = ["", "Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
+
+type TallerEditable = {
+  key: keyof Miembro
+  mesKey: keyof Miembro
+  anioKey: keyof Miembro
+  label: string
+}
+
+const TALLERES_EDIT: TallerEditable[] = [
+  { key: "taller_autoconocimiento", mesKey: "autoconocimiento_mes", anioKey: "autoconocimiento_anio", label: "Autoconocimiento" },
+  { key: "taller_transformacion",   mesKey: "transformacion_mes",   anioKey: "transformacion_anio",   label: "Transformación" },
+  { key: "taller_myl",              mesKey: "myl_mes",              anioKey: "myl_anio",              label: "MyL" },
+  { key: "taller_guerrero",         mesKey: "guerrero_mes",         anioKey: "guerrero_anio",         label: "El Camino del Guerrero" },
+  { key: "taller_biodecodificacion",mesKey: "biodecodificacion_mes",anioKey: "biodecodificacion_anio",label: "Biodecodificación" },
+  { key: "taller_nino_interior",    mesKey: "nino_interior_mes",    anioKey: "nino_interior_anio",    label: "Sanando mi Niño Interior" },
+  { key: "taller_constelaciones",   mesKey: "constelaciones_mes",   anioKey: "constelaciones_anio",   label: "Constelaciones Grupales" },
+]
+
+function TablaMiembros({ miembros, adminCaracteristica, adminNumero, onRefresh }: { miembros: Miembro[], adminCaracteristica: string, adminNumero: string, onRefresh: () => void }) {
   const t = (v: boolean) => v ? "✅" : "❌"
   const [orden, setOrden] = useState<"numero" | "nombre" | "talleres">("numero")
   const [dir, setDir] = useState<"asc" | "desc">("asc")
   const [busqueda, setBusqueda] = useState("")
+  const [editando, setEditando] = useState<Miembro | null>(null)
+  const [form, setForm] = useState<Miembro | null>(null)
+  const [guardando, setGuardando] = useState(false)
+  const [guardadoOk, setGuardadoOk] = useState(false)
 
   const totalTalleres = (m: Miembro) =>
     [m.taller_autoconocimiento, m.taller_transformacion, m.taller_myl,
@@ -1634,6 +1671,49 @@ function TablaMiembros({ miembros }: { miembros: Miembro[] }) {
   }
 
   const arrow = (col: typeof orden) => orden === col ? (dir === "asc" ? " ▲" : " ▼") : ""
+
+  const abrirEditar = (m: Miembro) => {
+    setEditando(m)
+    setForm({ ...m })
+    setGuardadoOk(false)
+  }
+
+  const cerrarEditar = () => {
+    setEditando(null)
+    setForm(null)
+  }
+
+  const setField = (key: keyof Miembro, value: any) => {
+    setForm(f => f ? { ...f, [key]: value } : f)
+  }
+
+  const guardar = async () => {
+    if (!form) return
+    setGuardando(true)
+    await supabase.rpc("actualizar_miembro", {
+      p_admin_caracteristica:    adminCaracteristica,
+      p_admin_numero:            adminNumero,
+      p_numero:                  form.numero,
+      p_nombre_apellido:         form.nombre_apellido,
+      p_nombre_gafete:           form.nombre_gafete,
+      p_celular_caracteristica:  form.celular_caracteristica,
+      p_celular_numero:          form.celular_numero,
+      p_email:                   form.email || null,
+      p_fecha_nacimiento:        form.fecha_nacimiento || null,
+      p_comentario:              form.comentario || null,
+      p_taller_autoconocimiento: form.taller_autoconocimiento, p_autoconocimiento_mes: form.autoconocimiento_mes ?? null, p_autoconocimiento_anio: form.autoconocimiento_anio ?? null,
+      p_taller_transformacion:   form.taller_transformacion,   p_transformacion_mes:   form.transformacion_mes ?? null,   p_transformacion_anio:   form.transformacion_anio ?? null,
+      p_taller_myl:              form.taller_myl,              p_myl_mes:              form.myl_mes ?? null,              p_myl_anio:              form.myl_anio ?? null,
+      p_taller_guerrero:         form.taller_guerrero,         p_guerrero_mes:         form.guerrero_mes ?? null,         p_guerrero_anio:         form.guerrero_anio ?? null,
+      p_taller_biodecodificacion:form.taller_biodecodificacion,p_biodecodificacion_mes:form.biodecodificacion_mes ?? null,p_biodecodificacion_anio:form.biodecodificacion_anio ?? null,
+      p_taller_nino_interior:    form.taller_nino_interior,    p_nino_interior_mes:    form.nino_interior_mes ?? null,    p_nino_interior_anio:    form.nino_interior_anio ?? null,
+      p_taller_constelaciones:   form.taller_constelaciones,   p_constelaciones_mes:   form.constelaciones_mes ?? null,   p_constelaciones_anio:   form.constelaciones_anio ?? null,
+    })
+    setGuardando(false)
+    setGuardadoOk(true)
+    onRefresh()
+    setTimeout(() => cerrarEditar(), 800)
+  }
 
   return (
     <div className="space-y-3">
@@ -1681,6 +1761,7 @@ function TablaMiembros({ miembros }: { miembros: Miembro[] }) {
           <th className="text-center px-2 py-2 font-semibold whitespace-nowrap">Niño Int</th>
           <th className="text-center px-2 py-2 font-semibold whitespace-nowrap">Constel</th>
           <th className="text-center px-2 py-2 font-semibold whitespace-nowrap">Total</th>
+          <th className="text-center px-2 py-2 font-semibold whitespace-nowrap">Editar</th>
         </tr>
       </thead>
       <tbody>
@@ -1702,10 +1783,119 @@ function TablaMiembros({ miembros }: { miembros: Miembro[] }) {
             <td className="text-center px-2 py-2">{t(m.taller_nino_interior)}</td>
             <td className="text-center px-2 py-2">{t(m.taller_constelaciones)}</td>
             <td className="text-center px-2 py-2 font-semibold text-blue-900 dark:text-blue-300">{totalTalleres(m)}/7</td>
+            <td className="text-center px-2 py-2">
+              <button
+                onClick={() => abrirEditar(m)}
+                className="p-1 rounded hover:bg-blue-100 text-blue-700 hover:text-blue-900 transition-colors"
+                title="Editar miembro"
+              >
+                <Pencil className="h-4 w-4" />
+              </button>
+            </td>
           </tr>
         ))}
       </tbody>
     </table>
+
+    {/* Modal de edición */}
+    {editando && form && (
+      <>
+        <div className="fixed inset-0 z-[10100] bg-black/60 backdrop-blur-sm" onClick={cerrarEditar} />
+        <div className="fixed inset-0 z-[10101] flex items-center justify-center p-3">
+          <div className="bg-background rounded-xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between px-5 py-4 border-b border-border sticky top-0 bg-background z-10">
+              <h2 className="font-bold text-base">Editar — {editando.nombre_apellido.trim()} <span className="text-muted-foreground font-normal text-sm">#{editando.numero}</span></h2>
+              <button onClick={cerrarEditar} className="p-1 rounded hover:bg-muted"><X className="h-4 w-4" /></button>
+            </div>
+
+            <div className="px-5 py-4 space-y-4">
+              {/* Datos personales */}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Nombre y Apellido</label>
+                  <input className="mt-1 w-full border border-border rounded-md px-3 py-1.5 text-sm bg-background" value={form.nombre_apellido} onChange={e => setField("nombre_apellido", e.target.value)} />
+                </div>
+                <div>
+                  <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Gafete</label>
+                  <input className="mt-1 w-full border border-border rounded-md px-3 py-1.5 text-sm bg-background" value={form.nombre_gafete || ""} onChange={e => setField("nombre_gafete", e.target.value)} />
+                </div>
+                <div>
+                  <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Característica</label>
+                  <input className="mt-1 w-full border border-border rounded-md px-3 py-1.5 text-sm bg-background" value={form.celular_caracteristica || ""} onChange={e => setField("celular_caracteristica", e.target.value)} />
+                </div>
+                <div>
+                  <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Celular</label>
+                  <input className="mt-1 w-full border border-border rounded-md px-3 py-1.5 text-sm bg-background" value={form.celular_numero || ""} onChange={e => setField("celular_numero", e.target.value)} />
+                </div>
+                <div>
+                  <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Email</label>
+                  <input type="email" className="mt-1 w-full border border-border rounded-md px-3 py-1.5 text-sm bg-background" value={form.email || ""} onChange={e => setField("email", e.target.value)} />
+                </div>
+                <div>
+                  <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Fecha Nacimiento</label>
+                  <input type="date" className="mt-1 w-full border border-border rounded-md px-3 py-1.5 text-sm bg-background" value={form.fecha_nacimiento?.slice(0,10) || ""} onChange={e => setField("fecha_nacimiento", e.target.value || null)} />
+                </div>
+              </div>
+              <div>
+                <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Comentario</label>
+                <textarea className="mt-1 w-full border border-border rounded-md px-3 py-1.5 text-sm bg-background resize-none" rows={2} value={form.comentario || ""} onChange={e => setField("comentario", e.target.value)} />
+              </div>
+
+              {/* Talleres */}
+              <div>
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">Talleres Realizados</p>
+                <div className="space-y-2">
+                  {TALLERES_EDIT.map(({ key, mesKey, anioKey, label }) => (
+                    <div key={key as string} className="flex items-center gap-3 flex-wrap">
+                      <label className="flex items-center gap-2 cursor-pointer min-w-[180px]">
+                        <input
+                          type="checkbox"
+                          checked={!!(form[key])}
+                          onChange={e => setField(key, e.target.checked)}
+                          className="h-4 w-4 rounded"
+                        />
+                        <span className="text-sm">{label}</span>
+                      </label>
+                      {form[key] && (
+                        <>
+                          <select
+                            className="border border-border rounded px-2 py-1 text-xs bg-background"
+                            value={(form[mesKey] as number) || ""}
+                            onChange={e => setField(mesKey, e.target.value ? parseInt(e.target.value) : null)}
+                          >
+                            <option value="">Mes</option>
+                            {MESES.slice(1).map((mes, i) => <option key={i+1} value={i+1}>{mes}</option>)}
+                          </select>
+                          <input
+                            type="number"
+                            placeholder="Año"
+                            min={2020} max={2030}
+                            className="border border-border rounded px-2 py-1 text-xs bg-background w-20"
+                            value={(form[anioKey] as number) || ""}
+                            onChange={e => setField(anioKey, e.target.value ? parseInt(e.target.value) : null)}
+                          />
+                        </>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="px-5 py-4 border-t border-border flex justify-end gap-2 sticky bottom-0 bg-background">
+              <button onClick={cerrarEditar} className="px-4 py-2 text-sm rounded-md border border-border hover:bg-muted">Cancelar</button>
+              <button
+                onClick={guardar}
+                disabled={guardando}
+                className="px-5 py-2 text-sm rounded-md bg-blue-900 text-white hover:bg-blue-800 disabled:opacity-50 font-semibold"
+              >
+                {guardando ? "Guardando..." : guardadoOk ? "✅ Guardado" : "Guardar cambios"}
+              </button>
+            </div>
+          </div>
+        </div>
+      </>
+    )}
     </div>
   )
 }

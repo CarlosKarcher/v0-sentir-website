@@ -1648,14 +1648,16 @@ function TablaMiembros({ miembros, adminCaracteristica, adminNumero, onRefresh }
     if (!top || !bottom) return
     let syncing = false
     const syncFromTop = () => {
-      if (syncing) return; syncing = true
+      if (syncing) return
+      syncing = true
       bottom.scrollLeft = top.scrollLeft
-      syncing = false
+      requestAnimationFrame(() => { syncing = false })
     }
     const syncFromBottom = () => {
-      if (syncing) return; syncing = true
+      if (syncing) return
+      syncing = true
       top.scrollLeft = bottom.scrollLeft
-      syncing = false
+      requestAnimationFrame(() => { syncing = false })
     }
     top.addEventListener("scroll", syncFromTop)
     bottom.addEventListener("scroll", syncFromBottom)

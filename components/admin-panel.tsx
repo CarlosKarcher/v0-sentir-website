@@ -1785,7 +1785,7 @@ function TablaMiembros({ miembros, adminCaracteristica, adminNumero, onRefresh }
     <div ref={topScrollRef} style={{ overflowX: "auto", overflowY: "hidden", height: 12 }}>
       <div style={{ height: 1 }} />
     </div>
-    <div ref={tableWrapRef} style={{ overflowX: "auto" }}>
+    <div ref={tableWrapRef} style={{ overflowX: "auto", overflowY: "auto", maxHeight: "calc(100vh - 220px)" }}>
     <table className="w-full text-sm border-collapse">
       <thead className="sticky top-0 z-20">
         <tr className="border-b-2 border-border bg-background">

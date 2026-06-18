@@ -988,6 +988,9 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                             ${filtradas.reduce((acc, i) => acc + (i.monto_pagado ?? 0), 0).toLocaleString("es-AR")} recaudado — Page: ${Math.round(filtradas.reduce((acc, i) => acc + (i.monto_pagado ?? 0), 0) * 0.09).toLocaleString("es-AR")} ARS
                           </span>
                         </span>
+                        <Button size="sm" variant="outline" className="gap-1.5" onClick={() => exportarCSVInscripciones(filtradas)}>
+                          <Download className="h-4 w-4" /> Exportar CSV
+                        </Button>
                       </div>
 
                       {filtradas.length === 0 ? (

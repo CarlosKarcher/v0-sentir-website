@@ -55,7 +55,7 @@ export function VideoPopup() {
 
           <video
             ref={videoRef}
-            src="/promo-mundial-auto.mp4"
+            src="/Auto-10-05-2026-segundo.mp4"
             playsInline
             controls
             preload="auto"

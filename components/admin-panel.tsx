@@ -1507,8 +1507,8 @@ function TablaInscripciones({
       <table className="w-full text-sm border-collapse min-w-[1100px]">
         <thead className="sticky top-0 z-20">
           <tr className="border-b-2 border-border bg-background">
-            <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Taller</th>
-            <th className="text-left px-2 py-2 font-semibold whitespace-nowrap sticky left-0 z-30 bg-background border-r border-border/40">Nombre</th>
+            <th className="text-left px-2 py-2 font-semibold whitespace-nowrap sticky left-0 z-30 bg-background border-r border-border/30" style={{ minWidth: 170, width: 170 }}>Taller</th>
+            <th className="text-left px-2 py-2 font-semibold whitespace-nowrap sticky z-30 bg-background border-r border-border/40" style={{ left: 170 }}>Nombre</th>
             <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Miembro</th>
             <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Enrolador</th>
             <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Email</th>
@@ -1532,8 +1532,8 @@ function TablaInscripciones({
             const saldo = precioEfectivo > 0 ? precioEfectivo - montoPagado : 0
             return (
               <tr key={ins.id} className={`border-b border-border/50 hover:bg-muted/30 transition-colors ${i % 2 === 0 ? "" : "bg-muted/10"}`}>
-                <td className="px-2 py-2 whitespace-nowrap font-medium text-xs">{ins.taller_nombre}</td>
-                <td className={`px-2 py-2 whitespace-nowrap font-medium sticky left-0 z-[1] bg-background border-r border-border/40 ${ins.metodo_pago === "tarjeta_credito" ? "text-green-600 dark:text-green-400" : ""}`}>{ins.nombre} {ins.apellido}</td>
+                <td className="px-2 py-2 whitespace-nowrap font-medium text-xs sticky left-0 z-[1] bg-background border-r border-border/30" style={{ minWidth: 170, width: 170 }}>{ins.taller_nombre}</td>
+                <td className={`px-2 py-2 whitespace-nowrap font-medium sticky z-[1] bg-background border-r border-border/40 ${ins.metodo_pago === "tarjeta_credito" ? "text-green-600 dark:text-green-400" : ""}`} style={{ left: 170 }}>{ins.nombre} {ins.apellido}</td>
                 <td className="px-2 py-2 whitespace-nowrap text-xs text-muted-foreground">{ins.nombre_miembro || "—"}</td>
                 <td className="px-2 py-2 whitespace-nowrap text-xs text-muted-foreground">
                   {ins.enrolador_nombre

@@ -1212,6 +1212,41 @@ function TablaInscripciones({
   const [guardandoPrecioInsc, setGuardandoPrecioInsc] = useState<string | null>(null)
   const [inscripcionConfirmada, setInscripcionConfirmada] = useState<InscripcionConTaller | null>(null)
   const [inscripcionMensaje, setInscripcionMensaje] = useState<InscripcionConTaller | null>(null)
+  const topScrollRef = React.useRef<HTMLDivElement>(null)
+  const tableWrapRef = React.useRef<HTMLDivElement>(null)
+
+  React.useEffect(() => {
+    const top = topScrollRef.current
+    const bottom = tableWrapRef.current
+    if (!top || !bottom) return
+    let syncing = false
+    const syncFromTop = () => {
+      if (syncing) return
+      syncing = true
+      bottom.scrollLeft = top.scrollLeft
+      requestAnimationFrame(() => { syncing = false })
+    }
+    const syncFromBottom = () => {
+      if (syncing) return
+      syncing = true
+      top.scrollLeft = bottom.scrollLeft
+      requestAnimationFrame(() => { syncing = false })
+    }
+    top.addEventListener("scroll", syncFromTop)
+    bottom.addEventListener("scroll", syncFromBottom)
+    return () => {
+      top.removeEventListener("scroll", syncFromTop)
+      bottom.removeEventListener("scroll", syncFromBottom)
+    }
+  }, [])
+
+  React.useEffect(() => {
+    const top = topScrollRef.current
+    const bottom = tableWrapRef.current
+    if (!top || !bottom) return
+    const inner = top.firstElementChild as HTMLElement
+    if (inner) inner.style.width = bottom.scrollWidth + "px"
+  }, [inscripciones.length])
 
   const estadoBadge = (estado: string) => {
     if (estado === "confirmado") return "bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300"
@@ -1464,14 +1499,16 @@ function TablaInscripciones({
         </>
       )}
 
-    {/* Barra de scroll arriba: rotateX voltea la barra de abajo hacia arriba */}
-    <div style={{ overflowX: "auto", transform: "rotateX(180deg)" }}>
-      <div style={{ transform: "rotateX(180deg)" }}>
+    {/* Barra de scroll superior sincronizada */}
+    <div ref={topScrollRef} style={{ overflowX: "auto", overflowY: "hidden", height: 12 }}>
+      <div style={{ height: 1 }} />
+    </div>
+    <div ref={tableWrapRef} style={{ overflowX: "auto", overflowY: "auto", maxHeight: "calc(100vh - 220px)" }}>
       <table className="w-full text-sm border-collapse min-w-[1100px]">
-        <thead>
-          <tr className="border-b-2 border-border bg-muted/50">
+        <thead className="sticky top-0 z-20">
+          <tr className="border-b-2 border-border bg-background">
             <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Taller</th>
-            <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Nombre</th>
+            <th className="text-left px-2 py-2 font-semibold whitespace-nowrap sticky left-0 z-30 bg-background border-r border-border/40">Nombre</th>
             <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Miembro</th>
             <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Enrolador</th>
             <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Email</th>
@@ -1496,7 +1533,7 @@ function TablaInscripciones({
             return (
               <tr key={ins.id} className={`border-b border-border/50 hover:bg-muted/30 transition-colors ${i % 2 === 0 ? "" : "bg-muted/10"}`}>
                 <td className="px-2 py-2 whitespace-nowrap font-medium text-xs">{ins.taller_nombre}</td>
-                <td className={`px-2 py-2 whitespace-nowrap font-medium ${ins.metodo_pago === "tarjeta_credito" ? "text-green-600 dark:text-green-400" : ""}`}>{ins.nombre} {ins.apellido}</td>
+                <td className={`px-2 py-2 whitespace-nowrap font-medium sticky left-0 z-[1] bg-background border-r border-border/40 ${ins.metodo_pago === "tarjeta_credito" ? "text-green-600 dark:text-green-400" : ""}`}>{ins.nombre} {ins.apellido}</td>
                 <td className="px-2 py-2 whitespace-nowrap text-xs text-muted-foreground">{ins.nombre_miembro || "—"}</td>
                 <td className="px-2 py-2 whitespace-nowrap text-xs text-muted-foreground">
                   {ins.enrolador_nombre
@@ -1604,7 +1641,6 @@ function TablaInscripciones({
           })}
         </tbody>
       </table>
-      </div>
     </div>
     </>
   )

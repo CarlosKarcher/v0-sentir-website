@@ -294,6 +294,18 @@ export function Events() {
 
   const pastEvents = [
     {
+      title: "Taller de Autoconocimiento - Río Gallegos",
+      date: "19, 20 y 21 de Junio 2026",
+      time: "Inicio: Viernes 19 de Junio, 17 Horas",
+      location: "Henry Williams Jamieson 548 - Jubilados Legislativos",
+      type: "Taller de Liderazgo",
+      available: false,
+      availabilityText: "Evento Realizado",
+      hasFlyer: false,
+      level: "1er Nivel",
+      contactPhone: "+54 9 2966 595803",
+    },
+    {
       title: "Taller: \"Sanando mi Niño Interior.\" - Río Gallegos",
       date: "14 de Junio de 2026",
       time: "Inicio: Domingo 14 Horas",
@@ -512,20 +524,6 @@ export function Events() {
   ]
 
   const events = [
-    {
-      title: "Taller de Autoconocimiento - Río Gallegos",
-      date: "19, 20 y 21 de Junio 2026",
-      time: "Inicio: Viernes 19 de Junio, 17 Horas",
-      location: "Henry Williams Jamieson 548 - Jubilados Legislativos",
-      type: "Taller de Liderazgo",
-      available: true,
-      availabilityText: "Cupos disponibles",
-      hasFlyer: false,
-      contactPhone: "+54 9 2966 595803",
-      tallerSlug: "autoconocimiento",
-      tallerId: "9a45a2ae-ec59-41ea-befb-a28c7c59c87d",
-      sede: "Río Gallegos",
-    },
     {
       title: "Taller de Transformación - Río Gallegos",
       date: "9, 10, 11 y 12 de Julio 2026",

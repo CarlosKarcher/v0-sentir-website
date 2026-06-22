@@ -304,7 +304,7 @@ export function VideoPresentation() {
                       setIsLoading(true)
                       setCurrentVideoIndex((i) => i + 1)
                     } else {
-                      setIsPlaying(false)
+                      handleClose()
                     }
                   }}
                 >

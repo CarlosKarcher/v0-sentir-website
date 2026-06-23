@@ -643,7 +643,12 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                       const totalPagado = inscFiltradas.reduce((acc, i) => acc + (i.monto_pagado ?? 0), 0)
                       const totalARecaudar = inscFiltradas.filter(i => i.estado !== "cancelado").reduce((acc, i) => acc + (i.precio_inscripto ?? i.taller_precio ?? 0), 0)
                       const totalPagadoParaPage = inscFiltradas
-                        .filter(i => !pageFeesPagados.has(`${i.taller_slug}:${i.localidad_taller ?? ""}:${(i.taller_fecha_inicio ?? "").substring(0, 10)}`))
+                        .filter(i => {
+                          const fecha = (i.taller_fecha_inicio ?? "").substring(0, 10)
+                          const claveConSede = `${i.taller_slug}:${i.localidad_taller ?? ""}:${fecha}`
+                          const claveSinSede = `${i.taller_slug}::${fecha}`
+                          return !pageFeesPagados.has(claveConSede) && !pageFeesPagados.has(claveSinSede)
+                        })
                         .reduce((acc, i) => acc + (i.monto_pagado ?? 0), 0)
                       return (
                         <div className="flex items-center gap-6 flex-wrap">

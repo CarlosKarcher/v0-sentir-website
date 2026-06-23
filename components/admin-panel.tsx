@@ -53,7 +53,7 @@ type Nomembro = {
 }
 
 type Vista = "menu" | "inscripciones" | "miembros" | "nomembros" | "taller" | "realizados"
-type InscripcionesTab = "inscriptos" | "precios" | "por_taller"
+type InscripcionesTab = "inscriptos" | "precios" | "por_taller" | "morosos"
 
 const TALLERES = [
   { key: "taller_autoconocimiento" as const, label: "Autoconocimiento" },
@@ -627,6 +627,16 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                   >
                     Filtro por Taller-Sede
                   </button>
+                  <button
+                    onClick={() => setInscripcionesTab("morosos")}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      inscripcionesTab === "morosos"
+                        ? "bg-red-600 text-white"
+                        : "hover:bg-muted text-red-600"
+                    }`}
+                  >
+                    Morosos
+                  </button>
                 </div>
 
                 {cargando && (
@@ -1094,6 +1104,53 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                           onActualizarPrecio={actualizarPrecioInscripto}
                           onEnviarEmailPago={enviarEmailPago}
                           pageFeePagado={filtroTallerSlug ? pageFeesPagados.has(`${filtroTallerSlug}:${filtroSede}:${filtroFechaInicio || "0001-01-01"}`) : false}
+                        />
+                      )}
+                    </div>
+                  )
+                })()}
+
+                {/* Tab Morosos */}
+                {!cargando && inscripcionesTab === "morosos" && (() => {
+                  const hoy = new Date()
+                  const morosos = inscripciones.filter(i => {
+                    if (!i.taller_fecha_inicio) return false
+                    const fechaTaller = new Date(i.taller_fecha_inicio)
+                    fechaTaller.setDate(fechaTaller.getDate() + 2)
+                    if (fechaTaller >= hoy) return false
+                    const precio = i.precio_inscripto ?? i.taller_precio ?? 0
+                    const pagado = i.monto_pagado ?? 0
+                    return precio > 0 && pagado < precio && i.estado !== "cancelado"
+                  }).sort((a, b) => {
+                    const orden: Record<string, number> = { pendiente: 0, confirmado: 1, cancelado: 2 }
+                    return (orden[a.estado] ?? 3) - (orden[b.estado] ?? 3)
+                  })
+                  const totalDeuda = morosos.reduce((acc, i) => {
+                    const precio = i.precio_inscripto ?? i.taller_precio ?? 0
+                    const pagado = i.monto_pagado ?? 0
+                    return acc + Math.max(0, precio - pagado)
+                  }, 0)
+                  return (
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-4 flex-wrap">
+                        <span className="text-sm text-muted-foreground">{morosos.length} morosos</span>
+                        <div className="flex items-center gap-2 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-lg px-4 py-1.5">
+                          <span className="text-base text-red-700 dark:text-red-300 font-medium">Total deuda:</span>
+                          <span className="text-base font-bold text-red-800 dark:text-red-200">${totalDeuda.toLocaleString("es-AR")} ARS</span>
+                        </div>
+                      </div>
+                      {morosos.length === 0 ? (
+                        <p className="text-center text-muted-foreground py-8">No hay morosos.</p>
+                      ) : (
+                        <TablaInscripciones
+                          inscripciones={morosos}
+                          accionInscripcion={accionInscripcion}
+                          onAprobar={aprobarInscripcion}
+                          onCancelar={cancelarInscripcion}
+                          onEliminar={eliminarInscripcion}
+                          onActualizarMonto={actualizarMontoPagado}
+                          onActualizarPrecio={actualizarPrecioInscripto}
+                          onEnviarEmailPago={enviarEmailPago}
                         />
                       )}
                     </div>

@@ -1048,16 +1048,29 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                                   <span className={`text-orange-500 dark:text-orange-400 ${esPagado ? "line-through opacity-60" : ""}`}>
                                     Page: ${Math.round(totalRec * 0.09).toLocaleString("es-AR")} ARS
                                   </span>
-                                  {filtroTallerSlug && (
-                                    <button
-                                      onClick={() => togglePageFeePagado(filtroTallerSlug, filtroSede, filtroFechaInicio || "0001-01-01")}
-                                      disabled={toggleandoPageFee}
-                                      title={esPagado ? "Marcar como no pagado" : "Marcar Page como pagado"}
-                                      className={`ml-2 inline-flex items-center justify-center w-5 h-5 border-2 rounded transition-colors ${esPagado ? "bg-orange-500 border-orange-500 text-white" : "bg-white dark:bg-background border-orange-400 text-transparent"} disabled:opacity-50`}
-                                    >
-                                      <Check className="w-3 h-3" strokeWidth={3} />
-                                    </button>
-                                  )}
+                                  {filtroTallerSlug && (() => {
+                                    const hoy = new Date().toISOString().substring(0, 10)
+                                    const esRealizado = filtroFechaInicio < hoy
+                                    if (esPagado) return (
+                                      <span className="ml-2 inline-flex items-center gap-1">
+                                        <span className="inline-flex items-center justify-center w-5 h-5 border-2 rounded bg-orange-500 border-orange-500 text-white">
+                                          <Check className="w-3 h-3" strokeWidth={3} />
+                                        </span>
+                                        <span className="text-orange-500 font-semibold text-xs">Pagado.</span>
+                                      </span>
+                                    )
+                                    if (!esRealizado) return null
+                                    return (
+                                      <button
+                                        onClick={() => togglePageFeePagado(filtroTallerSlug, filtroSede, filtroFechaInicio || "0001-01-01")}
+                                        disabled={toggleandoPageFee}
+                                        title="Marcar Page como pagado"
+                                        className="ml-2 inline-flex items-center justify-center w-5 h-5 border-2 rounded transition-colors bg-white dark:bg-background border-orange-400 text-transparent disabled:opacity-50"
+                                      >
+                                        <Check className="w-3 h-3" strokeWidth={3} />
+                                      </button>
+                                    )
+                                  })()}
                                 </>
                               )
                             })()}

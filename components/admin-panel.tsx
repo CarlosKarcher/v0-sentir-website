@@ -89,6 +89,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
   const [filtroEstado, setFiltroEstado] = useState<"todos" | "pendiente" | "confirmado" | "cancelado">("todos")
   const [filtroTallerSlug, setFiltroTallerSlug] = useState<string>("")
   const [filtroSede, setFiltroSede] = useState<string>("")
+  const [filtroFechaInicio, setFiltroFechaInicio] = useState<string>("")
   const [editandoPrecio, setEditandoPrecio] = useState<string | null>(null) // taller id
   const [precioEdit, setPrecioEdit] = useState({ precio: "", sede: "", descuento_tipo: "porcentaje" as "porcentaje" | "monto_fijo" | null, descuento_valor: "", descuento_hasta: "", acepta_transferencia: true, acepta_tarjeta: true, acepta_sena: true, fecha_inicio: "" })
   const [guardandoPrecio, setGuardandoPrecio] = useState(false)
@@ -646,9 +647,8 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                         .filter(i => {
                           const fecha = (i.taller_fecha_inicio ?? "").substring(0, 10)
                           const sede = i.localidad_taller ?? ""
-                          const claveConFecha = `${i.taller_slug}:${sede}:${fecha}`
-                          const claveSinFecha = `${i.taller_slug}:${sede}:0001-01-01`
-                          return !pageFeesPagados.has(claveConFecha) && !pageFeesPagados.has(claveSinFecha)
+                          return !pageFeesPagados.has(`${i.taller_slug}:${sede}:${fecha}`) &&
+                                 !pageFeesPagados.has(`${i.taller_slug}:${sede}:0001-01-01`)
                         })
                         .reduce((acc, i) => acc + (i.monto_pagado ?? 0), 0)
                       return (
@@ -978,16 +978,32 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
 
                 {/* Tab Filtro por Taller-Sede */}
                 {!cargando && inscripcionesTab === "por_taller" && (() => {
-                  // Opciones únicas de taller y sede desde las inscripciones cargadas
-                  const talleresUnicos = Array.from(new Map(inscripciones.map(i => [i.taller_slug, i.taller_nombre])).entries())
-                  const sedesUnicas = Array.from(new Set(inscripciones.map(i => i.localidad_taller).filter(Boolean))) as string[]
+                  // Combinaciones únicas Taller + Sede + Fecha desde las inscripciones
+                  const combosMap = new Map<string, { slug: string; nombre: string; sede: string; fecha: string }>()
+                  inscripciones.forEach(i => {
+                    const fecha = (i.taller_fecha_inicio ?? "").substring(0, 10)
+                    const key = `${i.taller_slug}|${i.localidad_taller ?? ""}|${fecha}`
+                    if (!combosMap.has(key)) combosMap.set(key, { slug: i.taller_slug, nombre: i.taller_nombre, sede: i.localidad_taller ?? "", fecha })
+                  })
+                  const combos = Array.from(combosMap.entries()).sort((a, b) => a[1].nombre.localeCompare(b[1].nombre) || a[1].fecha.localeCompare(b[1].fecha))
+                  const comboActual = filtroTallerSlug ? `${filtroTallerSlug}|${filtroSede}|${filtroFechaInicio}` : ""
 
                   const filtradas = inscripciones
-                    .filter(i => (!filtroTallerSlug || i.taller_slug === filtroTallerSlug) && (!filtroSede || i.localidad_taller === filtroSede))
+                    .filter(i => {
+                      if (!filtroTallerSlug) return true
+                      const fecha = (i.taller_fecha_inicio ?? "").substring(0, 10)
+                      return i.taller_slug === filtroTallerSlug && i.localidad_taller === filtroSede && fecha === filtroFechaInicio
+                    })
                     .sort((a, b) => {
                       const orden: Record<string, number> = { confirmado: 0, pendiente: 1, cancelado: 2 }
                       return (orden[a.estado] ?? 3) - (orden[b.estado] ?? 3)
                     })
+
+                  const formatFecha = (f: string) => {
+                    if (!f) return ""
+                    const [y, m, d] = f.split("-")
+                    return `${d}/${m}/${y}`
+                  }
 
                   return (
                     <div className="space-y-3">
@@ -995,34 +1011,23 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                         <div className="flex items-center gap-2">
                           <label className="text-sm font-medium whitespace-nowrap">Taller:</label>
                           <select
-                            value={filtroTallerSlug}
+                            value={comboActual}
                             onChange={e => {
-                              const slug = e.target.value
+                              const val = e.target.value
+                              if (!val) { setFiltroTallerSlug(""); setFiltroSede(""); setFiltroFechaInicio(""); return }
+                              const [slug, sede, fecha] = val.split("|")
                               setFiltroTallerSlug(slug)
-                              const sedesDelTaller = Array.from(new Set(inscripciones.filter(i => i.taller_slug === slug).map(i => i.localidad_taller).filter(Boolean))) as string[]
-                              if (sedesDelTaller.length === 1) {
-                                setFiltroSede(sedesDelTaller[0])
-                              } else {
-                                setFiltroSede("")
-                              }
+                              setFiltroSede(sede)
+                              setFiltroFechaInicio(fecha)
                             }}
-                            className="border border-border rounded-md px-3 py-1.5 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                            className="border border-border rounded-md px-3 py-1.5 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary min-w-[280px]"
                           >
                             <option value="">Todos</option>
-                            {talleresUnicos.map(([slug, nombre]) => (
-                              <option key={slug} value={slug}>{nombre}</option>
+                            {combos.map(([key, c]) => (
+                              <option key={key} value={key}>
+                                {c.nombre}{c.sede ? ` — ${c.sede}` : ""}{c.fecha ? ` — ${formatFecha(c.fecha)}` : ""}
+                              </option>
                             ))}
-                          </select>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <label className="text-sm font-medium whitespace-nowrap">Sede:</label>
-                          <select
-                            value={filtroSede}
-                            onChange={e => setFiltroSede(e.target.value)}
-                            className="border border-border rounded-md px-3 py-1.5 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-                          >
-                            <option value="">Todas</option>
-                            {sedesUnicas.map(s => <option key={s} value={s}>{s}</option>)}
                           </select>
                         </div>
                         <span className="text-xs text-muted-foreground flex items-center gap-2 flex-wrap">
@@ -1035,33 +1040,23 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                           <span className="font-semibold text-green-700 dark:text-green-400">
                             {(() => {
                               const totalRec = filtradas.reduce((acc, i) => acc + (i.monto_pagado ?? 0), 0)
-                              const talleresDelSlug = talleresList.filter(t => t.slug === filtroTallerSlug)
-                              const sedeUnica = talleresDelSlug.length === 1 ? (talleresDelSlug[0].sede ?? "") : null
-                              const sedeParaKey = sedeUnica !== null ? sedeUnica : filtroSede
-                              const mostrarCheckbox = filtroTallerSlug && (sedeUnica !== null || filtroSede !== "")
-                              // Si hay múltiples talleres con misma sede (distintas fechas), guardar sin fecha
-                              const talleresEnSede = talleresDelSlug.filter(t => t.sede === sedeParaKey || (!t.sede && !sedeParaKey))
-                              const usarFecha = talleresEnSede.length === 1
-                              const fechaInicioFiltro = usarFecha ? (talleresEnSede[0]?.fecha_inicio ?? "").substring(0, 10) : ""
-                              const pageKey = `${filtroTallerSlug}:${sedeParaKey}:${fechaInicioFiltro}`
-                              const esPagado = mostrarCheckbox ? pageFeesPagados.has(pageKey) : false
+                              const pageKey = `${filtroTallerSlug}:${filtroSede}:${filtroFechaInicio || "0001-01-01"}`
+                              const esPagado = filtroTallerSlug ? pageFeesPagados.has(pageKey) : false
                               return (
                                 <>
                                   ${totalRec.toLocaleString("es-AR")} recaudado —{" "}
                                   <span className={`text-orange-500 dark:text-orange-400 ${esPagado ? "line-through opacity-60" : ""}`}>
                                     Page: ${Math.round(totalRec * 0.09).toLocaleString("es-AR")} ARS
                                   </span>
-                                  {mostrarCheckbox ? (
+                                  {filtroTallerSlug && (
                                     <button
-                                      onClick={() => togglePageFeePagado(filtroTallerSlug, sedeParaKey, fechaInicioFiltro || "0001-01-01")}
+                                      onClick={() => togglePageFeePagado(filtroTallerSlug, filtroSede, filtroFechaInicio || "0001-01-01")}
                                       disabled={toggleandoPageFee}
                                       title={esPagado ? "Marcar como no pagado" : "Marcar Page como pagado"}
                                       className={`ml-2 inline-flex items-center justify-center w-5 h-5 border-2 rounded transition-colors ${esPagado ? "bg-orange-500 border-orange-500 text-white" : "bg-white dark:bg-background border-orange-400 text-transparent"} disabled:opacity-50`}
                                     >
                                       <Check className="w-3 h-3" strokeWidth={3} />
                                     </button>
-                                  ) : filtroTallerSlug && (
-                                    <span className="ml-2 text-xs text-muted-foreground italic">Seleccioná una sede</span>
                                   )}
                                 </>
                               )
@@ -1085,15 +1080,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                           onActualizarMonto={actualizarMontoPagado}
                           onActualizarPrecio={actualizarPrecioInscripto}
                           onEnviarEmailPago={enviarEmailPago}
-                          pageFeePagado={(() => {
-                            const tDelSlug = talleresList.filter(t => t.slug === filtroTallerSlug)
-                            const sUnica = tDelSlug.length === 1 ? (tDelSlug[0].sede ?? "") : null
-                            const sKey = sUnica !== null ? sUnica : filtroSede
-                            const tEnSede = tDelSlug.filter(t => t.sede === sKey || (!t.sede && !sKey))
-                            const fInicio = tEnSede.length === 1 ? (tEnSede[0]?.fecha_inicio ?? "").substring(0, 10) : ""
-                            const key = `${filtroTallerSlug}:${sKey}:${fInicio || "0001-01-01"}`
-                            return filtroTallerSlug && (sUnica !== null || filtroSede !== "") ? pageFeesPagados.has(key) : false
-                          })()}
+                          pageFeePagado={filtroTallerSlug ? pageFeesPagados.has(`${filtroTallerSlug}:${filtroSede}:${filtroFechaInicio || "0001-01-01"}`) : false}
                         />
                       )}
                     </div>

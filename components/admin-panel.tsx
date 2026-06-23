@@ -657,63 +657,63 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                 )}
 
                 {/* Tab Inscriptos */}
-                {!cargando && inscripcionesTab === "inscriptos" && (
-                  <div className="space-y-3">
-                    {(() => {
-                      const inscFiltradas = filtroEstado === "todos" ? inscripciones : inscripciones.filter(i => i.estado === filtroEstado)
-                      const totalPagado = inscFiltradas.reduce((acc, i) => acc + (i.monto_pagado ?? 0), 0)
-                      const totalARecaudar = inscFiltradas.filter(i => i.estado !== "cancelado").reduce((acc, i) => acc + (i.precio_inscripto ?? i.taller_precio ?? 0), 0)
-                      const totalPagadoParaPage = inscFiltradas
-                        .filter(i => {
-                          const fecha = (i.taller_fecha_inicio ?? "").substring(0, 10)
-                          const sede = i.localidad_taller ?? ""
-                          return !pageFeesPagados.has(`${i.taller_slug}:${sede}:${fecha}`) &&
-                                 !pageFeesPagados.has(`${i.taller_slug}:${sede}:0001-01-01`)
-                        })
-                        .reduce((acc, i) => acc + (i.monto_pagado ?? 0), 0)
-                      return (
-                        <div className="flex items-center gap-6 flex-wrap">
-                          <div className="flex items-center gap-3">
-                            <label className="text-sm font-medium">Filtrar por estado:</label>
-                            <select
-                              value={filtroEstado}
-                              onChange={e => setFiltroEstado(e.target.value as typeof filtroEstado)}
-                              className="border border-border rounded-md px-3 py-1.5 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-                            >
-                              <option value="todos">Todos</option>
-                              <option value="pendiente">Pendiente</option>
-                              <option value="confirmado">Confirmado</option>
-                              <option value="cancelado">Cancelado</option>
-                            </select>
-                          </div>
-                          <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg px-4 py-1.5">
-                            <span className="text-base text-blue-700 dark:text-blue-300 font-medium">Total a Rec:</span>
-                            <span className="text-base font-bold text-blue-800 dark:text-blue-200">${totalARecaudar.toLocaleString("es-AR")} ARS</span>
-                          </div>
-                          <div className="flex items-center gap-2 bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-lg px-4 py-1.5">
-                            <span className="text-base text-green-700 dark:text-green-300 font-medium">Total recaudado:</span>
-                            <span className="text-base font-bold text-green-800 dark:text-green-200">${totalPagado.toLocaleString("es-AR")} ARS</span>
-                            <span className="text-base text-orange-500 dark:text-orange-400">— Page: ${Math.round(totalPagadoParaPage * 0.09).toLocaleString("es-AR")} ARS</span>
-                          </div>
+                {!cargando && inscripcionesTab === "inscriptos" && (() => {
+                  const hoyStr = new Date().toISOString().substring(0, 10)
+                  const inscActuales = inscripciones.filter(i => !i.taller_fecha_inicio || i.taller_fecha_inicio.substring(0, 10) >= hoyStr)
+                  const inscFiltradas = filtroEstado === "todos" ? inscActuales : inscActuales.filter(i => i.estado === filtroEstado)
+                  const totalPagado = inscFiltradas.reduce((acc, i) => acc + (i.monto_pagado ?? 0), 0)
+                  const totalARecaudar = inscFiltradas.filter(i => i.estado !== "cancelado").reduce((acc, i) => acc + (i.precio_inscripto ?? i.taller_precio ?? 0), 0)
+                  const totalPagadoParaPage = inscActuales
+                    .filter(i => {
+                      const fecha = (i.taller_fecha_inicio ?? "").substring(0, 10)
+                      const sede = i.localidad_taller ?? ""
+                      return !pageFeesPagados.has(`${i.taller_slug}:${sede}:${fecha}`) &&
+                             !pageFeesPagados.has(`${i.taller_slug}:${sede}:0001-01-01`)
+                    })
+                    .reduce((acc, i) => acc + (i.monto_pagado ?? 0), 0)
+                  return (
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-6 flex-wrap">
+                        <div className="flex items-center gap-3">
+                          <label className="text-sm font-medium">Filtrar por estado:</label>
+                          <select
+                            value={filtroEstado}
+                            onChange={e => setFiltroEstado(e.target.value as typeof filtroEstado)}
+                            className="border border-border rounded-md px-3 py-1.5 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                          >
+                            <option value="todos">Todos</option>
+                            <option value="pendiente">Pendiente</option>
+                            <option value="confirmado">Confirmado</option>
+                            <option value="cancelado">Cancelado</option>
+                          </select>
                         </div>
-                      )
-                    })()}
-                    {inscripciones.length === 0 ? (
-                      <p className="text-center text-muted-foreground py-8">No hay inscripciones registradas.</p>
-                    ) : (
-                      <TablaInscripciones
-                        inscripciones={filtroEstado === "todos" ? inscripciones : inscripciones.filter(i => i.estado === filtroEstado)}
-                        accionInscripcion={accionInscripcion}
-                        onAprobar={aprobarInscripcion}
-                        onCancelar={cancelarInscripcion}
-                        onEliminar={eliminarInscripcion}
-                        onActualizarMonto={actualizarMontoPagado}
-                        onActualizarPrecio={actualizarPrecioInscripto}
-                        onEnviarEmailPago={enviarEmailPago}
-                      />
-                    )}
-                  </div>
-                )}
+                        <div className="flex items-center gap-2 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg px-4 py-1.5">
+                          <span className="text-base text-blue-700 dark:text-blue-300 font-medium">Total a Rec:</span>
+                          <span className="text-base font-bold text-blue-800 dark:text-blue-200">${totalARecaudar.toLocaleString("es-AR")} ARS</span>
+                        </div>
+                        <div className="flex items-center gap-2 bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-lg px-4 py-1.5">
+                          <span className="text-base text-green-700 dark:text-green-300 font-medium">Total recaudado:</span>
+                          <span className="text-base font-bold text-green-800 dark:text-green-200">${totalPagado.toLocaleString("es-AR")} ARS</span>
+                          <span className="text-base text-orange-500 dark:text-orange-400">— Page: ${Math.round(totalPagadoParaPage * 0.09).toLocaleString("es-AR")} ARS</span>
+                        </div>
+                      </div>
+                      {inscActuales.length === 0 ? (
+                        <p className="text-center text-muted-foreground py-8">No hay inscripciones registradas.</p>
+                      ) : (
+                        <TablaInscripciones
+                          inscripciones={inscFiltradas}
+                          accionInscripcion={accionInscripcion}
+                          onAprobar={aprobarInscripcion}
+                          onCancelar={cancelarInscripcion}
+                          onEliminar={eliminarInscripcion}
+                          onActualizarMonto={actualizarMontoPagado}
+                          onActualizarPrecio={actualizarPrecioInscripto}
+                          onEnviarEmailPago={enviarEmailPago}
+                        />
+                      )}
+                    </div>
+                  )
+                })()}
 
                 {/* Tab Precios */}
                 {!cargando && inscripcionesTab === "precios" && (

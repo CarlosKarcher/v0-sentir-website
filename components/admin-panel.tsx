@@ -981,9 +981,13 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                             {sedesUnicas.map(s => <option key={s} value={s}>{s}</option>)}
                           </select>
                         </div>
-                        <span className="text-xs text-muted-foreground">
+                        <span className="text-xs text-muted-foreground flex items-center gap-2 flex-wrap">
                           {filtradas.length} inscripciones
                           {"  "}
+                          <span className="inline-flex items-center gap-1 bg-blue-100 dark:bg-blue-900/40 border border-blue-300 dark:border-blue-700 rounded-md px-2 py-0.5">
+                            <span className="text-blue-700 dark:text-blue-300 font-medium">Total a Rec:</span>
+                            <span className="font-bold text-blue-800 dark:text-blue-200">${filtradas.filter(i => i.estado !== "cancelado").reduce((acc, i) => acc + (i.precio_inscripto ?? i.taller_precio ?? 0), 0).toLocaleString("es-AR")} ARS</span>
+                          </span>
                           <span className="font-semibold text-green-700 dark:text-green-400">
                             ${filtradas.reduce((acc, i) => acc + (i.monto_pagado ?? 0), 0).toLocaleString("es-AR")} recaudado — Page: ${Math.round(filtradas.reduce((acc, i) => acc + (i.monto_pagado ?? 0), 0) * 0.09).toLocaleString("es-AR")} ARS
                           </span>

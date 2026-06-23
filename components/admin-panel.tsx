@@ -97,6 +97,8 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
   const [accionInscripcion, setAccionInscripcion] = useState<string | null>(null) // inscripcion id en proceso
   const [confirmDialog, setConfirmDialog] = useState<{ titulo: string; mensaje: string; tipo: "confirm" | "info"; onConfirm?: () => void } | null>(null)
   const [sedes, setSedes] = useState<string[]>([])
+  const [pageFeesPagados, setPageFeesPagados] = useState<Set<string>>(new Set())
+  const [toggleandoPageFee, setToggleandoPageFee] = useState(false)
 
   const cargarSedes = async () => {
     const { data } = await supabase.from("sedes_sentir").select("nombre").eq("activo", true).order("orden")
@@ -135,6 +137,28 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
       p_admin_numero: adminNumero,
     })
     if (Array.isArray(data)) setTalleresList(data as Taller[])
+  }
+
+  const cargarPageFeesPagados = async () => {
+    const { data } = await supabase.rpc("listar_page_fees_pagados", {
+      p_admin_caracteristica: adminCaracteristica,
+      p_admin_numero: adminNumero,
+    })
+    if (Array.isArray(data)) {
+      setPageFeesPagados(new Set(data.map((r: { taller_slug: string; sede: string }) => `${r.taller_slug}:${r.sede}`)))
+    }
+  }
+
+  const togglePageFeePagado = async (tallerSlug: string, sede: string) => {
+    setToggleandoPageFee(true)
+    await supabase.rpc("toggle_page_fee_pagado", {
+      p_admin_caracteristica: adminCaracteristica,
+      p_admin_numero: adminNumero,
+      p_taller_slug: tallerSlug,
+      p_sede: sede,
+    })
+    await cargarPageFeesPagados()
+    setToggleandoPageFee(false)
   }
 
   const enviarEmailPago = async (ins: InscripcionConTaller, tipo: "parcial" | "confirmado", montoPagado: number) => {
@@ -324,6 +348,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
       if (inscripciones.length === 0) cargarInscripciones()
       if (talleresList.length === 0) cargarTalleres()
       if (sedes.length === 0) cargarSedes()
+      cargarPageFeesPagados()
     }
     if (v === "realizados" && inscripcionesRealizadas.length === 0) cargarInscripcionesRealizadas()
     if (v === "miembros" && miembros.length === 0) cargarMiembros()
@@ -332,7 +357,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
   }
 
   const recargar = () => {
-    if (vista === "inscripciones") { cargarInscripciones(); cargarTalleres() }
+    if (vista === "inscripciones") { cargarInscripciones(); cargarTalleres(); cargarPageFeesPagados() }
     if (vista === "realizados") cargarInscripcionesRealizadas()
     if (vista === "miembros" || vista === "taller") cargarMiembros()
     if (vista === "nomembros") cargarNomembros()
@@ -616,6 +641,9 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                       const inscFiltradas = filtroEstado === "todos" ? inscripciones : inscripciones.filter(i => i.estado === filtroEstado)
                       const totalPagado = inscFiltradas.reduce((acc, i) => acc + (i.monto_pagado ?? 0), 0)
                       const totalARecaudar = inscFiltradas.filter(i => i.estado !== "cancelado").reduce((acc, i) => acc + (i.precio_inscripto ?? i.taller_precio ?? 0), 0)
+                      const totalPagadoParaPage = inscFiltradas
+                        .filter(i => !pageFeesPagados.has(`${i.taller_slug}:${i.localidad_taller ?? ""}`) && !pageFeesPagados.has(`${i.taller_slug}:`))
+                        .reduce((acc, i) => acc + (i.monto_pagado ?? 0), 0)
                       return (
                         <div className="flex items-center gap-6 flex-wrap">
                           <div className="flex items-center gap-3">
@@ -638,7 +666,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                           <div className="flex items-center gap-2 bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-lg px-4 py-1.5">
                             <span className="text-base text-green-700 dark:text-green-300 font-medium">Total recaudado:</span>
                             <span className="text-base font-bold text-green-800 dark:text-green-200">${totalPagado.toLocaleString("es-AR")} ARS</span>
-                            <span className="text-base text-orange-500 dark:text-orange-400">— Page: ${Math.round(totalPagado * 0.09).toLocaleString("es-AR")} ARS</span>
+                            <span className="text-base text-orange-500 dark:text-orange-400">— Page: ${Math.round(totalPagadoParaPage * 0.09).toLocaleString("es-AR")} ARS</span>
                           </div>
                         </div>
                       )
@@ -989,7 +1017,29 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                             <span className="font-bold text-blue-800 dark:text-blue-200">${filtradas.filter(i => i.estado !== "cancelado").reduce((acc, i) => acc + (i.precio_inscripto ?? i.taller_precio ?? 0), 0).toLocaleString("es-AR")} ARS</span>
                           </span>
                           <span className="font-semibold text-green-700 dark:text-green-400">
-                            ${filtradas.reduce((acc, i) => acc + (i.monto_pagado ?? 0), 0).toLocaleString("es-AR")} recaudado — <span className="text-orange-500 dark:text-orange-400">Page: ${Math.round(filtradas.reduce((acc, i) => acc + (i.monto_pagado ?? 0), 0) * 0.09).toLocaleString("es-AR")} ARS</span>
+                            {(() => {
+                              const totalRec = filtradas.reduce((acc, i) => acc + (i.monto_pagado ?? 0), 0)
+                              const pageKey = `${filtroTallerSlug}:${filtroSede}`
+                              const esPagado = filtroTallerSlug ? pageFeesPagados.has(pageKey) : false
+                              return (
+                                <>
+                                  ${totalRec.toLocaleString("es-AR")} recaudado —{" "}
+                                  <span className={`text-orange-500 dark:text-orange-400 ${esPagado ? "line-through opacity-60" : ""}`}>
+                                    Page: ${Math.round(totalRec * 0.09).toLocaleString("es-AR")} ARS
+                                  </span>
+                                  {filtroTallerSlug && (
+                                    <button
+                                      onClick={() => togglePageFeePagado(filtroTallerSlug, filtroSede)}
+                                      disabled={toggleandoPageFee}
+                                      title={esPagado ? "Marcar como no pagado" : "Marcar Page como pagado"}
+                                      className={`ml-2 inline-flex items-center justify-center w-5 h-5 border-2 rounded transition-colors ${esPagado ? "bg-orange-500 border-orange-500 text-white" : "bg-white dark:bg-background border-orange-400 text-transparent"} disabled:opacity-50`}
+                                    >
+                                      <Check className="w-3 h-3" strokeWidth={3} />
+                                    </button>
+                                  )}
+                                </>
+                              )
+                            })()}
                           </span>
                         </span>
                         <Button size="sm" variant="outline" className="gap-1.5" onClick={() => exportarCSVInscripciones(filtradas)}>
@@ -1009,6 +1059,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                           onActualizarMonto={actualizarMontoPagado}
                           onActualizarPrecio={actualizarPrecioInscripto}
                           onEnviarEmailPago={enviarEmailPago}
+                          pageFeePagado={filtroTallerSlug ? pageFeesPagados.has(`${filtroTallerSlug}:${filtroSede}`) : false}
                         />
                       )}
                     </div>
@@ -1203,6 +1254,7 @@ function TablaInscripciones({
   onActualizarMonto,
   onActualizarPrecio,
   onEnviarEmailPago,
+  pageFeePagado,
 }: {
   inscripciones: InscripcionConTaller[]
   accionInscripcion: string | null
@@ -1212,6 +1264,7 @@ function TablaInscripciones({
   onActualizarMonto: (id: string, monto: number) => Promise<void>
   onActualizarPrecio: (id: string, precio: number) => Promise<void>
   onEnviarEmailPago: (ins: InscripcionConTaller, tipo: "parcial" | "confirmado", montoPagado: number) => Promise<void>
+  pageFeePagado?: boolean
 }) {
   const [montosEdit, setMontosEdit] = useState<Record<string, string>>({})
   const [guardandoMonto, setGuardandoMonto] = useState<string | null>(null)
@@ -1527,6 +1580,7 @@ function TablaInscripciones({
             <th className="text-right px-2 py-2 font-semibold whitespace-nowrap">Saldo</th>
             <th className="text-center px-2 py-2 font-semibold whitespace-nowrap">Estado</th>
             <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Fecha</th>
+            {pageFeePagado && <th className="text-center px-2 py-2 font-semibold whitespace-nowrap text-orange-500">Page</th>}
             <th className="text-center px-2 py-2 font-semibold whitespace-nowrap">Acciones</th>
           </tr>
         </thead>
@@ -1643,6 +1697,13 @@ function TablaInscripciones({
                     </button>
                   </div>
                 </td>
+                {pageFeePagado && (
+                  <td className="px-2 py-2 text-center">
+                    <span title="Page 9% pagado" className="inline-flex items-center justify-center w-5 h-5 rounded bg-orange-500 text-white">
+                      <Check className="w-3 h-3" strokeWidth={3} />
+                    </span>
+                  </td>
+                )}
               </tr>
             )
           })}

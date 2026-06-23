@@ -1151,6 +1151,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                           onActualizarMonto={actualizarMontoPagado}
                           onActualizarPrecio={actualizarPrecioInscripto}
                           onEnviarEmailPago={enviarEmailPago}
+                          modoMoroso
                         />
                       )}
                     </div>
@@ -1356,6 +1357,7 @@ function TablaInscripciones({
   onActualizarPrecio: (id: string, precio: number) => Promise<void>
   onEnviarEmailPago: (ins: InscripcionConTaller, tipo: "parcial" | "confirmado", montoPagado: number) => Promise<void>
   pageFeePagado?: boolean
+  modoMoroso?: boolean
 }) {
   const [montosEdit, setMontosEdit] = useState<Record<string, string>>({})
   const [guardandoMonto, setGuardandoMonto] = useState<string | null>(null)
@@ -1363,6 +1365,7 @@ function TablaInscripciones({
   const [guardandoPrecioInsc, setGuardandoPrecioInsc] = useState<string | null>(null)
   const [inscripcionConfirmada, setInscripcionConfirmada] = useState<InscripcionConTaller | null>(null)
   const [inscripcionMensaje, setInscripcionMensaje] = useState<InscripcionConTaller | null>(null)
+  const [inscripcionMorosa, setInscripcionMorosa] = useState<InscripcionConTaller | null>(null)
   const topScrollRef = React.useRef<HTMLDivElement>(null)
   const tableWrapRef = React.useRef<HTMLDivElement>(null)
 
@@ -1548,6 +1551,48 @@ function TablaInscripciones({
                 {/* Cierre */}
                 <div className="flex items-center gap-2 mt-2">
                   <p className="text-white/80 text-base font-medium">Gracias.</p>
+                  <span className="text-white font-bold text-base">Sentir</span>
+                  <img src="/fuego-de-sentir.png" alt="" className="h-5 w-auto" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Cartelito de mensaje moroso */}
+      {inscripcionMorosa && (
+        <>
+          <div className="fixed inset-0 z-[9998] bg-black/70 backdrop-blur-sm" onClick={() => setInscripcionMorosa(null)} />
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+            <div
+              className="relative rounded-2xl shadow-2xl overflow-hidden"
+              style={{ width: "min(420px, 96vw)", background: "linear-gradient(160deg, #3b0a0a 0%, #5c1212 50%, #7c1a1a 100%)" }}
+              onClick={e => e.stopPropagation()}
+            >
+              <button onClick={() => setInscripcionMorosa(null)} className="absolute top-3 right-3 text-white/60 hover:text-white z-10" type="button" aria-label="Cerrar">
+                <X className="h-5 w-5" />
+              </button>
+              <div className="flex flex-col items-center text-center px-8 py-10 gap-4">
+                <h2 className="text-white text-2xl font-bold">{inscripcionMorosa.nombre} {inscripcionMorosa.apellido}</h2>
+                <div className="bg-white/10 rounded-xl px-6 py-4 w-full text-left space-y-2">
+                  <p className="text-white text-base">
+                    Hola <span className="font-semibold">{inscripcionMorosa.nombre}</span>! Queremos recordarte que tenés un saldo pendiente con el Taller de <span className="font-semibold">{inscripcionMorosa.taller_nombre}</span>
+                    {inscripcionMorosa.localidad_taller ? `, realizado en ${inscripcionMorosa.localidad_taller}` : ""}
+                    {inscripcionMorosa.taller_fecha_inicio ? ` el ${formatFechaTaller(inscripcionMorosa.taller_fecha_inicio)}` : ""}.
+                  </p>
+                  {(() => {
+                    const precio = inscripcionMorosa.precio_inscripto ?? inscripcionMorosa.taller_precio ?? 0
+                    const pagado = inscripcionMorosa.monto_pagado ?? 0
+                    const saldo = precio - pagado
+                    return saldo > 0 ? (
+                      <p className="text-white/80 text-sm">Saldo pendiente: <span className="font-bold text-red-300">${saldo.toLocaleString("es-AR")}</span></p>
+                    ) : null
+                  })()}
+                  <p className="text-white text-base pt-1">Esperamos tu pago.</p>
+                  <p className="text-white text-base font-semibold">¡Abrazo!</p>
+                </div>
+                <div className="flex items-center gap-2 mt-1">
                   <span className="text-white font-bold text-base">Sentir</span>
                   <img src="/fuego-de-sentir.png" alt="" className="h-5 w-auto" />
                 </div>
@@ -1760,8 +1805,8 @@ function TablaInscripciones({
                     ) : null}
                     {ins.estado !== "confirmado" && (
                       <button
-                        onClick={() => setInscripcionMensaje(ins)}
-                        title="Ver y enviar mensaje de seña por WhatsApp"
+                        onClick={() => modoMoroso ? setInscripcionMorosa(ins) : setInscripcionMensaje(ins)}
+                        title={modoMoroso ? "Ver mensaje de deuda" : "Ver y enviar mensaje de seña por WhatsApp"}
                         className="w-8 h-8 rounded-full bg-teal-600 hover:bg-teal-700 text-white flex items-center justify-center transition-colors shadow-sm"
                         type="button"
                       >

@@ -1347,6 +1347,7 @@ function TablaInscripciones({
   onActualizarPrecio,
   onEnviarEmailPago,
   pageFeePagado,
+  modoMoroso,
 }: {
   inscripciones: InscripcionConTaller[]
   accionInscripcion: string | null

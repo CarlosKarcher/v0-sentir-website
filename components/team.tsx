@@ -116,6 +116,14 @@ const team = [
     facebook: "https://www.facebook.com/share/1C1sBzAUB7/",
     instagram: "https://www.instagram.com/fabyBrown",
   },
+  {
+    name: "Karen Romero",
+    role: "Community Manager • Marketing Digital • Creación de Contenido Audiovisual • Filmación y Edición de Videos • Cosmetóloga y Maquilladora Profesional",
+    specialties: [],
+    image: "/Karen-Sentir.jpeg",
+    phones: [{ name: "Karen", phone: "5492966565364" }],
+    instagram: "https://www.instagram.com/kbeautyskinstudio/",
+  },
 ]
 
 export function Team() {

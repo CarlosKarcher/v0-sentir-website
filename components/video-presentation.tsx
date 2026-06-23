@@ -5,7 +5,7 @@ import { X, Play } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 const VIDEO_SOURCES = [
-  "/cadena-2026-06-20.mp4",
+  "/auto-fer-dictando.mp4",
 ]
 
 export function VideoPresentation() {

@@ -145,17 +145,18 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
       p_admin_numero: adminNumero,
     })
     if (Array.isArray(data)) {
-      setPageFeesPagados(new Set(data.map((r: { taller_slug: string; sede: string }) => `${r.taller_slug}:${r.sede}`)))
+      setPageFeesPagados(new Set(data.map((r: { taller_slug: string; sede: string; fecha_inicio: string }) => `${r.taller_slug}:${r.sede}:${r.fecha_inicio}`)))
     }
   }
 
-  const togglePageFeePagado = async (tallerSlug: string, sede: string) => {
+  const togglePageFeePagado = async (tallerSlug: string, sede: string, fechaInicio: string) => {
     setToggleandoPageFee(true)
     await supabase.rpc("toggle_page_fee_pagado", {
       p_admin_caracteristica: adminCaracteristica,
       p_admin_numero: adminNumero,
       p_taller_slug: tallerSlug,
       p_sede: sede,
+      p_fecha_inicio: fechaInicio,
     })
     await cargarPageFeesPagados()
     setToggleandoPageFee(false)
@@ -642,7 +643,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                       const totalPagado = inscFiltradas.reduce((acc, i) => acc + (i.monto_pagado ?? 0), 0)
                       const totalARecaudar = inscFiltradas.filter(i => i.estado !== "cancelado").reduce((acc, i) => acc + (i.precio_inscripto ?? i.taller_precio ?? 0), 0)
                       const totalPagadoParaPage = inscFiltradas
-                        .filter(i => !pageFeesPagados.has(`${i.taller_slug}:${i.localidad_taller ?? ""}`) && !pageFeesPagados.has(`${i.taller_slug}:`))
+                        .filter(i => !pageFeesPagados.has(`${i.taller_slug}:${i.localidad_taller ?? ""}:${i.taller_fecha_inicio ?? ""}`))
                         .reduce((acc, i) => acc + (i.monto_pagado ?? 0), 0)
                       return (
                         <div className="flex items-center gap-6 flex-wrap">
@@ -1019,7 +1020,8 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                           <span className="font-semibold text-green-700 dark:text-green-400">
                             {(() => {
                               const totalRec = filtradas.reduce((acc, i) => acc + (i.monto_pagado ?? 0), 0)
-                              const pageKey = `${filtroTallerSlug}:${filtroSede}`
+                              const fechaInicioFiltro = filtradas[0]?.taller_fecha_inicio ?? ""
+                              const pageKey = `${filtroTallerSlug}:${filtroSede}:${fechaInicioFiltro}`
                               const esPagado = filtroTallerSlug ? pageFeesPagados.has(pageKey) : false
                               return (
                                 <>
@@ -1029,7 +1031,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                                   </span>
                                   {filtroTallerSlug && (
                                     <button
-                                      onClick={() => togglePageFeePagado(filtroTallerSlug, filtroSede)}
+                                      onClick={() => togglePageFeePagado(filtroTallerSlug, filtroSede, fechaInicioFiltro)}
                                       disabled={toggleandoPageFee}
                                       title={esPagado ? "Marcar como no pagado" : "Marcar Page como pagado"}
                                       className={`ml-2 inline-flex items-center justify-center w-5 h-5 border-2 rounded transition-colors ${esPagado ? "bg-orange-500 border-orange-500 text-white" : "bg-white dark:bg-background border-orange-400 text-transparent"} disabled:opacity-50`}
@@ -1059,7 +1061,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                           onActualizarMonto={actualizarMontoPagado}
                           onActualizarPrecio={actualizarPrecioInscripto}
                           onEnviarEmailPago={enviarEmailPago}
-                          pageFeePagado={filtroTallerSlug ? pageFeesPagados.has(`${filtroTallerSlug}:${filtroSede}`) : false}
+                          pageFeePagado={filtroTallerSlug ? pageFeesPagados.has(`${filtroTallerSlug}:${filtroSede}:${filtradas[0]?.taller_fecha_inicio ?? ""}`) : false}
                         />
                       )}
                     </div>

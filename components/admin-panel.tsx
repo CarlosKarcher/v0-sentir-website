@@ -989,7 +989,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                             <span className="font-bold text-blue-800 dark:text-blue-200">${filtradas.filter(i => i.estado !== "cancelado").reduce((acc, i) => acc + (i.precio_inscripto ?? i.taller_precio ?? 0), 0).toLocaleString("es-AR")} ARS</span>
                           </span>
                           <span className="font-semibold text-green-700 dark:text-green-400">
-                            ${filtradas.reduce((acc, i) => acc + (i.monto_pagado ?? 0), 0).toLocaleString("es-AR")} recaudado — Page: ${Math.round(filtradas.reduce((acc, i) => acc + (i.monto_pagado ?? 0), 0) * 0.09).toLocaleString("es-AR")} ARS
+                            ${filtradas.reduce((acc, i) => acc + (i.monto_pagado ?? 0), 0).toLocaleString("es-AR")} recaudado — <span className="text-orange-500 dark:text-orange-400">Page: ${Math.round(filtradas.reduce((acc, i) => acc + (i.monto_pagado ?? 0), 0) * 0.09).toLocaleString("es-AR")} ARS</span>
                           </span>
                         </span>
                         <Button size="sm" variant="outline" className="gap-1.5" onClick={() => exportarCSVInscripciones(filtradas)}>

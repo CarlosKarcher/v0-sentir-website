@@ -645,9 +645,8 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                       const totalPagadoParaPage = inscFiltradas
                         .filter(i => {
                           const fecha = (i.taller_fecha_inicio ?? "").substring(0, 10)
-                          const claveConSede = `${i.taller_slug}:${i.localidad_taller ?? ""}:${fecha}`
-                          const claveSinSede = `${i.taller_slug}::${fecha}`
-                          return !pageFeesPagados.has(claveConSede) && !pageFeesPagados.has(claveSinSede)
+                          const clave = `${i.taller_slug}:${i.localidad_taller ?? ""}:${fecha}`
+                          return !pageFeesPagados.has(clave)
                         })
                         .reduce((acc, i) => acc + (i.monto_pagado ?? 0), 0)
                       return (
@@ -1025,25 +1024,33 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                           <span className="font-semibold text-green-700 dark:text-green-400">
                             {(() => {
                               const totalRec = filtradas.reduce((acc, i) => acc + (i.monto_pagado ?? 0), 0)
-                              const tallerEncontrado = talleresList.find(t => t.slug === filtroTallerSlug && (!filtroSede || t.sede === filtroSede || !t.sede))
-                              const fechaInicioFiltro = ((tallerEncontrado?.fecha_inicio ?? filtradas[0]?.taller_fecha_inicio ?? "")).substring(0, 10)
-                              const pageKey = `${filtroTallerSlug}:${filtroSede}:${fechaInicioFiltro}`
-                              const esPagado = filtroTallerSlug ? pageFeesPagados.has(pageKey) : false
+                              // Talleres con el mismo slug
+                              const talleresDelSlug = talleresList.filter(t => t.slug === filtroTallerSlug)
+                              // Si hay uno solo, usar su sede real; si hay varios, exigir que filtroSede esté seleccionado
+                              const sedeUnica = talleresDelSlug.length === 1 ? (talleresDelSlug[0].sede ?? "") : null
+                              const sedeParaKey = sedeUnica !== null ? sedeUnica : filtroSede
+                              const mostrarCheckbox = filtroTallerSlug && (sedeUnica !== null || filtroSede !== "")
+                              const tallerEncontrado = talleresDelSlug.find(t => !sedeParaKey || t.sede === sedeParaKey) ?? talleresDelSlug[0]
+                              const fechaInicioFiltro = (tallerEncontrado?.fecha_inicio ?? filtradas[0]?.taller_fecha_inicio ?? "").substring(0, 10)
+                              const pageKey = `${filtroTallerSlug}:${sedeParaKey}:${fechaInicioFiltro}`
+                              const esPagado = mostrarCheckbox ? pageFeesPagados.has(pageKey) : false
                               return (
                                 <>
                                   ${totalRec.toLocaleString("es-AR")} recaudado —{" "}
                                   <span className={`text-orange-500 dark:text-orange-400 ${esPagado ? "line-through opacity-60" : ""}`}>
                                     Page: ${Math.round(totalRec * 0.09).toLocaleString("es-AR")} ARS
                                   </span>
-                                  {filtroTallerSlug && (
+                                  {mostrarCheckbox ? (
                                     <button
-                                      onClick={() => togglePageFeePagado(filtroTallerSlug, filtroSede, fechaInicioFiltro)}
+                                      onClick={() => togglePageFeePagado(filtroTallerSlug, sedeParaKey, fechaInicioFiltro)}
                                       disabled={toggleandoPageFee}
                                       title={esPagado ? "Marcar como no pagado" : "Marcar Page como pagado"}
                                       className={`ml-2 inline-flex items-center justify-center w-5 h-5 border-2 rounded transition-colors ${esPagado ? "bg-orange-500 border-orange-500 text-white" : "bg-white dark:bg-background border-orange-400 text-transparent"} disabled:opacity-50`}
                                     >
                                       <Check className="w-3 h-3" strokeWidth={3} />
                                     </button>
+                                  ) : filtroTallerSlug && (
+                                    <span className="ml-2 text-xs text-muted-foreground italic">Seleccioná una sede</span>
                                   )}
                                 </>
                               )
@@ -1067,7 +1074,14 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                           onActualizarMonto={actualizarMontoPagado}
                           onActualizarPrecio={actualizarPrecioInscripto}
                           onEnviarEmailPago={enviarEmailPago}
-                          pageFeePagado={filtroTallerSlug ? pageFeesPagados.has(`${filtroTallerSlug}:${filtroSede}:${((talleresList.find(t => t.slug === filtroTallerSlug && (!filtroSede || t.sede === filtroSede || !t.sede))?.fecha_inicio ?? filtradas[0]?.taller_fecha_inicio ?? "")).substring(0, 10)}`) : false}
+                          pageFeePagado={(() => {
+                            const tDelSlug = talleresList.filter(t => t.slug === filtroTallerSlug)
+                            const sUnica = tDelSlug.length === 1 ? (tDelSlug[0].sede ?? "") : null
+                            const sKey = sUnica !== null ? sUnica : filtroSede
+                            const tEncontrado = tDelSlug.find(t => !sKey || t.sede === sKey) ?? tDelSlug[0]
+                            const fInicio = (tEncontrado?.fecha_inicio ?? filtradas[0]?.taller_fecha_inicio ?? "").substring(0, 10)
+                            return filtroTallerSlug && (sUnica !== null || filtroSede !== "") ? pageFeesPagados.has(`${filtroTallerSlug}:${sKey}:${fInicio}`) : false
+                          })()}
                         />
                       )}
                     </div>

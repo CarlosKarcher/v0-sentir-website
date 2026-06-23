@@ -145,7 +145,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
       p_admin_numero: adminNumero,
     })
     if (Array.isArray(data)) {
-      setPageFeesPagados(new Set(data.map((r: { taller_slug: string; sede: string; fecha_inicio: string }) => `${r.taller_slug}:${r.sede}:${r.fecha_inicio}`)))
+      setPageFeesPagados(new Set(data.map((r: { taller_slug: string; sede: string; fecha_inicio: string }) => `${r.taller_slug}:${r.sede}:${r.fecha_inicio.substring(0, 10)}`)))
     }
   }
 
@@ -643,7 +643,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                       const totalPagado = inscFiltradas.reduce((acc, i) => acc + (i.monto_pagado ?? 0), 0)
                       const totalARecaudar = inscFiltradas.filter(i => i.estado !== "cancelado").reduce((acc, i) => acc + (i.precio_inscripto ?? i.taller_precio ?? 0), 0)
                       const totalPagadoParaPage = inscFiltradas
-                        .filter(i => !pageFeesPagados.has(`${i.taller_slug}:${i.localidad_taller ?? ""}:${i.taller_fecha_inicio ?? ""}`))
+                        .filter(i => !pageFeesPagados.has(`${i.taller_slug}:${i.localidad_taller ?? ""}:${(i.taller_fecha_inicio ?? "").substring(0, 10)}`))
                         .reduce((acc, i) => acc + (i.monto_pagado ?? 0), 0)
                       return (
                         <div className="flex items-center gap-6 flex-wrap">
@@ -1020,7 +1020,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                           <span className="font-semibold text-green-700 dark:text-green-400">
                             {(() => {
                               const totalRec = filtradas.reduce((acc, i) => acc + (i.monto_pagado ?? 0), 0)
-                              const fechaInicioFiltro = filtradas[0]?.taller_fecha_inicio ?? ""
+                              const fechaInicioFiltro = (filtradas[0]?.taller_fecha_inicio ?? "").substring(0, 10)
                               const pageKey = `${filtroTallerSlug}:${filtroSede}:${fechaInicioFiltro}`
                               const esPagado = filtroTallerSlug ? pageFeesPagados.has(pageKey) : false
                               return (
@@ -1061,7 +1061,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                           onActualizarMonto={actualizarMontoPagado}
                           onActualizarPrecio={actualizarPrecioInscripto}
                           onEnviarEmailPago={enviarEmailPago}
-                          pageFeePagado={filtroTallerSlug ? pageFeesPagados.has(`${filtroTallerSlug}:${filtroSede}:${filtradas[0]?.taller_fecha_inicio ?? ""}`) : false}
+                          pageFeePagado={filtroTallerSlug ? pageFeesPagados.has(`${filtroTallerSlug}:${filtroSede}:${(filtradas[0]?.taller_fecha_inicio ?? "").substring(0, 10)}`) : false}
                         />
                       )}
                     </div>

@@ -1047,12 +1047,12 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                           ${inscripcionesRealizadas.filter(i => i.estado !== "cancelado").reduce((acc, i) => acc + (i.precio_inscripto ?? i.taller_precio ?? 0), 0).toLocaleString("es-AR")} ARS
                         </span>
                       </div>
-                      <div className="flex items-center gap-2 bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800 rounded-lg px-4 py-1.5">
-                        <span className="text-base text-purple-700 dark:text-purple-300 font-medium">Total recaudado:</span>
-                        <span className="text-base font-bold text-purple-800 dark:text-purple-200">
+                      <div className="flex items-center gap-2 bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-lg px-4 py-1.5">
+                        <span className="text-base text-green-700 dark:text-green-300 font-medium">Total recaudado:</span>
+                        <span className="text-base font-bold text-green-800 dark:text-green-200">
                           ${inscripcionesRealizadas.reduce((acc, i) => acc + (i.monto_pagado ?? 0), 0).toLocaleString("es-AR")} ARS
                         </span>
-                        <span className="text-base text-purple-600 dark:text-purple-400">— Page: ${Math.round(inscripcionesRealizadas.reduce((acc, i) => acc + (i.monto_pagado ?? 0), 0) * 0.09).toLocaleString("es-AR")} ARS</span>
+                        <span className="text-base text-orange-500 dark:text-orange-400">— Page: ${Math.round(inscripcionesRealizadas.reduce((acc, i) => acc + (i.monto_pagado ?? 0), 0) * 0.09).toLocaleString("es-AR")} ARS</span>
                       </div>
                       <Button
                         onClick={() => exportarCSVInscripciones(inscripcionesRealizadas)}

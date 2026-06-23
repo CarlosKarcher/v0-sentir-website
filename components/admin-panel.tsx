@@ -994,7 +994,16 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                           <label className="text-sm font-medium whitespace-nowrap">Taller:</label>
                           <select
                             value={filtroTallerSlug}
-                            onChange={e => setFiltroTallerSlug(e.target.value)}
+                            onChange={e => {
+                              const slug = e.target.value
+                              setFiltroTallerSlug(slug)
+                              const sedesDelTaller = Array.from(new Set(inscripciones.filter(i => i.taller_slug === slug).map(i => i.localidad_taller).filter(Boolean))) as string[]
+                              if (sedesDelTaller.length === 1) {
+                                setFiltroSede(sedesDelTaller[0])
+                              } else {
+                                setFiltroSede("")
+                              }
+                            }}
                             className="border border-border rounded-md px-3 py-1.5 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary"
                           >
                             <option value="">Todos</option>

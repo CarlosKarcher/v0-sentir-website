@@ -638,7 +638,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                           <div className="flex items-center gap-2 bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-lg px-4 py-1.5">
                             <span className="text-base text-green-700 dark:text-green-300 font-medium">Total recaudado:</span>
                             <span className="text-base font-bold text-green-800 dark:text-green-200">${totalPagado.toLocaleString("es-AR")} ARS</span>
-                            <span className="text-base text-green-600 dark:text-green-400">— Page: ${Math.round(totalPagado * 0.09).toLocaleString("es-AR")} ARS</span>
+                            <span className="text-base text-orange-500 dark:text-orange-400">— Page: ${Math.round(totalPagado * 0.09).toLocaleString("es-AR")} ARS</span>
                           </div>
                         </div>
                       )

@@ -53,7 +53,7 @@ type Nomembro = {
 }
 
 type Vista = "menu" | "inscripciones" | "miembros" | "nomembros" | "taller" | "realizados"
-type InscripcionesTab = "inscriptos" | "precios" | "por_taller" | "morosos"
+type InscripcionesTab = "inscriptos" | "precios" | "por_taller" | "morosos" | "historicos"
 
 const TALLERES = [
   { key: "taller_autoconocimiento" as const, label: "Autoconocimiento" },
@@ -637,6 +637,16 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                   >
                     Morosos
                   </button>
+                  <button
+                    onClick={() => setInscripcionesTab("historicos")}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      inscripcionesTab === "historicos"
+                        ? "bg-gray-700 text-white"
+                        : "hover:bg-muted text-gray-500"
+                    }`}
+                  >
+                    Históricos
+                  </button>
                 </div>
 
                 {cargando && (
@@ -1111,6 +1121,37 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                 })()}
 
                 {/* Tab Morosos */}
+                {/* Tab Históricos */}
+                {!cargando && inscripcionesTab === "historicos" && (() => {
+                  const hoy = new Date().toISOString().substring(0, 10)
+                  const historicos = inscripciones.filter(i => {
+                    if (!i.taller_fecha_inicio) return false
+                    const fecha = i.taller_fecha_inicio.substring(0, 10)
+                    return fecha < hoy
+                  })
+                  return (
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-4 flex-wrap">
+                        <span className="text-sm text-muted-foreground">{historicos.length} inscripciones históricas</span>
+                      </div>
+                      {historicos.length === 0 ? (
+                        <p className="text-center text-muted-foreground py-8">No hay inscripciones históricas.</p>
+                      ) : (
+                        <TablaInscripciones
+                          inscripciones={historicos}
+                          accionInscripcion={accionInscripcion}
+                          onAprobar={aprobarInscripcion}
+                          onCancelar={cancelarInscripcion}
+                          onEliminar={eliminarInscripcion}
+                          onActualizarMonto={actualizarMontoPagado}
+                          onActualizarPrecio={actualizarPrecioInscripto}
+                          onEnviarEmailPago={enviarEmailPago}
+                        />
+                      )}
+                    </div>
+                  )
+                })()}
+
                 {!cargando && inscripcionesTab === "morosos" && (() => {
                   const hoy = new Date()
                   const morosos = inscripciones.filter(i => {

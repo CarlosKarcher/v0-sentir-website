@@ -55,7 +55,7 @@ export function VideoPopup() {
 
           <video
             ref={videoRef}
-            src="/Auto-10-05-2026-segundo.mp4"
+            src="/auto-fer-dictando.mp4"
             playsInline
             controls
             preload="auto"

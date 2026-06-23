@@ -210,39 +210,6 @@ export function Team() {
             </Card>
           ))}
 
-          {/* Cuencos - Despertar Lunar */}
-          <Card className="overflow-hidden hover:shadow-lg transition-shadow">
-            <div className="aspect-square overflow-hidden flex justify-center items-center bg-muted">
-              <video
-                src="/cuencos-despertar-lunar.mp4"
-                controls
-                autoPlay
-                muted
-                loop
-                className="w-full h-full object-cover"
-                preload="metadata"
-                playsInline
-              >
-                Tu navegador no soporta el video.
-              </video>
-            </div>
-            <CardContent className="pt-6">
-              <p className="text-base sm:text-lg font-semibold text-black mb-1">Cuencos Tibetanos</p>
-              <p className="text-xs sm:text-sm text-muted-foreground text-pretty">
-                Centro Holístico &quot;Despertar Lunar&quot;
-              </p>
-              <a
-                href="https://wa.me/5492966556444"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-4 flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
-                aria-label="WhatsApp contacto Cuencos"
-              >
-                <Phone className="h-5 w-5" />
-              </a>
-            </CardContent>
-          </Card>
-
           {/* Cromoterapia - Despertar Lunar (mismo tamaño que los cuadros del equipo) */}
           <Card className="overflow-hidden hover:shadow-lg transition-shadow">
             <div className="aspect-square overflow-hidden flex justify-center items-center bg-muted">

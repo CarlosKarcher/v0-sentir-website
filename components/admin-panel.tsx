@@ -1020,7 +1020,8 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                           <span className="font-semibold text-green-700 dark:text-green-400">
                             {(() => {
                               const totalRec = filtradas.reduce((acc, i) => acc + (i.monto_pagado ?? 0), 0)
-                              const fechaInicioFiltro = (filtradas[0]?.taller_fecha_inicio ?? "").substring(0, 10)
+                              const tallerEncontrado = talleresList.find(t => t.slug === filtroTallerSlug && (!filtroSede || t.sede === filtroSede || !t.sede))
+                              const fechaInicioFiltro = ((tallerEncontrado?.fecha_inicio ?? filtradas[0]?.taller_fecha_inicio ?? "")).substring(0, 10)
                               const pageKey = `${filtroTallerSlug}:${filtroSede}:${fechaInicioFiltro}`
                               const esPagado = filtroTallerSlug ? pageFeesPagados.has(pageKey) : false
                               return (
@@ -1061,7 +1062,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                           onActualizarMonto={actualizarMontoPagado}
                           onActualizarPrecio={actualizarPrecioInscripto}
                           onEnviarEmailPago={enviarEmailPago}
-                          pageFeePagado={filtroTallerSlug ? pageFeesPagados.has(`${filtroTallerSlug}:${filtroSede}:${(filtradas[0]?.taller_fecha_inicio ?? "").substring(0, 10)}`) : false}
+                          pageFeePagado={filtroTallerSlug ? pageFeesPagados.has(`${filtroTallerSlug}:${filtroSede}:${((talleresList.find(t => t.slug === filtroTallerSlug && (!filtroSede || t.sede === filtroSede || !t.sede))?.fecha_inicio ?? filtradas[0]?.taller_fecha_inicio ?? "")).substring(0, 10)}`) : false}
                         />
                       )}
                     </div>

@@ -573,6 +573,21 @@ export function Events() {
     },
 
     {
+      title: "Taller de Autoconocimiento - Río Gallegos",
+      date: "11, 12 y 13 de Septiembre 2026",
+      time: "Inicio: Viernes 11 de Septiembre, 16:30 Horas",
+      location: "Centro de Jubilados Legislativos — Henry Williams Jamieson 548, Río Gallegos",
+      type: "Taller de Liderazgo",
+      available: true,
+      availabilityText: "Cupos disponibles",
+      hasFlyer: true,
+      flyerImage: "/auto-septiembre-2026.jpeg",
+      level: "1er Nivel",
+      contactPhone: "+54 9 2966 595803",
+      tallerSlug: "autoconocimiento",
+      sede: "Río Gallegos",
+    },
+    {
       title: "Taller de Autoconocimiento - Córdoba",
       date: "25, 26 y 27 de Septiembre 2026",
       time: "Inicio: Viernes 25 de Septiembre a las 17 Hs",

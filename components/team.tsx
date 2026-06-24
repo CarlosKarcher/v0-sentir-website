@@ -123,6 +123,7 @@ const team = [
     image: "/Karen-Sentir.jpeg",
     phones: [{ name: "Karen", phone: "5492966565364" }],
     instagram: "https://www.instagram.com/kbeautyskinstudio/",
+    imageFit: "contain",
   },
 ]
 
@@ -149,7 +150,7 @@ export function Team() {
                 <img
                   src={member.image || "/placeholder.svg"}
                   alt={member.name}
-                  className="w-full h-full object-cover object-center hover:scale-105 transition-transform mx-auto block"
+                  className={`w-full h-full hover:scale-105 transition-transform mx-auto block ${(member as any).imageFit === "contain" ? "object-contain" : "object-cover object-center"}`}
                 />
               </div>
               <CardContent className="pt-6">

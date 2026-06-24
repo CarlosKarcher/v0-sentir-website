@@ -157,17 +157,6 @@ function InscribirseForm() {
           .limit(1)
         const data = rows?.[0] ?? null
         if (data) { setTallerData(data); setCargandoTaller(false); return }
-        // Si no hay futuros, tomar el más reciente pasado
-        const { data: rowsPast } = await supabase
-          .from("talleres")
-          .select("*")
-          .eq("slug", tallerSlug)
-          .eq("sede", sede)
-          .eq("activo", true)
-          .order("fecha_inicio", { ascending: false })
-          .limit(1)
-        const dataPast = rowsPast?.[0] ?? null
-        if (dataPast) { setTallerData(dataPast); setCargandoTaller(false); return }
       }
       // Opción 3: precio genérico sin sede
       const { data: rowsGen } = await supabase

@@ -192,10 +192,10 @@ const CALENDAR_EVENTS: DayEvent[] = [
   { month: 7, day: 29, type: "myl", label: "MyL 7 - 2da Sala." },
   { month: 7, day: 30, type: "myl", label: "MyL 7 - 2da Sala." },
 
-  // Septiembre — Autoconocimiento Córdoba
-  { month: 8, day: 25, type: "autoconocimiento", label: "Autocon. – Córdoba" },
-  { month: 8, day: 26, type: "autoconocimiento", label: "Autocon. – Córdoba" },
-  { month: 8, day: 27, type: "autoconocimiento", label: "Autocon. – Córdoba" },
+  // Septiembre — Autoconocimiento Río Gallegos
+  { month: 8, day: 11, type: "autoconocimiento", label: "Autocon. – Río Gallegos" },
+  { month: 8, day: 12, type: "autoconocimiento", label: "Autocon. – Río Gallegos" },
+  { month: 8, day: 13, type: "autoconocimiento", label: "Autocon. – Río Gallegos" },
 
   // Octubre — Autoconocimiento El Calafate
   { month: 9, day: 9, type: "autoconocimiento", label: "Autocon. – El Calafate" },

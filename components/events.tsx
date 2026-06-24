@@ -610,6 +610,7 @@ export function Events() {
       level: "1er Nivel",
       contactPhone: "+54 9 2966 595803",
       tallerSlug: "autoconocimiento",
+      tallerId: "6fc43f61-dc88-41ed-aa66-77d7d65d6456",
       sede: "Río Gallegos",
     },
     {

@@ -53,40 +53,29 @@ export default function TalleresInscripcionPage() {
           </div>
 
           <div className="flex flex-col gap-3">
-            {talleresFuturos.map((t, i) => {
-              const habilitado = !cargando && t.id && talleresActivos.has(t.id)
-              const url = `/inscribirse?taller=${t.slug}${t.id ? `&id=${t.id}` : ""}&localidad=${encodeURIComponent(t.sede)}&evento=${encodeURIComponent(`${t.title} — ${t.sede} — ${t.date} — ${t.location}`)}&back=proximos-eventos`
-              if (habilitado) {
-                return (
-                  <a
-                    key={i}
-                    href={url}
-                    className="flex items-center justify-between bg-white rounded-xl px-5 py-4 shadow-sm border border-gray-100 hover:border-green-400 hover:shadow-md transition-all group"
-                  >
-                    <div>
-                      <p className="font-semibold text-gray-800 group-hover:text-green-700">{t.title}</p>
-                      <p className="text-sm text-gray-500 mt-0.5">📍 {t.sede}{t.nivel ? ` · ${t.nivel}` : ""}</p>
-                      <p className="text-sm text-gray-400 mt-0.5">📅 {t.date}</p>
-                    </div>
-                    <ArrowRight className="h-5 w-5 text-gray-300 group-hover:text-green-600 flex-shrink-0 ml-4" />
-                  </a>
-                )
-              }
-              return (
-                <div
-                  key={i}
-                  className="flex items-center justify-between bg-white rounded-xl px-5 py-4 shadow-sm border border-gray-100 opacity-50 cursor-not-allowed"
-                >
-                  <div>
-                    <p className="font-semibold text-gray-500">{t.title}</p>
-                    <p className="text-sm text-gray-400 mt-0.5">📍 {t.sede}{t.nivel ? ` · ${t.nivel}` : ""}</p>
-                    <p className="text-sm text-gray-300 mt-0.5">📅 {t.date}</p>
-                    <p className="text-xs text-gray-400 mt-1">Precio no disponible aún</p>
-                  </div>
-                  <ArrowRight className="h-5 w-5 text-gray-200 flex-shrink-0 ml-4" />
-                </div>
-              )
-            })}
+            {cargando ? (
+              <p className="text-center text-gray-400 py-8">Cargando...</p>
+            ) : (
+              talleresFuturos
+                .filter(t => t.id && talleresActivos.has(t.id))
+                .map((t, i) => {
+                  const url = `/inscribirse?taller=${t.slug}${t.id ? `&id=${t.id}` : ""}&localidad=${encodeURIComponent(t.sede)}&evento=${encodeURIComponent(`${t.title} — ${t.sede} — ${t.date} — ${t.location}`)}&back=proximos-eventos`
+                  return (
+                    <a
+                      key={i}
+                      href={url}
+                      className="flex items-center justify-between bg-white rounded-xl px-5 py-4 shadow-sm border border-gray-100 hover:border-green-400 hover:shadow-md transition-all group"
+                    >
+                      <div>
+                        <p className="font-semibold text-gray-800 group-hover:text-green-700">{t.title}</p>
+                        <p className="text-sm text-gray-500 mt-0.5">📍 {t.sede}{t.nivel ? ` · ${t.nivel}` : ""}</p>
+                        <p className="text-sm text-gray-400 mt-0.5">📅 {t.date}</p>
+                      </div>
+                      <ArrowRight className="h-5 w-5 text-gray-300 group-hover:text-green-600 flex-shrink-0 ml-4" />
+                    </a>
+                  )
+                })
+            )}
           </div>
 
         </div>

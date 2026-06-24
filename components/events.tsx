@@ -582,6 +582,7 @@ export function Events() {
       availabilityText: "Cupos disponibles",
       hasFlyer: true,
       flyerImage: "/auto-septiembre-2026.jpeg",
+      flyerImageAlt: "/images/auto-septiembre-2026.jpeg",
       level: "1er Nivel",
       contactPhone: "+54 9 2966 595803",
       tallerSlug: "autoconocimiento",

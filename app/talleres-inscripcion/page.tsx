@@ -2,6 +2,8 @@
 
 import { Header } from "@/components/header"
 import { ArrowLeft, ArrowRight } from "lucide-react"
+import { useEffect, useState } from "react"
+import { supabase } from "@/lib/supabase-client"
 
 const TALLERES = [
   { title: "Taller de Transformación", sede: "Río Gallegos", date: "9, 10, 11 y 12 de Julio 2026", fechaInicio: "2026-07-09", slug: "transformacion", id: "2ecd2571-70d4-401c-9a40-56f0a3ab589c", location: "Lugar a Confirmar", nivel: "2do Nivel" },
@@ -19,6 +21,20 @@ const TALLERES = [
 export default function TalleresInscripcionPage() {
   const hoy = new Date().toISOString().substring(0, 10)
   const talleresFuturos = TALLERES.filter(t => t.fechaInicio >= hoy)
+  const [talleresActivos, setTalleresActivos] = useState<Set<string>>(new Set())
+  const [cargando, setCargando] = useState(true)
+
+  useEffect(() => {
+    supabase
+      .from("talleres")
+      .select("id")
+      .eq("activo", true)
+      .gte("fecha_inicio", new Date().toISOString())
+      .then(({ data }) => {
+        if (Array.isArray(data)) setTalleresActivos(new Set(data.map((t: { id: string }) => t.id)))
+        setCargando(false)
+      })
+  }, [])
 
   return (
     <>
@@ -38,20 +54,37 @@ export default function TalleresInscripcionPage() {
 
           <div className="flex flex-col gap-3">
             {talleresFuturos.map((t, i) => {
+              const habilitado = !cargando && t.id && talleresActivos.has(t.id)
               const url = `/inscribirse?taller=${t.slug}${t.id ? `&id=${t.id}` : ""}&localidad=${encodeURIComponent(t.sede)}&evento=${encodeURIComponent(`${t.title} — ${t.sede} — ${t.date} — ${t.location}`)}&back=proximos-eventos`
+              if (habilitado) {
+                return (
+                  <a
+                    key={i}
+                    href={url}
+                    className="flex items-center justify-between bg-white rounded-xl px-5 py-4 shadow-sm border border-gray-100 hover:border-green-400 hover:shadow-md transition-all group"
+                  >
+                    <div>
+                      <p className="font-semibold text-gray-800 group-hover:text-green-700">{t.title}</p>
+                      <p className="text-sm text-gray-500 mt-0.5">📍 {t.sede}{t.nivel ? ` · ${t.nivel}` : ""}</p>
+                      <p className="text-sm text-gray-400 mt-0.5">📅 {t.date}</p>
+                    </div>
+                    <ArrowRight className="h-5 w-5 text-gray-300 group-hover:text-green-600 flex-shrink-0 ml-4" />
+                  </a>
+                )
+              }
               return (
-                <a
+                <div
                   key={i}
-                  href={url}
-                  className="flex items-center justify-between bg-white rounded-xl px-5 py-4 shadow-sm border border-gray-100 hover:border-green-400 hover:shadow-md transition-all group"
+                  className="flex items-center justify-between bg-white rounded-xl px-5 py-4 shadow-sm border border-gray-100 opacity-50 cursor-not-allowed"
                 >
                   <div>
-                    <p className="font-semibold text-gray-800 group-hover:text-green-700">{t.title}</p>
-                    <p className="text-sm text-gray-500 mt-0.5">📍 {t.sede}{t.nivel ? ` · ${t.nivel}` : ""}</p>
-                    <p className="text-sm text-gray-400 mt-0.5">📅 {t.date}</p>
+                    <p className="font-semibold text-gray-500">{t.title}</p>
+                    <p className="text-sm text-gray-400 mt-0.5">📍 {t.sede}{t.nivel ? ` · ${t.nivel}` : ""}</p>
+                    <p className="text-sm text-gray-300 mt-0.5">📅 {t.date}</p>
+                    <p className="text-xs text-gray-400 mt-1">Precio no disponible aún</p>
                   </div>
-                  <ArrowRight className="h-5 w-5 text-gray-300 group-hover:text-green-600 flex-shrink-0 ml-4" />
-                </a>
+                  <ArrowRight className="h-5 w-5 text-gray-200 flex-shrink-0 ml-4" />
+                </div>
               )
             })}
           </div>

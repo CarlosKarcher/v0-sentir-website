@@ -4,13 +4,14 @@ import { Calendar, Clock, MapPin, Phone, FileText, ClipboardList, Lock } from "l
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { scrollToElement } from "@/lib/scroll"
 import { CONTACT_PHONE_NUMBER, SECTION_IDS } from "@/lib/constants"
 import type { Event } from "@/lib/types"
 import { ImagePopup } from "@/components/ui/image-popup"
 import { useUser } from "@/lib/user-context"
 import { LoginModal } from "@/components/login-modal"
+import { supabase } from "@/lib/supabase-client"
 
 // Función helper para generar enlace de WhatsApp
 const getWhatsAppLink = (phoneNumber: string) => {
@@ -21,10 +22,12 @@ const getWhatsAppLink = (phoneNumber: string) => {
 // Talleres que requieren login obligatorio para inscribirse
 const TALLERES_REQUIEREN_LOGIN = new Set(["transformacion", "metas-y-logros"])
 
-function EventCard({ event }: { event: Event }) {
+function EventCard({ event, talleresActivos }: { event: Event, talleresActivos: Set<string> }) {
   const { estado } = useUser()
   const [loginOpen, setLoginOpen] = useState(false)
   const requiereLogin = TALLERES_REQUIEREN_LOGIN.has(event.tallerSlug || "")
+  // Tiene precio cargado si su tallerId está en la lista de activos, o si no tiene tallerSlug (no es inscribible)
+  const tienePrecio = !event.tallerSlug || (event.tallerId ? talleresActivos.has(event.tallerId) : false)
   const [flyerOpen, setFlyerOpen] = useState(false)
   const [imageError, setImageError] = useState(false)
   const [imageSrc, setImageSrc] = useState(event.flyerImage || "/flyer-transformacion-rio-gallegos.jpg")
@@ -215,7 +218,15 @@ function EventCard({ event }: { event: Event }) {
         )}
         {event.tallerSlug && event.available && (
           <div className="pt-3">
-            {event.sede === "Punta Arenas" ? (
+            {!tienePrecio ? (
+              <button
+                disabled
+                className="flex items-center justify-center gap-2 w-full bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500 font-semibold py-2 px-4 rounded-lg text-sm cursor-not-allowed"
+              >
+                <ClipboardList className="h-4 w-4" />
+                Precio no disponible aún
+              </button>
+            ) : event.sede === "Punta Arenas" ? (
               <button
                 disabled
                 className="flex items-center justify-center gap-2 w-full bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500 font-semibold py-2 px-4 rounded-lg text-sm cursor-not-allowed"
@@ -291,6 +302,19 @@ function EventCard({ event }: { event: Event }) {
 
 export function Events() {
   const [showHistory, setShowHistory] = useState(false)
+  const [talleresActivos, setTalleresActivos] = useState<Set<string>>(new Set())
+
+  useEffect(() => {
+    const hoy = new Date().toISOString()
+    supabase
+      .from("talleres")
+      .select("id")
+      .eq("activo", true)
+      .gte("fecha_inicio", hoy)
+      .then(({ data }) => {
+        if (Array.isArray(data)) setTalleresActivos(new Set(data.map((t: { id: string }) => t.id)))
+      })
+  }, [])
 
   const pastEvents = [
     {
@@ -697,7 +721,7 @@ export function Events() {
 
         <div className="grid sm:grid-cols-2 gap-4 sm:gap-6 max-w-5xl mx-auto">
           {events.map((event, index) => (
-            <EventCard key={index} event={event} />
+            <EventCard key={index} event={event} talleresActivos={talleresActivos} />
           ))}
         </div>
 
@@ -723,7 +747,7 @@ export function Events() {
 
             <div className="grid sm:grid-cols-2 gap-4 sm:gap-6 max-w-5xl mx-auto">
               {pastEvents.map((event, index) => (
-                <EventCard key={index} event={event} />
+                <EventCard key={index} event={event} talleresActivos={talleresActivos} />
               ))}
             </div>
           </div>

@@ -4,19 +4,22 @@ import { Header } from "@/components/header"
 import { ArrowLeft, ArrowRight } from "lucide-react"
 
 const TALLERES = [
-  { title: "Taller de Autoconocimiento", sede: "Río Gallegos", date: "19, 20 y 21 de Junio 2026", slug: "autoconocimiento", id: "9a45a2ae-ec59-41ea-befb-a28c7c59c87d", location: "Henry Williams Jamieson 548 - Jubilados Legislativos", nivel: "1er Nivel" },
-  { title: "Taller de Transformación", sede: "Río Gallegos", date: "9, 10, 11 y 12 de Julio 2026", slug: "transformacion", id: "2ecd2571-70d4-401c-9a40-56f0a3ab589c", location: "Lugar a Confirmar", nivel: "2do Nivel" },
-  { title: "Taller de MyL 7 — 1ra Sala", sede: "Río Gallegos", date: "8 y 9 de Agosto 2026", slug: "metas-y-logros", id: "893c6f59-783e-45ae-bb45-282216b1f616", location: "Río Gallegos", nivel: "3er Nivel" },
-  { title: "Taller de MyL 7 — 2da Sala", sede: "Río Gallegos", date: "29 y 30 de Agosto 2026", slug: "metas-y-logros", id: "", location: "Río Gallegos", nivel: "3er Nivel" },
-  { title: "Taller de Autoconocimiento", sede: "Córdoba", date: "25, 26 y 27 de Septiembre 2026", slug: "autoconocimiento", id: "", location: "Córdoba", nivel: "1er Nivel" },
-  { title: "Taller de Autoconocimiento", sede: "El Calafate", date: "9, 10 y 11 de Octubre 2026", slug: "autoconocimiento", id: "", location: "Lugar a Designar", nivel: "1er Nivel" },
-  { title: "Taller de MyL 7 — Campamento y Cierre", sede: "Río Gallegos", date: "31 de Octubre y 1 de Noviembre 2026", slug: "metas-y-logros", id: "", location: "Río Gallegos", nivel: "3er Nivel" },
-  { title: "El Camino del Guerrero", sede: "Quequén / Necochea", date: "7 y 8 de Noviembre 2026", slug: "camino-del-guerrero", id: "82cac61c-8f4b-4316-bdd0-126994ed6a81", location: "A Confirmar", nivel: "" },
-  { title: "Taller de Autoconocimiento", sede: "Quequén / Necochea", date: "13, 14 y 15 de Noviembre 2026", slug: "autoconocimiento", id: "", location: "A Confirmar", nivel: "1er Nivel" },
-  { title: "Taller de Autoconocimiento", sede: "Ciudad de Buenos Aires", date: "4, 5 y 6 de Diciembre 2026", slug: "autoconocimiento", id: "", location: "Ciudad de Buenos Aires", nivel: "1er Nivel" },
+  { title: "Taller de Transformación", sede: "Río Gallegos", date: "9, 10, 11 y 12 de Julio 2026", fechaInicio: "2026-07-09", slug: "transformacion", id: "2ecd2571-70d4-401c-9a40-56f0a3ab589c", location: "Lugar a Confirmar", nivel: "2do Nivel" },
+  { title: "Taller de MyL 7 — 1ra Sala", sede: "Río Gallegos", date: "8 y 9 de Agosto 2026", fechaInicio: "2026-08-08", slug: "metas-y-logros", id: "893c6f59-783e-45ae-bb45-282216b1f616", location: "Río Gallegos", nivel: "3er Nivel" },
+  { title: "Taller de MyL 7 — 2da Sala", sede: "Río Gallegos", date: "29 y 30 de Agosto 2026", fechaInicio: "2026-08-29", slug: "metas-y-logros", id: "", location: "Río Gallegos", nivel: "3er Nivel" },
+  { title: "Taller de Autoconocimiento", sede: "Río Gallegos", date: "11, 12 y 13 de Septiembre 2026", fechaInicio: "2026-09-11", slug: "autoconocimiento", id: "", location: "Henry Williams Jamieson 548 - Jubilados Legislativos", nivel: "1er Nivel" },
+  { title: "Taller de Autoconocimiento", sede: "Córdoba", date: "25, 26 y 27 de Septiembre 2026", fechaInicio: "2026-09-25", slug: "autoconocimiento", id: "", location: "Córdoba", nivel: "1er Nivel" },
+  { title: "Taller de Autoconocimiento", sede: "El Calafate", date: "9, 10 y 11 de Octubre 2026", fechaInicio: "2026-10-09", slug: "autoconocimiento", id: "", location: "Lugar a Designar", nivel: "1er Nivel" },
+  { title: "Taller de MyL 7 — Campamento y Cierre", sede: "Río Gallegos", date: "31 de Octubre y 1 de Noviembre 2026", fechaInicio: "2026-10-31", slug: "metas-y-logros", id: "", location: "Río Gallegos", nivel: "3er Nivel" },
+  { title: "El Camino del Guerrero", sede: "Quequén / Necochea", date: "7 y 8 de Noviembre 2026", fechaInicio: "2026-11-07", slug: "camino-del-guerrero", id: "82cac61c-8f4b-4316-bdd0-126994ed6a81", location: "A Confirmar", nivel: "" },
+  { title: "Taller de Autoconocimiento", sede: "Quequén / Necochea", date: "13, 14 y 15 de Noviembre 2026", fechaInicio: "2026-11-13", slug: "autoconocimiento", id: "", location: "A Confirmar", nivel: "1er Nivel" },
+  { title: "Taller de Autoconocimiento", sede: "Ciudad de Buenos Aires", date: "4, 5 y 6 de Diciembre 2026", fechaInicio: "2026-12-04", slug: "autoconocimiento", id: "", location: "Ciudad de Buenos Aires", nivel: "1er Nivel" },
 ]
 
 export default function TalleresInscripcionPage() {
+  const hoy = new Date().toISOString().substring(0, 10)
+  const talleresFuturos = TALLERES.filter(t => t.fechaInicio >= hoy)
+
   return (
     <>
       <Header />
@@ -34,7 +37,7 @@ export default function TalleresInscripcionPage() {
           </div>
 
           <div className="flex flex-col gap-3">
-            {TALLERES.map((t, i) => {
+            {talleresFuturos.map((t, i) => {
               const url = `/inscribirse?taller=${t.slug}${t.id ? `&id=${t.id}` : ""}&localidad=${encodeURIComponent(t.sede)}&evento=${encodeURIComponent(`${t.title} — ${t.sede} — ${t.date} — ${t.location}`)}&back=proximos-eventos`
               return (
                 <a

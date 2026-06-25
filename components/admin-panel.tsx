@@ -596,7 +596,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
             {vista === "inscripciones" && (
               <div className="space-y-4">
                 {/* Sub-tabs */}
-                <div className="flex gap-2 border-b border-border pb-3">
+                <div className="flex gap-2 border-b border-border pb-3 justify-between">
                   <button
                     onClick={() => setInscripcionesTab("inscriptos")}
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
@@ -627,26 +627,28 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                   >
                     Filtro por Taller-Sede
                   </button>
-                  <button
-                    onClick={() => setInscripcionesTab("morosos")}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                      inscripcionesTab === "morosos"
-                        ? "bg-red-600 text-white"
-                        : "hover:bg-muted text-red-600"
-                    }`}
-                  >
-                    Morosos
-                  </button>
-                  <button
-                    onClick={() => setInscripcionesTab("historicos")}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                      inscripcionesTab === "historicos"
-                        ? "bg-gray-700 text-white"
-                        : "hover:bg-muted text-gray-500"
-                    }`}
-                  >
-                    Históricos
-                  </button>
+                  <div className="flex gap-2 ml-auto">
+                    <button
+                      onClick={() => setInscripcionesTab("morosos")}
+                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                        inscripcionesTab === "morosos"
+                          ? "bg-red-600 text-white"
+                          : "hover:bg-muted text-red-600"
+                      }`}
+                    >
+                      Morosos
+                    </button>
+                    <button
+                      onClick={() => setInscripcionesTab("historicos")}
+                      className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                        inscripcionesTab === "historicos"
+                          ? "bg-gray-700 text-white"
+                          : "hover:bg-muted text-gray-500"
+                      }`}
+                    >
+                      Históricos
+                    </button>
+                  </div>
                 </div>
 
                 {cargando && (

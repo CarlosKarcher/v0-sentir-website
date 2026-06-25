@@ -1145,17 +1145,26 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                       <div className="flex items-center gap-4 flex-wrap">
                         <span className="text-sm text-muted-foreground">{historicos.length} inscripciones históricas</span>
                       </div>
-                      {Object.keys(porTaller).length > 0 && (
-                        <div className="flex flex-col gap-1 mb-2">
-                          {Object.entries(porTaller).map(([key, vals]) => (
-                            <div key={key} className="text-xs text-muted-foreground bg-muted/40 rounded px-3 py-1.5 flex flex-wrap gap-3">
-                              <span className="font-medium text-foreground">{key}</span>
-                              <span className="text-green-700 font-semibold">${vals.recaudado.toLocaleString("es-AR")} recaudado</span>
-                              <span className="text-orange-500">Page: ${vals.page.toLocaleString("es-AR")} ARS</span>
+                      {Object.keys(porTaller).length > 0 && (() => {
+                        const totalGlobalRec = Object.values(porTaller).reduce((acc, v) => acc + v.recaudado, 0)
+                        const totalGlobalPage = Math.round(totalGlobalRec * 0.09)
+                        return (
+                          <div className="flex flex-col gap-1 mb-2">
+                            {Object.entries(porTaller).map(([key, vals]) => (
+                              <div key={key} className="text-xs text-muted-foreground bg-muted/40 rounded px-3 py-1.5 flex flex-wrap gap-3">
+                                <span className="font-medium text-foreground">{key}</span>
+                                <span className="text-green-700 font-semibold">${vals.recaudado.toLocaleString("es-AR")} recaudado</span>
+                                <span className="text-orange-500">Page: ${vals.page.toLocaleString("es-AR")} ARS</span>
+                              </div>
+                            ))}
+                            <div className="text-xs bg-gray-800 text-white rounded px-3 py-1.5 flex flex-wrap gap-3 mt-1">
+                              <span className="font-bold">TOTAL GLOBAL</span>
+                              <span className="text-green-300 font-bold">${totalGlobalRec.toLocaleString("es-AR")} recaudado</span>
+                              <span className="text-orange-300">Page: ${totalGlobalPage.toLocaleString("es-AR")} ARS</span>
                             </div>
-                          ))}
-                        </div>
-                      )}
+                          </div>
+                        )
+                      })()}
                       {historicos.length === 0 ? (
                         <p className="text-center text-muted-foreground py-8">No hay inscripciones históricas.</p>
                       ) : (

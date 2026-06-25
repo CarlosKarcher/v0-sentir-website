@@ -1129,11 +1129,30 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                     const fecha = i.taller_fecha_inicio.substring(0, 10)
                     return fecha < hoy
                   })
+                  // Agrupar por taller para mostrar totales
+                  const porTaller = historicos.reduce((acc, i) => {
+                    const key = `${i.taller_nombre ?? "—"} — ${i.localidad_taller ?? "—"} — ${i.taller_fecha_inicio?.substring(0, 10) ?? ""}`
+                    if (!acc[key]) acc[key] = { recaudado: 0, page: 0 }
+                    acc[key].recaudado += i.monto_pagado ?? 0
+                    acc[key].page = Math.round(acc[key].recaudado * 0.09)
+                    return acc
+                  }, {} as Record<string, { recaudado: number; page: number }>)
                   return (
                     <div className="space-y-3">
                       <div className="flex items-center gap-4 flex-wrap">
                         <span className="text-sm text-muted-foreground">{historicos.length} inscripciones históricas</span>
                       </div>
+                      {Object.keys(porTaller).length > 0 && (
+                        <div className="flex flex-col gap-1 mb-2">
+                          {Object.entries(porTaller).map(([key, vals]) => (
+                            <div key={key} className="text-xs text-muted-foreground bg-muted/40 rounded px-3 py-1.5 flex flex-wrap gap-3">
+                              <span className="font-medium text-foreground">{key}</span>
+                              <span className="text-green-700 font-semibold">${vals.recaudado.toLocaleString("es-AR")} recaudado</span>
+                              <span className="text-orange-500">Page: ${vals.page.toLocaleString("es-AR")} ARS</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                       {historicos.length === 0 ? (
                         <p className="text-center text-muted-foreground py-8">No hay inscripciones históricas.</p>
                       ) : (

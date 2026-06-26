@@ -47,7 +47,7 @@ function InscribirseForm() {
   // Taller siempre fijo desde la URL
   const tallerSlug = tallerSlugParam
   const tallerNombreSeleccionado = TALLERES_LISTA.find(t => t.slug === tallerSlug)?.nombre || tallerSlug
-  const camposFijos = TALLERES_CAMPOS_FIJOS.has(tallerSlug)
+  const camposFijos = TALLERES_CAMPOS_FIJOS.has(tallerSlug) && !esAdmin
 
   // Datos de transferencia según el evento
   const esBiodecodificacion = tallerSlug === "biodecodificacion"
@@ -71,6 +71,7 @@ function InscribirseForm() {
   const [modalidadPago, setModalidadPago] = useState<"total" | "tarjeta" | "sena">("total")
   const [cuotas, setCuotas] = useState<2 | 3 | null>(null)
 
+  const [esAdmin, setEsAdmin] = useState(false)
   const [enviando, setEnviando] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [exito, setExito] = useState(false)
@@ -100,6 +101,7 @@ function InscribirseForm() {
       }
 
       // Pre-rellenar datos desde el registro
+      if (data.es_admin) setEsAdmin(true)
       const parts = (data.nombre_apellido || "").trim().split(" ")
       setNombre(parts[0] || "")
       setApellido(parts.slice(1).join(" ") || "")

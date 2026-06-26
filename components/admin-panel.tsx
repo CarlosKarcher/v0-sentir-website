@@ -1052,9 +1052,9 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                               </option>
                             ))}
                           </select>
+                          <span className="text-xs text-muted-foreground whitespace-nowrap">{filtradas.length} inscripciones</span>
                         </div>
                         <span className="text-xs text-muted-foreground flex items-center gap-2 flex-wrap">
-                          {filtradas.length} inscripciones
                           {"  "}
                           <span className="inline-flex items-center gap-1 bg-blue-100 dark:bg-blue-900/40 border border-blue-300 dark:border-blue-700 rounded-md px-2 py-0.5">
                             <span className="text-blue-700 dark:text-blue-300 font-medium">Total a Rec:</span>

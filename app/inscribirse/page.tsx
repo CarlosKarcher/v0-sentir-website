@@ -118,8 +118,8 @@ function InscribirseForm() {
           return
         }
 
-        // No tiene el prerequisito
-        if (!data[requisito.campoDB]) {
+        // No tiene el prerequisito — admins pueden igualmente inscribirse
+        if (!data[requisito.campoDB] && !data.es_admin) {
           setTallerFaltante(requisito.tallerNombre)
           setEstadoUsuario("sin_prerequisito")
           return

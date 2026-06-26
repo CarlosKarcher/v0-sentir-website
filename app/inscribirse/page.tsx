@@ -44,6 +44,7 @@ function InscribirseForm() {
   const [estadoUsuario, setEstadoUsuario] = useState<"cargando" | "no_registrado" | "sin_prerequisito" | "ya_realizado" | "ok">("cargando")
   const [yaInscripto, setYaInscripto] = useState(false)
   const [tallerFaltante, setTallerFaltante] = useState("")
+  const [esAdmin, setEsAdmin] = useState(false)
 
   // Taller siempre fijo desde la URL
   const tallerSlug = tallerSlugParam
@@ -72,7 +73,6 @@ function InscribirseForm() {
   const [modalidadPago, setModalidadPago] = useState<"total" | "tarjeta" | "sena">("total")
   const [cuotas, setCuotas] = useState<2 | 3 | null>(null)
 
-  const [esAdmin, setEsAdmin] = useState(false)
   const [enviando, setEnviando] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [exito, setExito] = useState(false)

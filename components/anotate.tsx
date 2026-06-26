@@ -84,6 +84,7 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
   const [enviando, setEnviando] = useState(false)
   const [error, setError] = useState("")
   const [numeroMiembro, setNumeroMiembro] = useState<number | null>(null)
+  const [nombreEnviado, setNombreEnviado] = useState("")
 
   useEffect(() => {
     setMounted(true)
@@ -107,6 +108,7 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
       setEnviado(false)
       setError("")
       setNumeroMiembro(null)
+      setNombreEnviado("")
       setRecibirInfo(null)
       setCelularRegistrado("")
       setTalleres({
@@ -192,6 +194,7 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
       return
     }
     setNumeroMiembro(res ?? null)
+    setNombreEnviado(data.nombre_apellido)
     setEnviado(true)
     setEnviando(false)
   }
@@ -229,6 +232,7 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
       setEnviando(false)
       return
     }
+    setNombreEnviado(data.nombre_apellido)
     setEnviado(true)
     setEnviando(false)
   }
@@ -253,6 +257,9 @@ export function AnotateModal({ isOpen, onClose }: AnotateModalProps) {
           <div className="px-6 py-5">
             {enviado ? (
               <div className="text-center py-8">
+                {nombreEnviado && (
+                  <p className="text-xl font-semibold text-foreground mb-4">{nombreEnviado}</p>
+                )}
                 <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
                 <h3 className="text-2xl font-bold mb-2">¡Ya estás registrado!</h3>
                 {numeroMiembro && (

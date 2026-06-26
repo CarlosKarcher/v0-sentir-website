@@ -47,6 +47,7 @@ function InscribirseForm() {
   const [estadoUsuario, setEstadoUsuario] = useState<"cargando" | "no_registrado" | "sin_prerequisito" | "ya_realizado" | "ok">("cargando")
   const [yaInscripto, setYaInscripto] = useState(false)
   const [participanteNoRegistrado, setParticipanteNoRegistrado] = useState(false)
+  const [inscripcionDuplicada, setInscripcionDuplicada] = useState(false)
   const [tallerFaltante, setTallerFaltante] = useState("")
   const [esAdmin, setEsAdmin] = useState(false)
 
@@ -240,17 +241,18 @@ function InscribirseForm() {
       }
     }
 
-    // Verificar si ya existe una inscripción para este taller con el mismo email
-    const { data: inscripcionExistente } = await supabase
-      .from("inscripciones")
-      .select("id")
-      .eq("taller_id", tallerData.id)
-      .ilike("email", email.trim())
-      .neq("estado", "cancelado")
-      .maybeSingle()
+    // Verificar si ya existe una inscripción para este taller (slug + sede + fecha)
+    const fechaTaller = tallerData.fecha_inicio ? tallerData.fecha_inicio.slice(0, 10) : null
+    const sedeTaller = tallerData.sede ?? null
+    const { data: duplicada } = await supabase.rpc("verificar_inscripcion_duplicada", {
+      p_email: email.trim().toLowerCase(),
+      p_taller_slug: tallerSlug,
+      p_sede: sedeTaller,
+      p_fecha: fechaTaller,
+    })
 
-    if (inscripcionExistente) {
-      setError("Ya tenés una inscripción registrada para este taller.")
+    if (duplicada) {
+      setInscripcionDuplicada(true)
       setEnviando(false)
       return
     }
@@ -319,6 +321,37 @@ function InscribirseForm() {
   const precios = tallerData ? calcularPrecioFinal(tallerData) : null
   const inputFijo = "w-full border border-border rounded-md px-3 py-2 bg-muted/50 text-muted-foreground cursor-not-allowed"
   const inputEditable = "w-full border border-border rounded-md px-3 py-2 bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+
+  // Inscripción duplicada
+  if (inscripcionDuplicada) {
+    return (
+      <main className="flex-1 flex items-center justify-center p-6">
+        <div className="max-w-md w-full text-center space-y-6 py-12">
+          <div className="text-6xl">⚠️</div>
+          <h2 className="text-2xl font-bold">Ya estás inscripto en este taller</h2>
+          <p className="text-muted-foreground">
+            El email <strong>{email}</strong> ya tiene una inscripción registrada para{" "}
+            <strong>{tallerNombreSeleccionado}</strong>
+            {tallerData?.sede ? ` en ${tallerData.sede}` : ""}.
+          </p>
+          <p className="text-muted-foreground text-sm">
+            Si creés que es un error o querés consultar tu inscripción, contactanos.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <button
+              onClick={() => setInscripcionDuplicada(false)}
+              className="inline-block bg-blue-900 hover:bg-blue-800 text-white font-semibold py-3 px-6 rounded-xl transition-colors"
+            >
+              Volver al formulario
+            </button>
+            <a href={backUrl} className="inline-block border border-border hover:bg-muted font-medium py-3 px-6 rounded-xl transition-colors text-center">
+              Volver al inicio
+            </a>
+          </div>
+        </div>
+      </main>
+    )
+  }
 
   // Participante no registrado en la base de clientes
   if (participanteNoRegistrado) {

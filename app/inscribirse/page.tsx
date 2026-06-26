@@ -29,6 +29,9 @@ const REQUISITOS_ESTRICTOS: Record<string, { campoDB: string; tallerNombre: stri
 // Estos talleres bloquean los campos del usuario (deben coincidir con quien se logueó)
 const TALLERES_CAMPOS_FIJOS = new Set(["transformacion", "metas-y-logros"])
 
+// Estos talleres requieren que el participante esté registrado en la base de clientes
+const TALLERES_REQUIEREN_REGISTRO = new Set(["autoconocimiento", "transformacion", "metas-y-logros"])
+
 function InscribirseForm() {
   const searchParams = useSearchParams()
   const tallerSlugParam = searchParams.get("taller") || ""
@@ -43,6 +46,7 @@ function InscribirseForm() {
 
   const [estadoUsuario, setEstadoUsuario] = useState<"cargando" | "no_registrado" | "sin_prerequisito" | "ya_realizado" | "ok">("cargando")
   const [yaInscripto, setYaInscripto] = useState(false)
+  const [participanteNoRegistrado, setParticipanteNoRegistrado] = useState(false)
   const [tallerFaltante, setTallerFaltante] = useState("")
   const [esAdmin, setEsAdmin] = useState(false)
 
@@ -209,6 +213,17 @@ function InscribirseForm() {
 
     const mensajeFinal = mensaje.trim() || null
 
+    // Verificar que el participante esté registrado en la base de clientes
+    if (TALLERES_REQUIEREN_REGISTRO.has(tallerSlug)) {
+      const { data: clienteCheck } = await supabase
+        .rpc("buscar_email_registrado", { p_email: email.trim().toLowerCase() })
+      if (!clienteCheck?.encontrado) {
+        setParticipanteNoRegistrado(true)
+        setEnviando(false)
+        return
+      }
+    }
+
     // Buscar nombre del miembro si está logueado y guardar fecha de nacimiento
     let nombreMiembro: string | null = null
     if (emailAuth) {
@@ -304,6 +319,32 @@ function InscribirseForm() {
   const precios = tallerData ? calcularPrecioFinal(tallerData) : null
   const inputFijo = "w-full border border-border rounded-md px-3 py-2 bg-muted/50 text-muted-foreground cursor-not-allowed"
   const inputEditable = "w-full border border-border rounded-md px-3 py-2 bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+
+  // Participante no registrado en la base de clientes
+  if (participanteNoRegistrado) {
+    return (
+      <main className="flex-1 flex items-center justify-center p-6">
+        <div className="max-w-md w-full text-center space-y-6 py-12">
+          <div className="text-6xl">🚫</div>
+          <h2 className="text-2xl font-bold">El participante no está registrado</h2>
+          <p className="text-muted-foreground">
+            Para inscribirse en el <strong>{tallerNombreSeleccionado}</strong>, el participante
+            debe estar previamente registrado como cliente de Sentir.
+          </p>
+          <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl p-4 text-sm text-amber-800 dark:text-amber-200">
+            El email <strong>{email}</strong> no figura en nuestra base de clientes.
+            Por favor, registrá al cliente primero y luego completá la inscripción.
+          </div>
+          <button
+            onClick={() => setParticipanteNoRegistrado(false)}
+            className="inline-block bg-blue-900 hover:bg-blue-800 text-white font-semibold py-3 px-6 rounded-xl transition-colors"
+          >
+            Volver al formulario
+          </button>
+        </div>
+      </main>
+    )
+  }
 
   // Pantalla de carga
   if (estadoUsuario === "cargando") {

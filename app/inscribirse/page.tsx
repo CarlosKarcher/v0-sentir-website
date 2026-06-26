@@ -41,7 +41,7 @@ function InscribirseForm() {
   const { estado: estadoAuth, email: emailAuth } = useUser()
   const [loginOpen, setLoginOpen] = useState(false)
 
-  const [estadoUsuario, setEstadoUsuario] = useState<"cargando" | "no_registrado" | "sin_prerequisito" | "ya_realizado" | "ok">("cargando")
+  const [estadoUsuario, setEstadoUsuario] = useState<"cargando" | "no_registrado" | "sin_prerequisito" | "ya_realizado" | "ya_inscripto" | "ok">("cargando")
   const [tallerFaltante, setTallerFaltante] = useState("")
 
   // Taller siempre fijo desde la URL
@@ -129,6 +129,26 @@ function InscribirseForm() {
       setEstadoUsuario("ok")
     })
   }, [estadoAuth, emailAuth])
+
+  // Verificar si ya está inscripto en Transfor o MyL (solo no-admins)
+  useEffect(() => {
+    if (estadoUsuario !== "ok") return
+    if (!tallerData) return
+    if (!TALLERES_CAMPOS_FIJOS.has(tallerSlug)) return
+    if (esAdmin) return
+    if (!email) return
+
+    supabase
+      .from("inscripciones")
+      .select("id")
+      .eq("taller_id", tallerData.id)
+      .ilike("email", email)
+      .neq("estado", "cancelado")
+      .maybeSingle()
+      .then(({ data }) => {
+        if (data) setEstadoUsuario("ya_inscripto")
+      })
+  }, [estadoUsuario, tallerData, esAdmin, email, tallerSlug])
 
   // Cargar precio del taller — 1) por UUID exacto si viene en URL, 2) por slug+sede, 3) genérico sin sede
   useEffect(() => {
@@ -330,6 +350,28 @@ function InscribirseForm() {
           <h2 className="text-2xl font-bold">
             Tu{nombre ? `, ${nombre},` : ""} Ya Viviste esta hermosa Experiencia.
           </h2>
+          <a
+            href={backUrl}
+            className="inline-block bg-blue-900 hover:bg-blue-800 text-white font-semibold py-3 px-6 rounded-xl transition-colors"
+          >
+            Volver al inicio
+          </a>
+        </div>
+      </main>
+    )
+  }
+
+  // Ya inscripto en este taller
+  if (estadoUsuario === "ya_inscripto") {
+    return (
+      <main className="flex-1 flex items-center justify-center p-6">
+        <div className="max-w-md w-full text-center space-y-6 py-12">
+          <div className="text-6xl">📋</div>
+          <h2 className="text-2xl font-bold">Ya estás inscripto</h2>
+          <p className="text-muted-foreground">
+            Ya tenés una inscripción registrada para el <strong>{tallerNombreSeleccionado}</strong>.
+            Si tenés alguna consulta, contactanos.
+          </p>
           <a
             href={backUrl}
             className="inline-block bg-blue-900 hover:bg-blue-800 text-white font-semibold py-3 px-6 rounded-xl transition-colors"

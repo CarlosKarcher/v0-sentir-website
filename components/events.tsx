@@ -613,7 +613,7 @@ export function Events() {
       title: "El Camino del Guerrero - Punta Arenas",
       date: "15 y 16 de Agosto 2026",
       time: "Inicio: Sábado 15, 15 Horas",
-      location: "Lugar a Confirmar",
+      location: "Avda. Jorge Alessandri #264 Barrio Sur - Club Huracán",
       type: "Otro Taller",
       available: true,
       availabilityText: "Cupos disponibles",

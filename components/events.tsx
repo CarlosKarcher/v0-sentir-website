@@ -575,6 +575,7 @@ export function Events() {
       tallerSlug: "transformacion",
       tallerId: "2ecd2571-70d4-401c-9a40-56f0a3ab589c",
       sede: "Río Gallegos",
+      fechaInicio: "2026-07-09",
       fechaFin: "2026-07-12",
     },
     {
@@ -592,6 +593,7 @@ export function Events() {
       tallerSlug: "metas-y-logros",
       tallerId: "893c6f59-783e-45ae-bb45-282216b1f616",
       sede: "Río Gallegos",
+      fechaInicio: "2026-08-08",
       fechaFin: "2026-08-09",
     },
     {
@@ -608,6 +610,7 @@ export function Events() {
       contactPhone: "+54 9 2966 595803",
       tallerSlug: "camino-del-guerrero",
       sede: "Río Gallegos",
+      fechaInicio: "2026-08-22",
       fechaFin: "2026-08-23",
     },
     {
@@ -623,6 +626,7 @@ export function Events() {
       contactPhone: "+54 9 2966 595803",
       tallerSlug: "metas-y-logros",
       sede: "Río Gallegos",
+      fechaInicio: "2026-08-29",
       fechaFin: "2026-08-30",
     },
     {
@@ -641,6 +645,7 @@ export function Events() {
       tallerSlug: "autoconocimiento",
       tallerId: "6fc43f61-dc88-41ed-aa66-77d7d65d6456",
       sede: "Río Gallegos",
+      fechaInicio: "2026-09-11",
       fechaFin: "2026-09-13",
     },
     {
@@ -658,6 +663,7 @@ export function Events() {
       contactPhone: "+54 9 2966 595803",
       tallerSlug: "autoconocimiento",
       sede: "El Calafate",
+      fechaInicio: "2026-10-09",
       fechaFin: "2026-10-11",
     },
     {
@@ -673,6 +679,7 @@ export function Events() {
       contactPhone: "+54 9 2966 595803",
       tallerSlug: "metas-y-logros",
       sede: "Río Gallegos",
+      fechaInicio: "2026-10-31",
       fechaFin: "2026-11-01",
     },
     {
@@ -690,6 +697,7 @@ export function Events() {
       tallerSlug: "camino-del-guerrero",
       tallerId: "82cac61c-8f4b-4316-bdd0-126994ed6a81",
       sede: "Quequén-Neco",
+      fechaInicio: "2026-11-07",
       fechaFin: "2026-11-08",
     },
     {
@@ -707,6 +715,7 @@ export function Events() {
       contactPhone: "+54 11 6706 6630",
       tallerSlug: "autoconocimiento",
       sede: "Quequén-Neco",
+      fechaInicio: "2026-11-13",
       fechaFin: "2026-11-15",
     },
     {
@@ -725,14 +734,21 @@ export function Events() {
       contactWhatsappOnly: true,
       tallerSlug: "autoconocimiento",
       sede: "CABA",
+      fechaInicio: "2026-12-04",
       fechaFin: "2026-12-06",
     },
   ]
 
   const today = new Date().toISOString().split("T")[0]
-  const upcomingEvents = events.filter(e => !e.fechaFin || e.fechaFin >= today)
+  const upcomingEvents = events.filter(e => {
+    const cutoff = e.fechaFin ?? e.fechaInicio
+    return !cutoff || cutoff >= today
+  })
   const autoPassedEvents = events
-    .filter(e => e.fechaFin && e.fechaFin < today)
+    .filter(e => {
+      const cutoff = e.fechaFin ?? e.fechaInicio
+      return !!cutoff && cutoff < today
+    })
     .map(e => ({ ...e, available: false, availabilityText: "Evento Realizado" }))
   const allPastEvents = [...autoPassedEvents, ...pastEvents]
 

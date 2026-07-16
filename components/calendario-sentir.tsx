@@ -188,6 +188,9 @@ const CALENDAR_EVENTS: DayEvent[] = [
   { month: 7, day: 8, type: "myl", label: "MyL 7 - 1ra Sala." },
   { month: 7, day: 9, type: "myl", label: "MyL 7 - 1ra Sala." },
 
+  // Agosto — Niño Interior Punta Arenas
+  { month: 7, day: 14, type: "nino", label: "Taller Niño Interior – Punta Arenas" },
+
   // Agosto — Camino del Guerrero Punta Arenas
   { month: 7, day: 15, type: "guerrero", label: "Camino del Guerrero – Punta Arenas" },
   { month: 7, day: 16, type: "guerrero", label: "Camino del Guerrero – Punta Arenas" },

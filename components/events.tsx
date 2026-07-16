@@ -575,6 +575,7 @@ export function Events() {
       tallerSlug: "transformacion",
       tallerId: "2ecd2571-70d4-401c-9a40-56f0a3ab589c",
       sede: "Río Gallegos",
+      fechaFin: "2026-07-12",
     },
     {
       title: "Taller de MyL 7 - 1ra, Sala.",
@@ -591,6 +592,7 @@ export function Events() {
       tallerSlug: "metas-y-logros",
       tallerId: "893c6f59-783e-45ae-bb45-282216b1f616",
       sede: "Río Gallegos",
+      fechaFin: "2026-08-09",
     },
     {
       title: "El Camino del Guerrero - Río Gallegos",
@@ -606,6 +608,7 @@ export function Events() {
       contactPhone: "+54 9 2966 595803",
       tallerSlug: "camino-del-guerrero",
       sede: "Río Gallegos",
+      fechaFin: "2026-08-23",
     },
     {
       title: "Taller de MyL 7 - 2da Sala.",
@@ -620,8 +623,8 @@ export function Events() {
       contactPhone: "+54 9 2966 595803",
       tallerSlug: "metas-y-logros",
       sede: "Río Gallegos",
+      fechaFin: "2026-08-30",
     },
-
     {
       title: "Taller de Autoconocimiento - Río Gallegos",
       date: "11, 12 y 13 de Septiembre 2026",
@@ -638,6 +641,7 @@ export function Events() {
       tallerSlug: "autoconocimiento",
       tallerId: "6fc43f61-dc88-41ed-aa66-77d7d65d6456",
       sede: "Río Gallegos",
+      fechaFin: "2026-09-13",
     },
     {
       title: "Taller de Autoconocimiento - El Calafate",
@@ -654,6 +658,7 @@ export function Events() {
       contactPhone: "+54 9 2966 595803",
       tallerSlug: "autoconocimiento",
       sede: "El Calafate",
+      fechaFin: "2026-10-11",
     },
     {
       title: "Taller de MyL 7 - Campamento y Cierre.",
@@ -668,6 +673,7 @@ export function Events() {
       contactPhone: "+54 9 2966 595803",
       tallerSlug: "metas-y-logros",
       sede: "Río Gallegos",
+      fechaFin: "2026-11-01",
     },
     {
       title: "El Camino del Guerrero - Quequén/Necochea",
@@ -684,6 +690,7 @@ export function Events() {
       tallerSlug: "camino-del-guerrero",
       tallerId: "82cac61c-8f4b-4316-bdd0-126994ed6a81",
       sede: "Quequén-Neco",
+      fechaFin: "2026-11-08",
     },
     {
       title: "Taller de Autoconocimiento - Quequén/Necochea",
@@ -700,6 +707,7 @@ export function Events() {
       contactPhone: "+54 11 6706 6630",
       tallerSlug: "autoconocimiento",
       sede: "Quequén-Neco",
+      fechaFin: "2026-11-15",
     },
     {
       title: "Taller de Autoconocimiento - Ciudad de Buenos Aires",
@@ -717,8 +725,16 @@ export function Events() {
       contactWhatsappOnly: true,
       tallerSlug: "autoconocimiento",
       sede: "CABA",
+      fechaFin: "2026-12-06",
     },
   ]
+
+  const today = new Date().toISOString().split("T")[0]
+  const upcomingEvents = events.filter(e => !e.fechaFin || e.fechaFin >= today)
+  const autoPassedEvents = events
+    .filter(e => e.fechaFin && e.fechaFin < today)
+    .map(e => ({ ...e, available: false, availabilityText: "Evento Realizado" }))
+  const allPastEvents = [...autoPassedEvents, ...pastEvents]
 
   return (
     <section className="py-12 sm:py-16 bg-muted/30 w-full" id="proximos-eventos">
@@ -731,7 +747,7 @@ export function Events() {
         </div>
 
         <div className="grid sm:grid-cols-2 gap-4 sm:gap-6 max-w-5xl mx-auto">
-          {events.map((event, index) => (
+          {upcomingEvents.map((event, index) => (
             <EventCard key={index} event={event} talleresActivos={talleresActivos} talleresMap={talleresMap} />
           ))}
         </div>
@@ -757,7 +773,7 @@ export function Events() {
             </div>
 
             <div className="grid sm:grid-cols-2 gap-4 sm:gap-6 max-w-5xl mx-auto">
-              {pastEvents.map((event, index) => (
+              {allPastEvents.map((event, index) => (
                 <EventCard key={index} event={event} talleresActivos={talleresActivos} talleresMap={talleresMap} />
               ))}
             </div>

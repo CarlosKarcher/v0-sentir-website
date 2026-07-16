@@ -21,6 +21,7 @@ export interface Event {
   tallerSlug?: string  // slug del taller en DB para inscripción
   tallerId?: string    // UUID del registro exacto en tabla talleres
   sede?: string        // ciudad/sede del taller (de sedes_sentir)
+  fechaFin?: string    // YYYY-MM-DD — último día del evento; si ya pasó se mueve automáticamente a Realizados
 }
 
 export interface WrittenTestimonial {

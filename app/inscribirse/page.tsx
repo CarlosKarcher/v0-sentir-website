@@ -30,7 +30,7 @@ const REQUISITOS_ESTRICTOS: Record<string, { campoDB: string; tallerNombre: stri
 const TALLERES_CAMPOS_FIJOS = new Set(["transformacion", "metas-y-logros"])
 
 // Estos talleres requieren que el participante esté registrado en la base de clientes
-const TALLERES_REQUIEREN_REGISTRO = new Set(["autoconocimiento", "transformacion", "metas-y-logros"])
+const TALLERES_REQUIEREN_REGISTRO = new Set(["transformacion", "metas-y-logros"])
 
 function InscribirseForm() {
   const searchParams = useSearchParams()

@@ -22,12 +22,14 @@ const getWhatsAppLink = (phoneNumber: string) => {
 // Talleres que requieren login obligatorio para inscribirse
 const TALLERES_REQUIEREN_LOGIN = new Set(["transformacion", "metas-y-logros"])
 
-function EventCard({ event, talleresActivos }: { event: Event, talleresActivos: Set<string> }) {
+function EventCard({ event, talleresActivos, talleresMap }: { event: Event, talleresActivos: Set<string>, talleresMap: Map<string, string> }) {
   const { estado } = useUser()
   const [loginOpen, setLoginOpen] = useState(false)
   const requiereLogin = TALLERES_REQUIEREN_LOGIN.has(event.tallerSlug || "")
+  // Resolver tallerId: usar el hardcodeado si existe, sino buscar por slug+sede en Supabase
+  const resolvedTallerId = event.tallerId || (event.tallerSlug && event.sede ? talleresMap.get(`${event.tallerSlug}|${event.sede}`) : undefined)
   // Tiene precio cargado si su tallerId está en la lista de activos, o si no tiene tallerSlug (no es inscribible)
-  const tienePrecio = !event.tallerSlug || (event.tallerId ? talleresActivos.has(event.tallerId) : false)
+  const tienePrecio = !event.tallerSlug || (resolvedTallerId ? talleresActivos.has(resolvedTallerId) : false)
   const [flyerOpen, setFlyerOpen] = useState(false)
   const [imageError, setImageError] = useState(false)
   const [imageSrc, setImageSrc] = useState(event.flyerImage || "/flyer-transformacion-rio-gallegos.jpg")
@@ -236,7 +238,7 @@ function EventCard({ event, talleresActivos }: { event: Event, talleresActivos: 
               </button>
             ) : estado === "registrado" ? (
               <a
-                href={`/inscribirse?taller=${event.tallerSlug}${event.tallerId ? `&id=${event.tallerId}` : ""}&localidad=${encodeURIComponent(event.sede || event.location)}&evento=${encodeURIComponent(`${event.title} — ${event.date} — ${event.location}`)}&back=proximos-eventos`}
+                href={`/inscribirse?taller=${event.tallerSlug}${resolvedTallerId ? `&id=${resolvedTallerId}` : ""}&localidad=${encodeURIComponent(event.sede || event.location)}&evento=${encodeURIComponent(`${event.title} — ${event.date} — ${event.location}`)}&back=proximos-eventos`}
                 className="flex items-center justify-center gap-2 w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-sm"
               >
                 <ClipboardList className="h-4 w-4" />
@@ -263,7 +265,7 @@ function EventCard({ event, talleresActivos }: { event: Event, talleresActivos: 
               </>
             ) : (
               <a
-                href={`/inscribirse?taller=${event.tallerSlug}${event.tallerId ? `&id=${event.tallerId}` : ""}&localidad=${encodeURIComponent(event.sede || event.location)}&evento=${encodeURIComponent(`${event.title} — ${event.date} — ${event.location}`)}&back=proximos-eventos`}
+                href={`/inscribirse?taller=${event.tallerSlug}${resolvedTallerId ? `&id=${resolvedTallerId}` : ""}&localidad=${encodeURIComponent(event.sede || event.location)}&evento=${encodeURIComponent(`${event.title} — ${event.date} — ${event.location}`)}&back=proximos-eventos`}
                 className="flex items-center justify-center gap-2 w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-sm"
               >
                 <ClipboardList className="h-4 w-4" />
@@ -303,16 +305,25 @@ function EventCard({ event, talleresActivos }: { event: Event, talleresActivos: 
 export function Events() {
   const [showHistory, setShowHistory] = useState(false)
   const [talleresActivos, setTalleresActivos] = useState<Set<string>>(new Set())
+  const [talleresMap, setTalleresMap] = useState<Map<string, string>>(new Map())
 
   useEffect(() => {
     const hoy = new Date().toISOString()
     supabase
       .from("talleres")
-      .select("id")
+      .select("id, slug, sede")
       .eq("activo", true)
       .gte("fecha_inicio", hoy)
       .then(({ data }) => {
-        if (Array.isArray(data)) setTalleresActivos(new Set(data.map((t: { id: string }) => t.id)))
+        if (Array.isArray(data)) {
+          setTalleresActivos(new Set(data.map((t: { id: string }) => t.id)))
+          const map = new Map<string, string>()
+          data.forEach((t: { id: string, slug: string, sede: string }) => {
+            const key = `${t.slug}|${t.sede}`
+            if (!map.has(key)) map.set(key, t.id)
+          })
+          setTalleresMap(map)
+        }
       })
   }, [])
 
@@ -594,7 +605,6 @@ export function Events() {
       flyerImageAlt: "/images/camino del guerrero 22-23 agosto rio gallegos.jpeg",
       contactPhone: "+54 9 2966 595803",
       tallerSlug: "camino-del-guerrero",
-      tallerId: "2fb63442-2ff8-4db0-ba8f-db8500fff673",
       sede: "Río Gallegos",
     },
     {
@@ -722,7 +732,7 @@ export function Events() {
 
         <div className="grid sm:grid-cols-2 gap-4 sm:gap-6 max-w-5xl mx-auto">
           {events.map((event, index) => (
-            <EventCard key={index} event={event} talleresActivos={talleresActivos} />
+            <EventCard key={index} event={event} talleresActivos={talleresActivos} talleresMap={talleresMap} />
           ))}
         </div>
 
@@ -748,7 +758,7 @@ export function Events() {
 
             <div className="grid sm:grid-cols-2 gap-4 sm:gap-6 max-w-5xl mx-auto">
               {pastEvents.map((event, index) => (
-                <EventCard key={index} event={event} talleresActivos={talleresActivos} />
+                <EventCard key={index} event={event} talleresActivos={talleresActivos} talleresMap={talleresMap} />
               ))}
             </div>
           </div>

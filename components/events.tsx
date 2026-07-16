@@ -591,8 +591,10 @@ export function Events() {
       availabilityText: "Cupos disponibles",
       hasFlyer: true,
       flyerImage: "/camino del guerrero 22-23 agosto rio gallegos.jpeg",
+      flyerImageAlt: "/images/camino del guerrero 22-23 agosto rio gallegos.jpeg",
       contactPhone: "+54 9 2966 595803",
       tallerSlug: "camino-del-guerrero",
+      tallerId: "2fb63442-2ff8-4db0-ba8f-db8500fff673",
       sede: "Río Gallegos",
     },
     {

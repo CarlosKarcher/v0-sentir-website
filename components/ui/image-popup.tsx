@@ -70,20 +70,30 @@ export function ImagePopup({ src, alt, isOpen, onClose }: ImagePopupProps) {
             <X className="h-5 w-5" />
           </Button>
           
-          {/* Imagen */}
+          {/* Imagen o Video */}
           <div className="relative flex items-center justify-center p-4">
-            <img
-              src={src}
-              alt={alt}
-              className="max-w-full max-h-[90vh] object-contain rounded-lg"
-              style={{ 
-                objectFit: "contain",
-                display: "block"
-              }}
-              onError={(e) => {
-                console.error("Error al cargar la imagen:", src)
-              }}
-            />
+            {src.toLowerCase().endsWith(".mp4") ? (
+              <video
+                src={src}
+                controls
+                autoPlay
+                className="max-w-full max-h-[90vh] rounded-lg"
+                style={{ display: "block" }}
+              />
+            ) : (
+              <img
+                src={src}
+                alt={alt}
+                className="max-w-full max-h-[90vh] object-contain rounded-lg"
+                style={{
+                  objectFit: "contain",
+                  display: "block"
+                }}
+                onError={(e) => {
+                  console.error("Error al cargar la imagen:", src)
+                }}
+              />
+            )}
           </div>
         </div>
       </div>

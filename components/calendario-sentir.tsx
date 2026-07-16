@@ -188,6 +188,14 @@ const CALENDAR_EVENTS: DayEvent[] = [
   { month: 7, day: 8, type: "myl", label: "MyL 7 - 1ra Sala." },
   { month: 7, day: 9, type: "myl", label: "MyL 7 - 1ra Sala." },
 
+  // Agosto — Camino del Guerrero Punta Arenas
+  { month: 7, day: 15, type: "guerrero", label: "Camino del Guerrero – Punta Arenas" },
+  { month: 7, day: 16, type: "guerrero", label: "Camino del Guerrero – Punta Arenas" },
+
+  // Agosto — Camino del Guerrero Río Gallegos
+  { month: 7, day: 22, type: "guerrero", label: "Camino del Guerrero – Río Gallegos" },
+  { month: 7, day: 23, type: "guerrero", label: "Camino del Guerrero – Río Gallegos" },
+
   // Agosto — MyL 7 · 2da Sala
   { month: 7, day: 29, type: "myl", label: "MyL 7 - 2da Sala." },
   { month: 7, day: 30, type: "myl", label: "MyL 7 - 2da Sala." },

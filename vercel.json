@@ -5,6 +5,10 @@
     {
       "path": "/api/ping-turnos",
       "schedule": "0 12 * * *"
+    },
+    {
+      "path": "/api/marcar-talleres-realizados",
+      "schedule": "0 9 * * *"
     }
   ]
 }

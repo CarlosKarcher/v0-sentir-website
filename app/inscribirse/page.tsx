@@ -707,16 +707,18 @@ function InscribirseForm() {
                 />
               </div>
             )}
-            <div className="space-y-1">
-              <label className="text-sm font-medium">Ciudad</label>
-              <input
-                type="text"
-                value={ciudad}
-                onChange={e => setCiudad(e.target.value)}
-                placeholder="Tu ciudad"
-                className={inputEditable}
-              />
-            </div>
+            {tallerSlug !== "constelaciones-grupales" && (
+              <div className="space-y-1">
+                <label className="text-sm font-medium">Ciudad</label>
+                <input
+                  type="text"
+                  value={ciudad}
+                  onChange={e => setCiudad(e.target.value)}
+                  placeholder="Tu ciudad"
+                  className={inputEditable}
+                />
+              </div>
+            )}
           </div>
 
           {/* Fecha de nacimiento */}

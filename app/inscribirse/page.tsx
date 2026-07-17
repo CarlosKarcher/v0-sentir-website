@@ -695,16 +695,18 @@ function InscribirseForm() {
 
           {/* DNI y Ciudad */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-1">
-              <label className="text-sm font-medium">DNI <span className="text-green-600">del Participante</span></label>
-              <input
-                type="text"
-                value={dni}
-                onChange={e => setDni(e.target.value)}
-                placeholder="Número de DNI"
-                className={inputEditable}
-              />
-            </div>
+            {tallerSlug !== "constelaciones-grupales" && (
+              <div className="space-y-1">
+                <label className="text-sm font-medium">DNI <span className="text-green-600">del Participante</span></label>
+                <input
+                  type="text"
+                  value={dni}
+                  onChange={e => setDni(e.target.value)}
+                  placeholder="Número de DNI"
+                  className={inputEditable}
+                />
+              </div>
+            )}
             <div className="space-y-1">
               <label className="text-sm font-medium">Ciudad</label>
               <input
@@ -718,15 +720,17 @@ function InscribirseForm() {
           </div>
 
           {/* Fecha de nacimiento */}
-          <div className="space-y-1">
-            <label className="text-sm font-medium">Fecha de nacimiento <span className="text-green-600">del Participante</span></label>
-            <input
-              type="date"
-              value={fechaNacimiento}
-              onChange={e => setFechaNacimiento(e.target.value)}
-              className={inputEditable}
-            />
-          </div>
+          {tallerSlug !== "constelaciones-grupales" && (
+            <div className="space-y-1">
+              <label className="text-sm font-medium">Fecha de nacimiento <span className="text-green-600">del Participante</span></label>
+              <input
+                type="date"
+                value={fechaNacimiento}
+                onChange={e => setFechaNacimiento(e.target.value)}
+                className={inputEditable}
+              />
+            </div>
+          )}
 
           {/* Campo especial Autoconocimiento */}
           {tallerSlug === "autoconocimiento" && (

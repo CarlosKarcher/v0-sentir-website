@@ -118,9 +118,13 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
       return
     }
     setGuardandoSede(true)
-    const maxOrden = sedes.length + 1
-    const { error } = await supabase.from("sedes_sentir").insert({ nombre, codigo_postal: codigo_postal || null, activo: true, orden: maxOrden })
-    if (error) { setConfirmDialog({ titulo: "Error al guardar", mensaje: error.message, tipo: "info" }); setGuardandoSede(false); return }
+    const { data, error } = await supabase.rpc("agregar_sede", {
+      p_admin_caracteristica: adminCaracteristica,
+      p_admin_numero: adminNumero,
+      p_nombre: nombre,
+      p_codigo_postal: codigo_postal || null,
+    })
+    if (error || data?.error) { setConfirmDialog({ titulo: "Error al guardar", mensaje: error?.message || data?.error, tipo: "info" }); setGuardandoSede(false); return }
     await cargarSedes()
     setAgregandoSede(false)
     setNuevaSede({ nombre: "", codigo_postal: "" })

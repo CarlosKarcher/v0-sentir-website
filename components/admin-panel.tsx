@@ -100,10 +100,31 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
   const [sedes, setSedes] = useState<string[]>([])
   const [pageFeesPagados, setPageFeesPagados] = useState<Set<string>>(new Set())
   const [toggleandoPageFee, setToggleandoPageFee] = useState(false)
+  const [agregandoSede, setAgregandoSede] = useState(false)
+  const [nuevaSede, setNuevaSede] = useState({ nombre: "", codigo_postal: "" })
+  const [guardandoSede, setGuardandoSede] = useState(false)
 
   const cargarSedes = async () => {
     const { data } = await supabase.from("sedes_sentir").select("nombre").eq("activo", true).order("orden")
     if (Array.isArray(data)) setSedes(data.map((s: { nombre: string }) => s.nombre))
+  }
+
+  const guardarNuevaSede = async () => {
+    const nombre = nuevaSede.nombre.trim()
+    const codigo_postal = nuevaSede.codigo_postal.trim()
+    if (!nombre) { setConfirmDialog({ titulo: "Falta nombre", mensaje: "Ingresá el nombre de la sede.", tipo: "info" }); return }
+    if (sedes.map(s => s.toLowerCase()).includes(nombre.toLowerCase())) {
+      setConfirmDialog({ titulo: "Sede ya existe", mensaje: `La sede "${nombre}" ya está registrada.`, tipo: "info" })
+      return
+    }
+    setGuardandoSede(true)
+    const maxOrden = sedes.length + 1
+    const { error } = await supabase.from("sedes_sentir").insert({ nombre, codigo_postal: codigo_postal || null, activo: true, orden: maxOrden })
+    if (error) { setConfirmDialog({ titulo: "Error al guardar", mensaje: error.message, tipo: "info" }); setGuardandoSede(false); return }
+    await cargarSedes()
+    setAgregandoSede(false)
+    setNuevaSede({ nombre: "", codigo_postal: "" })
+    setGuardandoSede(false)
   }
 
   const cargarInscripciones = async () => {
@@ -721,11 +742,51 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                 {/* Tab Precios */}
                 {!cargando && inscripcionesTab === "precios" && (
                   <div className="space-y-3">
-                    <div className="flex justify-end">
+                    <div className="flex justify-end gap-2">
+                      <Button size="sm" variant="outline" onClick={() => setAgregandoSede(true)} className="gap-2">
+                        + Agregar sede
+                      </Button>
                       <Button size="sm" onClick={() => setAgregandoTaller(true)} disabled={agregandoTaller} className="gap-2">
                         + Agregar taller
                       </Button>
                     </div>
+
+                    {/* Modal agregar sede */}
+                    {agregandoSede && (
+                      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+                        <div className="bg-background rounded-lg shadow-xl p-6 w-full max-w-sm space-y-4">
+                          <h3 className="font-semibold text-lg">Agregar sede</h3>
+                          <div className="space-y-3">
+                            <div>
+                              <label className="text-sm font-medium">Nombre de la sede</label>
+                              <input
+                                className="mt-1 w-full border rounded px-3 py-2 text-sm"
+                                placeholder="Ej: El Calafate"
+                                value={nuevaSede.nombre}
+                                onChange={e => setNuevaSede(p => ({ ...p, nombre: e.target.value }))}
+                              />
+                            </div>
+                            <div>
+                              <label className="text-sm font-medium">Código postal</label>
+                              <input
+                                className="mt-1 w-full border rounded px-3 py-2 text-sm"
+                                placeholder="Ej: 9405"
+                                value={nuevaSede.codigo_postal}
+                                onChange={e => setNuevaSede(p => ({ ...p, codigo_postal: e.target.value }))}
+                              />
+                            </div>
+                          </div>
+                          <div className="flex justify-end gap-2 pt-2">
+                            <Button size="sm" variant="outline" onClick={() => { setAgregandoSede(false); setNuevaSede({ nombre: "", codigo_postal: "" }) }}>
+                              Cancelar
+                            </Button>
+                            <Button size="sm" disabled={guardandoSede} onClick={guardarNuevaSede}>
+                              {guardandoSede ? "Guardando..." : "Guardar"}
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                     {talleresList.length === 0 ? (
                       <p className="text-center text-muted-foreground py-8">Cargando talleres...</p>
                     ) : (

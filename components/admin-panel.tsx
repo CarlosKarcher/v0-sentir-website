@@ -189,6 +189,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
 
   const cerrarTaller = async (tallerSlug: string, sede: string, fechaInicio: string) => {
     setCerrandoTaller(true)
+    setConfirmDialog(null)
     await supabase.rpc("cerrar_taller", {
       p_admin_caracteristica: adminCaracteristica,
       p_admin_numero: adminNumero,
@@ -197,6 +198,10 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
       p_fecha_inicio: fechaInicio,
     })
     await cargarTalleresCerrados()
+    setFiltroTallerSlug("")
+    setFiltroSede("")
+    setFiltroFechaInicio("")
+    await cargarInscripciones()
     setCerrandoTaller(false)
   }
 

@@ -1202,7 +1202,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                             <Button
                               size="sm"
                               variant="outline"
-                              className="gap-1.5 border-purple-400 text-purple-700 dark:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-950/30"
+                              className="gap-1.5 border-purple-400 text-purple-700 dark:text-purple-300 hover:bg-purple-50 hover:text-purple-700 dark:hover:bg-purple-950/30 dark:hover:text-purple-300"
                               disabled={cerrandoTaller}
                               onClick={() => {
                                 setConfirmDialog({

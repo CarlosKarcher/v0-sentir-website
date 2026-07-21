@@ -1307,13 +1307,19 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                 })()}
 
                 {!cargando && inscripcionesTab === "morosos" && (() => {
+                  const morososVistos = new Set<string>()
                   const morosos = inscripciones.filter(i => {
                     if (!i.taller_fecha_inicio) return false
                     const key = `${i.taller_slug}|${i.localidad_taller ?? ""}|${i.taller_fecha_inicio.substring(0, 10)}`
                     if (!talleresCerrados.has(key)) return false
                     const precio = i.precio_inscripto ?? i.taller_precio ?? 0
                     const pagado = i.monto_pagado ?? 0
-                    return i.estado === "pendiente" && precio > 0 && pagado < precio
+                    if (!(i.estado === "pendiente" && precio > 0 && pagado < precio)) return false
+                    const persona = i.email?.toLowerCase().trim() || `${i.nombre?.toLowerCase().trim()}|${i.apellido?.toLowerCase().trim()}`
+                    const dedupKey = `${persona}|${i.taller_slug}|${i.taller_fecha_inicio.substring(0, 10)}`
+                    if (morososVistos.has(dedupKey)) return false
+                    morososVistos.add(dedupKey)
+                    return true
                   }).sort((a, b) => {
                     const orden: Record<string, number> = { pendiente: 0, confirmado: 1, cancelado: 2 }
                     return (orden[a.estado] ?? 3) - (orden[b.estado] ?? 3)

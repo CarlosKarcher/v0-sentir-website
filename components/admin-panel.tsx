@@ -1247,20 +1247,13 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                 {/* Tab Morosos */}
                 {/* Tab Históricos */}
                 {!cargando && inscripcionesTab === "historicos" && (() => {
-                  const historicosRaw = inscripciones.filter(i => {
+                  const historicos = inscripciones.filter(i => {
                     if (!i.taller_fecha_inicio) return false
                     const key = `${i.taller_slug}|${i.localidad_taller ?? ""}|${i.taller_fecha_inicio.substring(0, 10)}`
                     if (!talleresCerrados.has(key)) return false
                     const precio = i.precio_inscripto ?? i.taller_precio ?? 0
                     const pagado = i.monto_pagado ?? 0
                     return i.estado === "confirmado" && pagado >= precio
-                  })
-                  const vistosHistoricos = new Set<string>()
-                  const historicos = historicosRaw.filter(i => {
-                    const pk = i.email?.toLowerCase().trim() || `${i.nombre?.toLowerCase().trim()}|${i.apellido?.toLowerCase().trim()}`
-                    if (vistosHistoricos.has(pk)) return false
-                    vistosHistoricos.add(pk)
-                    return true
                   })
                   // Agrupar por taller para mostrar totales
                   const porTaller = historicos.reduce((acc, i) => {
@@ -1314,7 +1307,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                 })()}
 
                 {!cargando && inscripcionesTab === "morosos" && (() => {
-                  const morososTodos = inscripciones.filter(i => {
+                  const morosos = inscripciones.filter(i => {
                     if (!i.taller_fecha_inicio) return false
                     const key = `${i.taller_slug}|${i.localidad_taller ?? ""}|${i.taller_fecha_inicio.substring(0, 10)}`
                     if (!talleresCerrados.has(key)) return false
@@ -1324,13 +1317,6 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                   }).sort((a, b) => {
                     const orden: Record<string, number> = { pendiente: 0, confirmado: 1, cancelado: 2 }
                     return (orden[a.estado] ?? 3) - (orden[b.estado] ?? 3)
-                  })
-                  const vistosMorosos = new Set<string>()
-                  const morosos = morososTodos.filter(i => {
-                    const pk = i.email?.toLowerCase().trim() || `${i.nombre?.toLowerCase().trim()}|${i.apellido?.toLowerCase().trim()}`
-                    if (vistosMorosos.has(pk)) return false
-                    vistosMorosos.add(pk)
-                    return true
                   })
                   const totalDeuda = morosos.reduce((acc, i) => {
                     const precio = i.precio_inscripto ?? i.taller_precio ?? 0

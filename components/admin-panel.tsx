@@ -1211,10 +1211,10 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                               disabled={cerrandoTaller}
                               onClick={() => {
                                 setConfirmDialog({
-                                  titulo: "Cerrar taller",
-                                  mensaje: `¿Confirmás el cierre del taller? Los confirmados con saldo $0 pasarán a Históricos y los pendientes con saldo > $0 pasarán a Morosos.`,
+                                  titulo: "¿Cerrás el taller?",
+                                  mensaje: `Esta acción es permanente y no se puede deshacer. El taller quedará cerrado y no podrá reabrirse.`,
                                   tipo: "confirm",
-                                  textoConfirmar: "Sí, cerrar",
+                                  textoConfirmar: "Cerrar taller",
                                   onConfirm: () => cerrarTaller(filtroTallerSlug, filtroSede, filtroFechaInicio),
                                 })
                               }}

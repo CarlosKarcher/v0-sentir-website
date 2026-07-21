@@ -96,10 +96,12 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
   const [agregandoTaller, setAgregandoTaller] = useState(false)
   const [nuevoTaller, setNuevoTaller] = useState({ slug: "", nombre: "", sede: "", precio: "", descuento_tipo: "" as "porcentaje" | "monto_fijo" | "", descuento_valor: "", descuento_hasta: "", fecha_inicio: "" })
   const [accionInscripcion, setAccionInscripcion] = useState<string | null>(null) // inscripcion id en proceso
-  const [confirmDialog, setConfirmDialog] = useState<{ titulo: string; mensaje: string; tipo: "confirm" | "info"; onConfirm?: () => void } | null>(null)
+  const [confirmDialog, setConfirmDialog] = useState<{ titulo: string; mensaje: string; tipo: "confirm" | "info"; textoConfirmar?: string; onConfirm?: () => void } | null>(null)
   const [sedes, setSedes] = useState<string[]>([])
   const [pageFeesPagados, setPageFeesPagados] = useState<Set<string>>(new Set())
   const [toggleandoPageFee, setToggleandoPageFee] = useState(false)
+  const [talleresCerrados, setTalleresCerrados] = useState<Set<string>>(new Set())
+  const [cerrandoTaller, setCerrandoTaller] = useState(false)
   const [agregandoSede, setAgregandoSede] = useState(false)
   const [nuevaSede, setNuevaSede] = useState({ nombre: "", codigo_postal: "" })
   const [guardandoSede, setGuardandoSede] = useState(false)
@@ -173,6 +175,29 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
     if (Array.isArray(data)) {
       setPageFeesPagados(new Set(data.map((r: { taller_slug: string; sede: string; fecha_inicio: string }) => `${r.taller_slug}:${r.sede}:${r.fecha_inicio.substring(0, 10)}`)))
     }
+  }
+
+  const cargarTalleresCerrados = async () => {
+    const { data } = await supabase.rpc("listar_talleres_cerrados", {
+      p_admin_caracteristica: adminCaracteristica,
+      p_admin_numero: adminNumero,
+    })
+    if (Array.isArray(data)) {
+      setTalleresCerrados(new Set(data.map((r: { taller_slug: string; sede: string; fecha_inicio: string }) => `${r.taller_slug}|${r.sede}|${r.fecha_inicio.substring(0, 10)}`)))
+    }
+  }
+
+  const cerrarTaller = async (tallerSlug: string, sede: string, fechaInicio: string) => {
+    setCerrandoTaller(true)
+    await supabase.rpc("cerrar_taller", {
+      p_admin_caracteristica: adminCaracteristica,
+      p_admin_numero: adminNumero,
+      p_taller_slug: tallerSlug,
+      p_sede: sede,
+      p_fecha_inicio: fechaInicio,
+    })
+    await cargarTalleresCerrados()
+    setCerrandoTaller(false)
   }
 
   const togglePageFeePagado = async (tallerSlug: string, sede: string, fechaInicio: string) => {
@@ -376,6 +401,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
       if (talleresList.length === 0) cargarTalleres()
       if (sedes.length === 0) cargarSedes()
       cargarPageFeesPagados()
+      cargarTalleresCerrados()
     }
     if (v === "realizados" && inscripcionesRealizadas.length === 0) cargarInscripcionesRealizadas()
     if (v === "miembros" && miembros.length === 0) cargarMiembros()
@@ -384,7 +410,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
   }
 
   const recargar = () => {
-    if (vista === "inscripciones") { cargarInscripciones(); cargarTalleres(); cargarPageFeesPagados() }
+    if (vista === "inscripciones") { cargarInscripciones(); cargarTalleres(); cargarPageFeesPagados(); cargarTalleresCerrados() }
     if (vista === "realizados") cargarInscripcionesRealizadas()
     if (vista === "miembros" || vista === "taller") cargarMiembros()
     if (vista === "nomembros") cargarNomembros()
@@ -1071,7 +1097,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                   inscripciones.forEach(i => {
                     const fecha = (i.taller_fecha_inicio ?? "").substring(0, 10)
                     const key = `${i.taller_slug}|${i.localidad_taller ?? ""}|${fecha}`
-                    if (!combosMap.has(key)) combosMap.set(key, { slug: i.taller_slug, nombre: i.taller_nombre, sede: i.localidad_taller ?? "", fecha })
+                    if (!combosMap.has(key) && !talleresCerrados.has(key)) combosMap.set(key, { slug: i.taller_slug, nombre: i.taller_nombre, sede: i.localidad_taller ?? "", fecha })
                   })
                   const combos = Array.from(combosMap.entries()).sort((a, b) => a[1].nombre.localeCompare(b[1].nombre) || a[1].fecha.localeCompare(b[1].fecha))
                   const comboActual = filtroTallerSlug ? `${filtroTallerSlug}|${filtroSede}|${filtroFechaInicio}` : ""
@@ -1167,6 +1193,31 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                         <Button size="sm" variant="outline" className="gap-1.5" onClick={() => exportarCSVInscripciones(filtradas)}>
                           <Download className="h-4 w-4" /> Exportar CSV
                         </Button>
+                        {filtroTallerSlug && (() => {
+                          const limite = new Date(filtroFechaInicio)
+                          limite.setDate(limite.getDate() + 2)
+                          const yaRealizado = new Date() > limite
+                          if (!yaRealizado) return null
+                          return (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="gap-1.5 border-purple-400 text-purple-700 dark:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-950/30"
+                              disabled={cerrandoTaller}
+                              onClick={() => {
+                                setConfirmDialog({
+                                  titulo: "Cerrar taller",
+                                  mensaje: `¿Confirmás el cierre del taller? Los confirmados con saldo $0 pasarán a Históricos y los pendientes con saldo > $0 pasarán a Morosos.`,
+                                  tipo: "confirm",
+                                  textoConfirmar: "Sí, cerrar",
+                                  onConfirm: () => cerrarTaller(filtroTallerSlug, filtroSede, filtroFechaInicio),
+                                })
+                              }}
+                            >
+                              Cerrar taller
+                            </Button>
+                          )
+                        })()}
                       </div>
 
                       {filtradas.length === 0 ? (
@@ -1191,11 +1242,13 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                 {/* Tab Morosos */}
                 {/* Tab Históricos */}
                 {!cargando && inscripcionesTab === "historicos" && (() => {
-                  const hoy = new Date().toISOString().substring(0, 10)
                   const historicos = inscripciones.filter(i => {
                     if (!i.taller_fecha_inicio) return false
-                    const fecha = i.taller_fecha_inicio.substring(0, 10)
-                    return fecha < hoy
+                    const key = `${i.taller_slug}|${i.localidad_taller ?? ""}|${i.taller_fecha_inicio.substring(0, 10)}`
+                    if (!talleresCerrados.has(key)) return false
+                    const precio = i.precio_inscripto ?? i.taller_precio ?? 0
+                    const pagado = i.monto_pagado ?? 0
+                    return i.estado === "confirmado" && pagado >= precio
                   })
                   // Agrupar por taller para mostrar totales
                   const porTaller = historicos.reduce((acc, i) => {
@@ -1249,15 +1302,13 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                 })()}
 
                 {!cargando && inscripcionesTab === "morosos" && (() => {
-                  const hoy = new Date()
                   const morosos = inscripciones.filter(i => {
                     if (!i.taller_fecha_inicio) return false
-                    const fechaTaller = new Date(i.taller_fecha_inicio)
-                    fechaTaller.setDate(fechaTaller.getDate() + 2)
-                    if (fechaTaller >= hoy) return false
+                    const key = `${i.taller_slug}|${i.localidad_taller ?? ""}|${i.taller_fecha_inicio.substring(0, 10)}`
+                    if (!talleresCerrados.has(key)) return false
                     const precio = i.precio_inscripto ?? i.taller_precio ?? 0
                     const pagado = i.monto_pagado ?? 0
-                    return precio > 0 && pagado < precio && i.estado !== "cancelado"
+                    return i.estado === "pendiente" && precio > 0 && pagado < precio
                   }).sort((a, b) => {
                     const orden: Record<string, number> = { pendiente: 0, confirmado: 1, cancelado: 2 }
                     return (orden[a.estado] ?? 3) - (orden[b.estado] ?? 3)
@@ -1451,7 +1502,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
               {confirmDialog.tipo === "confirm" ? (
                 <>
                   <Button variant="outline" onClick={() => setConfirmDialog(null)}>Cancelar</Button>
-                  <Button variant="destructive" onClick={confirmDialog.onConfirm}>Sí, eliminar</Button>
+                  <Button variant="destructive" onClick={() => { setConfirmDialog(null); confirmDialog.onConfirm?.() }}>{confirmDialog.textoConfirmar ?? "Sí, eliminar"}</Button>
                 </>
               ) : (
                 <Button variant="outline" onClick={() => setConfirmDialog(null)}>Cerrar</Button>

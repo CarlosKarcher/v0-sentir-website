@@ -230,6 +230,12 @@ const CALENDAR_EVENTS: DayEvent[] = [
   { month: 11, day: 4, type: "autoconocimiento", label: "Autocon. – CABA" },
   { month: 11, day: 5, type: "autoconocimiento", label: "Autocon. – CABA" },
   { month: 11, day: 6, type: "autoconocimiento", label: "Autocon. – CABA" },
+
+  // Diciembre — Transformación Río Gallegos
+  { month: 11, day: 10, type: "transformacion", label: "Transfor. – Río Gallegos" },
+  { month: 11, day: 11, type: "transformacion", label: "Transfor. – Río Gallegos" },
+  { month: 11, day: 12, type: "transformacion", label: "Transfor. – Río Gallegos" },
+  { month: 11, day: 13, type: "transformacion", label: "Transfor. – Río Gallegos" },
 ]
 
 function getFirstWeekday(year: number, month: number): number {

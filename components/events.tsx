@@ -309,11 +309,12 @@ export function Events() {
 
   useEffect(() => {
     const hoy = new Date().toISOString()
+    const hoyFecha = hoy.split("T")[0]
     supabase
       .from("talleres")
       .select("id, slug, sede")
       .eq("activo", true)
-      .gte("fecha_inicio", hoy)
+      .or(`fecha_inicio.gte.${hoy},fecha_fin.gte.${hoyFecha}`)
       .then(({ data }) => {
         if (Array.isArray(data)) {
           setTalleresActivos(new Set(data.map((t: { id: string }) => t.id)))

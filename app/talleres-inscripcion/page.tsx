@@ -32,11 +32,13 @@ export default function TalleresInscripcionPage() {
   const [cargando, setCargando] = useState(true)
 
   useEffect(() => {
+    const ahora = new Date().toISOString()
+    const hoy = ahora.split("T")[0]
     supabase
       .from("talleres")
       .select("id, slug, nombre, fecha_inicio, sede")
       .eq("activo", true)
-      .gte("fecha_inicio", new Date().toISOString())
+      .or(`fecha_inicio.gte.${ahora},fecha_fin.gte.${hoy}`)
       .order("fecha_inicio")
       .then(({ data }) => {
         if (Array.isArray(data)) setTalleres(data)

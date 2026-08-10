@@ -662,6 +662,8 @@ export function Events() {
       availabilityText: "Cupos disponibles",
       hasFlyer: false,
       contactPhone: "+54 9 2966 595803",
+      tallerSlug: "constelaciones-grupales",
+      sede: "Río Gallegos",
       fechaInicio: "2026-08-31",
       fechaFin: "2026-08-31",
     },

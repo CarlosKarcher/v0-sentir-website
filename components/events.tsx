@@ -653,9 +653,10 @@ export function Events() {
     },
     {
       title: "Constelaciones Familiares Abiertas.",
+      subtitle: "Henry William Jamieson 547 - Quincho Jubi Legislativos",
       date: "31 de Agosto 2026",
-      time: "Inicio: Lunes 31 de Agosto, 15:00 Horas",
-      location: "Henry William Jamieson 547 - Quincho Jubi Legislativos — Río Gallegos",
+      time: "15:00 Horas",
+      location: "Río Gallegos",
       type: "Otro Taller",
       available: true,
       availabilityText: "Cupos disponibles",

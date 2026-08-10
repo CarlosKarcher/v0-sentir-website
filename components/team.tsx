@@ -198,40 +198,7 @@ export function Team() {
             </Card>
           ))}
 
-          {/* Cromoterapia - Despertar Lunar (mismo tamaño que los cuadros del equipo) */}
-          <Card className="overflow-hidden hover:shadow-lg transition-shadow">
-            <div className="aspect-square overflow-hidden flex justify-center items-center bg-muted">
-              <video
-                src="/cromoterapia-despertar-lunar.mp4"
-                controls
-                autoPlay
-                muted
-                loop
-                className="w-full h-full object-cover"
-                preload="metadata"
-                playsInline
-              >
-                Tu navegador no soporta el video.
-              </video>
-            </div>
-            <CardContent className="pt-6">
-              <p className="text-xs sm:text-sm text-foreground mb-3 text-pretty">
-                <span className="text-base sm:text-lg font-semibold text-black">Cromoterapia:</span> Espacio Energético dónde el uso del color en conjunto con los cristales, promueven un estado de bienestar general.
-              </p>
-              <p className="text-xs text-muted-foreground mb-4">
-                <span className="font-semibold text-foreground">Lugar:</span> Centro Holístico &quot;Despertar Lunar&quot; — Patagones 230 — <span className="text-base sm:text-lg font-bold text-black">Terapeuta: Karina Martínez</span>.
-              </p>
-              <a
-                href="https://wa.me/5492966556444"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
-                aria-label="WhatsApp contacto Cromoterapia"
-              >
-                <Phone className="h-5 w-5" />
-              </a>
-            </CardContent>
-          </Card>
+
         </div>
         
         {/* Pop-up de imagen */}

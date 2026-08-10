@@ -1300,6 +1300,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                           onActualizarMonto={actualizarMontoPagado}
                           onActualizarPrecio={actualizarPrecioInscripto}
                           onEnviarEmailPago={enviarEmailPago}
+                          esHistorico={true}
                         />
                       )}
                     </div>
@@ -1558,6 +1559,7 @@ function TablaInscripciones({
   onEnviarEmailPago: (ins: InscripcionConTaller, tipo: "parcial" | "confirmado", montoPagado: number) => Promise<void>
   pageFeePagado?: boolean
   modoMoroso?: boolean
+  esHistorico?: boolean
 }) {
   const [montosEdit, setMontosEdit] = useState<Record<string, string>>({})
   const [guardandoMonto, setGuardandoMonto] = useState<string | null>(null)
@@ -1724,10 +1726,14 @@ function TablaInscripciones({
                 <div className="flex flex-col items-center gap-1">
                   <div className="flex items-center gap-2">
                     <Check className="h-6 w-6 text-green-400" />
-                    <span className="text-green-400 text-xl font-extrabold tracking-wide">Tu lugar está CONFIRMADO</span>
+                    <span className="text-green-400 text-xl font-extrabold tracking-wide">
+                      {esHistorico ? "TALLER REALIZADO con Éxito" : "Tu lugar está CONFIRMADO"}
+                    </span>
                     <Check className="h-6 w-6 text-green-400" />
                   </div>
-                  <p className="text-white text-lg font-semibold">¡Te esperamos!</p>
+                  <p className="text-white text-lg font-semibold">
+                    {esHistorico ? "¡Todo abonado!" : "¡Te esperamos!"}
+                  </p>
                 </div>
 
                 {/* Fecha inicio */}

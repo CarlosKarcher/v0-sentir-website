@@ -1548,6 +1548,7 @@ function TablaInscripciones({
   onEnviarEmailPago,
   pageFeePagado,
   modoMoroso,
+  esHistorico,
 }: {
   inscripciones: InscripcionConTaller[]
   accionInscripcion: string | null

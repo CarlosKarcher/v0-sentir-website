@@ -71,27 +71,6 @@ const team = [
     phone: "5492966232480",
   },
   {
-    name: "Jimena Natalia Catrihuala",
-    role: "Terapias Holísticas - Master Reiki - Masajista Profesional.",
-    specialties: ["Staff de Sentir"],
-    image: "/Jimena-Catrihuala.jpeg",
-    phone: "5492966520362",
-  },
-  {
-    name: "Karina Martinez",
-    role: "Terapias Energéticas - Munay Ki - Reiki - Péndulo - Reconstrucción del Alma - Herbolaría",
-    specialties: [],
-    image: "/Karina-Martinez.jpeg",
-    phone: "5492966556444",
-  },
-  {
-    name: "Sofía Martín",
-    role: "Reiki usui - Limpieza Energética con Péndulo",
-    specialties: ["Staff de Sentir"],
-    image: "/sofy-06-2026.jpeg",
-    phone: "5492966714217",
-  },
-  {
     name: "Carla Duarte",
     role: "Terapeuta Holística.",
     specialties: [

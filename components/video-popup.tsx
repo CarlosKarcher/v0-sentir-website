@@ -55,7 +55,7 @@ export function VideoPopup() {
 
           <video
             ref={videoRef}
-            src="/inicio-myl-7.mp4"
+            src="/camino-del-guerrero-general.mp4"
             playsInline
             controls
             preload="auto"

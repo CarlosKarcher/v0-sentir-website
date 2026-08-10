@@ -26,32 +26,22 @@ export function Merchandising() {
         </div>
 
         <div className="flex flex-col justify-center items-center gap-4">
-          <div 
-            className="relative inline-block cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-lg rounded-lg overflow-hidden group"
-            onClick={handleButtonClick}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault()
-                handleButtonClick()
-              }
-            }}
-            aria-label="Ingresar a la Tienda"
+          <div
+            className="relative inline-block cursor-not-allowed rounded-lg overflow-hidden opacity-60"
+            aria-disabled="true"
           >
             <img
               src="/logo-tienda-Sentir.jpeg"
-              alt="Logo Tienda Sentir - Click para ingresar"
-              className="object-contain transition-opacity duration-300 group-hover:opacity-90"
+              alt="Logo Tienda Sentir"
+              className="object-contain"
               style={{ width: "8cm", height: "10cm" }}
             />
-            {/* Indicador visual de que es clickeable */}
-            <div className="absolute bottom-2 right-2 bg-primary text-primary-foreground rounded-full p-2 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            {/* Indicador de no disponible */}
+            <div className="absolute bottom-2 right-2 bg-gray-400 text-white rounded-full p-2 shadow-lg">
               <ArrowRight className="h-5 w-5" />
             </div>
-            {/* Borde sutil al hover */}
-            <div className="absolute inset-0 border-2 border-primary opacity-0 group-hover:opacity-50 transition-opacity duration-300 rounded-lg pointer-events-none"></div>
           </div>
+          <p className="text-sm text-muted-foreground mt-2">Próximamente disponible</p>
           
         </div>
       </div>

@@ -84,18 +84,6 @@ const team = [
     instagram: "https://www.instagram.com/carladu_arte/",
   },
   {
-    name: "Fabiola Mancilla Gallego / Sandro Brown",
-    role: "Creadores de Papeleria Artesanal y Objetos con intención.",
-    specialties: [],
-    image: "/foto-faby-sandro.jpeg",
-    phones: [
-      { name: "Faby", phone: "542966540082" },
-      { name: "Sandro", phone: "542966489050" },
-    ],
-    facebook: "https://www.facebook.com/share/1C1sBzAUB7/",
-    instagram: "https://www.instagram.com/fabyBrown",
-  },
-  {
     name: "Karen Romero",
     role: "Community Manager • Marketing Digital • Creación de Contenido Audiovisual • Filmación y Edición de Videos • Cosmetóloga y Maquilladora Profesional",
     specialties: [],

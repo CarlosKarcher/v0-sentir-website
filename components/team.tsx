@@ -92,6 +92,13 @@ const team = [
     instagram: "https://www.instagram.com/kbeautyskinstudio/",
     imageFit: "contain",
   },
+  {
+    name: "Lucia \"Loly\" Tamiozzo",
+    role: "Community Manager, Creadora de contenido, Marketing Digital y Ventas, Diseño Digital en Imágenes, Grabación y Edición de Videos, Asesorías en Redes Sociales y E-Commerce",
+    specialties: [],
+    image: "/Loly.jpeg",
+    phones: [],
+  },
 ]
 
 export function Team() {

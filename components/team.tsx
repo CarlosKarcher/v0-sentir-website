@@ -99,6 +99,13 @@ const team = [
     image: "/Loly.jpeg",
     phones: [],
   },
+  {
+    name: "Ximena Medina",
+    role: "Terapeuta Holística",
+    specialties: ["Reiki y Péndulo Evolutivo"],
+    image: "/Xime Medina.jpeg",
+    phones: [],
+  },
 ]
 
 export function Team() {

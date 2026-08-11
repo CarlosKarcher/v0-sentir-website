@@ -97,14 +97,14 @@ const team = [
     role: "Community Manager, Creadora de contenido, Marketing Digital y Ventas, Diseño Digital en Imágenes, Grabación y Edición de Videos, Asesorías en Redes Sociales y E-Commerce",
     specialties: [],
     image: "/Loly.jpeg",
-    phones: [],
+    phone: "5492966515683",
   },
   {
     name: "Ximena Medina",
     role: "Terapeuta Holística",
     specialties: ["Reiki y Péndulo Evolutivo"],
     image: "/Xime Medina.jpeg",
-    phones: [],
+    phone: "5492966707629",
   },
 ]
 

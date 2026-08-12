@@ -96,7 +96,7 @@ const team = [
     name: "Lucia \"Loly\" Tamiozzo",
     role: "Community Manager, Creadora de contenido, Marketing Digital y Ventas, Diseño Digital en Imágenes, Grabación y Edición de Videos, Asesorías en Redes Sociales y E-Commerce",
     specialties: [],
-    image: "/Loly 2.jpeg",
+    image: "/Loly 3.jpeg",
     phones: [{ name: "Loly", phone: "5492966515683" }],
     instagram: "https://www.instagram.com/loly.tamiozzo?igsh=MTAza2RrbXMzNzNzaQ==",
   },

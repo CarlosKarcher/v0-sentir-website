@@ -79,6 +79,12 @@ const EVENT_TYPES: Record<string, EventTypeConfig> = {
     dotBg: "bg-yellow-400",
     label: "Feria Sentir",
   },
+  constelaciones: {
+    bg: "bg-rose-600",
+    text: "text-white",
+    dotBg: "bg-rose-600",
+    label: "Constelaciones Familiares",
+  },
 }
 
 type EventType = keyof typeof EVENT_TYPES
@@ -195,6 +201,9 @@ const CALENDAR_EVENTS: DayEvent[] = [
   { month: 7, day: 15, type: "guerrero", label: "Camino del Guerrero – Punta Arenas" },
   { month: 7, day: 16, type: "guerrero", label: "Camino del Guerrero – Punta Arenas" },
 
+
+  // Agosto — Constelaciones Familiares Río Gallegos
+  { month: 7, day: 28, type: "constelaciones", label: "Constelaciones Familiares – Río Gallegos" },
 
   // Agosto — MyL 7 · 2da Sala
   { month: 7, day: 29, type: "myl", label: "MyL 7 - 2da Sala." },

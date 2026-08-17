@@ -637,7 +637,7 @@ export function Events() {
     {
       title: "Constelaciones Familiares Abiertas.",
       subtitle: "Río Gallegos",
-      date: "31 de Agosto 2026",
+      date: "28 de Agosto 2026",
       time: "15:00 Horas",
       location: "Henry William Jamieson 547 - Quincho Jubi Legislativos",
       type: "Otro Taller",
@@ -647,8 +647,8 @@ export function Events() {
       contactPhone: "+54 9 2966 595803",
       tallerSlug: "constelaciones-grupales",
       sede: "Río Gallegos",
-      fechaInicio: "2026-08-31",
-      fechaFin: "2026-08-31",
+      fechaInicio: "2026-08-28",
+      fechaFin: "2026-08-28",
     },
     {
       title: "Taller de Autoconocimiento - Río Gallegos",

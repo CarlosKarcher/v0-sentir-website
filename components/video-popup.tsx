@@ -55,7 +55,7 @@ export function VideoPopup() {
 
           <video
             ref={videoRef}
-            src="/camino del guerrero general.mp4"
+            src="/Guerrero-punta-arenas-agosto-2026.mp4"
             playsInline
             controls
             preload="auto"

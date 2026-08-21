@@ -214,6 +214,11 @@ const CALENDAR_EVENTS: DayEvent[] = [
   { month: 8, day: 12, type: "autoconocimiento", label: "Autocon. – Río Gallegos" },
   { month: 8, day: 13, type: "autoconocimiento", label: "Autocon. – Río Gallegos" },
 
+  // Septiembre — Autoconocimiento Punta Arenas
+  { month: 8, day: 25, type: "autoconocimiento", label: "Autocon. – Punta Arenas" },
+  { month: 8, day: 26, type: "autoconocimiento", label: "Autocon. – Punta Arenas" },
+  { month: 8, day: 27, type: "autoconocimiento", label: "Autocon. – Punta Arenas" },
+
   // Octubre — Autoconocimiento El Calafate
   { month: 9, day: 9, type: "autoconocimiento", label: "Autocon. – El Calafate" },
   { month: 9, day: 10, type: "autoconocimiento", label: "Autocon. – El Calafate" },

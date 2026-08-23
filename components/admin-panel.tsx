@@ -1151,7 +1151,10 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                               </option>
                             ))}
                           </select>
-                          <span className="text-xs text-muted-foreground whitespace-nowrap">{filtradas.length} inscripciones</span>
+                          <div className="flex flex-col whitespace-nowrap">
+                            <span className="text-xs text-muted-foreground">{filtradas.length} inscripciones</span>
+                            <span className="text-xs text-muted-foreground">{filtradas.filter(i => !i.abandono).length} activos</span>
+                          </div>
                         </div>
                         <span className="text-xs text-muted-foreground flex items-center gap-2 flex-wrap">
                           {"  "}

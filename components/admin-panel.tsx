@@ -1567,17 +1567,24 @@ function TablaInscripciones({
   const [preciosEdit, setPreciosEdit] = useState<Record<string, string>>({})
   const [guardandoPrecioInsc, setGuardandoPrecioInsc] = useState<string | null>(null)
   const [abandonoPendiente, setAbandonoPendiente] = useState<Record<string, boolean>>({})
+  const [abandonoConfirmado, setAbandonoConfirmado] = useState<Record<string, boolean>>({})
   const [guardandoAbandono, setGuardandoAbandono] = useState<string | null>(null)
+
+  const getAbandono = (ins: InscripcionConTaller) =>
+    ins.id in abandonoPendiente ? abandonoPendiente[ins.id]
+    : ins.id in abandonoConfirmado ? abandonoConfirmado[ins.id]
+    : ins.abandono
 
   const clickAbandono = (ins: InscripcionConTaller) => {
     if (ins.id in abandonoPendiente) return
-    setAbandonoPendiente(p => ({ ...p, [ins.id]: !ins.abandono }))
+    setAbandonoPendiente(p => ({ ...p, [ins.id]: !getAbandono(ins) }))
   }
 
   const guardarAbandono = async (ins: InscripcionConTaller) => {
     const nuevo = abandonoPendiente[ins.id]
     setGuardandoAbandono(ins.id)
     await supabase.from("inscripciones").update({ abandono: nuevo }).eq("id", ins.id)
+    setAbandonoConfirmado(p => ({ ...p, [ins.id]: nuevo }))
     setAbandonoPendiente(p => { const n = { ...p }; delete n[ins.id]; return n })
     setGuardandoAbandono(null)
   }
@@ -1963,7 +1970,7 @@ function TablaInscripciones({
                         onClick={() => clickAbandono(ins)}
                         title="Marcar abandono"
                         className="w-6 h-6 flex items-center justify-center rounded border text-xs font-black transition-colors flex-shrink-0"
-                        style={(ins.id in abandonoPendiente ? abandonoPendiente[ins.id] : ins.abandono)
+                        style={getAbandono(ins)
                           ? { background: "#dc2626", borderColor: "#dc2626", color: "white" }
                           : { background: "transparent", borderColor: "#d1d5db", color: "#d1d5db" }}
                         type="button"

@@ -1970,34 +1970,50 @@ function TablaInscripciones({
                 <td className="px-2 py-2 whitespace-nowrap text-xs">{ins.telefono}</td>
                 <td className="px-2 py-2 whitespace-nowrap text-xs text-muted-foreground">{ins.localidad_taller || "—"}</td>
                 <td className="px-2 py-2 whitespace-nowrap text-xs text-right">
-                  <div className="flex items-center gap-1 justify-end">
+                  <div className="flex flex-col items-end gap-1">
                     <input
                       type="number"
                       value={precioEditVal ?? (ins.precio_inscripto ?? "")}
                       onChange={e => setPreciosEdit(p => ({ ...p, [ins.id]: e.target.value }))}
-                      onBlur={() => guardarPrecioInscripto(ins)}
                       disabled={guardandoPrecioInsc === ins.id}
                       placeholder="0"
                       className="w-24 border border-border rounded px-2 py-0.5 text-right bg-background text-xs focus:outline-none focus:ring-1 focus:ring-primary"
                     />
-                    {guardandoPrecioInsc === ins.id && <span className="text-muted-foreground text-xs">...</span>}
+                    {precioEditVal !== undefined && (
+                      <div className="flex gap-1">
+                        <button onClick={() => guardarPrecioInscripto(ins)} disabled={guardandoPrecioInsc === ins.id} type="button" className="px-2 py-0.5 rounded text-xs font-semibold bg-green-600 text-white hover:bg-green-700">
+                          {guardandoPrecioInsc === ins.id ? "..." : "Guardar"}
+                        </button>
+                        <button onClick={() => setPreciosEdit(p => { const n = { ...p }; delete n[ins.id]; return n })} type="button" className="px-2 py-0.5 rounded text-xs font-semibold bg-gray-200 text-gray-700 hover:bg-gray-300">
+                          Cancelar
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </td>
                 <td className={`px-2 py-2 whitespace-nowrap text-xs font-semibold ${ins.metodo_pago === "tarjeta_credito" ? "text-green-600 dark:text-green-400" : "text-muted-foreground"}`}>
                   {precioEfectivo === 0 ? "Gratuito" : (METODO_PAGO_LABEL[ins.metodo_pago] || ins.metodo_pago || "—")}
                 </td>
                 <td className="px-2 py-2 whitespace-nowrap text-xs text-right">
-                  <div className="flex items-center gap-1 justify-end">
+                  <div className="flex flex-col items-end gap-1">
                     <input
                       type="number"
                       value={montoEditVal ?? (precioEfectivo === 0 ? 0 : (ins.monto_pagado ?? ""))}
                       onChange={e => setMontosEdit(p => ({ ...p, [ins.id]: e.target.value }))}
-                      onBlur={() => guardarMonto(ins)}
                       disabled={guardandoMonto === ins.id}
                       placeholder="0"
                       className="w-24 border border-border rounded px-2 py-0.5 text-right bg-background text-xs focus:outline-none focus:ring-1 focus:ring-primary"
                     />
-                    {guardandoMonto === ins.id && <span className="text-muted-foreground text-xs">...</span>}
+                    {montoEditVal !== undefined && (
+                      <div className="flex gap-1">
+                        <button onClick={() => guardarMonto(ins)} disabled={guardandoMonto === ins.id} type="button" className="px-2 py-0.5 rounded text-xs font-semibold bg-green-600 text-white hover:bg-green-700">
+                          {guardandoMonto === ins.id ? "..." : "Guardar"}
+                        </button>
+                        <button onClick={() => setMontosEdit(p => { const n = { ...p }; delete n[ins.id]; return n })} type="button" className="px-2 py-0.5 rounded text-xs font-semibold bg-gray-200 text-gray-700 hover:bg-gray-300">
+                          Cancelar
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </td>
                 <td className={`px-2 py-2 whitespace-nowrap text-xs text-right font-semibold ${saldo > 0 ? "text-red-600 dark:text-red-400" : "text-green-600 dark:text-green-400"}`}>

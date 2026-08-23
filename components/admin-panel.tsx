@@ -768,6 +768,8 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                           onActualizarMonto={actualizarMontoPagado}
                           onActualizarPrecio={actualizarPrecioInscripto}
                           onEnviarEmailPago={enviarEmailPago}
+                          adminCaracteristica={adminCaracteristica}
+                          adminNumero={adminNumero}
                         />
                       )}
                     </div>
@@ -1238,6 +1240,8 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                           onActualizarPrecio={actualizarPrecioInscripto}
                           onEnviarEmailPago={enviarEmailPago}
                           pageFeePagado={filtroTallerSlug ? pageFeesPagados.has(`${filtroTallerSlug}:${filtroSede}:${filtroFechaInicio || "0001-01-01"}`) : false}
+                          adminCaracteristica={adminCaracteristica}
+                          adminNumero={adminNumero}
                         />
                       )}
                     </div>
@@ -1301,6 +1305,8 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                           onActualizarPrecio={actualizarPrecioInscripto}
                           onEnviarEmailPago={enviarEmailPago}
                           esHistorico={true}
+                          adminCaracteristica={adminCaracteristica}
+                          adminNumero={adminNumero}
                         />
                       )}
                     </div>
@@ -1352,6 +1358,8 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                           onActualizarPrecio={actualizarPrecioInscripto}
                           onEnviarEmailPago={enviarEmailPago}
                           modoMoroso
+                          adminCaracteristica={adminCaracteristica}
+                          adminNumero={adminNumero}
                         />
                       )}
                     </div>
@@ -1549,6 +1557,8 @@ function TablaInscripciones({
   pageFeePagado,
   modoMoroso,
   esHistorico,
+  adminCaracteristica,
+  adminNumero,
 }: {
   inscripciones: InscripcionConTaller[]
   accionInscripcion: string | null
@@ -1561,6 +1571,8 @@ function TablaInscripciones({
   pageFeePagado?: boolean
   modoMoroso?: boolean
   esHistorico?: boolean
+  adminCaracteristica: string
+  adminNumero: string
 }) {
   const [montosEdit, setMontosEdit] = useState<Record<string, string>>({})
   const [guardandoMonto, setGuardandoMonto] = useState<string | null>(null)

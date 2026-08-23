@@ -733,6 +733,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                     <div className="space-y-3">
                       <div className="flex items-center gap-6 flex-wrap">
                         <span className="text-sm font-semibold text-muted-foreground bg-muted rounded-full px-3 py-1">{inscFiltradas.length} inscripciones</span>
+                        <span className="text-sm font-semibold text-green-700 dark:text-green-300 bg-green-100 dark:bg-green-900/40 rounded-full px-3 py-1">{inscFiltradas.filter(i => !i.abandono).length} activos</span>
                         <div className="flex items-center gap-3">
                           <label className="text-sm font-medium">Filtrar por estado:</label>
                           <select

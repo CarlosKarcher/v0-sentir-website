@@ -1566,6 +1566,13 @@ function TablaInscripciones({
   const [guardandoMonto, setGuardandoMonto] = useState<string | null>(null)
   const [preciosEdit, setPreciosEdit] = useState<Record<string, string>>({})
   const [guardandoPrecioInsc, setGuardandoPrecioInsc] = useState<string | null>(null)
+  const [abandonoState, setAbandonoState] = useState<Record<string, boolean>>({})
+
+  const toggleAbandono = async (ins: InscripcionConTaller) => {
+    const nuevo = !(abandonoState[ins.id] ?? ins.abandono)
+    setAbandonoState(p => ({ ...p, [ins.id]: nuevo }))
+    await supabase.from("inscripciones").update({ abandono: nuevo }).eq("id", ins.id)
+  }
   const [inscripcionConfirmada, setInscripcionConfirmada] = useState<InscripcionConTaller | null>(null)
   const [inscripcionMensaje, setInscripcionMensaje] = useState<InscripcionConTaller | null>(null)
   const [inscripcionMorosa, setInscripcionMorosa] = useState<InscripcionConTaller | null>(null)
@@ -1937,7 +1944,22 @@ function TablaInscripciones({
             return (
               <tr key={ins.id} className={`border-b border-border/50 hover:bg-muted/30 transition-colors ${i % 2 === 0 ? "" : "bg-muted/10"}`}>
                 <td className="px-2 py-2 whitespace-nowrap font-medium text-xs sticky left-0 z-[1] bg-background border-r border-border/30" style={{ minWidth: 170, width: 170 }}>{ins.taller_nombre}</td>
-                <td className={`px-2 py-2 whitespace-nowrap font-medium sticky z-[1] bg-background border-r border-border/40 ${ins.metodo_pago === "tarjeta_credito" ? "text-green-600 dark:text-green-400" : ""}`} style={{ left: 170 }}>{ins.nombre} {ins.apellido}</td>
+                <td className={`px-2 py-2 whitespace-nowrap font-medium sticky z-[1] bg-background border-r border-border/40 ${ins.metodo_pago === "tarjeta_credito" ? "text-green-600 dark:text-green-400" : ""}`} style={{ left: 170 }}>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => toggleAbandono(ins)}
+                      title={abandonoState[ins.id] ?? ins.abandono ? "Quitar marca de abandono" : "Marcar como abandono"}
+                      className="w-6 h-6 flex items-center justify-center rounded border text-xs font-black transition-colors flex-shrink-0"
+                      style={abandonoState[ins.id] ?? ins.abandono
+                        ? { background: "#dc2626", borderColor: "#dc2626", color: "white" }
+                        : { background: "transparent", borderColor: "#d1d5db", color: "#d1d5db" }}
+                      type="button"
+                    >
+                      X
+                    </button>
+                    <span>{ins.nombre} {ins.apellido}</span>
+                  </div>
+                </td>
                 <td className="px-2 py-2 whitespace-nowrap text-xs text-muted-foreground">{ins.nombre_miembro || "—"}</td>
                 <td className="px-2 py-2 whitespace-nowrap text-xs text-muted-foreground">
                   {ins.enrolador_nombre

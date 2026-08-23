@@ -58,6 +58,7 @@ export interface Inscripcion {
   mensaje_inscripto: string | null
   creado_en: string
   confirmado_en: string | null
+  abandono: boolean
 }
 
 // Inscripción enriquecida con datos del taller (devuelta por listar_inscripciones RPC)

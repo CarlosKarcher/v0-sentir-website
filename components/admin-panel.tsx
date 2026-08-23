@@ -1583,7 +1583,12 @@ function TablaInscripciones({
   const guardarAbandono = async (ins: InscripcionConTaller) => {
     const nuevo = abandonoPendiente[ins.id]
     setGuardandoAbandono(ins.id)
-    await supabase.from("inscripciones").update({ abandono: nuevo }).eq("id", ins.id)
+    await supabase.rpc("actualizar_abandono", {
+      p_admin_caracteristica: adminCaracteristica,
+      p_admin_numero: adminNumero,
+      p_inscripcion_id: ins.id,
+      p_abandono: nuevo,
+    })
     setAbandonoConfirmado(p => ({ ...p, [ins.id]: nuevo }))
     setAbandonoPendiente(p => { const n = { ...p }; delete n[ins.id]; return n })
     setGuardandoAbandono(null)

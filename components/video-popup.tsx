@@ -55,7 +55,7 @@ export function VideoPopup() {
 
           <video
             ref={videoRef}
-            src="/Guerrero-punta-arenas-agosto-2026.mp4"
+            src="/Abrazos-Gratis-29-08-2026.mp4"
             playsInline
             controls
             preload="auto"

@@ -2168,7 +2168,7 @@ const TALLERES_EDIT: TallerEditable[] = [
 
 function TablaMiembros({ miembros, adminCaracteristica, adminNumero, onRefresh }: { miembros: Miembro[], adminCaracteristica: string, adminNumero: string, onRefresh: () => void }) {
   const t = (v: boolean) => v ? "✅" : "❌"
-  const [orden, setOrden] = useState<"numero" | "nombre" | "talleres">("numero")
+  const [orden, setOrden] = useState<"numero" | "nombre" | "talleres" | "cumpleanos">("numero")
   const [dir, setDir] = useState<"asc" | "desc">("asc")
   const [busqueda, setBusqueda] = useState("")
   const [editando, setEditando] = useState<Miembro | null>(null)
@@ -2233,6 +2233,13 @@ function TablaMiembros({ miembros, adminCaracteristica, adminNumero, onRefresh }
       const ta = totalTalleres(a), tb = totalTalleres(b)
       if (ta !== tb) cmp = tb - ta
       else cmp = talleresLiderazgo(b) - talleresLiderazgo(a)
+    } else if (orden === "cumpleanos") {
+      const diasMes = (fn: string | null | undefined) => {
+        if (!fn) return 9999
+        const [, mo, d] = fn.slice(0, 10).split("-")
+        return parseInt(mo) * 100 + parseInt(d)
+      }
+      cmp = diasMes(a.fecha_nacimiento) - diasMes(b.fecha_nacimiento)
     } else {
       cmp = a.numero - b.numero
     }
@@ -2245,6 +2252,17 @@ function TablaMiembros({ miembros, adminCaracteristica, adminNumero, onRefresh }
   }
 
   const arrow = (col: typeof orden) => orden === col ? (dir === "asc" ? " ▲" : " ▼") : ""
+
+  // Para cumpleaños: resaltar si el cumpleaños es hoy o en los próximos 7 días
+  const esCumpleProximo = (fn: string | null | undefined) => {
+    if (!fn) return false
+    const hoy = new Date()
+    const [, mo, d] = fn.slice(0, 10).split("-")
+    const cumple = new Date(hoy.getFullYear(), parseInt(mo) - 1, parseInt(d))
+    if (cumple < hoy) cumple.setFullYear(hoy.getFullYear() + 1)
+    const diff = (cumple.getTime() - hoy.getTime()) / (1000 * 60 * 60 * 24)
+    return diff <= 7
+  }
 
   const abrirEditar = (m: Miembro) => {
     setEditando(m)
@@ -2317,6 +2335,9 @@ function TablaMiembros({ miembros, adminCaracteristica, adminNumero, onRefresh }
         <button onClick={() => toggleOrden("talleres")} className={`px-3 py-1 rounded-full text-xs font-semibold border transition-colors ${orden === "talleres" ? "bg-blue-900 text-white border-blue-900" : "border-border hover:border-blue-900"}`}>
           Talleres hechos{arrow("talleres")}
         </button>
+        <button onClick={() => toggleOrden("cumpleanos")} className={`px-3 py-1 rounded-full text-xs font-semibold border transition-colors ${orden === "cumpleanos" ? "bg-pink-700 text-white border-pink-700" : "border-border hover:border-pink-700"}`}>
+          Cumpleaños{arrow("cumpleanos")}
+        </button>
       </div>
     {/* Barra de scroll superior sincronizada */}
     <div ref={topScrollRef} style={{ overflowX: "auto", overflowY: "hidden", height: 12 }}>
@@ -2345,7 +2366,7 @@ function TablaMiembros({ miembros, adminCaracteristica, adminNumero, onRefresh }
       </thead>
       <tbody>
         {sorted.map((m, i) => (
-          <tr key={m.numero} className={`border-b border-border/50 hover:bg-muted/30 transition-colors ${i % 2 === 0 ? "" : "bg-muted/10"}`}>
+          <tr key={m.numero} className={`border-b border-border/50 hover:bg-muted/30 transition-colors ${orden === "cumpleanos" && esCumpleProximo(m.fecha_nacimiento) ? "bg-pink-50 dark:bg-pink-950/30" : i % 2 === 0 ? "" : "bg-muted/10"}`}>
             <td className="px-2 py-2 font-medium sticky left-0 z-[1] bg-background border-r border-border/30">{m.numero}</td>
             <td className="px-2 py-2 whitespace-nowrap sticky left-8 z-[1] bg-background border-r border-border/40">{m.nombre_apellido.trim()}</td>
             <td className="px-2 py-2 whitespace-nowrap">{m.nombre_gafete?.trim()}</td>

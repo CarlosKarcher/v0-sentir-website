@@ -11,6 +11,8 @@ export async function POST(req: NextRequest) {
       apellido,
       email,
       tallerNombre,
+      tallerSlug,
+      fechaInicioTaller,
       localidad,
       fechaInscripcion,
       montoPagado,
@@ -19,6 +21,11 @@ export async function POST(req: NextRequest) {
     } = body
 
     const esParcial = tipo === "parcial"
+    const esConstelaciones = (tallerSlug as string ?? "").includes("constelacion")
+    const saldoCero = (saldo as number) <= 0
+    const tallerYaRealizado = fechaInicioTaller
+      ? new Date() > new Date(fechaInicioTaller as string)
+      : false
 
     const subject = esParcial
       ? `💚 Seña recibida — ${tallerNombre}`
@@ -77,8 +84,11 @@ export async function POST(req: NextRequest) {
             </div>
 
             <div style="background:rgba(255,255,255,0.15);border-radius:12px;padding:16px 24px;margin-bottom:12px;">
-              <p style="color:#4ade80;font-size:18px;font-weight:bold;margin:0;">✓ Tu lugar está CONFIRMADO ✓</p>
-              <p style="font-size:16px;margin:4px 0 0;">¡Te esperamos!</p>
+              ${(!esConstelaciones && saldoCero)
+                ? `<p style="color:#4ade80;font-size:18px;font-weight:bold;margin:0;">Has abonado el total del Taller. ¡Gracias.!</p>`
+                : `<p style="color:#4ade80;font-size:18px;font-weight:bold;margin:0;">✓ Tu lugar está CONFIRMADO ✓</p>
+              ${!tallerYaRealizado ? `<p style="font-size:16px;margin:4px 0 0;">¡Te esperamos!</p>` : ""}`
+              }
             </div>
 
             <div style="background:rgba(255,255,255,0.1);border-radius:12px;padding:12px 24px;margin-bottom:24px;">

@@ -231,6 +231,8 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
           apellido: ins.apellido,
           email: ins.email,
           tallerNombre: ins.taller_nombre,
+          tallerSlug: ins.taller_slug,
+          fechaInicioTaller: ins.taller_fecha_inicio ?? null,
           localidad: ins.localidad_taller,
           fechaInscripcion: new Date(ins.creado_en).toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" }),
           montoPagado,

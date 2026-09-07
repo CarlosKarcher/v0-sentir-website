@@ -1709,8 +1709,7 @@ function TablaInscripciones({
       ``,
       (() => { const precio = ins.precio_inscripto ?? ins.taller_precio ?? 0; const saldo = precio - (ins.monto_pagado ?? 0); return precio > 0 ? `Tu saldo a pagar es: $${saldo.toLocaleString("es-AR")}` : "" })(),
       ``,
-      `Gracias, te Esperamos.!!`,
-      ``,
+      ...(!(ins.taller_fecha_inicio && new Date() > new Date(ins.taller_fecha_inicio)) ? [`Gracias, te Esperamos.!!`, ``] : []),
       `*Sentir* 🔥`,
     ].filter(l => l !== undefined)
     const mensaje = lineas.join("\n")
@@ -1951,7 +1950,9 @@ function TablaInscripciones({
 
                 {/* Cierre */}
                 <div className="flex flex-col items-center gap-1 mt-1">
-                  <p className="text-white text-base font-semibold">Gracias, te Esperamos.!!</p>
+                  {!(inscripcionMensaje.taller_fecha_inicio && new Date() > new Date(inscripcionMensaje.taller_fecha_inicio)) && (
+                    <p className="text-white text-base font-semibold">Gracias, te Esperamos.!!</p>
+                  )}
                   <div className="flex items-center gap-2 mt-1">
                     <span className="text-white font-bold text-base">Sentir</span>
                     <img src="/fuego-de-sentir.png" alt="" className="h-5 w-auto" />

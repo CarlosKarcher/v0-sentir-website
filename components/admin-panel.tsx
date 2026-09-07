@@ -1773,18 +1773,42 @@ function TablaInscripciones({
                 </div>
 
                 {/* Mensaje confirmación */}
-                <div className="flex flex-col items-center gap-1">
-                  <div className="flex items-center gap-2">
-                    <Check className="h-6 w-6 text-green-400" />
-                    <span className="text-green-400 text-xl font-extrabold tracking-wide">
-                      {esHistorico ? "TALLER REALIZADO con Éxito" : "Tu lugar está CONFIRMADO"}
-                    </span>
-                    <Check className="h-6 w-6 text-green-400" />
-                  </div>
-                  <p className="text-white text-lg font-semibold">
-                    {esHistorico ? "¡Todo abonado!" : "¡Te esperamos!"}
-                  </p>
-                </div>
+                {(() => {
+                  const esConstelaciones = (inscripcionConfirmada.taller_slug ?? "").includes("constelacion")
+                  const tallerPasado = inscripcionConfirmada.taller_fecha_inicio
+                    ? new Date() > new Date(inscripcionConfirmada.taller_fecha_inicio)
+                    : false
+                  if (esHistorico) {
+                    return (
+                      <div className="flex flex-col items-center gap-1">
+                        <div className="flex items-center gap-2">
+                          <Check className="h-6 w-6 text-green-400" />
+                          <span className="text-green-400 text-xl font-extrabold tracking-wide">TALLER REALIZADO con Éxito</span>
+                          <Check className="h-6 w-6 text-green-400" />
+                        </div>
+                        <p className="text-white text-lg font-semibold">¡Todo abonado!</p>
+                      </div>
+                    )
+                  }
+                  if (!esConstelaciones) {
+                    return (
+                      <div className="flex flex-col items-center gap-1">
+                        <span className="text-green-400 text-xl font-extrabold tracking-wide text-center">Has abonado el total del Taller. ¡Gracias.!</span>
+                      </div>
+                    )
+                  }
+                  // Constelaciones
+                  return (
+                    <div className="flex flex-col items-center gap-1">
+                      <div className="flex items-center gap-2">
+                        <Check className="h-6 w-6 text-green-400" />
+                        <span className="text-green-400 text-xl font-extrabold tracking-wide">Tu lugar está CONFIRMADO</span>
+                        <Check className="h-6 w-6 text-green-400" />
+                      </div>
+                      {!tallerPasado && <p className="text-white text-lg font-semibold">¡Te esperamos!</p>}
+                    </div>
+                  )
+                })()}
 
                 {/* Fecha inicio */}
                 {inscripcionConfirmada.taller_fecha_inicio && (

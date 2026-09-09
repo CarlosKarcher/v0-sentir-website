@@ -657,7 +657,7 @@ export function Events() {
       title: "Taller de Autoconocimiento - Río Gallegos",
       date: "11, 12 y 13 de Septiembre 2026",
       time: "Inicio: Viernes 11 de Septiembre, 16:30 Horas",
-      location: "Centro de Jubilados Legislativos — Henry Williams Jamieson 548, Río Gallegos",
+      location: "Lugar a Confirmar",
       type: "Taller de Liderazgo",
       available: true,
       availabilityText: "Cupos disponibles",

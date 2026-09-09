@@ -1790,9 +1790,13 @@ function TablaInscripciones({
                     )
                   }
                   if (!esConstelaciones) {
+                    const precioEfectivo = inscripcionConfirmada.precio_inscripto ?? calcularPrecioFinal({ precio: inscripcionConfirmada.taller_precio, descuento_tipo: inscripcionConfirmada.taller_descuento_tipo, descuento_valor: inscripcionConfirmada.taller_descuento_valor }).precioFinal
                     return (
                       <div className="flex flex-col items-center gap-1">
-                        <span className="text-green-400 text-xl font-extrabold tracking-wide text-center">Has abonado el total del Taller. ¡Gracias.!</span>
+                        {precioEfectivo === 0
+                          ? <span className="text-green-400 text-xl font-extrabold tracking-wide text-center">Costo del Taller cero - Beca al 100%</span>
+                          : <span className="text-green-400 text-xl font-extrabold tracking-wide text-center">Has abonado el total del Taller. ¡Gracias.!</span>
+                        }
                       </div>
                     )
                   }

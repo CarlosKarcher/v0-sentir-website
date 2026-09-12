@@ -33,7 +33,7 @@ export default function TalleresInscripcionPage() {
 
   useEffect(() => {
     const hoy = new Date().toISOString().split("T")[0]
-    const hace48h = new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString().split("T")[0]
+    const hace48h = new Date(Date.now() - 72 * 60 * 60 * 1000).toISOString().split("T")[0]
     supabase
       .from("talleres")
       .select("id, slug, nombre, fecha_inicio, sede")

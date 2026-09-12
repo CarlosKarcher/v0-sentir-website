@@ -177,7 +177,7 @@ function InscribirseForm() {
       if (sede) {
         const hoy = new Date().toISOString().split("T")[0]
         const fechaCorte = tallerSlug === "constelaciones-grupales"
-          ? new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString().split("T")[0]
+          ? new Date(Date.now() - 72 * 60 * 60 * 1000).toISOString().split("T")[0]
           : hoy
         const { data: rows } = await supabase
           .from("talleres")

@@ -38,7 +38,7 @@ export default function TalleresInscripcionPage() {
       .from("talleres")
       .select("id, slug, nombre, fecha_inicio, sede")
       .eq("activo", true)
-      .or(`fecha_inicio.gte.${ahora},fecha_fin.gte.${hoy}`)
+      .or(`fecha_inicio.gte.${hoy},fecha_fin.gte.${hoy}`)
       .order("fecha_inicio")
       .then(({ data }) => {
         if (Array.isArray(data)) setTalleres(data)

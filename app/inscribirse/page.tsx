@@ -175,7 +175,7 @@ function InscribirseForm() {
       }
       // Opción 2: slug + sede — si hay varios, tomar el próximo evento futuro
       if (sede) {
-        const hoy = new Date().toISOString()
+        const hoy = new Date().toISOString().split("T")[0]
         const { data: rows } = await supabase
           .from("talleres")
           .select("*")

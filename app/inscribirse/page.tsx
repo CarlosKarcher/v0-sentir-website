@@ -176,13 +176,16 @@ function InscribirseForm() {
       // Opción 2: slug + sede — si hay varios, tomar el próximo evento futuro
       if (sede) {
         const hoy = new Date().toISOString().split("T")[0]
+        const fechaCorte = tallerSlug === "constelaciones-grupales"
+          ? new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString().split("T")[0]
+          : hoy
         const { data: rows } = await supabase
           .from("talleres")
           .select("*")
           .eq("slug", tallerSlug)
           .eq("sede", sede)
           .eq("activo", true)
-          .gte("fecha_inicio", hoy)
+          .gte("fecha_inicio", fechaCorte)
           .order("fecha_inicio", { ascending: true })
           .limit(1)
         const data = rows?.[0] ?? null

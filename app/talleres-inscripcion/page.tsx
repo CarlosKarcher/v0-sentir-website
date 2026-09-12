@@ -32,16 +32,22 @@ export default function TalleresInscripcionPage() {
   const [cargando, setCargando] = useState(true)
 
   useEffect(() => {
-    const ahora = new Date().toISOString()
-    const hoy = ahora.split("T")[0]
+    const hoy = new Date().toISOString().split("T")[0]
+    const hace48h = new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString().split("T")[0]
     supabase
       .from("talleres")
       .select("id, slug, nombre, fecha_inicio, sede")
       .eq("activo", true)
-      .or(`fecha_inicio.gte.${hoy},fecha_fin.gte.${hoy}`)
+      .or(`fecha_inicio.gte.${hace48h},fecha_fin.gte.${hoy}`)
       .order("fecha_inicio")
       .then(({ data }) => {
-        if (Array.isArray(data)) setTalleres(data)
+        if (Array.isArray(data)) {
+          // Constelaciones grupales tiene gracia de 48hs; el resto solo aparece a partir de hoy
+          const filtrados = data.filter(t =>
+            t.slug === "constelaciones-grupales" ? t.fecha_inicio >= hace48h : t.fecha_inicio >= hoy
+          )
+          setTalleres(filtrados)
+        }
         setCargando(false)
       })
   }, [])

@@ -1340,7 +1340,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                         <Button size="sm" variant="outline" className="gap-1.5" onClick={() => exportarCSVInscripciones(filtradas)}>
                           <Download className="h-4 w-4" /> Exportar CSV
                         </Button>
-                        {filtroTallerSlug && filtroFechaInicio < new Date().toISOString().substring(0, 10) && (
+                        {filtroTallerSlug && filtroFechaInicio < new Date().toISOString().substring(0, 10) && !["transformacion", "myl"].includes(filtroTallerSlug) && (
                           <Button
                             size="sm"
                             variant="outline"

@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react"
 import { createPortal } from "react-dom"
 import * as XLSX from "xlsx"
 import { supabase } from "@/lib/supabase-client"
-import { X, Download, RefreshCw, ArrowLeft, Users, UserX, Filter, ClipboardList, DollarSign, Check, Ban, Trash2, MessageCircle, Pencil } from "lucide-react"
+import { X, Download, RefreshCw, ArrowLeft, Users, UserX, Filter, ClipboardList, DollarSign, Check, Ban, Trash2, MessageCircle, Pencil, UserPlus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { calcularPrecioFinal } from "@/types/database"
 import type { Taller, InscripcionConTaller } from "@/types/database"
@@ -2206,6 +2206,7 @@ function TablaMiembros({ miembros, adminCaracteristica, adminNumero, onRefresh }
   const [form, setForm] = useState<Miembro | null>(null)
   const [guardando, setGuardando] = useState(false)
   const [guardadoOk, setGuardadoOk] = useState(false)
+  const [abrirRegistro, setAbrirRegistro] = useState(false)
   const topScrollRef = React.useRef<HTMLDivElement>(null)
   const tableWrapRef = React.useRef<HTMLDivElement>(null)
 
@@ -2354,6 +2355,13 @@ function TablaMiembros({ miembros, adminCaracteristica, adminNumero, onRefresh }
           </button>
         )}
         {busqueda && <span className="text-xs text-muted-foreground">{sorted.length} resultado{sorted.length !== 1 ? "s" : ""}</span>}
+        <button
+          onClick={() => setAbrirRegistro(true)}
+          className="ml-auto flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-blue-900 text-white text-xs font-semibold hover:bg-blue-800 transition-colors whitespace-nowrap"
+        >
+          <UserPlus className="h-3.5 w-3.5" />
+          Registrar taller
+        </button>
       </div>
       <div className="flex items-center gap-2 flex-wrap">
         <span className="text-sm font-medium">Ordenar por:</span>
@@ -2528,6 +2536,15 @@ function TablaMiembros({ miembros, adminCaracteristica, adminNumero, onRefresh }
         </div>
       </>
     )}
+    {abrirRegistro && (
+      <ModalRegistrarTaller
+        miembros={miembros}
+        adminCaracteristica={adminCaracteristica}
+        adminNumero={adminNumero}
+        onClose={() => setAbrirRegistro(false)}
+        onSuccess={() => { onRefresh() }}
+      />
+    )}
     </div>
   )
 }
@@ -2558,5 +2575,286 @@ function TablaNomembros({ nomembros }: { nomembros: Nomembro[] }) {
         ))}
       </tbody>
     </table>
+  )
+}
+
+const MESES_FULL = ["", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
+const ANIOS_FULL = Array.from({ length: new Date().getFullYear() - 2014 }, (_, i) => 2015 + i).reverse()
+
+function ModalRegistrarTaller({ miembros, adminCaracteristica, adminNumero, onClose, onSuccess }: {
+  miembros: Miembro[]
+  adminCaracteristica: string
+  adminNumero: string
+  onClose: () => void
+  onSuccess: () => void
+}) {
+  type Paso = "buscar" | "existente" | "nuevo" | "ok"
+  const [paso, setPaso] = useState<Paso>("buscar")
+  const [busqueda, setBusqueda] = useState("")
+  const [seleccionado, setSeleccionado] = useState<Miembro | null>(null)
+  const [tallerKey, setTallerKey] = useState("")
+  const [mes, setMes] = useState("")
+  const [anio, setAnio] = useState("")
+  const [formNuevo, setFormNuevo] = useState({ nombre_apellido: "", nombre_gafete: "", celular_caracteristica: "", celular_numero: "", email: "" })
+  const [guardando, setGuardando] = useState(false)
+  const [error, setError] = useState("")
+
+  const resultados = busqueda.trim().length >= 2
+    ? miembros.filter(m => m.nombre_apellido.toLowerCase().includes(busqueda.toLowerCase())).slice(0, 8)
+    : []
+
+  const seleccionarMiembro = (m: Miembro) => {
+    setSeleccionado(m)
+    setTallerKey("")
+    setMes("")
+    setAnio("")
+    setError("")
+    setPaso("existente")
+  }
+
+  const irNuevo = () => {
+    setFormNuevo(f => ({ ...f, nombre_apellido: busqueda.trim() }))
+    setTallerKey("")
+    setMes("")
+    setAnio("")
+    setError("")
+    setPaso("nuevo")
+  }
+
+  const guardarExistente = async () => {
+    if (!seleccionado || !tallerKey || !mes || !anio) { setError("Seleccioná el taller, mes y año."); return }
+    setGuardando(true)
+    setError("")
+    const m = seleccionado
+    const im = parseInt(mes), ia = parseInt(anio)
+    const { error: sbError } = await supabase.rpc("actualizar_miembro", {
+      p_admin_caracteristica:     adminCaracteristica,
+      p_admin_numero:             adminNumero,
+      p_numero:                   m.numero,
+      p_nombre_apellido:          m.nombre_apellido,
+      p_nombre_gafete:            m.nombre_gafete,
+      p_celular_caracteristica:   m.celular_caracteristica,
+      p_celular_numero:           m.celular_numero,
+      p_email:                    m.email,
+      p_fecha_nacimiento:         m.fecha_nacimiento,
+      p_comentario:               m.comentario,
+      p_taller_autoconocimiento:  tallerKey === "taller_autoconocimiento"  ? true : m.taller_autoconocimiento,
+      p_autoconocimiento_mes:     tallerKey === "taller_autoconocimiento"  ? im   : m.autoconocimiento_mes,
+      p_autoconocimiento_anio:    tallerKey === "taller_autoconocimiento"  ? ia   : m.autoconocimiento_anio,
+      p_taller_transformacion:    tallerKey === "taller_transformacion"    ? true : m.taller_transformacion,
+      p_transformacion_mes:       tallerKey === "taller_transformacion"    ? im   : m.transformacion_mes,
+      p_transformacion_anio:      tallerKey === "taller_transformacion"    ? ia   : m.transformacion_anio,
+      p_taller_myl:               tallerKey === "taller_myl"               ? true : m.taller_myl,
+      p_myl_mes:                  tallerKey === "taller_myl"               ? im   : m.myl_mes,
+      p_myl_anio:                 tallerKey === "taller_myl"               ? ia   : m.myl_anio,
+      p_taller_guerrero:          tallerKey === "taller_guerrero"          ? true : m.taller_guerrero,
+      p_guerrero_mes:             tallerKey === "taller_guerrero"          ? im   : m.guerrero_mes,
+      p_guerrero_anio:            tallerKey === "taller_guerrero"          ? ia   : m.guerrero_anio,
+      p_taller_biodecodificacion: tallerKey === "taller_biodecodificacion" ? true : m.taller_biodecodificacion,
+      p_biodecodificacion_mes:    tallerKey === "taller_biodecodificacion" ? im   : m.biodecodificacion_mes,
+      p_biodecodificacion_anio:   tallerKey === "taller_biodecodificacion" ? ia   : m.biodecodificacion_anio,
+      p_taller_nino_interior:     tallerKey === "taller_nino_interior"     ? true : m.taller_nino_interior,
+      p_nino_interior_mes:        tallerKey === "taller_nino_interior"     ? im   : m.nino_interior_mes,
+      p_nino_interior_anio:       tallerKey === "taller_nino_interior"     ? ia   : m.nino_interior_anio,
+      p_taller_constelaciones:    tallerKey === "taller_constelaciones"    ? true : m.taller_constelaciones,
+      p_constelaciones_mes:       tallerKey === "taller_constelaciones"    ? im   : m.constelaciones_mes,
+      p_constelaciones_anio:      tallerKey === "taller_constelaciones"    ? ia   : m.constelaciones_anio,
+    })
+    setGuardando(false)
+    if (sbError) { setError(`Error: ${sbError.message}`); return }
+    onSuccess()
+    setPaso("ok")
+  }
+
+  const guardarNuevo = async () => {
+    if (!formNuevo.nombre_apellido || !formNuevo.celular_caracteristica || !formNuevo.celular_numero || !tallerKey || !mes || !anio) {
+      setError("Completá los campos obligatorios."); return
+    }
+    setGuardando(true)
+    setError("")
+    const im = parseInt(mes), ia = parseInt(anio)
+    const { error: sbError } = await supabase.rpc("registrar_miembro", {
+      nombre_apellido:           formNuevo.nombre_apellido,
+      nombre_gafete:             formNuevo.nombre_gafete || null,
+      celular_caracteristica:    formNuevo.celular_caracteristica,
+      celular_numero:            formNuevo.celular_numero,
+      email:                     formNuevo.email || null,
+      comentario:                null,
+      taller_autoconocimiento:   tallerKey === "taller_autoconocimiento",
+      autoconocimiento_mes:      tallerKey === "taller_autoconocimiento"  ? im : null,
+      autoconocimiento_anio:     tallerKey === "taller_autoconocimiento"  ? ia : null,
+      taller_transformacion:     tallerKey === "taller_transformacion",
+      transformacion_mes:        tallerKey === "taller_transformacion"    ? im : null,
+      transformacion_anio:       tallerKey === "taller_transformacion"    ? ia : null,
+      taller_myl:                tallerKey === "taller_myl",
+      myl_mes:                   tallerKey === "taller_myl"               ? im : null,
+      myl_anio:                  tallerKey === "taller_myl"               ? ia : null,
+      taller_guerrero:           tallerKey === "taller_guerrero",
+      guerrero_mes:              tallerKey === "taller_guerrero"          ? im : null,
+      guerrero_anio:             tallerKey === "taller_guerrero"          ? ia : null,
+      taller_biodecodificacion:  tallerKey === "taller_biodecodificacion",
+      biodecodificacion_mes:     tallerKey === "taller_biodecodificacion" ? im : null,
+      biodecodificacion_anio:    tallerKey === "taller_biodecodificacion" ? ia : null,
+      taller_nino_interior:      tallerKey === "taller_nino_interior",
+      nino_interior_mes:         tallerKey === "taller_nino_interior"     ? im : null,
+      nino_interior_anio:        tallerKey === "taller_nino_interior"     ? ia : null,
+      taller_constelaciones:     tallerKey === "taller_constelaciones",
+      constelaciones_mes:        null,
+      constelaciones_anio:       null,
+      recibir_informacion:       false,
+    })
+    setGuardando(false)
+    if (sbError) { setError(`Error: ${sbError.message}`); return }
+    onSuccess()
+    setPaso("ok")
+  }
+
+  const tallerSelector = (
+    <div className="space-y-3">
+      <div>
+        <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Taller realizado *</label>
+        <select
+          className="mt-1 w-full border border-border rounded-md px-3 py-2 text-sm bg-background"
+          value={tallerKey}
+          onChange={e => setTallerKey(e.target.value)}
+        >
+          <option value="">Seleccioná un taller...</option>
+          {TALLERES_EDIT.map(t => <option key={t.key as string} value={t.key as string}>{t.label}</option>)}
+        </select>
+      </div>
+      {tallerKey && (
+        <div className="flex gap-3">
+          <div className="flex-1">
+            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Mes *</label>
+            <select className="mt-1 w-full border border-border rounded-md px-3 py-2 text-sm bg-background" value={mes} onChange={e => setMes(e.target.value)}>
+              <option value="">Mes...</option>
+              {MESES_FULL.slice(1).map((nombre, i) => <option key={i + 1} value={i + 1}>{nombre}</option>)}
+            </select>
+          </div>
+          <div className="flex-1">
+            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Año *</label>
+            <select className="mt-1 w-full border border-border rounded-md px-3 py-2 text-sm bg-background" value={anio} onChange={e => setAnio(e.target.value)}>
+              <option value="">Año...</option>
+              {ANIOS_FULL.map(a => <option key={a} value={a}>{a}</option>)}
+            </select>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+
+  return createPortal(
+    <>
+      <div className="fixed inset-0 z-[10200] bg-black/60 backdrop-blur-sm" onClick={onClose} />
+      <div className="fixed inset-0 z-[10201] flex items-center justify-center p-3">
+        <div className="bg-background rounded-xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+          <div className="flex items-center justify-between px-5 py-4 border-b border-border sticky top-0 bg-background z-10">
+            <div className="flex items-center gap-2">
+              {paso !== "buscar" && paso !== "ok" && (
+                <button onClick={() => { setPaso("buscar"); setSeleccionado(null); setError("") }} className="p-1 rounded hover:bg-muted">
+                  <ArrowLeft className="h-4 w-4" />
+                </button>
+              )}
+              <h2 className="font-bold text-base">Registrar Taller Realizado</h2>
+            </div>
+            <button onClick={onClose} className="p-1 rounded hover:bg-muted"><X className="h-4 w-4" /></button>
+          </div>
+
+          <div className="px-5 py-4 space-y-4">
+
+            {paso === "ok" && (
+              <div className="text-center py-6 space-y-3">
+                <Check className="h-12 w-12 text-green-500 mx-auto" />
+                <p className="font-semibold text-lg">Taller registrado</p>
+                <button onClick={onClose} className="px-6 py-2 rounded-md bg-blue-900 text-white text-sm font-semibold hover:bg-blue-800">Cerrar</button>
+              </div>
+            )}
+
+            {paso === "buscar" && (
+              <div className="space-y-3">
+                <p className="text-sm text-muted-foreground">Buscá al participante por nombre</p>
+                <input
+                  type="text"
+                  placeholder="Nombre y apellido..."
+                  value={busqueda}
+                  onChange={e => setBusqueda(e.target.value)}
+                  autoFocus
+                  className="w-full border border-border rounded-md px-3 py-2 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                />
+                {busqueda.trim().length >= 2 && (
+                  <div className="border border-border rounded-md overflow-hidden">
+                    {resultados.length > 0
+                      ? resultados.map(m => (
+                          <button key={m.numero} onClick={() => seleccionarMiembro(m)}
+                            className="w-full text-left px-3 py-2.5 hover:bg-muted/40 border-b border-border/30 last:border-0 transition-colors">
+                            <span className="text-sm font-medium">{m.nombre_apellido.trim()}</span>
+                            <span className="text-xs text-muted-foreground ml-2">#{m.numero}</span>
+                          </button>
+                        ))
+                      : <div className="px-3 py-3 text-sm text-muted-foreground">Sin resultados en la base de clientes</div>
+                    }
+                  </div>
+                )}
+                <button onClick={irNuevo}
+                  className="w-full mt-1 text-sm border-2 border-dashed border-border rounded-md py-3 text-muted-foreground hover:border-blue-700 hover:text-blue-700 transition-colors">
+                  + No está en la lista — Agregar como nuevo cliente
+                </button>
+              </div>
+            )}
+
+            {paso === "existente" && seleccionado && (
+              <div className="space-y-4">
+                <div className="rounded-lg bg-muted/30 border border-border px-4 py-3">
+                  <p className="font-semibold">{seleccionado.nombre_apellido.trim()} <span className="text-muted-foreground font-normal text-sm">#{seleccionado.numero}</span></p>
+                  <p className="text-xs text-muted-foreground mt-0.5">{seleccionado.celular_caracteristica} {seleccionado.celular_numero}</p>
+                </div>
+                {tallerSelector}
+                {error && <p className="text-red-500 text-sm">{error}</p>}
+                <button onClick={guardarExistente} disabled={guardando}
+                  className="w-full py-2.5 rounded-md bg-blue-900 text-white text-sm font-semibold hover:bg-blue-800 disabled:opacity-50">
+                  {guardando ? "Guardando..." : "Marcar taller realizado"}
+                </button>
+              </div>
+            )}
+
+            {paso === "nuevo" && (
+              <div className="space-y-4">
+                <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Datos del nuevo cliente</p>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="col-span-2">
+                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Nombre y Apellido *</label>
+                    <input className="mt-1 w-full border border-border rounded-md px-3 py-1.5 text-sm bg-background" value={formNuevo.nombre_apellido} onChange={e => setFormNuevo(f => ({ ...f, nombre_apellido: e.target.value }))} />
+                  </div>
+                  <div className="col-span-2">
+                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Nombre en el Gafete</label>
+                    <input className="mt-1 w-full border border-border rounded-md px-3 py-1.5 text-sm bg-background" value={formNuevo.nombre_gafete} onChange={e => setFormNuevo(f => ({ ...f, nombre_gafete: e.target.value }))} />
+                  </div>
+                  <div>
+                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Característica *</label>
+                    <input className="mt-1 w-full border border-border rounded-md px-3 py-1.5 text-sm bg-background" placeholder="+54" value={formNuevo.celular_caracteristica} onChange={e => setFormNuevo(f => ({ ...f, celular_caracteristica: e.target.value }))} />
+                  </div>
+                  <div>
+                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Celular *</label>
+                    <input className="mt-1 w-full border border-border rounded-md px-3 py-1.5 text-sm bg-background" value={formNuevo.celular_numero} onChange={e => setFormNuevo(f => ({ ...f, celular_numero: e.target.value }))} />
+                  </div>
+                  <div className="col-span-2">
+                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Email</label>
+                    <input type="email" className="mt-1 w-full border border-border rounded-md px-3 py-1.5 text-sm bg-background" value={formNuevo.email} onChange={e => setFormNuevo(f => ({ ...f, email: e.target.value }))} />
+                  </div>
+                </div>
+                {tallerSelector}
+                {error && <p className="text-red-500 text-sm">{error}</p>}
+                <button onClick={guardarNuevo} disabled={guardando}
+                  className="w-full py-2.5 rounded-md bg-blue-900 text-white text-sm font-semibold hover:bg-blue-800 disabled:opacity-50">
+                  {guardando ? "Guardando..." : "Agregar cliente y registrar taller"}
+                </button>
+              </div>
+            )}
+
+          </div>
+        </div>
+      </div>
+    </>,
+    document.body
   )
 }

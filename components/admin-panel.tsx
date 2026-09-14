@@ -1349,7 +1349,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                             onClick={() => {
                               const candidatos = filtradas.filter(i => !i.abandono && i.estado !== "cancelado")
                               setConfirmDialog({
-                                titulo: "Incorporar a Taller Realizado",
+                                titulo: "Incorporar clientes",
                                 mensaje: `Se procesarán ${candidatos.length} inscripciones activas. Los que ya estén en la base de clientes con este taller marcado se omitirán. ¿Confirmar?`,
                                 tipo: "confirm",
                                 textoConfirmar: "Sí, incorporar",
@@ -1357,7 +1357,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                               })
                             }}
                           >
-                            {incorporandoTaller ? "Procesando..." : "Incorporar a Taller Realizado"}
+                            {incorporandoTaller ? "Procesando..." : "Incorporar clientes"}
                           </Button>
                         )}
                         {filtroTallerSlug && (() => {

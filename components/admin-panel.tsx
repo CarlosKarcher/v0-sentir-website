@@ -67,6 +67,20 @@ const TALLERES = [
 
 type TallerKey = typeof TALLERES[number]["key"]
 
+const SLUG_A_TALLER_KEY: Partial<Record<string, keyof Miembro>> = {
+  "autoconocimiento": "taller_autoconocimiento",
+  "transformacion": "taller_transformacion",
+  "myl": "taller_myl",
+  "guerrero": "taller_guerrero",
+  "camino-del-guerrero": "taller_guerrero",
+  "el-camino-del-guerrero": "taller_guerrero",
+  "biodecodificacion": "taller_biodecodificacion",
+  "nino-interior": "taller_nino_interior",
+  "nino_interior": "taller_nino_interior",
+  "constelaciones": "taller_constelaciones",
+  "constelaciones-grupales": "taller_constelaciones",
+}
+
 interface AdminPanelProps {
   isOpen: boolean
   onClose: () => void
@@ -105,6 +119,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
   const [agregandoSede, setAgregandoSede] = useState(false)
   const [nuevaSede, setNuevaSede] = useState({ nombre: "", codigo_postal: "" })
   const [guardandoSede, setGuardandoSede] = useState(false)
+  const [incorporandoTaller, setIncorporandoTaller] = useState(false)
 
   const cargarSedes = async () => {
     const { data } = await supabase.from("sedes_sentir").select("nombre").eq("activo", true).order("orden")
@@ -399,6 +414,125 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
     })
     if (Array.isArray(data)) setNomembros(data)
     setCargando(false)
+  }
+
+  const incorporarATallerRealizado = async (inscripcionesFiltradas: InscripcionConTaller[]) => {
+    setIncorporandoTaller(true)
+
+    let listaMiembros = miembros
+    if (listaMiembros.length === 0) {
+      const { data } = await supabase.rpc("listar_miembros", {
+        p_admin_caracteristica: adminCaracteristica,
+        p_admin_numero: adminNumero,
+      })
+      if (Array.isArray(data)) { listaMiembros = data; setMiembros(data) }
+    }
+
+    const tallerKey = SLUG_A_TALLER_KEY[filtroTallerSlug]
+    if (!tallerKey) {
+      setIncorporandoTaller(false)
+      setConfirmDialog({ titulo: "Error", mensaje: `No se reconoció el taller "${filtroTallerSlug}". Revisá el slug.`, tipo: "info" })
+      return
+    }
+
+    const [anioStr, mesStr] = filtroFechaInicio.split("-")
+    const mes = parseInt(mesStr)
+    const anio = parseInt(anioStr)
+
+    const candidatos = inscripcionesFiltradas.filter(i => !i.abandono && i.estado !== "cancelado")
+    let nuevo = 0, actualizado = 0, omitido = 0, errores = 0
+
+    for (const insc of candidatos) {
+      const miembro = insc.email
+        ? listaMiembros.find(m => m.email && m.email.toLowerCase() === insc.email.toLowerCase())
+        : undefined
+
+      if (miembro) {
+        if (miembro[tallerKey]) { omitido++; continue }
+        const { error: sbError } = await supabase.rpc("actualizar_miembro", {
+          p_admin_caracteristica:     adminCaracteristica,
+          p_admin_numero:             adminNumero,
+          p_numero:                   miembro.numero,
+          p_nombre_apellido:          miembro.nombre_apellido,
+          p_nombre_gafete:            miembro.nombre_gafete,
+          p_celular_caracteristica:   miembro.celular_caracteristica,
+          p_celular_numero:           miembro.celular_numero,
+          p_email:                    miembro.email,
+          p_fecha_nacimiento:         miembro.fecha_nacimiento,
+          p_comentario:               miembro.comentario,
+          p_taller_autoconocimiento:  tallerKey === "taller_autoconocimiento"  ? true : miembro.taller_autoconocimiento,
+          p_autoconocimiento_mes:     tallerKey === "taller_autoconocimiento"  ? mes  : miembro.autoconocimiento_mes,
+          p_autoconocimiento_anio:    tallerKey === "taller_autoconocimiento"  ? anio : miembro.autoconocimiento_anio,
+          p_taller_transformacion:    tallerKey === "taller_transformacion"    ? true : miembro.taller_transformacion,
+          p_transformacion_mes:       tallerKey === "taller_transformacion"    ? mes  : miembro.transformacion_mes,
+          p_transformacion_anio:      tallerKey === "taller_transformacion"    ? anio : miembro.transformacion_anio,
+          p_taller_myl:               tallerKey === "taller_myl"               ? true : miembro.taller_myl,
+          p_myl_mes:                  tallerKey === "taller_myl"               ? mes  : miembro.myl_mes,
+          p_myl_anio:                 tallerKey === "taller_myl"               ? anio : miembro.myl_anio,
+          p_taller_guerrero:          tallerKey === "taller_guerrero"          ? true : miembro.taller_guerrero,
+          p_guerrero_mes:             tallerKey === "taller_guerrero"          ? mes  : miembro.guerrero_mes,
+          p_guerrero_anio:            tallerKey === "taller_guerrero"          ? anio : miembro.guerrero_anio,
+          p_taller_biodecodificacion: tallerKey === "taller_biodecodificacion" ? true : miembro.taller_biodecodificacion,
+          p_biodecodificacion_mes:    tallerKey === "taller_biodecodificacion" ? mes  : miembro.biodecodificacion_mes,
+          p_biodecodificacion_anio:   tallerKey === "taller_biodecodificacion" ? anio : miembro.biodecodificacion_anio,
+          p_taller_nino_interior:     tallerKey === "taller_nino_interior"     ? true : miembro.taller_nino_interior,
+          p_nino_interior_mes:        tallerKey === "taller_nino_interior"     ? mes  : miembro.nino_interior_mes,
+          p_nino_interior_anio:       tallerKey === "taller_nino_interior"     ? anio : miembro.nino_interior_anio,
+          p_taller_constelaciones:    tallerKey === "taller_constelaciones"    ? true : miembro.taller_constelaciones,
+          p_constelaciones_mes:       tallerKey === "taller_constelaciones"    ? mes  : miembro.constelaciones_mes,
+          p_constelaciones_anio:      tallerKey === "taller_constelaciones"    ? anio : miembro.constelaciones_anio,
+        })
+        if (sbError) { errores++; continue }
+        actualizado++
+      } else {
+        const { error: sbError } = await supabase.rpc("registrar_miembro", {
+          nombre_apellido:           `${insc.nombre} ${insc.apellido}`,
+          nombre_gafete:             insc.nombre || null,
+          celular_caracteristica:    "",
+          celular_numero:            insc.telefono || "",
+          email:                     insc.email || null,
+          comentario:                null,
+          taller_autoconocimiento:   tallerKey === "taller_autoconocimiento",
+          autoconocimiento_mes:      tallerKey === "taller_autoconocimiento"  ? mes  : null,
+          autoconocimiento_anio:     tallerKey === "taller_autoconocimiento"  ? anio : null,
+          taller_transformacion:     tallerKey === "taller_transformacion",
+          transformacion_mes:        tallerKey === "taller_transformacion"    ? mes  : null,
+          transformacion_anio:       tallerKey === "taller_transformacion"    ? anio : null,
+          taller_myl:                tallerKey === "taller_myl",
+          myl_mes:                   tallerKey === "taller_myl"               ? mes  : null,
+          myl_anio:                  tallerKey === "taller_myl"               ? anio : null,
+          taller_guerrero:           tallerKey === "taller_guerrero",
+          guerrero_mes:              tallerKey === "taller_guerrero"          ? mes  : null,
+          guerrero_anio:             tallerKey === "taller_guerrero"          ? anio : null,
+          taller_biodecodificacion:  tallerKey === "taller_biodecodificacion",
+          biodecodificacion_mes:     tallerKey === "taller_biodecodificacion" ? mes  : null,
+          biodecodificacion_anio:    tallerKey === "taller_biodecodificacion" ? anio : null,
+          taller_nino_interior:      tallerKey === "taller_nino_interior",
+          nino_interior_mes:         tallerKey === "taller_nino_interior"     ? mes  : null,
+          nino_interior_anio:        tallerKey === "taller_nino_interior"     ? anio : null,
+          taller_constelaciones:     tallerKey === "taller_constelaciones",
+          constelaciones_mes:        null,
+          constelaciones_anio:       null,
+          recibir_informacion:       false,
+        })
+        if (sbError) { errores++; continue }
+        nuevo++
+      }
+    }
+
+    setIncorporandoTaller(false)
+    if (nuevo > 0 || actualizado > 0) setMiembros([]) // forzar recarga al ir a Miembros
+
+    const partes: string[] = []
+    if (nuevo > 0) partes.push(`${nuevo} cliente${nuevo !== 1 ? "s" : ""} nuevo${nuevo !== 1 ? "s" : ""} agregado${nuevo !== 1 ? "s" : ""}`)
+    if (actualizado > 0) partes.push(`taller marcado a ${actualizado} cliente${actualizado !== 1 ? "s" : ""} existente${actualizado !== 1 ? "s" : ""}`)
+    if (omitido > 0) partes.push(`${omitido} omitido${omitido !== 1 ? "s" : ""} (ya tenían el taller)`)
+    if (errores > 0) partes.push(`${errores} con error`)
+    setConfirmDialog({
+      titulo: "Incorporación completada",
+      mensaje: partes.length > 0 ? partes.join(". ") + "." : "No había candidatos para incorporar.",
+      tipo: "info",
+    })
   }
 
   const irA = (v: Vista) => {
@@ -1206,6 +1340,26 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                         <Button size="sm" variant="outline" className="gap-1.5" onClick={() => exportarCSVInscripciones(filtradas)}>
                           <Download className="h-4 w-4" /> Exportar CSV
                         </Button>
+                        {filtroTallerSlug && filtroFechaInicio < new Date().toISOString().substring(0, 10) && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="gap-1.5 border-green-600 text-green-700 dark:text-green-400 hover:bg-green-50 hover:text-green-700 dark:hover:bg-green-950/30"
+                            disabled={incorporandoTaller}
+                            onClick={() => {
+                              const candidatos = filtradas.filter(i => !i.abandono && i.estado !== "cancelado")
+                              setConfirmDialog({
+                                titulo: "Incorporar a Taller Realizado",
+                                mensaje: `Se procesarán ${candidatos.length} inscripciones activas. Los que ya estén en la base de clientes con este taller marcado se omitirán. ¿Confirmar?`,
+                                tipo: "confirm",
+                                textoConfirmar: "Sí, incorporar",
+                                onConfirm: () => incorporarATallerRealizado(filtradas),
+                              })
+                            }}
+                          >
+                            {incorporandoTaller ? "Procesando..." : "Incorporar a Taller Realizado"}
+                          </Button>
+                        )}
                         {filtroTallerSlug && (() => {
                           const limite = new Date(filtroFechaInicio)
                           limite.setDate(limite.getDate() + 2)

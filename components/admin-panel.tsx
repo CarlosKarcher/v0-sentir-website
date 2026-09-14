@@ -440,15 +440,18 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
     const anio = parseInt(anioStr)
 
     const candidatos = inscripcionesFiltradas.filter(i => !i.abandono && i.estado !== "cancelado")
-    let nuevo = 0, actualizado = 0, omitido = 0, errores = 0
+    let nuevo = 0, errores = 0
+    const actualizados: string[] = []
+    const omitidos: string[] = []
 
     for (const insc of candidatos) {
+      const nombreInsc = `${insc.nombre} ${insc.apellido}`.trim()
       const miembro = insc.email
         ? listaMiembros.find(m => m.email && m.email.toLowerCase() === insc.email.toLowerCase())
         : undefined
 
       if (miembro) {
-        if (miembro[tallerKey]) { omitido++; continue }
+        if (miembro[tallerKey]) { omitidos.push(nombreInsc); continue }
         const { error: sbError } = await supabase.rpc("actualizar_miembro", {
           p_admin_caracteristica:     adminCaracteristica,
           p_admin_numero:             adminNumero,
@@ -483,7 +486,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
           p_constelaciones_anio:      tallerKey === "taller_constelaciones"    ? anio : miembro.constelaciones_anio,
         })
         if (sbError) { errores++; continue }
-        actualizado++
+        actualizados.push(nombreInsc)
       } else {
         const { error: sbError } = await supabase.rpc("registrar_miembro", {
           nombre_apellido:           `${insc.nombre} ${insc.apellido}`,
@@ -521,12 +524,12 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
     }
 
     setIncorporandoTaller(false)
-    if (nuevo > 0 || actualizado > 0) setMiembros([]) // forzar recarga al ir a Miembros
+    if (nuevo > 0 || actualizados.length > 0) setMiembros([]) // forzar recarga al ir a Miembros
 
     const partes: string[] = []
     if (nuevo > 0) partes.push(`${nuevo} cliente${nuevo !== 1 ? "s" : ""} nuevo${nuevo !== 1 ? "s" : ""} agregado${nuevo !== 1 ? "s" : ""}`)
-    if (actualizado > 0) partes.push(`taller marcado a ${actualizado} cliente${actualizado !== 1 ? "s" : ""} existente${actualizado !== 1 ? "s" : ""}`)
-    if (omitido > 0) partes.push(`${omitido} omitido${omitido !== 1 ? "s" : ""} (ya tenían el taller)`)
+    if (actualizados.length > 0) partes.push(`Taller marcado a ${actualizados.length} cliente${actualizados.length !== 1 ? "s" : ""} existente${actualizados.length !== 1 ? "s" : ""}: ${actualizados.join(", ")}`)
+    if (omitidos.length > 0) partes.push(`${omitidos.length} ya tenían el taller (omitidos): ${omitidos.join(", ")}`)
     if (errores > 0) partes.push(`${errores} con error`)
     setConfirmDialog({
       titulo: "Incorporación completada",

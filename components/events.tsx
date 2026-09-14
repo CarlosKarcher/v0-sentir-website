@@ -720,7 +720,7 @@ export function Events() {
       flyerImage: "/auto rio Gallegos octubre 2026.jpeg",
       flyerImageAlt: "/images/auto rio Gallegos octubre 2026.jpeg",
       level: "1er Nivel",
-      contactPhone: "+54 9 2966 595803",
+      contactPhone: "+54 9 2966 211547",
       tallerSlug: "autoconocimiento",
       tallerId: "37595e4d-1e12-4eab-aede-14e6e8857cc3",
       sede: "Río Gallegos",

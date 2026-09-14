@@ -1741,6 +1741,17 @@ function TablaInscripciones({
   const [abandonoPendiente, setAbandonoPendiente] = useState<Record<string, boolean>>({})
   const [abandonoConfirmado, setAbandonoConfirmado] = useState<Record<string, boolean>>({})
   const [guardandoAbandono, setGuardandoAbandono] = useState<string | null>(null)
+  const [ordenNombre, setOrdenNombre] = useState<"none" | "asc" | "desc">("none")
+
+  const toggleOrdenNombre = () => setOrdenNombre(o => o === "none" ? "asc" : o === "asc" ? "desc" : "none")
+
+  const inscripcionesSorted = ordenNombre === "none"
+    ? inscripciones
+    : [...inscripciones].sort((a, b) => {
+        const na = `${a.nombre} ${a.apellido}`.toLowerCase()
+        const nb = `${b.nombre} ${b.apellido}`.toLowerCase()
+        return ordenNombre === "asc" ? na.localeCompare(nb, "es") : nb.localeCompare(na, "es")
+      })
 
   const getAbandono = (ins: InscripcionConTaller) =>
     ins.id in abandonoPendiente ? abandonoPendiente[ins.id]
@@ -2143,7 +2154,9 @@ function TablaInscripciones({
         <thead className="sticky top-0 z-20">
           <tr className="border-b-2 border-border bg-background">
             <th className="text-left px-2 py-2 font-semibold whitespace-nowrap sticky left-0 z-30 bg-background border-r border-border/30" style={{ minWidth: 170, width: 170 }}>Taller</th>
-            <th className="text-left px-2 py-2 font-semibold whitespace-nowrap sticky z-30 bg-background border-r border-border/40" style={{ left: 170 }}>Nombre</th>
+            <th className="text-left px-2 py-2 font-semibold whitespace-nowrap sticky z-30 bg-background border-r border-border/40 cursor-pointer select-none hover:text-blue-700 transition-colors" style={{ left: 170 }} onClick={toggleOrdenNombre}>
+              Nombre{ordenNombre === "asc" ? " ▲" : ordenNombre === "desc" ? " ▼" : " ⇅"}
+            </th>
             <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Miembro</th>
             <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Enrolador</th>
             <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Email</th>
@@ -2160,7 +2173,7 @@ function TablaInscripciones({
           </tr>
         </thead>
         <tbody>
-          {inscripciones.map((ins, i) => {
+          {inscripcionesSorted.map((ins, i) => {
             const precioEfectivo = getPrecioEfectivo(ins)
             const precioEditVal = preciosEdit[ins.id]
             const montoEditVal = montosEdit[ins.id]

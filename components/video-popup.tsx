@@ -56,8 +56,8 @@ export function VideoPopup() {
             background: "#000",
             borderRadius: "12px",
             overflow: "hidden",
-            width: "min(960px, 98vw)",
-            maxHeight: "92vh",
+            width: "min(640px, 96vw)",
+            maxHeight: "70vh",
             display: "flex",
             gap: "4px",
           }}
@@ -83,7 +83,7 @@ export function VideoPopup() {
               controls
               preload="auto"
               onEnded={handleEnded1}
-              style={{ display: "block", width: "100%", maxHeight: "92vh", objectFit: "contain" }}
+              style={{ display: "block", width: "100%", maxHeight: "70vh", objectFit: "contain" }}
             />
           </div>
 
@@ -95,7 +95,7 @@ export function VideoPopup() {
               playsInline
               controls
               preload="auto"
-              style={{ display: "block", width: "100%", maxHeight: "92vh", objectFit: "contain" }}
+              style={{ display: "block", width: "100%", maxHeight: "70vh", objectFit: "contain" }}
             />
           </div>
         </div>

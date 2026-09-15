@@ -4,7 +4,7 @@ import React, { useState, useRef } from "react"
 import { X, Play } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
-const VIDEO_SRC = "/Video-Autoconocimiento-marzo-2026.mp4"
+const VIDEO_SRC = "/video-auto-11-09-2026.mp4"
 const WIDTH_CM = 10
 const HEIGHT_CM = 15
 

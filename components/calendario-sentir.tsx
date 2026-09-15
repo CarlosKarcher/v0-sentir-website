@@ -224,6 +224,11 @@ const CALENDAR_EVENTS: DayEvent[] = [
   { month: 9, day: 10, type: "autoconocimiento", label: "Autocon. – El Calafate" },
   { month: 9, day: 11, type: "autoconocimiento", label: "Autocon. – El Calafate" },
 
+  // Octubre — Autoconocimiento Río Gallegos
+  { month: 9, day: 16, type: "autoconocimiento", label: "Autocon. – Río Gallegos" },
+  { month: 9, day: 17, type: "autoconocimiento", label: "Autocon. – Río Gallegos" },
+  { month: 9, day: 18, type: "autoconocimiento", label: "Autocon. – Río Gallegos" },
+
   // Octubre/Noviembre — MyL 7 · Campamento y Cierre
   { month: 9, day: 31, type: "myl", label: "MyL 7 - Campamento y Cierre" },
   { month: 10, day: 1, type: "myl", label: "MyL 7 - Campamento y Cierre" },

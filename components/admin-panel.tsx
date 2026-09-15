@@ -2372,6 +2372,7 @@ function TablaMiembros({ miembros, adminCaracteristica, adminNumero, onRefresh }
   const [orden, setOrden] = useState<"numero" | "nombre" | "talleres" | "cumpleanos">("numero")
   const [dir, setDir] = useState<"asc" | "desc">("asc")
   const [busqueda, setBusqueda] = useState("")
+  const [filtroEstado, setFiltroEstado] = useState<"todos"|"solo_auto"|"sin_auto"|"falta_myl">("todos")
   const [editando, setEditando] = useState<Miembro | null>(null)
   const [form, setForm] = useState<Miembro | null>(null)
   const [guardando, setGuardando] = useState(false)
@@ -2423,9 +2424,15 @@ function TablaMiembros({ miembros, adminCaracteristica, adminNumero, onRefresh }
   const talleresLiderazgo = (m: Miembro) =>
     [m.taller_autoconocimiento, m.taller_transformacion, m.taller_myl].filter(Boolean).length
 
-  const filtrados = busqueda.trim()
-    ? miembros.filter(m => m.nombre_apellido.toLowerCase().includes(busqueda.toLowerCase()))
-    : miembros
+  const filtrados = (() => {
+    let base = busqueda.trim()
+      ? miembros.filter(m => m.nombre_apellido.toLowerCase().includes(busqueda.toLowerCase()))
+      : miembros
+    if (filtroEstado === "solo_auto") base = base.filter(m => m.taller_autoconocimiento && !m.taller_transformacion)
+    if (filtroEstado === "sin_auto")  base = base.filter(m => !m.taller_autoconocimiento)
+    if (filtroEstado === "falta_myl") base = base.filter(m => m.taller_transformacion && !m.taller_myl)
+    return base
+  })()
 
   const sorted = [...filtrados].sort((a, b) => {
     let cmp = 0
@@ -2548,6 +2555,21 @@ function TablaMiembros({ miembros, adminCaracteristica, adminNumero, onRefresh }
           Cumpleaños{arrow("cumpleanos")}
         </button>
       </div>
+      <div className="flex items-center gap-2 flex-wrap">
+        <span className="text-sm font-medium">Filtrar:</span>
+        {([
+          { key: "todos",     label: "Todos" },
+          { key: "solo_auto", label: "Solo Autoconocimiento" },
+          { key: "sin_auto",  label: "Sin Autoconocimiento" },
+          { key: "falta_myl", label: "Les falta MyL" },
+        ] as const).map(f => (
+          <button key={f.key} onClick={() => setFiltroEstado(f.key)}
+            className={`px-3 py-1 rounded-full text-xs font-semibold border transition-colors ${filtroEstado === f.key ? "bg-teal-700 text-white border-teal-700" : "border-border hover:border-teal-700"}`}>
+            {f.label}
+          </button>
+        ))}
+        {filtroEstado !== "todos" && <span className="text-xs text-muted-foreground">{sorted.length} resultado{sorted.length !== 1 ? "s" : ""}</span>}
+      </div>
     {/* Barra de scroll superior sincronizada */}
     <div ref={topScrollRef} style={{ overflowX: "auto", overflowY: "hidden", height: 12 }}>
       <div style={{ height: 1 }} />
@@ -2563,6 +2585,7 @@ function TablaMiembros({ miembros, adminCaracteristica, adminNumero, onRefresh }
           <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Fecha Nac.</th>
           <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Email</th>
           <th className="text-center px-2 py-2 font-semibold whitespace-nowrap">Auto</th>
+          <th className="text-center px-2 py-2 font-semibold whitespace-nowrap">Fecha Auto</th>
           <th className="text-center px-2 py-2 font-semibold whitespace-nowrap">Transf</th>
           <th className="text-center px-2 py-2 font-semibold whitespace-nowrap">MyL</th>
           <th className="text-center px-2 py-2 font-semibold whitespace-nowrap">Guerrero</th>
@@ -2585,6 +2608,11 @@ function TablaMiembros({ miembros, adminCaracteristica, adminNumero, onRefresh }
             </td>
             <td className="px-2 py-2 whitespace-nowrap text-xs text-muted-foreground">{m.email || "—"}</td>
             <td className="text-center px-2 py-2">{t(m.taller_autoconocimiento)}</td>
+            <td className="text-center px-2 py-2 text-xs text-muted-foreground whitespace-nowrap">
+              {m.taller_autoconocimiento && (m.autoconocimiento_mes || m.autoconocimiento_anio)
+                ? `${m.autoconocimiento_mes ? String(m.autoconocimiento_mes).padStart(2,"0") : "??"}/${m.autoconocimiento_anio ?? "????"}`
+                : "—"}
+            </td>
             <td className="text-center px-2 py-2">{t(m.taller_transformacion)}</td>
             <td className="text-center px-2 py-2">{t(m.taller_myl)}</td>
             <td className="text-center px-2 py-2">{t(m.taller_guerrero)}</td>

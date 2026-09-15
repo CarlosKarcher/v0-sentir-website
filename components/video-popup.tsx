@@ -55,7 +55,7 @@ export function VideoPopup() {
 
           <video
             ref={videoRef}
-            src="/Abrazos-Gratis-29-08-2026.mp4"
+            src="/video-auto-11-09-2026.mp4"
             playsInline
             controls
             preload="auto"

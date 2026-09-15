@@ -78,7 +78,7 @@ export function VideoPopup() {
           <div style={{ flex: 1, ...ringStyle(0) }}>
             <video
               ref={video1Ref}
-              src="/video-auto-11-09-2026-2.MP4"
+              src="/video-auto-11-09-2026-2.mp4"
               playsInline
               controls
               preload="auto"

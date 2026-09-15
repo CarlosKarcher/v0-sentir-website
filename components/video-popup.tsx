@@ -4,8 +4,14 @@ import * as React from "react"
 import { X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
+const VIDEOS = [
+  "/video-auto-11-09-2026-2.MP4",
+  "/video-auto-11-09-2026.mp4",
+]
+
 export function VideoPopup() {
   const [isOpen, setIsOpen] = React.useState(true)
+  const [current, setCurrent] = React.useState(0)
   const videoRef = React.useRef<HTMLVideoElement>(null)
 
   React.useEffect(() => {
@@ -15,7 +21,15 @@ export function VideoPopup() {
     const tryPlay = () => { v.play().catch(() => {}) }
     if (v.readyState >= 1) tryPlay()
     else v.addEventListener("loadedmetadata", tryPlay, { once: true })
-  }, [])
+  }, [current])
+
+  const handleEnded = () => {
+    if (current < VIDEOS.length - 1) {
+      setCurrent(current + 1)
+    } else {
+      setIsOpen(false)
+    }
+  }
 
   const handleClose = () => {
     videoRef.current?.pause()
@@ -53,12 +67,20 @@ export function VideoPopup() {
             <X style={{ width: 20, height: 20 }} />
           </Button>
 
+          {VIDEOS.length > 1 && (
+            <div style={{ position: "absolute", top: 8, left: 12, zIndex: 20, color: "rgba(255,255,255,0.7)", fontSize: 12 }}>
+              {current + 1} / {VIDEOS.length}
+            </div>
+          )}
+
           <video
+            key={current}
             ref={videoRef}
-            src="/video-auto-11-09-2026.mp4"
+            src={VIDEOS[current]}
             playsInline
             controls
             preload="auto"
+            onEnded={handleEnded}
             style={{ display: "block", width: "100%", maxHeight: "92vh", objectFit: "contain" }}
           />
         </div>

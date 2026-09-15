@@ -26,11 +26,8 @@ const REQUISITOS_ESTRICTOS: Record<string, { campoDB: string; tallerNombre: stri
   "metas-y-logros": { campoDB: "taller_transformacion",   tallerNombre: "Taller de Transformación" },
 }
 
-// Estos talleres bloquean los campos del usuario (deben coincidir con quien se logueó)
-const TALLERES_CAMPOS_FIJOS = new Set(["transformacion", "metas-y-logros"])
-
-// Estos talleres requieren que el participante esté registrado en la base de clientes
-const TALLERES_REQUIEREN_REGISTRO = new Set(["transformacion", "metas-y-logros"])
+// Talleres con campos bloqueados (ninguno actualmente — se completaban cuando había login obligatorio)
+const TALLERES_CAMPOS_FIJOS = new Set<string>([])
 
 function InscribirseForm() {
   const searchParams = useSearchParams()
@@ -83,55 +80,26 @@ function InscribirseForm() {
   const [exito, setExito] = useState(false)
   const [mailCopiado, setMailCopiado] = useState(false)
 
-  // Cargar datos del usuario y verificar prerequisitos
+  // Pre-rellenar datos si el usuario tiene sesión activa
   useEffect(() => {
     if (estadoAuth === "cargando") return
 
-    // Transformacion y MyL requieren login obligatorio
-    if (camposFijos && (estadoAuth === "no_logueado" || estadoAuth === "sin_registro" || !emailAuth)) {
-      setEstadoUsuario("no_registrado")
-      return
-    }
-
-    // Otros talleres: puede continuar sin login
     if (estadoAuth === "no_logueado" || estadoAuth === "sin_registro" || !emailAuth) {
       setEstadoUsuario("ok")
       return
     }
 
-    // Tiene sesión: cargar datos del miembro
+    // Tiene sesión: pre-rellenar datos del miembro
     supabase.rpc("buscar_email_registrado", { p_email: emailAuth.toLowerCase() }).then(({ data }) => {
-      if (!data?.encontrado) {
-        setEstadoUsuario(camposFijos ? "no_registrado" : "ok")
-        return
+      if (data?.encontrado) {
+        if (data.es_admin) setEsAdmin(true)
+        const parts = (data.nombre_apellido || "").trim().split(" ")
+        setNombre(parts[0] || "")
+        setApellido(parts.slice(1).join(" ") || "")
+        setEmail(emailAuth)
+        setTelefono(`${data.celular_caracteristica || ""} ${data.celular_numero || ""}`.trim())
+        if (data.fecha_nacimiento) setFechaNacimiento(data.fecha_nacimiento.slice(0, 10))
       }
-
-      // Pre-rellenar datos desde el registro
-      if (data.es_admin) setEsAdmin(true)
-      const parts = (data.nombre_apellido || "").trim().split(" ")
-      setNombre(parts[0] || "")
-      setApellido(parts.slice(1).join(" ") || "")
-      setEmail(emailAuth)
-      setTelefono(`${data.celular_caracteristica || ""} ${data.celular_numero || ""}`.trim())
-      if (data.fecha_nacimiento) setFechaNacimiento(data.fecha_nacimiento.slice(0, 10))
-
-      // Verificar prerequisito usando datos del RPC (evita problemas de RLS)
-      const requisito = REQUISITOS_ESTRICTOS[tallerSlug]
-      if (requisito) {
-        // Ya realizó este taller (solo aplica a Transformación) — admins pueden igualmente inscribirse
-        if (requisito.campoPropio && data[requisito.campoPropio] && !data.es_admin) {
-          setEstadoUsuario("ya_realizado")
-          return
-        }
-
-        // No tiene el prerequisito — admins pueden igualmente inscribirse
-        if (!data[requisito.campoDB] && !data.es_admin) {
-          setTallerFaltante(requisito.tallerNombre)
-          setEstadoUsuario("sin_prerequisito")
-          return
-        }
-      }
-
       setEstadoUsuario("ok")
     })
   }, [estadoAuth, emailAuth])
@@ -217,12 +185,24 @@ function InscribirseForm() {
 
     const mensajeFinal = mensaje.trim() || null
 
-    // Verificar que el participante esté registrado en la base de clientes
-    if (TALLERES_REQUIEREN_REGISTRO.has(tallerSlug)) {
+    // Para talleres con prerequisito estricto: verificar que el email esté en miembros con el prerequisito cumplido
+    const requisito = REQUISITOS_ESTRICTOS[tallerSlug]
+    if (requisito && !esAdmin) {
       const { data: clienteCheck } = await supabase
         .rpc("buscar_email_registrado", { p_email: email.trim().toLowerCase() })
       if (!clienteCheck?.encontrado) {
         setParticipanteNoRegistrado(true)
+        setEnviando(false)
+        return
+      }
+      if (requisito.campoPropio && clienteCheck[requisito.campoPropio]) {
+        setEstadoUsuario("ya_realizado")
+        setEnviando(false)
+        return
+      }
+      if (!clienteCheck[requisito.campoDB]) {
+        setTallerFaltante(requisito.tallerNombre)
+        setEstadoUsuario("sin_prerequisito")
         setEnviando(false)
         return
       }

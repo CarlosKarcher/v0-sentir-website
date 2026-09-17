@@ -110,65 +110,76 @@ export function Hero({ onAnotate }: { onAnotate?: () => void }) {
         <p className="text-xs sm:text-sm md:text-base text-muted-foreground mb-3 sm:mb-4 max-w-2xl mx-auto text-pretty px-2">
           Un espacio de transformación, crecimiento y autoconocimiento donde descubrirás tu verdadero potencial
         </p>
-        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center px-4">
-          <Button
-            size="sm"
-            className="text-sm sm:text-sm bg-blue-900 hover:bg-blue-800 text-white w-full sm:w-auto"
-            onClick={() => scrollToElement(SECTION_IDS.QUIENES_SOMOS)}
-          >
-            Comenza tu camino..
-            <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
-          </Button>
-          <Button
-            size="sm"
-            className="text-sm bg-blue-900 hover:bg-blue-800 text-white w-full sm:w-auto"
-            onClick={() => scrollToElement(SECTION_IDS.CONTACTO)}
-          >
-            Contacto
-          </Button>
-        </div>
-        <div className="mt-2 sm:mt-3 px-4 flex flex-col sm:flex-row gap-2 justify-center">
-          <Button
-            size="sm"
-            className="text-sm bg-blue-900 hover:bg-blue-800 text-white w-full sm:w-auto"
-            onClick={() => scrollToElement(SECTION_IDS.SENTIR_DESDE_ADENTRO)}
-          >
-            Sentir desde Adentro
-          </Button>
-          <Button
-            size="sm"
-            className="text-sm bg-green-700 hover:bg-green-600 text-white w-full sm:w-auto font-bold"
-            onClick={onAnotate}
-          >
-            Registrate
-          </Button>
-        </div>
-        <div className="mt-3 sm:mt-4 px-4 flex justify-center">
+        <div className="flex flex-row items-stretch justify-center gap-3 px-4 mt-1">
+          {/* Botón vertical Inscribite */}
           <a
             href="/talleres-inscripcion"
             style={{
-              display: "inline-block",
-              padding: "12px 40px",
-              fontSize: "1.1rem",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              writingMode: "vertical-rl",
+              textOrientation: "mixed",
+              transform: "rotate(180deg)",
+              padding: "12px 10px",
+              fontSize: "0.95rem",
               fontWeight: 900,
               color: "#fff",
               borderRadius: "14px",
               textDecoration: "none",
-              letterSpacing: "0.04em",
+              letterSpacing: "0.06em",
               animation: "pulsarVerde 2s ease-in-out infinite",
               boxShadow: "0 0 32px 8px rgba(34,197,94,0.5)",
+              minHeight: "120px",
             }}
           >
             Inscribite Aquí.!!
           </a>
-          <style>{`
-            @keyframes pulsarVerde {
-              0%   { background-color: #15803d; box-shadow: 0 0 24px 4px rgba(34,197,94,0.4); }
-              50%  { background-color: #22c55e; box-shadow: 0 0 48px 16px rgba(34,197,94,0.85); }
-              100% { background-color: #15803d; box-shadow: 0 0 24px 4px rgba(34,197,94,0.4); }
-            }
-          `}</style>
+
+          {/* Los 4 botones en grilla 2x2 */}
+          <div className="flex flex-col gap-2">
+            <div className="flex flex-row gap-2">
+              <Button
+                size="sm"
+                className="text-sm bg-blue-900 hover:bg-blue-800 text-white"
+                onClick={() => scrollToElement(SECTION_IDS.QUIENES_SOMOS)}
+              >
+                Comenza tu camino..
+                <ArrowRight className="ml-1 h-4 w-4" />
+              </Button>
+              <Button
+                size="sm"
+                className="text-sm bg-blue-900 hover:bg-blue-800 text-white"
+                onClick={() => scrollToElement(SECTION_IDS.CONTACTO)}
+              >
+                Contacto
+              </Button>
+            </div>
+            <div className="flex flex-row gap-2">
+              <Button
+                size="sm"
+                className="text-sm bg-blue-900 hover:bg-blue-800 text-white"
+                onClick={() => scrollToElement(SECTION_IDS.SENTIR_DESDE_ADENTRO)}
+              >
+                Sentir desde Adentro
+              </Button>
+              <Button
+                size="sm"
+                className="text-sm bg-green-700 hover:bg-green-600 text-white font-bold"
+                onClick={onAnotate}
+              >
+                Registrate
+              </Button>
+            </div>
+          </div>
         </div>
+        <style>{`
+          @keyframes pulsarVerde {
+            0%   { background-color: #15803d; box-shadow: 0 0 24px 4px rgba(34,197,94,0.4); }
+            50%  { background-color: #22c55e; box-shadow: 0 0 48px 16px rgba(34,197,94,0.85); }
+            100% { background-color: #15803d; box-shadow: 0 0 24px 4px rgba(34,197,94,0.4); }
+          }
+        `}</style>
       </div>
     </section>
   )

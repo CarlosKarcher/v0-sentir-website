@@ -100,7 +100,7 @@ export function Hero({ onAnotate }: { onAnotate?: () => void }) {
         ))}
       </div>
 
-      <div className="w-full max-w-7xl mx-auto relative z-10 text-center px-4 pt-3 sm:pt-6 md:pt-10 pb-2">
+      <div className="w-full max-w-7xl mx-auto relative z-10 text-center px-4 pt-0 pb-2">
         <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-1 md:mb-2 leading-tight">
           <span className="text-blue-900">SENTIR</span>
         </h1>

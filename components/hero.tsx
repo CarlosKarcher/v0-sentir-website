@@ -50,7 +50,7 @@ export function Hero({ onAnotate }: { onAnotate?: () => void }) {
   }, [])
 
   return (
-    <section className="relative min-h-[500px] sm:min-h-[600px] md:min-h-[700px] flex justify-center overflow-hidden">
+    <section className="relative min-h-[380px] sm:min-h-[420px] md:min-h-[480px] flex justify-center overflow-hidden">
       <div className="absolute inset-0 z-0">
         <div className="relative w-full h-full">
           {heroImages.map((image, index) => (
@@ -100,56 +100,56 @@ export function Hero({ onAnotate }: { onAnotate?: () => void }) {
         ))}
       </div>
 
-      <div className="w-full max-w-7xl mx-auto relative z-10 text-center px-4 pt-8 sm:pt-12 md:pt-16 pb-12 sm:pb-16 md:pb-20">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-2 text-balance leading-tight">
+      <div className="w-full max-w-7xl mx-auto relative z-10 text-center px-4 pt-4 sm:pt-6 md:pt-8 pb-6 sm:pb-8 md:pb-10">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-1 text-balance leading-tight">
           <span className="text-blue-900">SENTIR</span>
         </h1>
-        <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-6 sm:mb-8 text-balance max-w-4xl mx-auto px-2">
+        <p className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold mb-3 sm:mb-4 text-balance max-w-4xl mx-auto px-2">
           Comunidad para el Liderazgo y Desarrollo Personal
         </p>
-        <p className="text-sm sm:text-base md:text-lg text-muted-foreground mb-6 sm:mb-8 max-w-2xl mx-auto text-pretty px-2">
+        <p className="text-xs sm:text-sm md:text-base text-muted-foreground mb-3 sm:mb-4 max-w-2xl mx-auto text-pretty px-2">
           Un espacio de transformación, crecimiento y autoconocimiento donde descubrirás tu verdadero potencial
         </p>
-        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
-          <Button 
-            size="lg" 
-            className="text-sm sm:text-base bg-blue-900 hover:bg-blue-800 text-white w-full sm:w-auto"
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center px-4">
+          <Button
+            size="sm"
+            className="text-sm sm:text-sm bg-blue-900 hover:bg-blue-800 text-white w-full sm:w-auto"
             onClick={() => scrollToElement(SECTION_IDS.QUIENES_SOMOS)}
           >
             Comenza tu camino..
             <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
           </Button>
-          <Button 
-            size="lg" 
-            className="text-sm sm:text-base bg-blue-900 hover:bg-blue-800 text-white w-full sm:w-auto"
+          <Button
+            size="sm"
+            className="text-sm bg-blue-900 hover:bg-blue-800 text-white w-full sm:w-auto"
             onClick={() => scrollToElement(SECTION_IDS.CONTACTO)}
           >
             Contacto
           </Button>
         </div>
-        <div className="mt-3 sm:mt-4 px-4 flex flex-col sm:flex-row gap-3 justify-center">
+        <div className="mt-2 sm:mt-3 px-4 flex flex-col sm:flex-row gap-2 justify-center">
           <Button
-            size="lg"
-            className="text-sm sm:text-base bg-blue-900 hover:bg-blue-800 text-white w-full sm:w-auto"
+            size="sm"
+            className="text-sm bg-blue-900 hover:bg-blue-800 text-white w-full sm:w-auto"
             onClick={() => scrollToElement(SECTION_IDS.SENTIR_DESDE_ADENTRO)}
           >
             Sentir desde Adentro
           </Button>
           <Button
-            size="lg"
-            className="text-sm sm:text-base bg-green-700 hover:bg-green-600 text-white w-full sm:w-auto font-bold"
+            size="sm"
+            className="text-sm bg-green-700 hover:bg-green-600 text-white w-full sm:w-auto font-bold"
             onClick={onAnotate}
           >
             Registrate
           </Button>
         </div>
-        <div className="mt-5 sm:mt-6 px-4 flex justify-center">
+        <div className="mt-3 sm:mt-4 px-4 flex justify-center">
           <a
             href="/talleres-inscripcion"
             style={{
               display: "inline-block",
-              padding: "18px 56px",
-              fontSize: "1.25rem",
+              padding: "12px 40px",
+              fontSize: "1.1rem",
               fontWeight: 900,
               color: "#fff",
               borderRadius: "14px",

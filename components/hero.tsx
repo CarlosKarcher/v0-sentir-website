@@ -100,46 +100,46 @@ export function Hero({ onAnotate }: { onAnotate?: () => void }) {
         ))}
       </div>
 
-      <div className="w-full max-w-7xl mx-auto relative z-10 text-center px-4 pt-8 sm:pt-12 md:pt-16 pb-6 sm:pb-8 md:pb-10">
-        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-2 text-balance leading-tight">
+      <div className="w-full max-w-7xl mx-auto relative z-10 text-center px-4 pt-3 sm:pt-5 md:pt-8 pb-4">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-1 leading-tight">
           <span className="text-blue-900">SENTIR</span>
         </h1>
-        <p className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-4 text-balance max-w-4xl mx-auto px-2">
+        <p className="text-lg sm:text-xl md:text-2xl font-bold mb-2 max-w-3xl mx-auto">
           Comunidad para el Liderazgo y Desarrollo Personal
         </p>
-        <p className="text-sm sm:text-base md:text-lg text-muted-foreground mb-5 max-w-2xl mx-auto text-pretty px-2">
+        <p className="text-xs sm:text-sm text-muted-foreground mb-3 max-w-xl mx-auto">
           Un espacio de transformación, crecimiento y autoconocimiento donde descubrirás tu verdadero potencial
         </p>
-        <div className="flex flex-col gap-3 items-center px-4 mt-2">
-          <div className="flex flex-row gap-3">
+        <div className="flex flex-col gap-2 items-center px-4">
+          <div className="flex flex-row gap-2 justify-center flex-wrap">
             <Button
-              size="lg"
-              className="text-base bg-blue-900 hover:bg-blue-800 text-white"
+              size="sm"
+              className="text-sm bg-blue-900 hover:bg-blue-800 text-white"
               onClick={() => scrollToElement(SECTION_IDS.QUIENES_SOMOS)}
             >
               Comenza tu camino..
-              <ArrowRight className="ml-2 h-5 w-5" />
+              <ArrowRight className="ml-1 h-4 w-4" />
             </Button>
             <Button
-              size="lg"
-              className="text-base bg-blue-900 hover:bg-blue-800 text-white"
+              size="sm"
+              className="text-sm bg-blue-900 hover:bg-blue-800 text-white"
               onClick={() => scrollToElement(SECTION_IDS.CONTACTO)}
             >
               Contacto
             </Button>
           </div>
-          <div className="flex flex-row gap-3">
+          <div className="flex flex-row gap-2 justify-center flex-wrap">
             <a
               href="/talleres-inscripcion"
               style={{
                 display: "inline-flex",
                 alignItems: "center",
                 justifyContent: "center",
-                padding: "10px 24px",
-                fontSize: "1rem",
+                padding: "6px 16px",
+                fontSize: "0.875rem",
                 fontWeight: 900,
                 color: "#fff",
-                borderRadius: "8px",
+                borderRadius: "6px",
                 textDecoration: "none",
                 letterSpacing: "0.04em",
                 animation: "pulsarVerde 2s ease-in-out infinite",
@@ -149,8 +149,8 @@ export function Hero({ onAnotate }: { onAnotate?: () => void }) {
               Inscribite Aquí.!!
             </a>
             <Button
-              size="lg"
-              className="text-base bg-green-700 hover:bg-green-600 text-white font-bold"
+              size="sm"
+              className="text-sm bg-green-700 hover:bg-green-600 text-white font-bold"
               onClick={onAnotate}
             >
               Registrate

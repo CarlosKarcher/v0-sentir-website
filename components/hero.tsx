@@ -168,19 +168,22 @@ export function Hero({ onAnotate }: { onAnotate?: () => void }) {
         {/* Alianza SENTIR + ACEPTAR ES CRECER */}
         <div className="mt-4 pt-3 border-t border-white/20">
           <p className="text-xs font-semibold tracking-widest text-slate-400 uppercase mb-1">Alianza Institucional</p>
-          <p className="text-sm sm:text-base font-black text-slate-700 mb-2">SENTIR + ACEPTAR ES CRECER</p>
-          <div className="flex flex-row items-center justify-center gap-4 sm:gap-10">
+          <p className="text-base sm:text-lg font-black text-slate-700 mb-3">SENTIR + ACEPTAR ES CRECER</p>
+          <div className="flex flex-row items-center justify-center gap-6 sm:gap-14 mb-3">
             <div className="flex flex-col items-center gap-1">
-              <img src="/Fuego de Sentir.png" alt="Sentir" className="w-12 h-12 sm:w-16 sm:h-16 object-contain drop-shadow-md" />
-              <span className="text-blue-900 font-bold text-xs">SENTIR</span>
+              <img src="/Fuego de Sentir.png" alt="Sentir" className="w-16 h-16 sm:w-20 sm:h-20 object-contain drop-shadow-md" />
+              <span className="text-blue-900 font-bold text-sm">SENTIR</span>
             </div>
-            <span className="text-2xl font-black text-slate-300">+</span>
+            <span className="text-3xl font-black text-slate-300">+</span>
             <div className="flex flex-col items-center gap-1">
-              <img src="/images/logo-aceptar-es-crecer.jpeg" alt="Aceptar es Crecer" className="w-12 h-12 sm:w-16 sm:h-16 object-contain rounded-lg drop-shadow-md" />
-              <span className="text-yellow-600 font-bold text-xs">ACEPTAR ES CRECER</span>
+              <img src="/images/logo-aceptar-es-crecer.jpeg" alt="Aceptar es Crecer" className="w-16 h-16 sm:w-20 sm:h-20 object-contain rounded-lg drop-shadow-md" />
+              <span className="text-yellow-600 font-bold text-sm">ACEPTAR ES CRECER</span>
             </div>
           </div>
-          <p className="text-xs text-slate-500 italic mt-2">Dos comunidades, un mismo propósito</p>
+          <p className="text-xs sm:text-sm text-slate-600 max-w-xl mx-auto leading-relaxed">
+            La Comunidad SENTIR trabaja junto a Aceptar es Crecer en Río Gallegos, uniendo fuerzas para acompañar procesos de transformación personal y liderazgo.
+          </p>
+          <p className="text-xs text-slate-400 italic mt-1">Dos comunidades, un mismo propósito</p>
         </div>
       </div>
     </section>

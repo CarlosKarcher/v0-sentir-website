@@ -50,7 +50,7 @@ export function Hero({ onAnotate }: { onAnotate?: () => void }) {
   }, [])
 
   return (
-    <section className="relative min-h-[380px] sm:min-h-[420px] md:min-h-[480px] flex justify-center overflow-hidden">
+    <section className="relative min-h-screen flex justify-center overflow-hidden">
       <div className="absolute inset-0 z-0">
         <div className="relative w-full h-full">
           {heroImages.map((image, index) => (
@@ -100,46 +100,46 @@ export function Hero({ onAnotate }: { onAnotate?: () => void }) {
         ))}
       </div>
 
-      <div className="w-full max-w-7xl mx-auto relative z-10 text-center px-4 pt-4 sm:pt-6 md:pt-8 pb-6 sm:pb-8 md:pb-10">
-        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-1 text-balance leading-tight">
+      <div className="w-full max-w-7xl mx-auto relative z-10 text-center px-4 pt-8 sm:pt-12 md:pt-16 pb-6 sm:pb-8 md:pb-10">
+        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-2 text-balance leading-tight">
           <span className="text-blue-900">SENTIR</span>
         </h1>
-        <p className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold mb-3 sm:mb-4 text-balance max-w-4xl mx-auto px-2">
+        <p className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-4 text-balance max-w-4xl mx-auto px-2">
           Comunidad para el Liderazgo y Desarrollo Personal
         </p>
-        <p className="text-xs sm:text-sm md:text-base text-muted-foreground mb-3 sm:mb-4 max-w-2xl mx-auto text-pretty px-2">
+        <p className="text-sm sm:text-base md:text-lg text-muted-foreground mb-5 max-w-2xl mx-auto text-pretty px-2">
           Un espacio de transformación, crecimiento y autoconocimiento donde descubrirás tu verdadero potencial
         </p>
-        <div className="flex flex-col gap-2 items-center px-4 mt-1">
-          <div className="flex flex-row gap-2">
+        <div className="flex flex-col gap-3 items-center px-4 mt-2">
+          <div className="flex flex-row gap-3">
             <Button
-              size="sm"
-              className="text-sm bg-blue-900 hover:bg-blue-800 text-white"
+              size="lg"
+              className="text-base bg-blue-900 hover:bg-blue-800 text-white"
               onClick={() => scrollToElement(SECTION_IDS.QUIENES_SOMOS)}
             >
               Comenza tu camino..
-              <ArrowRight className="ml-1 h-4 w-4" />
+              <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
             <Button
-              size="sm"
-              className="text-sm bg-blue-900 hover:bg-blue-800 text-white"
+              size="lg"
+              className="text-base bg-blue-900 hover:bg-blue-800 text-white"
               onClick={() => scrollToElement(SECTION_IDS.CONTACTO)}
             >
               Contacto
             </Button>
           </div>
-          <div className="flex flex-row gap-2">
+          <div className="flex flex-row gap-3">
             <a
               href="/talleres-inscripcion"
               style={{
                 display: "inline-flex",
                 alignItems: "center",
                 justifyContent: "center",
-                padding: "6px 16px",
-                fontSize: "0.875rem",
+                padding: "10px 24px",
+                fontSize: "1rem",
                 fontWeight: 900,
                 color: "#fff",
-                borderRadius: "6px",
+                borderRadius: "8px",
                 textDecoration: "none",
                 letterSpacing: "0.04em",
                 animation: "pulsarVerde 2s ease-in-out infinite",
@@ -149,8 +149,8 @@ export function Hero({ onAnotate }: { onAnotate?: () => void }) {
               Inscribite Aquí.!!
             </a>
             <Button
-              size="sm"
-              className="text-sm bg-green-700 hover:bg-green-600 text-white font-bold"
+              size="lg"
+              className="text-base bg-green-700 hover:bg-green-600 text-white font-bold"
               onClick={onAnotate}
             >
               Registrate
@@ -166,24 +166,24 @@ export function Hero({ onAnotate }: { onAnotate?: () => void }) {
         `}</style>
 
         {/* Alianza SENTIR + ACEPTAR ES CRECER */}
-        <div className="mt-4 pt-3 border-t border-white/20">
-          <p className="text-xs font-semibold tracking-widest text-slate-400 uppercase mb-1">Alianza Institucional</p>
-          <p className="text-base sm:text-lg font-black text-slate-700 mb-3">SENTIR + ACEPTAR ES CRECER</p>
-          <div className="flex flex-row items-center justify-center gap-6 sm:gap-14 mb-3">
-            <div className="flex flex-col items-center gap-1">
-              <img src="/Fuego de Sentir.png" alt="Sentir" className="w-16 h-16 sm:w-20 sm:h-20 object-contain drop-shadow-md" />
-              <span className="text-blue-900 font-bold text-sm">SENTIR</span>
+        <div className="mt-6 pt-4 border-t border-white/20">
+          <p className="text-xs sm:text-sm font-semibold tracking-widest text-slate-400 uppercase mb-2">Alianza Institucional</p>
+          <p className="text-xl sm:text-2xl md:text-3xl font-black text-slate-700 mb-4">SENTIR + ACEPTAR ES CRECER</p>
+          <div className="flex flex-row items-center justify-center gap-8 sm:gap-20 mb-4">
+            <div className="flex flex-col items-center gap-2">
+              <img src="/Fuego de Sentir.png" alt="Sentir" className="w-24 h-24 sm:w-32 sm:h-32 md:w-36 md:h-36 object-contain drop-shadow-lg" />
+              <span className="text-blue-900 font-bold text-base sm:text-lg">SENTIR</span>
             </div>
-            <span className="text-3xl font-black text-slate-300">+</span>
-            <div className="flex flex-col items-center gap-1">
-              <img src="/images/logo-aceptar-es-crecer.jpeg" alt="Aceptar es Crecer" className="w-16 h-16 sm:w-20 sm:h-20 object-contain rounded-lg drop-shadow-md" />
-              <span className="text-yellow-600 font-bold text-sm">ACEPTAR ES CRECER</span>
+            <span className="text-4xl sm:text-5xl font-black text-slate-300">+</span>
+            <div className="flex flex-col items-center gap-2">
+              <img src="/images/logo-aceptar-es-crecer.jpeg" alt="Aceptar es Crecer" className="w-24 h-24 sm:w-32 sm:h-32 md:w-36 md:h-36 object-contain rounded-xl drop-shadow-lg" />
+              <span className="text-yellow-600 font-bold text-base sm:text-lg">ACEPTAR ES CRECER</span>
             </div>
           </div>
-          <p className="text-xs sm:text-sm text-slate-600 max-w-xl mx-auto leading-relaxed">
-            La Comunidad SENTIR trabaja junto a Aceptar es Crecer en Río Gallegos, uniendo fuerzas para acompañar procesos de transformación personal y liderazgo.
+          <p className="text-sm sm:text-base text-slate-600 max-w-xl mx-auto leading-relaxed">
+            La Comunidad SENTIR trabaja junto a Aceptar es Crecer en Río Grande y Ushuaia, uniendo fuerzas para acompañar procesos de transformación personal y liderazgo.
           </p>
-          <p className="text-xs text-slate-400 italic mt-1">Dos comunidades, un mismo propósito</p>
+          <p className="text-xs sm:text-sm text-slate-400 italic mt-2">Dos comunidades, un mismo propósito</p>
         </div>
       </div>
     </section>

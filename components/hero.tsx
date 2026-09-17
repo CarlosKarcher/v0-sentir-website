@@ -164,6 +164,24 @@ export function Hero({ onAnotate }: { onAnotate?: () => void }) {
             100% { background-color: #15803d; box-shadow: 0 0 16px 3px rgba(34,197,94,0.4); }
           }
         `}</style>
+
+        {/* Alianza SENTIR + ACEPTAR ES CRECER */}
+        <div className="mt-4 pt-3 border-t border-white/20">
+          <p className="text-xs font-semibold tracking-widest text-slate-400 uppercase mb-1">Alianza Institucional</p>
+          <p className="text-sm sm:text-base font-black text-slate-700 mb-2">SENTIR + ACEPTAR ES CRECER</p>
+          <div className="flex flex-row items-center justify-center gap-4 sm:gap-10">
+            <div className="flex flex-col items-center gap-1">
+              <img src="/Fuego de Sentir.png" alt="Sentir" className="w-12 h-12 sm:w-16 sm:h-16 object-contain drop-shadow-md" />
+              <span className="text-blue-900 font-bold text-xs">SENTIR</span>
+            </div>
+            <span className="text-2xl font-black text-slate-300">+</span>
+            <div className="flex flex-col items-center gap-1">
+              <img src="/images/logo-aceptar-es-crecer.jpeg" alt="Aceptar es Crecer" className="w-12 h-12 sm:w-16 sm:h-16 object-contain rounded-lg drop-shadow-md" />
+              <span className="text-yellow-600 font-bold text-xs">ACEPTAR ES CRECER</span>
+            </div>
+          </div>
+          <p className="text-xs text-slate-500 italic mt-2">Dos comunidades, un mismo propósito</p>
+        </div>
       </div>
     </section>
   )

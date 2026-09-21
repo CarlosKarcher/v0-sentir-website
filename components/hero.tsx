@@ -87,6 +87,26 @@ export function Hero({ onAnotate }: { onAnotate?: () => void }) {
 
       <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/40 to-background" />
 
+      {/* Banners Ponte en mi Lugar - izquierda del hero */}
+      <div className="absolute top-16 left-2 sm:left-6 z-20 flex flex-row gap-1 sm:gap-2 items-start">
+        <div className="flex flex-col items-center gap-1">
+          <span className="text-white text-xs font-bold drop-shadow">Proyecto</span>
+          <span className="text-yellow-300 text-[10px] font-semibold drop-shadow leading-tight text-center">Ponte en mi lugar</span>
+          <div className="flex flex-row gap-1 sm:gap-2">
+            <img
+              src="/images/ponte-en-mi-lugar-frente.jpeg"
+              alt="Ponte en mi lugar - Frente"
+              className="w-20 h-32 sm:w-28 sm:h-44 md:w-36 md:h-56 object-cover rounded-lg shadow-lg border-2 border-yellow-400"
+            />
+            <img
+              src="/images/ponte-en-mi-lugar-reverso.jpeg"
+              alt="Ponte en mi lugar - Reverso"
+              className="w-20 h-32 sm:w-28 sm:h-44 md:w-36 md:h-56 object-cover rounded-lg shadow-lg border-2 border-purple-500"
+            />
+          </div>
+        </div>
+      </div>
+
       <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-20 flex gap-2">
         {heroImages.map((_, index) => (
           <button

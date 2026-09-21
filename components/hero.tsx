@@ -87,7 +87,21 @@ export function Hero({ onAnotate }: { onAnotate?: () => void }) {
 
       <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/40 to-background" />
 
-<div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+      {/* Botón Proyecto Giulliana Collazo - esquina superior izquierda */}
+      <div className="absolute top-4 left-4 z-20">
+        <button className="overflow-hidden rounded-lg shadow-xl border-2 border-yellow-400 hover:scale-105 transition-transform cursor-pointer w-32 sm:w-44 md:w-56">
+          <div className="overflow-hidden" style={{ height: "72px" }}>
+            <img
+              src="/images/ponte-en-mi-lugar-frente.jpeg"
+              alt="Proyecto Giulliana Collazo - Ponte en mi lugar"
+              className="w-full"
+              style={{ objectFit: "cover", objectPosition: "top", height: "100%" }}
+            />
+          </div>
+        </button>
+      </div>
+
+      <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-20 flex gap-2">
         {heroImages.map((_, index) => (
           <button
             key={index}
@@ -105,17 +119,6 @@ export function Hero({ onAnotate }: { onAnotate?: () => void }) {
           <span className="text-blue-900">SENTIR</span>
         </h1>
 
-        {/* Botón Proyecto Giulliana Collazo */}
-        <div className="flex justify-center mb-2">
-          <button className="overflow-hidden rounded-xl shadow-lg border-2 border-yellow-400 hover:scale-105 transition-transform cursor-pointer w-40 sm:w-52 md:w-64">
-            <img
-              src="/images/ponte-en-mi-lugar-frente.jpeg"
-              alt="Proyecto Giulliana Collazo - Ponte en mi lugar"
-              className="w-full object-cover object-top"
-              style={{ height: "80px" }}
-            />
-          </button>
-        </div>
         <p className="text-sm sm:text-xl md:text-2xl lg:text-3xl font-bold mb-2 md:mb-3 max-w-3xl mx-auto">
           Comunidad para el Liderazgo y Desarrollo Personal
         </p>

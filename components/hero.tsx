@@ -87,18 +87,16 @@ export function Hero({ onAnotate }: { onAnotate?: () => void }) {
 
       <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/40 to-background" />
 
-      {/* Botón Proyecto Giulliana Collazo - esquina superior izquierda */}
-      <div className="absolute top-4 left-4 z-20">
-        <button className="overflow-hidden rounded-lg shadow-xl border-2 border-yellow-400 hover:scale-105 transition-transform cursor-pointer w-32 sm:w-44 md:w-56">
-          <div className="overflow-hidden" style={{ height: "72px" }}>
-            <img
-              src="/images/ponte-en-mi-lugar-frente.jpeg"
-              alt="Proyecto Giulliana Collazo - Ponte en mi lugar"
-              className="w-full"
-              style={{ objectFit: "cover", objectPosition: "top", height: "100%" }}
-            />
-          </div>
+      {/* Proyecto Ponte en mi Lugar - esquina superior izquierda */}
+      <div className="absolute top-4 left-4 z-20 flex flex-col items-center gap-2">
+        <button className="bg-purple-800 hover:bg-purple-700 text-white font-bold text-xs sm:text-sm px-3 py-2 rounded-lg shadow-xl border-2 border-yellow-400 transition-colors text-center leading-snug max-w-[140px] sm:max-w-[180px]">
+          Sentir Impulsa El Proyecto<br />"Ponte en mi Lugar"
         </button>
+        <img
+          src="/images/ponte-en-mi-lugar-frente.jpeg"
+          alt="Flyer Proyecto Giulliana Collazo"
+          className="w-28 sm:w-36 md:w-44 rounded-lg shadow-xl border-2 border-yellow-400"
+        />
       </div>
 
       <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-20 flex gap-2">

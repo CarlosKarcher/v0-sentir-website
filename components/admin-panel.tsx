@@ -2166,6 +2166,7 @@ function TablaInscripciones({
             <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Enrolador</th>
             <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Email</th>
             <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Teléfono</th>
+            <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">DNI</th>
             <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Sede</th>
             <th className="text-right px-2 py-2 font-semibold whitespace-nowrap">Monto</th>
             <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Forma de pago</th>
@@ -2223,6 +2224,7 @@ function TablaInscripciones({
                 </td>
                 <td className="px-2 py-2 whitespace-nowrap text-xs text-muted-foreground">{ins.email}</td>
                 <td className="px-2 py-2 whitespace-nowrap text-xs">{ins.telefono}</td>
+                <td className="px-2 py-2 whitespace-nowrap text-xs text-muted-foreground">{ins.dni || "—"}</td>
                 <td className="px-2 py-2 whitespace-nowrap text-xs text-muted-foreground">{ins.localidad_taller || "—"}</td>
                 <td className="px-2 py-2 whitespace-nowrap text-xs text-right">
                   <div className="flex flex-col items-end gap-1">

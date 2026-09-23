@@ -39,6 +39,7 @@ type Miembro = {
   constelaciones_anio: number | null
   comentario: string | null
   fecha_nacimiento: string | null
+  dni: string | null
   created_at: string
 }
 
@@ -461,9 +462,9 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
           p_celular_caracteristica:   miembro.celular_caracteristica,
           p_celular_numero:           miembro.celular_numero,
           p_email:                    miembro.email,
-          p_fecha_nacimiento:         miembro.fecha_nacimiento,
+          p_fecha_nacimiento:         miembro.fecha_nacimiento || (insc.fecha_nacimiento && insc.fecha_nacimiento !== "1964-05-10" ? insc.fecha_nacimiento : null),
           p_comentario:               miembro.comentario,
-          p_dni:                      miembro.dni || null,
+          p_dni:                      miembro.dni || insc.dni || null,
           p_taller_autoconocimiento:  tallerKey === "taller_autoconocimiento"  ? true : miembro.taller_autoconocimiento,
           p_autoconocimiento_mes:     tallerKey === "taller_autoconocimiento"  ? mes  : miembro.autoconocimiento_mes,
           p_autoconocimiento_anio:    tallerKey === "taller_autoconocimiento"  ? anio : miembro.autoconocimiento_anio,
@@ -496,6 +497,8 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
           celular_numero:            insc.telefono || "",
           email:                     insc.email || null,
           comentario:                null,
+          dni:                       insc.dni || null,
+          fecha_nacimiento:          (insc.fecha_nacimiento && insc.fecha_nacimiento !== "1964-05-10") ? insc.fecha_nacimiento : null,
           taller_autoconocimiento:   tallerKey === "taller_autoconocimiento",
           autoconocimiento_mes:      tallerKey === "taller_autoconocimiento"  ? mes  : null,
           autoconocimiento_anio:     tallerKey === "taller_autoconocimiento"  ? anio : null,

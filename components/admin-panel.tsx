@@ -463,6 +463,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
           p_email:                    miembro.email,
           p_fecha_nacimiento:         miembro.fecha_nacimiento,
           p_comentario:               miembro.comentario,
+          p_dni:                      miembro.dni || null,
           p_taller_autoconocimiento:  tallerKey === "taller_autoconocimiento"  ? true : miembro.taller_autoconocimiento,
           p_autoconocimiento_mes:     tallerKey === "taller_autoconocimiento"  ? mes  : miembro.autoconocimiento_mes,
           p_autoconocimiento_anio:    tallerKey === "taller_autoconocimiento"  ? anio : miembro.autoconocimiento_anio,
@@ -579,11 +580,12 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
   }
 
   const exportarCSVMiembros = (data: Miembro[], filename: string) => {
-    const headers = ["Nº", "Nombre", "Gafete", "Celular", "Email", "Auto", "Transf", "MyL", "Guerrero", "Biodec", "Niño Int", "Constel", "Comentario", "Fecha"]
+    const headers = ["Nº", "Nombre", "Gafete", "DNI", "Celular", "Email", "Auto", "Transf", "MyL", "Guerrero", "Biodec", "Niño Int", "Constel", "Comentario", "Fecha"]
     const rows = data.map(m => [
       m.numero,
       m.nombre_apellido.trim(),
       m.nombre_gafete?.trim() || "",
+      m.dni || "",
       `${m.celular_caracteristica} ${m.celular_numero}`,
       m.email || "",
       m.taller_autoconocimiento ? "SI" : "NO",
@@ -2502,6 +2504,7 @@ function TablaMiembros({ miembros, adminCaracteristica, adminNumero, onRefresh }
       p_email:                   form.email || null,
       p_fecha_nacimiento:        form.fecha_nacimiento || null,
       p_comentario:              form.comentario || null,
+      p_dni:                     form.dni || null,
       p_taller_autoconocimiento: form.taller_autoconocimiento, p_autoconocimiento_mes: form.autoconocimiento_mes ?? null, p_autoconocimiento_anio: form.autoconocimiento_anio ?? null,
       p_taller_transformacion:   form.taller_transformacion,   p_transformacion_mes:   form.transformacion_mes ?? null,   p_transformacion_anio:   form.transformacion_anio ?? null,
       p_taller_myl:              form.taller_myl,              p_myl_mes:              form.myl_mes ?? null,              p_myl_anio:              form.myl_anio ?? null,
@@ -2581,6 +2584,7 @@ function TablaMiembros({ miembros, adminCaracteristica, adminNumero, onRefresh }
           <th className="text-left px-2 py-2 font-semibold whitespace-nowrap sticky left-0 z-30 bg-background border-r border-border/30">Nº</th>
           <th className="text-left px-2 py-2 font-semibold whitespace-nowrap sticky left-8 z-30 bg-background border-r border-border/40">Nombre</th>
           <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Gafete</th>
+          <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">DNI</th>
           <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Celular</th>
           <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Fecha Nac.</th>
           <th className="text-left px-2 py-2 font-semibold whitespace-nowrap">Email</th>
@@ -2602,6 +2606,7 @@ function TablaMiembros({ miembros, adminCaracteristica, adminNumero, onRefresh }
             <td className="px-2 py-2 font-medium sticky left-0 z-[1] bg-background border-r border-border/30">{m.numero}</td>
             <td className="px-2 py-2 whitespace-nowrap sticky left-8 z-[1] bg-background border-r border-border/40">{m.nombre_apellido.trim()}</td>
             <td className="px-2 py-2 whitespace-nowrap">{m.nombre_gafete?.trim()}</td>
+            <td className="px-2 py-2 whitespace-nowrap text-xs text-muted-foreground">{m.dni || "—"}</td>
             <td className="px-2 py-2 whitespace-nowrap">{m.celular_caracteristica} {m.celular_numero}</td>
             <td className="px-2 py-2 whitespace-nowrap text-xs text-muted-foreground">
               {m.fecha_nacimiento ? (() => { const [y,mo,d] = m.fecha_nacimiento!.slice(0,10).split("-"); return `${d}/${mo}/${y}` })() : "—"}
@@ -2672,6 +2677,10 @@ function TablaMiembros({ miembros, adminCaracteristica, adminNumero, onRefresh }
                 <div>
                   <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Fecha Nacimiento</label>
                   <input type="date" className="mt-1 w-full border border-border rounded-md px-3 py-1.5 text-sm bg-background" value={form.fecha_nacimiento?.slice(0,10) || ""} onChange={e => setField("fecha_nacimiento", e.target.value || null)} />
+                </div>
+                <div>
+                  <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">DNI</label>
+                  <input className="mt-1 w-full border border-border rounded-md px-3 py-1.5 text-sm bg-background" value={form.dni || ""} onChange={e => setField("dni", e.target.value || null)} />
                 </div>
               </div>
               <div>
@@ -2836,6 +2845,7 @@ function ModalRegistrarTaller({ miembros, adminCaracteristica, adminNumero, onCl
       p_email:                    m.email,
       p_fecha_nacimiento:         m.fecha_nacimiento,
       p_comentario:               m.comentario,
+      p_dni:                      m.dni || null,
       p_taller_autoconocimiento:  tallerKey === "taller_autoconocimiento"  ? true : m.taller_autoconocimiento,
       p_autoconocimiento_mes:     tallerKey === "taller_autoconocimiento"  ? im   : m.autoconocimiento_mes,
       p_autoconocimiento_anio:    tallerKey === "taller_autoconocimiento"  ? ia   : m.autoconocimiento_anio,

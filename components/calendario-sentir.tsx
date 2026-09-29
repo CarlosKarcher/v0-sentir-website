@@ -229,6 +229,11 @@ const CALENDAR_EVENTS: DayEvent[] = [
   { month: 9, day: 17, type: "autoconocimiento", label: "Autocon. – Río Gallegos" },
   { month: 9, day: 18, type: "autoconocimiento", label: "Autocon. – Río Gallegos" },
 
+  // Octubre — Autoconocimiento Río Grande
+  { month: 9, day: 23, type: "autoconocimiento", label: "Autocon. – Río Grande" },
+  { month: 9, day: 24, type: "autoconocimiento", label: "Autocon. – Río Grande" },
+  { month: 9, day: 25, type: "autoconocimiento", label: "Autocon. – Río Grande" },
+
   // Octubre/Noviembre — MyL 7 · Campamento y Cierre
   { month: 9, day: 31, type: "myl", label: "MyL 7 - Campamento y Cierre" },
   { month: 10, day: 1, type: "myl", label: "MyL 7 - Campamento y Cierre" },

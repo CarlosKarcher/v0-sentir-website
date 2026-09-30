@@ -1967,7 +1967,7 @@ function TablaInscripciones({
                     return (
                       <div className="flex flex-col items-center gap-1">
                         {precioEfectivo === 0
-                          ? <span className="text-green-400 text-xl font-extrabold tracking-wide text-center">Costo del Taller cero - Beca al 100%</span>
+                          ? <span className="text-green-400 text-xl font-extrabold tracking-wide text-center">Sin Costo.</span>
                           : <span className="text-green-400 text-xl font-extrabold tracking-wide text-center">Has abonado el total del Taller. ¡Gracias.!</span>
                         }
                       </div>

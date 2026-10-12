@@ -24,6 +24,7 @@ type Taller = {
   slug: string
   nombre: string
   fecha_inicio: string
+  fecha_fin: string | null
   sede: string
 }
 
@@ -36,16 +37,19 @@ export default function TalleresInscripcionPage() {
     const hace48h = new Date(Date.now() - 72 * 60 * 60 * 1000).toISOString().split("T")[0]
     supabase
       .from("talleres")
-      .select("id, slug, nombre, fecha_inicio, sede")
+      .select("id, slug, nombre, fecha_inicio, fecha_fin, sede")
       .eq("activo", true)
       .or(`fecha_inicio.gte.${hace48h},fecha_fin.gte.${hoy}`)
       .order("fecha_inicio")
       .then(({ data }) => {
         if (Array.isArray(data)) {
           // Constelaciones grupales tiene gracia de 48hs; el resto solo aparece a partir de hoy
-          const filtrados = data.filter(t =>
-            t.slug === "constelaciones-grupales" ? t.fecha_inicio >= hace48h : t.fecha_inicio >= hoy
-          )
+          const filtrados = data.filter(t => {
+            if (t.slug === "constelaciones-grupales") return t.fecha_inicio >= hace48h
+            // Si tiene fecha_fin explícita, el taller sigue disponible hasta ese día
+            if (t.fecha_fin) return t.fecha_fin >= hoy
+            return t.fecha_inicio >= hoy
+          })
           setTalleres(filtrados)
         }
         setCargando(false)

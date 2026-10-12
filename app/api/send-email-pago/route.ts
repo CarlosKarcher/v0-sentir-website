@@ -56,6 +56,7 @@ export async function POST(req: NextRequest) {
             <div style="background:rgba(255,255,255,0.1);border-radius:12px;padding:12px 24px;margin-bottom:24px;">
               <p style="color:rgba(255,255,255,0.6);font-size:11px;text-transform:uppercase;letter-spacing:1px;margin:0 0 4px;">TU SALDO A PAGAR ES</p>
               <p style="font-size:22px;font-weight:bold;margin:0;">$${saldo.toLocaleString("es-AR")}</p>
+              <p style="font-size:22px;font-weight:bold;margin:4px 0 0;">Alias: Coach.fercarcamo.mp</p>
             </div>
             ` : ""}
 

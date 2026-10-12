@@ -2121,6 +2121,9 @@ function TablaInscripciones({
                       <p className="text-white font-semibold text-base">
                         ${saldo.toLocaleString("es-AR")}
                       </p>
+                      <p className="text-white font-semibold text-base">
+                        Alias: Coach.fercarcamo.mp
+                      </p>
                     </div>
                   )
                 })()}

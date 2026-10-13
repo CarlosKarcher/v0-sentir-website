@@ -951,20 +951,13 @@ function InscribirseForm() {
                 Sentir — Comunidad para el Desarrollo y Liderazgo Personal.
               </p>
             </div>
-            <div className="flex flex-col gap-3 pt-2">
+            <div className="pt-2">
               <button
                 type="button"
                 onClick={procesarInscripcion}
                 className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-xl transition-colors text-base"
               >
                 ACEPTAR
-              </button>
-              <button
-                type="button"
-                onClick={() => setMostrarTerminos(false)}
-                className="w-full border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 font-medium py-2 px-6 rounded-xl transition-colors text-sm"
-              >
-                Cancelar
               </button>
             </div>
           </div>

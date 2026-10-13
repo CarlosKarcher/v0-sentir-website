@@ -29,6 +29,58 @@ const REQUISITOS_ESTRICTOS: Record<string, { campoDB: string; tallerNombre: stri
 // Talleres con campos bloqueados (ninguno actualmente — se completaban cuando había login obligatorio)
 const TALLERES_CAMPOS_FIJOS = new Set<string>([])
 
+function ModalTerminos({ onAceptar }: { onAceptar: () => void }) {
+  const [aceptado, setAceptado] = useState(false)
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-lg w-full p-6 space-y-5">
+        <h2 className="text-base font-bold text-center uppercase tracking-wide text-red-700 dark:text-red-400">
+          IMPORTANTE — POLÍTICA DE INSCRIPCIÓN Y PAGOS
+        </h2>
+        <div className="text-sm text-gray-700 dark:text-gray-300 space-y-3 leading-relaxed">
+          <p>
+            Al inscribirte en cualquier taller de Sentir, aceptas expresamente que todo pago realizado,
+            ya sea en concepto de seña o del importe total, es definitivo y no admite devolución,
+            independientemente del motivo por el cual decidas no asistir o no finalizar dicho taller.
+          </p>
+          <p>
+            Tu inscripción implica la reserva de tu lugar y tu compromiso con las condiciones establecidas.
+          </p>
+          <p>
+            Gracias por comprender, respetar y acompañar el compromiso que construimos en comunidad.
+          </p>
+          <p className="font-semibold text-gray-800 dark:text-gray-200">
+            Sentir — Comunidad para el Desarrollo y Liderazgo Personal.
+          </p>
+        </div>
+
+        {/* Checkbox de aceptación */}
+        <label className="flex items-center gap-3 cursor-pointer select-none">
+          <input
+            type="checkbox"
+            checked={aceptado}
+            onChange={e => setAceptado(e.target.checked)}
+            className="w-5 h-5 rounded border-2 border-gray-400 accent-green-600 cursor-pointer"
+          />
+          <span className="text-sm font-medium text-gray-800 dark:text-gray-200">
+            Acepto las Políticas de Sentir.
+          </span>
+        </label>
+
+        {aceptado && (
+          <button
+            type="button"
+            onClick={onAceptar}
+            className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-xl transition-colors text-base"
+          >
+            ACEPTAR
+          </button>
+        )}
+      </div>
+    </div>
+  )
+}
+
 function InscribirseForm() {
   const searchParams = useSearchParams()
   const tallerSlugParam = searchParams.get("taller") || ""
@@ -930,38 +982,7 @@ function InscribirseForm() {
 
       {/* Modal de términos y condiciones */}
       {mostrarTerminos && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-lg w-full p-6 space-y-5">
-            <h2 className="text-base font-bold text-center uppercase tracking-wide text-red-700 dark:text-red-400">
-              IMPORTANTE — POLÍTICA DE INSCRIPCIÓN Y PAGOS
-            </h2>
-            <div className="text-sm text-gray-700 dark:text-gray-300 space-y-3 leading-relaxed">
-              <p>
-                Al inscribirte en cualquier taller de Sentir, aceptas expresamente que todo pago realizado,
-                ya sea en concepto de seña o del importe total, es definitivo y no admite devolución,
-                independientemente del motivo por el cual decidas no asistir o no finalizar dicho taller.
-              </p>
-              <p>
-                Tu inscripción implica la reserva de tu lugar y tu compromiso con las condiciones establecidas.
-              </p>
-              <p>
-                Gracias por comprender, respetar y acompañar el compromiso que construimos en comunidad.
-              </p>
-              <p className="font-semibold text-gray-800 dark:text-gray-200">
-                Sentir — Comunidad para el Desarrollo y Liderazgo Personal.
-              </p>
-            </div>
-            <div className="pt-2">
-              <button
-                type="button"
-                onClick={procesarInscripcion}
-                className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-xl transition-colors text-base"
-              >
-                ACEPTAR
-              </button>
-            </div>
-          </div>
-        </div>
+        <ModalTerminos onAceptar={procesarInscripcion} />
       )}
     </main>
   )

@@ -79,6 +79,7 @@ function InscribirseForm() {
   const [error, setError] = useState<string | null>(null)
   const [exito, setExito] = useState(false)
   const [mailCopiado, setMailCopiado] = useState(false)
+  const [mostrarTerminos, setMostrarTerminos] = useState(false)
 
   // Pre-rellenar datos si el usuario tiene sesión activa
   useEffect(() => {
@@ -175,8 +176,13 @@ function InscribirseForm() {
     buscar()
   }, [tallerSlug, tallerIdParam, localidadParam])
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    setMostrarTerminos(true)
+  }
+
+  const procesarInscripcion = async () => {
+    setMostrarTerminos(false)
     if (!tallerSlug) { setError("No se especificó el taller"); return }
     if (!tallerData) { setError("No se pudo cargar el taller seleccionado"); return }
 
@@ -921,6 +927,49 @@ function InscribirseForm() {
           </a>
         </form>
       </div>
+
+      {/* Modal de términos y condiciones */}
+      {mostrarTerminos && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-lg w-full p-6 space-y-5">
+            <h2 className="text-base font-bold text-center uppercase tracking-wide text-red-700 dark:text-red-400">
+              IMPORTANTE — POLÍTICA DE INSCRIPCIÓN Y PAGOS
+            </h2>
+            <div className="text-sm text-gray-700 dark:text-gray-300 space-y-3 leading-relaxed">
+              <p>
+                Al inscribirte en cualquier taller de Sentir, aceptas expresamente que todo pago realizado,
+                ya sea en concepto de seña o del importe total, es definitivo y no admite devolución,
+                independientemente del motivo por el cual decidas no asistir o no finalizar dicho taller.
+              </p>
+              <p>
+                Tu inscripción implica la reserva de tu lugar y tu compromiso con las condiciones establecidas.
+              </p>
+              <p>
+                Gracias por comprender, respetar y acompañar el compromiso que construimos en comunidad.
+              </p>
+              <p className="font-semibold text-gray-800 dark:text-gray-200">
+                Sentir — Comunidad para el Desarrollo y Liderazgo Personal.
+              </p>
+            </div>
+            <div className="flex flex-col gap-3 pt-2">
+              <button
+                type="button"
+                onClick={procesarInscripcion}
+                className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-xl transition-colors text-base"
+              >
+                ACEPTAR
+              </button>
+              <button
+                type="button"
+                onClick={() => setMostrarTerminos(false)}
+                className="w-full border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 font-medium py-2 px-6 rounded-xl transition-colors text-sm"
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   )
 }

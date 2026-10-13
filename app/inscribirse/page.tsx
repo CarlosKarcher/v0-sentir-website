@@ -40,11 +40,11 @@ function ModalTerminos({ onAceptar }: { onAceptar: () => void }) {
         <div className="text-sm text-gray-700 dark:text-gray-300 space-y-3 leading-relaxed">
           <p>
             Al inscribirte en cualquier taller de Sentir, aceptas expresamente que todo pago realizado,
-            ya sea en concepto de seña o del importe total, es definitivo y no admite devolución,
+            ya sea en concepto de seña o del importe total, <strong>es definitivo y no admite devolución,</strong>{" "}
             independientemente del motivo por el cual decidas no asistir o no finalizar dicho taller.
           </p>
           <p>
-            Tu inscripción implica la reserva de tu lugar y tu compromiso con las condiciones establecidas.
+            Tu inscripción <strong>implica la reserva de tu lugar y tu compromiso</strong> con las condiciones establecidas.
           </p>
           <p>
             Gracias por comprender, respetar y acompañar el compromiso que construimos en comunidad.

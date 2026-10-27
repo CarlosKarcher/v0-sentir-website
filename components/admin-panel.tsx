@@ -1423,7 +1423,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                     if (!i.taller_fecha_inicio) return false
                     const key = `${i.taller_slug}|${i.localidad_taller ?? ""}|${i.taller_fecha_inicio.substring(0, 10)}`
                     if (!talleresCerrados.has(key)) return false
-                    const precio = i.precio_inscripto ?? i.taller_precio ?? 0
+                    const precio = i.precio_inscripto ?? calcularPrecioFinal({ precio: i.taller_precio, descuento_tipo: i.taller_descuento_tipo, descuento_valor: i.taller_descuento_valor }).precioFinal
                     const pagado = i.monto_pagado ?? 0
                     return i.estado === "confirmado" && pagado >= precio
                   })
@@ -1487,7 +1487,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                     if (!i.taller_fecha_inicio) return false
                     const key = `${i.taller_slug}|${i.localidad_taller ?? ""}|${i.taller_fecha_inicio.substring(0, 10)}`
                     if (!talleresCerrados.has(key)) return false
-                    const precio = i.precio_inscripto ?? i.taller_precio ?? 0
+                    const precio = i.precio_inscripto ?? calcularPrecioFinal({ precio: i.taller_precio, descuento_tipo: i.taller_descuento_tipo, descuento_valor: i.taller_descuento_valor }).precioFinal
                     const pagado = i.monto_pagado ?? 0
                     if (!(i.estado === "pendiente" && precio > 0 && pagado < precio)) return false
                     const persona = i.email?.toLowerCase().trim() || `${i.nombre?.toLowerCase().trim()}|${i.apellido?.toLowerCase().trim()}`
@@ -1500,7 +1500,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                     return (orden[a.estado] ?? 3) - (orden[b.estado] ?? 3)
                   })
                   const totalDeuda = morosos.reduce((acc, i) => {
-                    const precio = i.precio_inscripto ?? i.taller_precio ?? 0
+                    const precio = i.precio_inscripto ?? calcularPrecioFinal({ precio: i.taller_precio, descuento_tipo: i.taller_descuento_tipo, descuento_valor: i.taller_descuento_valor }).precioFinal
                     const pagado = i.monto_pagado ?? 0
                     return acc + Math.max(0, precio - pagado)
                   }, 0)
@@ -1880,7 +1880,7 @@ function TablaInscripciones({
       ``,
       `Fecha de inscripción: ${fechaInscripcion}`,
       ``,
-      (() => { const precio = ins.precio_inscripto ?? ins.taller_precio ?? 0; const saldo = precio - (ins.monto_pagado ?? 0); return precio > 0 ? `Tu saldo a pagar es: $${saldo.toLocaleString("es-AR")}` : "" })(),
+      (() => { const precio = ins.precio_inscripto ?? calcularPrecioFinal({ precio: ins.taller_precio, descuento_tipo: ins.taller_descuento_tipo, descuento_valor: ins.taller_descuento_valor }).precioFinal; const saldo = precio - (ins.monto_pagado ?? 0); return precio > 0 ? `Tu saldo a pagar es: $${saldo.toLocaleString("es-AR")}` : "" })(),
       ``,
       ...(!(ins.taller_fecha_inicio && new Date() > new Date(ins.taller_fecha_inicio)) ? [`Gracias, te Esperamos.!!`, ``] : []),
       `*Sentir* 🔥`,
@@ -2038,7 +2038,7 @@ function TablaInscripciones({
                     {inscripcionMorosa.taller_fecha_inicio ? ` el ${formatFechaTaller(inscripcionMorosa.taller_fecha_inicio)}` : ""}.
                   </p>
                   {(() => {
-                    const precio = inscripcionMorosa.precio_inscripto ?? inscripcionMorosa.taller_precio ?? 0
+                    const precio = inscripcionMorosa.precio_inscripto ?? calcularPrecioFinal({ precio: inscripcionMorosa.taller_precio, descuento_tipo: inscripcionMorosa.taller_descuento_tipo, descuento_valor: inscripcionMorosa.taller_descuento_valor }).precioFinal
                     const pagado = inscripcionMorosa.monto_pagado ?? 0
                     const saldo = precio - pagado
                     return saldo > 0 ? (
@@ -2111,7 +2111,7 @@ function TablaInscripciones({
 
                 {/* Saldo */}
                 {(() => {
-                  const precio = inscripcionMensaje.precio_inscripto ?? inscripcionMensaje.taller_precio ?? 0
+                  const precio = inscripcionMensaje.precio_inscripto ?? calcularPrecioFinal({ precio: inscripcionMensaje.taller_precio, descuento_tipo: inscripcionMensaje.taller_descuento_tipo, descuento_valor: inscripcionMensaje.taller_descuento_valor }).precioFinal
                   const pagado = inscripcionMensaje.monto_pagado ?? 0
                   const saldo = precio - pagado
                   if (precio <= 0) return null

@@ -257,6 +257,11 @@ const CALENDAR_EVENTS: DayEvent[] = [
   { month: 11, day: 11, type: "transformacion", label: "Transfor. – Río Gallegos" },
   { month: 11, day: 12, type: "transformacion", label: "Transfor. – Río Gallegos" },
   { month: 11, day: 13, type: "transformacion", label: "Transfor. – Río Gallegos" },
+
+  // Diciembre — Autoconocimiento Puerto Natales
+  { month: 11, day: 18, type: "autoconocimiento", label: "Autocon. – Puerto Natales" },
+  { month: 11, day: 19, type: "autoconocimiento", label: "Autocon. – Puerto Natales" },
+  { month: 11, day: 20, type: "autoconocimiento", label: "Autocon. – Puerto Natales" },
 ]
 
 function getFirstWeekday(year: number, month: number): number {

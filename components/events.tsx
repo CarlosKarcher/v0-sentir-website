@@ -228,7 +228,7 @@ function EventCard({ event, talleresActivos, talleresMap }: { event: Event, tall
                 <ClipboardList className="h-4 w-4" />
                 Precio no disponible aún
               </button>
-            ) : event.sede === "Punta Arenas" ? (
+            ) : event.sede === "Punta Arenas" || event.sede === "Puerto Natales" ? (
               <button
                 disabled
                 className="flex items-center justify-center gap-2 w-full bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500 font-semibold py-2 px-4 rounded-lg text-sm cursor-not-allowed"
@@ -829,6 +829,24 @@ export function Events() {
       sede: "Río Gallegos",
       fechaInicio: "2026-12-10",
       fechaFin: "2026-12-13",
+    },
+    {
+      title: "Taller de Autoconocimiento - Puerto Natales, Chile",
+      date: "18, 19 y 20 de Diciembre 2026",
+      time: "Inicio: Viernes 18 de Diciembre",
+      location: "Lugar a Confirmar",
+      type: "Taller de Liderazgo",
+      available: true,
+      availabilityText: "Cupos disponibles",
+      hasFlyer: true,
+      flyerImage: "/auto puerto natales.jpeg",
+      flyerImageAlt: "/images/auto puerto natales.jpeg",
+      level: "1er Nivel",
+      contactPhone: "+54 9 2966 595803",
+      tallerSlug: "autoconocimiento",
+      sede: "Puerto Natales",
+      fechaInicio: "2026-12-18",
+      fechaFin: "2026-12-20",
     },
   ]
 

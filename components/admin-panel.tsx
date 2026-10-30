@@ -6,7 +6,7 @@ import * as XLSX from "xlsx"
 import { supabase } from "@/lib/supabase-client"
 import { X, Download, RefreshCw, ArrowLeft, Users, UserX, Filter, ClipboardList, DollarSign, Check, Ban, Trash2, MessageCircle, Pencil, UserPlus } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { calcularPrecioFinal } from "@/types/database"
+import { calcularPrecioFinal, descuentoVencido } from "@/types/database"
 import type { Taller, InscripcionConTaller } from "@/types/database"
 
 type Miembro = {
@@ -1190,7 +1190,9 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                                       </div>
                                       {(t as any).descuento_hasta && (() => {
                                         const [y, m, d] = (t as any).descuento_hasta.slice(0, 10).split("-")
-                                        return <div className="text-xs text-red-500 font-medium">hasta {d}/{m}/{y}</div>
+                                        return descuentoVencido(t.descuento_hasta)
+                                          ? <div className="text-xs text-muted-foreground line-through">vencido {d}/{m}/{y}</div>
+                                          : <div className="text-xs text-red-500 font-medium">hasta {d}/{m}/{y}</div>
                                       })()}
                                     </td>
                                     <td className={`px-3 py-2 text-right font-semibold ${precios.descuentoMonto > 0 ? "text-green-600 dark:text-green-400" : ""}`}>

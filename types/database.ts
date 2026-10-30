@@ -26,10 +26,19 @@ export interface Taller {
   acepta_sena: boolean
 }
 
-export function calcularPrecioFinal(taller: Pick<Taller, 'precio' | 'descuento_tipo' | 'descuento_valor'>) {
+// El descuento vale hasta el día indicado inclusive (fecha local)
+export function descuentoVencido(descuentoHasta: string | null | undefined) {
+  if (!descuentoHasta) return false
+  const hoy = new Date().toLocaleDateString("en-CA")
+  return hoy > descuentoHasta.slice(0, 10)
+}
+
+export function calcularPrecioFinal(taller: Pick<Taller, 'precio' | 'descuento_tipo' | 'descuento_valor'> & { descuento_hasta?: string | null }) {
   const precioReal = taller.precio
   let descuentoMonto = 0
-  if (taller.descuento_tipo === 'porcentaje' && taller.descuento_valor) {
+  if (descuentoVencido(taller.descuento_hasta)) {
+    descuentoMonto = 0
+  } else if (taller.descuento_tipo === 'porcentaje' && taller.descuento_valor) {
     descuentoMonto = Math.round(precioReal * taller.descuento_valor / 100)
   } else if (taller.descuento_tipo === 'monto_fijo' && taller.descuento_valor) {
     descuentoMonto = taller.descuento_valor

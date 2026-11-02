@@ -915,6 +915,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                           onEnviarEmailPago={enviarEmailPago}
                           adminCaracteristica={adminCaracteristica}
                           adminNumero={adminNumero}
+                          onAbandonoGuardado={(id, abandono) => setInscripciones(prev => prev.map(x => x.id === id ? { ...x, abandono } : x))}
                         />
                       )}
                     </div>
@@ -1412,6 +1413,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                           pageFeePagado={filtroTallerSlug ? pageFeesPagados.has(`${filtroTallerSlug}:${filtroSede}:${filtroFechaInicio || "0001-01-01"}`) : false}
                           adminCaracteristica={adminCaracteristica}
                           adminNumero={adminNumero}
+                          onAbandonoGuardado={(id, abandono) => setInscripciones(prev => prev.map(x => x.id === id ? { ...x, abandono } : x))}
                         />
                       )}
                     </div>
@@ -1477,6 +1479,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                           esHistorico={true}
                           adminCaracteristica={adminCaracteristica}
                           adminNumero={adminNumero}
+                          onAbandonoGuardado={(id, abandono) => setInscripciones(prev => prev.map(x => x.id === id ? { ...x, abandono } : x))}
                         />
                       )}
                     </div>
@@ -1530,6 +1533,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                           modoMoroso
                           adminCaracteristica={adminCaracteristica}
                           adminNumero={adminNumero}
+                          onAbandonoGuardado={(id, abandono) => setInscripciones(prev => prev.map(x => x.id === id ? { ...x, abandono } : x))}
                         />
                       )}
                     </div>
@@ -1729,6 +1733,7 @@ function TablaInscripciones({
   esHistorico,
   adminCaracteristica,
   adminNumero,
+  onAbandonoGuardado,
 }: {
   inscripciones: InscripcionConTaller[]
   accionInscripcion: string | null
@@ -1743,6 +1748,7 @@ function TablaInscripciones({
   esHistorico?: boolean
   adminCaracteristica: string
   adminNumero: string
+  onAbandonoGuardado?: (id: string, abandono: boolean) => void
 }) {
   const [montosEdit, setMontosEdit] = useState<Record<string, string>>({})
   const [guardandoMonto, setGuardandoMonto] = useState<string | null>(null)
@@ -1783,6 +1789,7 @@ function TablaInscripciones({
       p_abandono: nuevo,
     })
     setAbandonoConfirmado(p => ({ ...p, [ins.id]: nuevo }))
+    onAbandonoGuardado?.(ins.id, nuevo)
     setAbandonoPendiente(p => { const n = { ...p }; delete n[ins.id]; return n })
     setGuardandoAbandono(null)
   }

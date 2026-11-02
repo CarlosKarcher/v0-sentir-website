@@ -446,7 +446,6 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
     let nuevo = 0, errores = 0
     const actualizados: string[] = []
     const omitidos: string[] = []
-    const noEncontrados: string[] = []
     const soloDigitos = (s?: string | null) => (s || "").replace(/\D/g, "")
 
     for (const insc of candidatos) {
@@ -455,9 +454,6 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
       const miembro =
         (insc.email ? listaMiembros.find(m => m.email && m.email.toLowerCase() === insc.email.toLowerCase()) : undefined)
         ?? (dniInsc ? listaMiembros.find(m => soloDigitos(m.dni) === dniInsc) : undefined)
-
-      // Solo Autoconocimiento crea clientes nuevos; en los demás niveles el cliente ya debe existir
-      if (!miembro && tallerKey !== "taller_autoconocimiento") { noEncontrados.push(nombreInsc); continue }
 
       if (miembro) {
         if (miembro[tallerKey]) { omitidos.push(nombreInsc); continue }
@@ -526,8 +522,8 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
           nino_interior_mes:         tallerKey === "taller_nino_interior"     ? mes  : null,
           nino_interior_anio:        tallerKey === "taller_nino_interior"     ? anio : null,
           taller_constelaciones:     tallerKey === "taller_constelaciones",
-          constelaciones_mes:        null,
-          constelaciones_anio:       null,
+          constelaciones_mes:        tallerKey === "taller_constelaciones"    ? mes  : null,
+          constelaciones_anio:       tallerKey === "taller_constelaciones"    ? anio : null,
           recibir_informacion:       false,
         })
         if (sbError) { errores++; continue }
@@ -542,7 +538,6 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
     if (nuevo > 0) partes.push(`${nuevo} cliente${nuevo !== 1 ? "s" : ""} nuevo${nuevo !== 1 ? "s" : ""} agregado${nuevo !== 1 ? "s" : ""}`)
     if (actualizados.length > 0) partes.push(`Taller marcado a ${actualizados.length} cliente${actualizados.length !== 1 ? "s" : ""} existente${actualizados.length !== 1 ? "s" : ""}: ${actualizados.join(", ")}`)
     if (omitidos.length > 0) partes.push(`${omitidos.length} ya tenían el taller (omitidos): ${omitidos.join(", ")}`)
-    if (noEncontrados.length > 0) partes.push(`${noEncontrados.length} no encontrados en la base de clientes (no se agregaron): ${noEncontrados.join(", ")}`)
     if (errores > 0) partes.push(`${errores} con error`)
     setConfirmDialog({
       titulo: "Incorporación completada",

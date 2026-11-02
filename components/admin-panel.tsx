@@ -72,12 +72,14 @@ const SLUG_A_TALLER_KEY: Partial<Record<string, keyof Miembro>> = {
   "autoconocimiento": "taller_autoconocimiento",
   "transformacion": "taller_transformacion",
   "myl": "taller_myl",
+  "metas-y-logros": "taller_myl",
   "guerrero": "taller_guerrero",
   "camino-del-guerrero": "taller_guerrero",
   "el-camino-del-guerrero": "taller_guerrero",
   "biodecodificacion": "taller_biodecodificacion",
   "nino-interior": "taller_nino_interior",
   "nino_interior": "taller_nino_interior",
+  "sanando-mi-nino-interior": "taller_nino_interior",
   "constelaciones": "taller_constelaciones",
   "constelaciones-grupales": "taller_constelaciones",
 }
@@ -444,12 +446,18 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
     let nuevo = 0, errores = 0
     const actualizados: string[] = []
     const omitidos: string[] = []
+    const noEncontrados: string[] = []
+    const soloDigitos = (s?: string | null) => (s || "").replace(/\D/g, "")
 
     for (const insc of candidatos) {
       const nombreInsc = `${insc.nombre} ${insc.apellido}`.trim()
-      const miembro = insc.email
-        ? listaMiembros.find(m => m.email && m.email.toLowerCase() === insc.email.toLowerCase())
-        : undefined
+      const dniInsc = soloDigitos(insc.dni)
+      const miembro =
+        (insc.email ? listaMiembros.find(m => m.email && m.email.toLowerCase() === insc.email.toLowerCase()) : undefined)
+        ?? (dniInsc ? listaMiembros.find(m => soloDigitos(m.dni) === dniInsc) : undefined)
+
+      // Solo Autoconocimiento crea clientes nuevos; en los demás niveles el cliente ya debe existir
+      if (!miembro && tallerKey !== "taller_autoconocimiento") { noEncontrados.push(nombreInsc); continue }
 
       if (miembro) {
         if (miembro[tallerKey]) { omitidos.push(nombreInsc); continue }
@@ -534,6 +542,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
     if (nuevo > 0) partes.push(`${nuevo} cliente${nuevo !== 1 ? "s" : ""} nuevo${nuevo !== 1 ? "s" : ""} agregado${nuevo !== 1 ? "s" : ""}`)
     if (actualizados.length > 0) partes.push(`Taller marcado a ${actualizados.length} cliente${actualizados.length !== 1 ? "s" : ""} existente${actualizados.length !== 1 ? "s" : ""}: ${actualizados.join(", ")}`)
     if (omitidos.length > 0) partes.push(`${omitidos.length} ya tenían el taller (omitidos): ${omitidos.join(", ")}`)
+    if (noEncontrados.length > 0) partes.push(`${noEncontrados.length} no encontrados en la base de clientes (no se agregaron): ${noEncontrados.join(", ")}`)
     if (errores > 0) partes.push(`${errores} con error`)
     setConfirmDialog({
       titulo: "Incorporación completada",
@@ -1351,7 +1360,7 @@ export function AdminPanel({ isOpen, onClose, adminCaracteristica, adminNumero }
                         <Button size="sm" variant="outline" className="gap-1.5" onClick={() => exportarCSVInscripciones(filtradas)}>
                           <Download className="h-4 w-4" /> Exportar CSV
                         </Button>
-                        {filtroTallerSlug && filtroFechaInicio < new Date().toISOString().substring(0, 10) && !["transformacion", "myl"].includes(filtroTallerSlug) && (
+                        {filtroTallerSlug && filtroFechaInicio < new Date().toISOString().substring(0, 10) && (
                           <Button
                             size="sm"
                             variant="outline"

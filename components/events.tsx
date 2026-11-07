@@ -778,7 +778,7 @@ export function Events() {
     {
       title: "Taller de Autoconocimiento - Quequén/Necochea",
       date: "13, 14 y 15 de Noviembre, 2026",
-      time: "Inicio: Viernes 13, 16 Horas",
+      time: "Inicio: Viernes 13 de Noviembre, 17:00 Horas",
       location: "A Confirmar",
       type: "Taller de Liderazgo",
       available: true,
@@ -796,7 +796,7 @@ export function Events() {
     {
       title: "Taller de Autoconocimiento - Ciudad de Buenos Aires",
       date: "4, 5 y 6 de Diciembre 2026",
-      time: "Inicio: Viernes 4 de Diciembre a las 17 Horas",
+      time: "Inicio: Viernes 4 de Diciembre, 17:00 Horas",
       location: "Ciudad de Buenos Aires",
       type: "Taller de Liderazgo",
       available: true,
@@ -833,7 +833,7 @@ export function Events() {
     {
       title: "Taller de Autoconocimiento - Puerto Natales, Chile",
       date: "18, 19 y 20 de Diciembre 2026",
-      time: "Inicio: Viernes 18 de Diciembre",
+      time: "Inicio: Viernes 18 de Diciembre, 17:00 Horas",
       location: "Lugar a Confirmar",
       type: "Taller de Liderazgo",
       available: true,
@@ -851,7 +851,7 @@ export function Events() {
     {
       title: "Taller de Autoconocimiento - Río Grande",
       date: "8, 9 y 10 de Enero 2027",
-      time: "Inicio: Viernes 8 de Enero",
+      time: "Inicio: Viernes 8 de Enero, 17:00 Horas",
       location: "Lugar a Confirmar",
       type: "Taller de Liderazgo",
       available: true,
@@ -867,7 +867,7 @@ export function Events() {
     {
       title: "Taller de Autoconocimiento - Puerto Montt, Chile",
       date: "22, 23 y 24 de Enero 2027",
-      time: "Inicio: Viernes 22 de Enero",
+      time: "Inicio: Viernes 22 de Enero, 17:00 Horas",
       location: "Lugar a Confirmar",
       type: "Taller de Liderazgo",
       available: true,

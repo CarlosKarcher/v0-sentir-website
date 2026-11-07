@@ -848,6 +848,22 @@ export function Events() {
       fechaInicio: "2026-12-18",
       fechaFin: "2026-12-20",
     },
+    {
+      title: "Taller de Autoconocimiento - Río Grande",
+      date: "8, 9 y 10 de Enero 2027",
+      time: "Inicio: Viernes 8 de Enero",
+      location: "Lugar a Confirmar",
+      type: "Taller de Liderazgo",
+      available: true,
+      availabilityText: "Cupos disponibles",
+      hasFlyer: false,
+      level: "1er Nivel",
+      contactPhone: "+54 9 2966 595803",
+      tallerSlug: "autoconocimiento",
+      sede: "Río Grande",
+      fechaInicio: "2027-01-08",
+      fechaFin: "2027-01-10",
+    },
   ]
 
   const today = new Date().toISOString().split("T")[0]

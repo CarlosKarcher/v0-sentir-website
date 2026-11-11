@@ -57,13 +57,6 @@ const team = [
     phone: "5492966639509",
   },
   {
-    name: "José Matulich",
-    role: "Péndulo Hebreo y Reiki",
-    specialties: ["Staff de Sentir"],
-    image: "/Jose Matulich.jpg",
-    phone: "5492966646975",
-  },
-  {
     name: "Angélica Caicheo",
     role: "Sesiones de Reiki y Acupuntura",
     specialties: ["Staff de Sentir"],

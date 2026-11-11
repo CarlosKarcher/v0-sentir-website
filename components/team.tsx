@@ -109,6 +109,7 @@ const team = [
       "Staff de Sentir",
     ],
     image: "/Carlos Esparza Coach.jpeg",
+    phone: "5492262639406",
   },
 ]
 

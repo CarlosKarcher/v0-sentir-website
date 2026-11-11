@@ -100,6 +100,16 @@ const team = [
     image: "/Xime Medina.jpeg",
     phone: "5492966707629",
   },
+  {
+    name: "Carlos Esparza",
+    role: "Coaching Deportivo",
+    specialties: [
+      "Neurociencia aplicada al Deporte y Alto Rendimiento",
+      "Inteligencia Emocional",
+      "Staff de Sentir",
+    ],
+    image: "/Carlos Esparza Coach.jpeg",
+  },
 ]
 
 export function Team() {

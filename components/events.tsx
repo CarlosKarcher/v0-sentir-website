@@ -789,6 +789,7 @@ export function Events() {
       level: "1er Nivel",
       contactPhone: "+54 11 6706 6630",
       tallerSlug: "autoconocimiento",
+      tallerId: "55a79c43-bc5f-4b20-95ea-14d8bb1dc3c0",
       sede: "Quequén-Neco",
       fechaInicio: "2026-11-13",
       fechaFin: "2026-11-15",

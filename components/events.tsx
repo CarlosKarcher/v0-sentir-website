@@ -793,6 +793,7 @@ export function Events() {
       sede: "Quequén-Neco",
       fechaInicio: "2026-11-13",
       fechaFin: "2026-11-15",
+      inscripcionHasta: "2026-11-30",
     },
     {
       title: "Taller de Autoconocimiento - Ciudad de Buenos Aires",
@@ -934,12 +935,12 @@ export function Events() {
 
   const today = new Date().toISOString().split("T")[0]
   const upcomingEvents = events.filter(e => {
-    const cutoff = e.fechaFin ?? e.fechaInicio
+    const cutoff = e.inscripcionHasta ?? e.fechaFin ?? e.fechaInicio
     return !cutoff || cutoff >= today
   })
   const autoPassedEvents = events
     .filter(e => {
-      const cutoff = e.fechaFin ?? e.fechaInicio
+      const cutoff = e.inscripcionHasta ?? e.fechaFin ?? e.fechaInicio
       return !!cutoff && cutoff < today
     })
     .map(e => ({ ...e, available: false, availabilityText: "Evento Realizado" }))

@@ -23,6 +23,7 @@ export interface Event {
   sede?: string        // ciudad/sede del taller (de sedes_sentir)
   fechaInicio?: string // YYYY-MM-DD — primer día del evento; usado como fallback si no hay fechaFin
   fechaFin?: string    // YYYY-MM-DD — último día del evento; si ya pasó se mueve automáticamente a Realizados
+  inscripcionHasta?: string // YYYY-MM-DD — mantiene el evento en Próximos (inscripción abierta) hasta esta fecha aunque ya haya terminado
 }
 
 export interface WrittenTestimonial {

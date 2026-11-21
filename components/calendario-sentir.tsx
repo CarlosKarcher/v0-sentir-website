@@ -265,7 +265,31 @@ const CALENDAR_EVENTS: DayEvent[] = [
 ]
 
 // ── CALENDARIO 2027 ─────────────────────────────────────────
-const CALENDAR_EVENTS_2027: DayEvent[] = []
+const CALENDAR_EVENTS_2027: DayEvent[] = [
+  // Enero — Autoconocimiento Río Grande
+  { month: 0, day: 8, type: "autoconocimiento", label: "Autocon. – Río Grande" },
+  { month: 0, day: 9, type: "autoconocimiento", label: "Autocon. – Río Grande" },
+  { month: 0, day: 10, type: "autoconocimiento", label: "Autocon. – Río Grande" },
+
+  // Enero — Autoconocimiento Puerto Montt
+  { month: 0, day: 22, type: "autoconocimiento", label: "Autocon. – Puerto Montt" },
+  { month: 0, day: 23, type: "autoconocimiento", label: "Autocon. – Puerto Montt" },
+  { month: 0, day: 24, type: "autoconocimiento", label: "Autocon. – Puerto Montt" },
+
+  // Febrero — Autoconocimiento Río Gallegos
+  { month: 1, day: 5, type: "autoconocimiento", label: "Autocon. – Río Gallegos" },
+  { month: 1, day: 6, type: "autoconocimiento", label: "Autocon. – Río Gallegos" },
+  { month: 1, day: 7, type: "autoconocimiento", label: "Autocon. – Río Gallegos" },
+
+  // Marzo — MyL 8 · 1ra Sala
+  { month: 2, day: 6, type: "myl", label: "MyL 8 - 1ra Sala." },
+  { month: 2, day: 7, type: "myl", label: "MyL 8 - 1ra Sala." },
+
+  // Abril — Autoconocimiento El Calafate
+  { month: 3, day: 2, type: "autoconocimiento", label: "Autocon. – El Calafate" },
+  { month: 3, day: 3, type: "autoconocimiento", label: "Autocon. – El Calafate" },
+  { month: 3, day: 4, type: "autoconocimiento", label: "Autocon. – El Calafate" },
+]
 
 const EVENTS_BY_YEAR: Record<number, DayEvent[]> = {
   2026: CALENDAR_EVENTS,
@@ -448,7 +472,9 @@ export function CalendarioSentir() {
               {val.fireIcon && (
                 <img src="/fuego-de-sentir.png" alt="" className="w-5 h-5 object-contain -ml-1" />
               )}
-              <span className="text-base sm:text-lg font-medium text-foreground">{val.label}</span>
+              <span className="text-base sm:text-lg font-medium text-foreground">
+                {key === "myl" ? `MyL ${year === 2027 ? 8 : 7}` : val.label}
+              </span>
             </div>
           ))}
         </div>

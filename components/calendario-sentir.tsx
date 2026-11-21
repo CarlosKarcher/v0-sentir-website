@@ -264,6 +264,16 @@ const CALENDAR_EVENTS: DayEvent[] = [
   { month: 11, day: 20, type: "autoconocimiento", label: "Autocon. – Puerto Natales" },
 ]
 
+// ── CALENDARIO 2027 ─────────────────────────────────────────
+const CALENDAR_EVENTS_2027: DayEvent[] = []
+
+const EVENTS_BY_YEAR: Record<number, DayEvent[]> = {
+  2026: CALENDAR_EVENTS,
+  2027: CALENDAR_EVENTS_2027,
+}
+
+const YEARS = [2026, 2027]
+
 function getFirstWeekday(year: number, month: number): number {
   const day = new Date(year, month, 1).getDay()
   return (day + 6) % 7
@@ -379,7 +389,7 @@ function MonthCalendar({
 }
 
 export function CalendarioSentir() {
-  const year = 2026
+  const [year, setYear] = useState(2026)
   const [tooltip, setTooltip] = useState<TooltipState>({ visible: false, label: "", x: 0, y: 0 })
 
   const rows = [
@@ -405,11 +415,29 @@ export function CalendarioSentir() {
         {/* Header */}
         <div className="max-w-3xl mx-auto text-center mb-8 sm:mb-12">
           <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-3 sm:mb-4 text-balance">
-            Calendario Sentir 2026
+            Calendario Sentir {year}
           </h2>
           <p className="text-base sm:text-lg text-muted-foreground text-pretty">
             Todos los eventos del año marcados en el calendario
           </p>
+        </div>
+
+        {/* Year tabs */}
+        <div className="flex justify-center gap-2 mb-8">
+          {YEARS.map((y) => (
+            <button
+              key={y}
+              type="button"
+              onClick={() => setYear(y)}
+              className={`px-6 py-2 rounded-full text-base sm:text-lg font-semibold border transition-colors ${
+                y === year
+                  ? "bg-foreground text-background border-foreground"
+                  : "bg-card text-foreground border-border hover:bg-muted"
+              }`}
+            >
+              {y}
+            </button>
+          ))}
         </div>
 
         {/* Legend */}
@@ -431,10 +459,10 @@ export function CalendarioSentir() {
             <div key={rowIdx} className="flex gap-3 sm:gap-4">
               {group.map((monthIndex) => (
                 <MonthCalendar
-                  key={monthIndex}
+                  key={`${year}-${monthIndex}`}
                   year={year}
                   monthIndex={monthIndex}
-                  events={CALENDAR_EVENTS}
+                  events={EVENTS_BY_YEAR[year] ?? []}
                   onDayHover={setTooltip}
                 />
               ))}

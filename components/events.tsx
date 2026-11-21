@@ -793,7 +793,6 @@ export function Events() {
       sede: "Quequén-Neco",
       fechaInicio: "2026-11-13",
       fechaFin: "2026-11-15",
-      inscripcionHasta: "2026-11-30",
     },
     {
       title: "Taller de Autoconocimiento - Ciudad de Buenos Aires",

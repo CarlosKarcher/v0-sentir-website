@@ -4,15 +4,15 @@ import * as React from "react"
 import { X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
+const VIDEO_SRC = "/transfor-dic-2026.mp4"
+
 export function VideoPopup() {
   const [isOpen, setIsOpen] = React.useState(true)
-  const [activeIndex, setActiveIndex] = React.useState(0)
-  const video1Ref = React.useRef<HTMLVideoElement>(null)
-  const video2Ref = React.useRef<HTMLVideoElement>(null)
+  const videoRef = React.useRef<HTMLVideoElement>(null)
 
-  // Autoplay primer video al abrir
+  // Autoplay al abrir (silenciado, requisito de los navegadores)
   React.useEffect(() => {
-    const v = video1Ref.current
+    const v = videoRef.current
     if (!v) return
     v.muted = true
     const tryPlay = () => { v.play().catch(() => {}) }
@@ -20,28 +20,12 @@ export function VideoPopup() {
     else v.addEventListener("loadedmetadata", tryPlay, { once: true })
   }, [])
 
-  const handleEnded1 = () => {
-    setActiveIndex(1)
-    const v = video2Ref.current
-    if (!v) return
-    v.muted = false
-    const tryPlay = () => { v.play().catch(() => {}) }
-    if (v.readyState >= 1) tryPlay()
-    else v.addEventListener("loadedmetadata", tryPlay, { once: true })
-  }
-
   const handleClose = () => {
-    video1Ref.current?.pause()
-    video2Ref.current?.pause()
+    videoRef.current?.pause()
     setIsOpen(false)
   }
 
   if (!isOpen) return null
-
-  const ringStyle = (index: number): React.CSSProperties => ({
-    outline: activeIndex === index ? "3px solid #fff" : "none",
-    borderRadius: "8px",
-  })
 
   return (
     <>
@@ -56,10 +40,8 @@ export function VideoPopup() {
             background: "#000",
             borderRadius: "12px",
             overflow: "hidden",
-            width: "min(640px, 96vw)",
-            maxHeight: "70vh",
-            display: "flex",
-            gap: "4px",
+            maxWidth: "96vw",
+            maxHeight: "85vh",
           }}
           onClick={(e) => e.stopPropagation()}
         >
@@ -74,30 +56,14 @@ export function VideoPopup() {
             <X style={{ width: 20, height: 20 }} />
           </Button>
 
-          {/* Video 1 — se reproduce primero */}
-          <div style={{ flex: 1, ...ringStyle(0) }}>
-            <video
-              ref={video1Ref}
-              src="/video-auto-11-09-2026-2.mp4"
-              playsInline
-              controls
-              preload="auto"
-              onEnded={handleEnded1}
-              style={{ display: "block", width: "100%", maxHeight: "70vh", objectFit: "contain" }}
-            />
-          </div>
-
-          {/* Video 2 — se reproduce después */}
-          <div style={{ flex: 1, ...ringStyle(1) }}>
-            <video
-              ref={video2Ref}
-              src="/video-auto-11-09-2026.mp4"
-              playsInline
-              controls
-              preload="auto"
-              style={{ display: "block", width: "100%", maxHeight: "70vh", objectFit: "contain" }}
-            />
-          </div>
+          <video
+            ref={videoRef}
+            src={VIDEO_SRC}
+            playsInline
+            controls
+            preload="auto"
+            style={{ display: "block", maxWidth: "96vw", maxHeight: "85vh", objectFit: "contain" }}
+          />
         </div>
       </div>
     </>

@@ -57,7 +57,33 @@ export function SentirDesdeAdentro() {
           </p>
         </div>
 
-        {/* Autoconocimiento y Guerrero Mayo 2026 — MÁS RECIENTE */}
+        {/* Autoconocimiento Septiembre 2026 — MÁS RECIENTE */}
+        <div className="max-w-5xl mx-auto mb-10 sm:mb-12 md:mb-16">
+          <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-6 text-center text-balance">
+            Taller de Autoconocimiento — Septiembre 2026
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+            {["/video-auto-11-09-2026-2.mp4", "/video-auto-11-09-2026.mp4"].map((src) => (
+              <Card key={src} className="overflow-hidden">
+                <CardContent className="p-0">
+                  <div className="relative w-full" style={{ aspectRatio: "16/9" }}>
+                    <video
+                      src={src}
+                      controls
+                      className="w-full h-full object-contain mx-auto block"
+                      preload="metadata"
+                      playsInline
+                    >
+                      Tu navegador no soporta el elemento de video.
+                    </video>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+
+        {/* Autoconocimiento y Guerrero Mayo 2026 */}
         <div className="max-w-5xl mx-auto mb-10 sm:mb-12 md:mb-16">
           <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-6 text-center text-balance">
             Autoconocimiento y El Camino del Guerrero — Mayo 2026

@@ -62,6 +62,7 @@ export function VideoPopup() {
             playsInline
             controls
             preload="auto"
+            onEnded={handleClose}
             style={{ display: "block", maxWidth: "96vw", maxHeight: "85vh", objectFit: "contain" }}
           />
         </div>

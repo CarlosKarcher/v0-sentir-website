@@ -1,20 +1,8 @@
-"use client"
-
-import { useState } from "react"
 import { ArrowRight } from "lucide-react"
-import { TiendaProductos } from "@/components/tienda-productos"
+
+const TIENDA_URL = "https://tinyurl.com/AlasdelSurPatagonia"
 
 export function Merchandising() {
-  const [showTienda, setShowTienda] = useState(false)
-
-  const handleButtonClick = () => {
-    setShowTienda(true)
-  }
-
-  const handleCloseTienda = () => {
-    setShowTienda(false)
-  }
-
   return (
     <section id="merchandising" className="py-12 sm:py-16 md:py-20 bg-background w-full">
       <div className="w-full max-w-7xl mx-auto px-4">
@@ -26,9 +14,12 @@ export function Merchandising() {
         </div>
 
         <div className="flex flex-col justify-center items-center gap-4">
-          <div
-            className="relative inline-block cursor-not-allowed rounded-lg overflow-hidden opacity-60"
-            aria-disabled="true"
+          <a
+            href={TIENDA_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="relative inline-block rounded-lg overflow-hidden shadow-md hover:shadow-xl hover:scale-[1.02] transition-all"
+            aria-label="Ir a la tienda de Sentir"
           >
             <img
               src="/logo-tienda-Sentir.jpeg"
@@ -36,17 +27,20 @@ export function Merchandising() {
               className="object-contain"
               style={{ width: "8cm", height: "10cm" }}
             />
-            {/* Indicador de no disponible */}
-            <div className="absolute bottom-2 right-2 bg-gray-400 text-white rounded-full p-2 shadow-lg">
+            <div className="absolute bottom-2 right-2 bg-blue-900 text-white rounded-full p-2 shadow-lg">
               <ArrowRight className="h-5 w-5" />
             </div>
-          </div>
-          <p className="text-sm text-muted-foreground mt-2">Próximamente disponible</p>
-          
+          </a>
+          <a
+            href={TIENDA_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm font-semibold text-blue-900 hover:underline mt-2"
+          >
+            Ir a la tienda
+          </a>
         </div>
       </div>
-      {showTienda && <TiendaProductos onClose={handleCloseTienda} />}
     </section>
   )
 }
-

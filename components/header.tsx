@@ -182,6 +182,17 @@ export function Header({ onAnotate }: HeaderProps) {
 
               <NavigationMenuItem>
                 <NavigationMenuLink
+                  href="https://tinyurl.com/AlasdelSurPatagonia"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={cn("group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50")}
+                >
+                  Merchandising
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+
+              <NavigationMenuItem>
+                <NavigationMenuLink
                   href="#musica-sentir"
                   onClick={(e) => { e.preventDefault(); scrollToElement("musica-sentir", 80) }}
                   className={cn("group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 cursor-pointer")}
@@ -246,6 +257,7 @@ export function Header({ onAnotate }: HeaderProps) {
                 <a href="#talleres" className="text-lg font-medium hover:text-primary transition-colors" onClick={() => setIsOpen(false)}>Talleres y Sesiones</a>
                 <a href="#proximos-eventos" className="text-center text-lg font-semibold text-white bg-green-600 hover:bg-green-700 px-4 py-3 rounded-lg transition-colors" onClick={() => setIsOpen(false)}>Inscribir a talleres</a>
                 <a href="#equipo" className="text-lg font-medium hover:text-primary transition-colors" onClick={() => setIsOpen(false)}>Equipo</a>
+                <a href="https://tinyurl.com/AlasdelSurPatagonia" target="_blank" rel="noopener noreferrer" className="text-lg font-medium hover:text-primary transition-colors" onClick={() => setIsOpen(false)}>Merchandising</a>
                 <a href="#musica-sentir" className="text-lg font-medium hover:text-primary transition-colors" onClick={(e) => { e.preventDefault(); setIsOpen(false); setTimeout(() => scrollToElement("musica-sentir", 80), 100) }}>Música de Sentir</a>
                 {esAdmin && (
                   <button onClick={() => { setIsOpen(false); setAdminPanelOpen(true) }} className="mt-2 w-full text-left text-lg font-bold text-white bg-blue-900 hover:bg-blue-800 px-4 py-3 rounded-lg transition-colors">

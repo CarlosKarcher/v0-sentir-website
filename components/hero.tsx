@@ -178,7 +178,20 @@ export function Hero({ onAnotate }: { onAnotate?: () => void }) {
           }
         `}</style>
 
-        {/* Alianza SENTIR + ACEPTAR ES CRECER */}
+        {/* Planner 2027 de regalo */}
+        <div className="mt-3 md:mt-5 pt-3 border-t border-white/20 flex flex-col items-center">
+          <a
+            href="/Planner_2027_SENTIR_Regalo.pdf"
+            download="Planner_2027_SENTIR_Regalo.pdf"
+            className="inline-block px-8 py-4 sm:px-12 sm:py-5 rounded-2xl bg-blue-900 hover:bg-blue-800 text-white text-xl sm:text-2xl md:text-3xl font-black shadow-xl transition-colors"
+          >
+            PLANNER 2027 de Sentir
+          </a>
+          <p className="mt-2 text-lg sm:text-xl md:text-2xl font-bold text-yellow-600">Llevatelo.!!!!!</p>
+        </div>
+
+        {/* Alianza SENTIR + ACEPTAR ES CRECER — oculta por ahora */}
+        {false && (
         <div className="mt-3 md:mt-5 pt-3 border-t border-white/20">
           <p className="text-xs font-semibold tracking-widest text-slate-400 uppercase mb-1">Alianza Institucional</p>
           <p className="text-sm sm:text-lg md:text-2xl font-black text-slate-700 mb-2">SENTIR + ACEPTAR ES CRECER</p>
@@ -198,6 +211,7 @@ export function Hero({ onAnotate }: { onAnotate?: () => void }) {
           </p>
           <p className="text-xs text-slate-400 italic mt-1">Dos comunidades, un mismo propósito</p>
         </div>
+        )}
       </div>
     </section>
   )

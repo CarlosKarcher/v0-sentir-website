@@ -179,7 +179,7 @@ export function Hero({ onAnotate }: { onAnotate?: () => void }) {
         `}</style>
 
         {/* Planner 2027 de regalo */}
-        <div className="mt-3 md:mt-5 pt-3 border-t border-white/20 flex flex-col items-center">
+        <div className="mt-12 md:mt-14 pt-3 border-t border-white/20 flex flex-col items-center">
           <a
             href="/Planner_2027_SENTIR_Regalo.pdf"
             download="Planner_2027_SENTIR_Regalo.pdf"
@@ -187,7 +187,7 @@ export function Hero({ onAnotate }: { onAnotate?: () => void }) {
           >
             PLANNER 2027 de Sentir
           </a>
-          <p className="mt-2 text-lg sm:text-xl md:text-2xl font-bold text-yellow-600">Llevatelo.!!!!!</p>
+          <p className="mt-2 text-lg sm:text-xl md:text-2xl font-bold text-yellow-600">Llevatelo de Regalo.!!!!!</p>
         </div>
 
         {/* Alianza SENTIR + ACEPTAR ES CRECER — oculta por ahora */}

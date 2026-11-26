@@ -5,17 +5,20 @@ import { useRouter } from "next/navigation";
 import { ETAPAS, FRASE, MAX_JUGADORES, PERMITIR_PASO } from "@/lib/esencia/cartas";
 import type { Modo } from "@/lib/esencia/juego";
 import { guardarAnfitrion, leerNombre, guardarNombre, nuevoCodigo } from "@/lib/esencia/local";
+import { useUser } from "@/lib/user-context";
 
 export default function Inicio() {
   const router = useRouter();
+  // en Sentir ya sabemos quién es: se usa su nombre de Sentir y no se le pregunta
+  const { nombre: nombreSentir } = useUser();
   const [nombre, setNombre] = useState("");
   const [modo, setModo] = useState<Modo>("facilitador");
   const [codigo, setCodigo] = useState("");
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setNombre(leerNombre());
-  }, []);
+    setNombre(nombreSentir || leerNombre());
+  }, [nombreSentir]);
 
   const crear = (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,10 +56,17 @@ export default function Inicio() {
       <div className="tarjetas">
         <form className="panel" onSubmit={crear}>
           <h2>Abrir una mesa</h2>
-          <label className="campo">
-            <span>Tu nombre</span>
-            <input className="texto" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="¿Cómo te llamás?" maxLength={30} />
-          </label>
+          {nombreSentir ? (
+            <p style={{ margin: 0 }}>
+              ¡Hola, <b>{nombreSentir}</b>! Te damos la bienvenida a Nuestra Esencia. Si abrís una mesa, vas a ser{" "}
+              <b>el guía del juego</b>: invitás a los demás y acompañás el recorrido.
+            </p>
+          ) : (
+            <label className="campo">
+              <span>Tu nombre</span>
+              <input className="texto" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="¿Cómo te llamás?" maxLength={30} />
+            </label>
+          )}
           <div className="campo">
             <span>¿Cómo quieren jugar?</span>
             <div className="opciones">
@@ -114,6 +124,7 @@ export default function Inicio() {
           ? "Nadie está obligado a responder. Se puede pasar una carta, guardar silencio o simplemente escuchar."
           : "Cada respuesta vale. Tomate tu tiempo y respondé desde donde estés hoy."}
       </p>
+      <p className="muted small" style={{ textAlign: "right", margin: "28px 0 0" }}>Realizado por Carlos Karcher.</p>
     </main>
   );
 }

@@ -94,7 +94,7 @@ export function About() {
               <div className="rounded-full bg-blue-900/10 w-16 h-16 flex items-center justify-center mb-4 mx-auto">
                 <Target className="h-8 w-8 text-blue-900" />
               </div>
-              <h3 className="text-lg sm:text-xl font-semibold mb-3 text-center">Nuestra Misión</h3>
+              <h3 id="nuestra-mision" className="text-lg sm:text-xl font-semibold mb-3 text-center">Nuestra Misión</h3>
               <p className="text-sm sm:text-base text-muted-foreground text-center text-pretty mb-4 sm:mb-6">
                 Acompañar a las personas en su viaje de autoconocimiento y transformación, proporcionando herramientas
                 efectivas para alcanzar sus metas y vivir en plenitud y autenticidad.

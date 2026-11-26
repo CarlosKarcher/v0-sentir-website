@@ -15,7 +15,6 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu"
 import { cn } from "@/lib/utils"
-import { scrollToElement } from "@/lib/scroll"
 import { AdminPanel } from "@/components/admin-panel"
 
 interface HeaderProps {
@@ -35,9 +34,40 @@ export function Header({ onAnotate }: HeaderProps) {
   // no cuentan) o administradores; si no, queda en gris. Las páginas /esencia vuelven a controlarlo.
   const AVISO_ESENCIA = "Para quienes hicieron al menos un taller de Sentir"
 
+  // Todas las opciones del menú que llevan a una sección de la página (#...) pasan por acá, en computadora y
+  // en celular: se cierra el menú, se deja lugar para la barra de arriba (que es fija y tapaba el título) y,
+  // como la página sigue cargando contenido y se estira, se vuelve a acomodar unas veces si la sección se movió.
+  const irASeccion = (e: React.MouseEvent) => {
+    const link = (e.target as HTMLElement).closest?.("a[href^='#']") as HTMLAnchorElement | null
+    if (!link) return
+    const id = decodeURIComponent(link.hash.slice(1))
+    if (!id || !document.getElementById(id)) return
+    e.preventDefault()
+    const menuAbierto = isOpen
+    setIsOpen(false)
+    // si la persona empieza a moverse por su cuenta, no se la vuelve a llevar
+    let soltar = false
+    const alMoverse = () => { soltar = true }
+    for (const ev of ["wheel", "touchmove", "keydown"]) window.addEventListener(ev, alMoverse, { once: true, passive: true })
+    const ubicar = (suave: boolean) => {
+      const el = document.getElementById(id)
+      if (!el || (soltar && !suave)) return
+      const alto = document.querySelector("header")?.getBoundingClientRect().height ?? 80
+      const destino = el.getBoundingClientRect().top + window.scrollY - alto - 8
+      if (Math.abs(el.getBoundingClientRect().top - alto - 8) > 6) {
+        window.scrollTo({ top: Math.max(0, destino), behavior: suave ? "smooth" : "auto" })
+      }
+    }
+    // con el menú del celular abierto, esperar a que se cierre (mientras está abierto la página no se puede mover)
+    const inicio = menuAbierto ? 350 : 0
+    setTimeout(() => ubicar(true), inicio)
+    for (const t of [900, 1700, 2600]) setTimeout(() => ubicar(false), inicio + t)
+    history.replaceState(null, "", `#${id}`)
+  }
+
   return (
     <>
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header onClick={irASeccion} className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       {process.env.NEXT_PUBLIC_BUILD_TIME && (
         <span className="hidden sm:block absolute top-1 left-2 text-xs text-muted-foreground font-mono z-10">
           v{new Date(process.env.NEXT_PUBLIC_BUILD_TIME).toLocaleString("es-AR", {
@@ -97,7 +127,7 @@ export function Header({ onAnotate }: HeaderProps) {
                     </li>
                     <li>
                       <NavigationMenuLink asChild>
-                        <a href="#que-ofrecemos" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                        <a href="#ofrecemos" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
                           <div className="text-sm font-medium leading-none">Qué Ofrecemos</div>
                           <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">Nuestros servicios y talleres</p>
                         </a>
@@ -105,7 +135,7 @@ export function Header({ onAnotate }: HeaderProps) {
                     </li>
                     <li>
                       <NavigationMenuLink asChild>
-                        <a href="#a-quien-va-dirigido" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                        <a href="#para-quien" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
                           <div className="text-sm font-medium leading-none">A Quién Va Dirigido</div>
                           <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">Para quiénes son nuestros talleres</p>
                         </a>
@@ -212,7 +242,6 @@ export function Header({ onAnotate }: HeaderProps) {
               <NavigationMenuItem>
                 <NavigationMenuLink
                   href="#musica-sentir"
-                  onClick={(e) => { e.preventDefault(); scrollToElement("musica-sentir", 80) }}
                   className={cn("group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 cursor-pointer")}
                 >
                   Música de Sentir
@@ -267,8 +296,8 @@ export function Header({ onAnotate }: HeaderProps) {
               <nav className="flex flex-col gap-4 mt-8">
                 <a href="#que-hacemos" className="text-lg font-medium hover:text-primary transition-colors" onClick={() => setIsOpen(false)}>Qué Hacemos</a>
                 <a href="#nuestra-mision" className="text-lg font-medium hover:text-primary transition-colors" onClick={() => setIsOpen(false)}>Nuestra Misión</a>
-                <a href="#que-ofrecemos" className="text-lg font-medium hover:text-primary transition-colors" onClick={() => setIsOpen(false)}>Qué Ofrecemos</a>
-                <a href="#a-quien-va-dirigido" className="text-lg font-medium hover:text-primary transition-colors" onClick={() => setIsOpen(false)}>A Quién Va Dirigido</a>
+                <a href="#ofrecemos" className="text-lg font-medium hover:text-primary transition-colors" onClick={() => setIsOpen(false)}>Qué Ofrecemos</a>
+                <a href="#para-quien" className="text-lg font-medium hover:text-primary transition-colors" onClick={() => setIsOpen(false)}>A Quién Va Dirigido</a>
                 {/* Agenda de Turnos: oculta del menú por ahora */}
                 <a href="#proximos-eventos" className="text-lg font-medium hover:text-primary transition-colors" onClick={() => setIsOpen(false)}>Próximos Eventos</a>
                 <a href="#equipo" className="text-lg font-medium hover:text-primary transition-colors" onClick={() => setIsOpen(false)}>Equipo</a>
@@ -288,7 +317,7 @@ export function Header({ onAnotate }: HeaderProps) {
                 <a href="#proximos-eventos" className="text-center text-lg font-semibold text-white bg-green-600 hover:bg-green-700 px-4 py-3 rounded-lg transition-colors" onClick={() => setIsOpen(false)}>Inscribir a talleres</a>
                 <a href="https://tinyurl.com/AlasdelSurPatagonia" target="_blank" rel="noopener noreferrer" className="text-lg font-medium hover:text-primary transition-colors" onClick={() => setIsOpen(false)}>Merchandising</a>
                 <a href="#testimonios" className="text-lg font-medium hover:text-primary transition-colors" onClick={() => setIsOpen(false)}>Testimonios</a>
-                <a href="#musica-sentir" className="text-lg font-medium hover:text-primary transition-colors" onClick={(e) => { e.preventDefault(); setIsOpen(false); setTimeout(() => scrollToElement("musica-sentir", 80), 100) }}>Música de Sentir</a>
+                <a href="#musica-sentir" className="text-lg font-medium hover:text-primary transition-colors">Música de Sentir</a>
                 {esAdmin && (
                   <button onClick={() => { setIsOpen(false); setAdminPanelOpen(true) }} className="mt-2 w-full text-left text-lg font-bold text-white bg-blue-900 hover:bg-blue-800 px-4 py-3 rounded-lg transition-colors">
                     Admin

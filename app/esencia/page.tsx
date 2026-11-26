@@ -38,11 +38,19 @@ export default function Inicio() {
 
   return (
     <main className="inicio">
-      <header>
+      {/* con la bienvenida, la barra pasa a 3 columnas para que el saludo quede justo en el centro */}
+      <header style={nombreSentir ? { display: "grid", gridTemplateColumns: "1fr auto 1fr", gap: 12 } : undefined}>
         <span className="marca">
           <span className="chispa" /> Nuestra Esencia
         </span>
-        <span className="muted small">2 a {MAX_JUGADORES} personas · a distancia</span>
+        {nombreSentir && (
+          <span style={{ textAlign: "center" }}>
+            ¡Bienvenido/a, <b>{nombreSentir}</b>!
+          </span>
+        )}
+        <span className="muted small" style={nombreSentir ? { justifySelf: "end" } : undefined}>
+          2 a {MAX_JUGADORES} personas · a distancia
+        </span>
       </header>
 
       <section className="portada">

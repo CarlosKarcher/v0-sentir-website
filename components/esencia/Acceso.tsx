@@ -1,15 +1,14 @@
 "use client"
 
-import { useState } from "react"
 import { useUser } from "@/lib/user-context"
-import { LoginModal } from "@/components/login-modal"
 
 // Control de entrada a Nuestra Esencia: solo juegan miembros de Sentir con al menos un taller
 // (las constelaciones no cuentan) o administradores, entren por el menú, por un link o con el código.
+// El juego NUNCA pide el mail: usa el usuario que el navegador ya tiene guardado de sentir.fun.
+// Si no hay ninguno, se manda a registrarse o ingresar en sentir.fun desde ese mismo navegador.
 // No toca el juego: si la persona cumple, se muestra la página tal cual.
 export function EsenciaAcceso({ children }: { children: React.ReactNode }) {
   const { estado, puedeEsencia } = useUser()
-  const [loginOpen, setLoginOpen] = useState(false)
 
   if (puedeEsencia) return <>{children}</>
 
@@ -39,16 +38,18 @@ export function EsenciaAcceso({ children }: { children: React.ReactNode }) {
         ) : (
           <>
             <h1>
-              Ingresá con tu <em>email de Sentir</em>
+              Primero, <em>entrá a Sentir</em>
             </h1>
-            <p>Nuestra Esencia es para quienes hicieron al menos un taller de Sentir.</p>
-            <button className="btn primario" onClick={() => setLoginOpen(true)} style={{ marginTop: 18 }}>
-              Ingresar
-            </button>
+            <p>
+              Para jugar, primero registrate o ingresá en <b>sentir.fun</b> desde este mismo navegador. Después volvé a abrir
+              el link de la mesa.
+            </p>
+            <a className="btn primario" href="/" style={{ marginTop: 18 }}>
+              Ir a Sentir
+            </a>
           </>
         )}
       </section>
-      <LoginModal isOpen={loginOpen} onClose={() => setLoginOpen(false)} onLoginSuccess={() => setLoginOpen(false)} />
     </main>
   )
 }

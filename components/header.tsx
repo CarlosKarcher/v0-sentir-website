@@ -123,17 +123,19 @@ export function Header({ onAnotate }: HeaderProps) {
                     href="/esencia"
                     target="_blank"
                     rel="noopener"
-                    className={cn("group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50")}
+                    className={cn("group inline-flex h-10 w-max flex-col items-center justify-center rounded-md bg-background px-4 py-1 text-sm font-medium leading-tight transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50")}
                   >
-                    Nuestra Esencia
+                    <span>Nuestra Esencia</span>
+                    <span className="text-xs font-normal">(Juego)</span>
                   </NavigationMenuLink>
                 ) : (
                   <span
                     aria-disabled="true"
                     title={AVISO_ESENCIA}
-                    className="inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium text-muted-foreground/50 cursor-not-allowed select-none"
+                    className="inline-flex h-10 w-max flex-col items-center justify-center rounded-md px-4 py-1 text-sm font-medium leading-tight text-muted-foreground/50 cursor-not-allowed select-none"
                   >
-                    Nuestra Esencia
+                    <span>Nuestra Esencia</span>
+                    <span className="text-xs font-normal">(Juego)</span>
                   </span>
                 )}
               </NavigationMenuItem>
@@ -269,10 +271,14 @@ export function Header({ onAnotate }: HeaderProps) {
                 <a href="#a-quien-va-dirigido" className="text-lg font-medium hover:text-primary transition-colors" onClick={() => setIsOpen(false)}>A Quién Va Dirigido</a>
                 {/* Agenda de Turnos: oculta del menú por ahora */}
                 {puedeEsencia ? (
-                  <a href="/esencia" target="_blank" rel="noopener" className="text-lg font-medium hover:text-primary transition-colors" onClick={() => setIsOpen(false)}>Nuestra Esencia</a>
+                  <a href="/esencia" target="_blank" rel="noopener" className="text-lg font-medium hover:text-primary transition-colors" onClick={() => setIsOpen(false)}>
+                    Nuestra Esencia
+                    <span className="block text-sm font-normal">(Juego)</span>
+                  </a>
                 ) : (
                   <span aria-disabled="true" className="text-lg font-medium text-muted-foreground/50 cursor-not-allowed select-none">
                     Nuestra Esencia
+                    <span className="block text-sm font-normal">(Juego)</span>
                     <span className="block text-xs font-normal">{AVISO_ESENCIA}</span>
                   </span>
                 )}

@@ -2,12 +2,14 @@
 
 import { useEffect, useState } from "react"
 import { createPortal } from "react-dom"
+import { usePathname } from "next/navigation"
 import { useUser } from "@/lib/user-context"
 import { LoginModal } from "@/components/login-modal"
 import { X } from "lucide-react"
 
 export function WelcomeModal() {
   const { estado } = useUser()
+  const pathname = usePathname()
   const [visible, setVisible] = useState(false)
   const [mounted, setMounted] = useState(false)
   const [loginOpen, setLoginOpen] = useState(false)
@@ -23,7 +25,8 @@ export function WelcomeModal() {
     }
   }, [estado])
 
-  if (!mounted) return null
+  // en el juego Nuestra Esencia no se interrumpe a quien entra con una invitación
+  if (!mounted || pathname?.startsWith("/esencia")) return null
 
   return (
     <>

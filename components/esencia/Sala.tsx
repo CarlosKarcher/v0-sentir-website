@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
+import { useUser } from "@/lib/user-context";
 import { CARTAS, CIERRES, ETAPAS, FRASE, MAX_JUGADORES, PERMITIR_PASO, TIPOS } from "@/lib/esencia/cartas";
 import { DORSO_INICIAL, VUELTAS_POR_ETAPA, type Comodin, type Estado, type Jugador } from "@/lib/esencia/juego";
 import { guardarNombre, leerAnfitrion, leerNombre } from "@/lib/esencia/local";
@@ -74,7 +76,13 @@ export default function Sala({ codigo }: { codigo: string }) {
 /* ------------------------------------------------------------------ */
 
 function Antesala({ local, onEntrar }: { local: MediaStream | null | undefined; onEntrar: (n: string) => void }) {
+  // en Sentir ya sabemos quién es: se usa su nombre de Sentir y no se le pregunta
+  const { nombre: nombreSentir } = useUser();
   const [n, setN] = useState(leerNombre);
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (nombreSentir) setN(nombreSentir);
+  }, [nombreSentir]);
   return (
     <div className="centro">
       <form
@@ -94,10 +102,16 @@ function Antesala({ local, onEntrar }: { local: MediaStream | null | undefined; 
           )}
         </div>
         <p className="frase" style={{ textAlign: "center", margin: 0 }}>«{FRASE}»</p>
-        <label className="campo">
-          <span>¿Cómo te llamás?</span>
-          <input className="texto" value={n} onChange={(e) => setN(e.target.value)} placeholder="Tu nombre" maxLength={30} autoFocus />
-        </label>
+        {nombreSentir ? (
+          <p style={{ textAlign: "center", margin: 0 }}>
+            ¡Hola, <b>{nombreSentir}</b>! Te damos la bienvenida a la mesa.
+          </p>
+        ) : (
+          <label className="campo">
+            <span>¿Cómo te llamás?</span>
+            <input className="texto" value={n} onChange={(e) => setN(e.target.value)} placeholder="Tu nombre" maxLength={30} autoFocus />
+          </label>
+        )}
         <button className="btn primario ancho" disabled={!n.trim()}>Entrar a la mesa</button>
         <p className="muted small" style={{ textAlign: "center", margin: 0 }}>
           {PERMITIR_PASO
@@ -536,6 +550,7 @@ function Carta({ rev, visible, tipo, etiqueta, texto, dorso, cinta }: { rev: num
 function Videos({ estado, miId }: { estado: Estado; miId: string }) {
   const { local, remotos, expulsar } = useSala();
   const soyAnfitrion = estado.jugadores.find((j) => j.id === miId)?.anfitrion ?? false;
+  const [aCerrar, setACerrar] = useState<Jugador | null>(null); // jugador al que el guía quiere cerrarle la sesión
   const [mic, setMic] = useState(true);
   const [cam, setCam] = useState(true);
   const alternar = (tipo: "audio" | "video", on: boolean) => local?.getTracks().filter((t) => t.kind === tipo).forEach((t) => (t.enabled = on));
@@ -554,7 +569,7 @@ function Videos({ estado, miId }: { estado: Estado; miId: string }) {
               <button
                 className="cerrar-sesion"
                 title={`Cerrar la sesión de ${j.nombre}`}
-                onClick={() => confirm(`¿Cerrar la sesión de ${j.nombre}? Va a poder volver a entrar con el mismo link.`) && expulsar(j.id)}
+                onClick={() => setACerrar(j)}
               >
                 Cerrar sesión
               </button>
@@ -572,8 +587,44 @@ function Videos({ estado, miId }: { estado: Estado; miId: string }) {
           </button>
         </div>
       )}
+      {aCerrar && (
+        <Confirmar
+          titulo="Cerrar sesión"
+          aceptar="Aceptar"
+          onAceptar={() => { expulsar(aCerrar.id); setACerrar(null); }}
+          onCancelar={() => setACerrar(null)}
+        >
+          ¿Confirmás que querés cerrar la sesión de <b>{aCerrar.nombre}</b>?<br />
+          Va a poder volver a entrar con el mismo link.
+        </Confirmar>
+      )}
     </div>
   );
+}
+
+/** Cartel propio del juego para confirmar una acción (en lugar del aviso gris del navegador) */
+function Confirmar({ titulo, aceptar, onAceptar, onCancelar, children }: { titulo: string; aceptar: string; onAceptar: () => void; onCancelar: () => void; children: React.ReactNode }) {
+  useEffect(() => {
+    const tecla = (e: KeyboardEvent) => e.key === "Escape" && onCancelar();
+    window.addEventListener("keydown", tecla);
+    return () => window.removeEventListener("keydown", tecla);
+  }, [onCancelar]);
+  // se dibuja directo dentro de .esencia, para que ningún contenedor lo recorte y tome los estilos del juego
+  const raiz = typeof document !== "undefined" ? document.querySelector(".esencia") : null;
+  const cartel = (
+    <div className="confirmar-fondo" onClick={onCancelar}>
+      <div className="confirmar" role="dialog" aria-modal="true" aria-label={titulo} onClick={(e) => e.stopPropagation()}>
+        <span className="chispa" />
+        <h3>{titulo}</h3>
+        <p>{children}</p>
+        <div className="acciones">
+          <button className="btn" onClick={onCancelar}>Cancelar</button>
+          <button className="btn primario" onClick={onAceptar} autoFocus>{aceptar}</button>
+        </div>
+      </div>
+    </div>
+  );
+  return raiz ? createPortal(cartel, raiz) : cartel;
 }
 
 function Video({ stream, espejo, silencio }: { stream: MediaStream; espejo?: boolean; silencio?: boolean }) {

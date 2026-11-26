@@ -261,7 +261,7 @@ function Espera({ codigo, estado, soyAnfitrion }: { codigo: string; estado: Esta
       {soyAnfitrion ? (
         <>
           <p className="muted small" style={{ margin: 0 }}>
-            Compartí el link o el código <b className="codigo">{codigo}</b> con quienes van a jugar.
+            Compartí el link de la mesa con quienes van a jugar. Solo se puede entrar con ese link.
           </p>
           <ModoSelector estado={estado} />
           <div className="fila solo-escritorio">

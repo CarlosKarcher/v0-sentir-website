@@ -13,7 +13,6 @@ export default function Inicio() {
   const { nombre: nombreSentir } = useUser();
   const [nombre, setNombre] = useState("");
   const [modo, setModo] = useState<Modo>("facilitador");
-  const [codigo, setCodigo] = useState("");
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -28,12 +27,6 @@ export default function Inicio() {
     const c = nuevoCodigo();
     guardarAnfitrion(c, { nombre: n, modo });
     router.push(`/esencia/sala/${c}`);
-  };
-
-  const unirse = (e: React.FormEvent) => {
-    e.preventDefault();
-    const c = codigo.toUpperCase().replace(/[^A-Z0-9]/g, "");
-    if (c.length >= 4) router.push(`/esencia/sala/${c}`);
   };
 
   return (
@@ -61,8 +54,8 @@ export default function Inicio() {
         <p className="frase" style={{ marginTop: 18 }}>«{FRASE}»</p>
       </section>
 
-      {/* quien llega desde Sentir entra como guía: solo ve «Abrir una mesa». Los invitados entran con el link de la mesa */}
-      <div className="tarjetas" style={nombreSentir ? { maxWidth: 560, marginInline: "auto" } : undefined}>
+      {/* acá solo se abre una mesa (quien la abre es el guía). Los invitados entran únicamente con el link de la mesa */}
+      <div className="tarjetas" style={{ maxWidth: 560, marginInline: "auto" }}>
         <form className="panel" onSubmit={crear}>
           <h2>Abrir una mesa</h2>
           {nombreSentir ? (
@@ -94,29 +87,6 @@ export default function Inicio() {
             Abrir la mesa
           </button>
         </form>
-
-        {!nombreSentir && (
-        <form className="panel" onSubmit={unirse}>
-          <h2>Tengo un código</h2>
-          <p className="muted" style={{ margin: 0 }}>
-            Si te invitaron, entrá con el link que te mandaron o escribí el código de la mesa.
-          </p>
-          <label className="campo">
-            <span>Código</span>
-            <input
-              className="texto"
-              value={codigo}
-              onChange={(e) => setCodigo(e.target.value.toUpperCase())}
-              placeholder="Ej: K7MQ2P"
-              maxLength={8}
-              style={{ letterSpacing: "0.2em" }}
-            />
-          </label>
-          <button className="btn ancho" disabled={codigo.replace(/[^A-Za-z0-9]/g, "").length < 4}>
-            Entrar
-          </button>
-        </form>
-        )}
       </div>
 
       <div className="etapas-lista">

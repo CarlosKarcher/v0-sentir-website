@@ -335,6 +335,7 @@ function InscribirseForm() {
           apellido: apellido.trim(),
           email: email.trim().toLowerCase(),
           tallerNombre: tallerNombreSeleccionado,
+          tallerSlug,
           localidad: localidadParam ? decodeURIComponent(localidadParam) : null,
           precioFinal: precios?.precioFinal ?? 0,
           moneda: tallerData?.moneda ?? "ARS",

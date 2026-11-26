@@ -43,6 +43,12 @@ export async function POST(req: NextRequest) {
         })()
       : null
 
+    // Mismo criterio que la página de inscripción: Biodecodificación cobra a otro alias
+    const esBiodecodificacion =
+      body.tallerSlug === "biodecodificacion" || /biodecodif/i.test(String(tallerNombre ?? ""))
+    const aliasPago = esBiodecodificacion ? "ckarcher.mp" : "coach.fercarcamo.mp"
+    const mostrarAlias = !esPrecioGratis && precioFinal > 0 && modalidadPago !== "tarjeta"
+
     const { error } = await resend.emails.send({
       from: "Sentir <inscripciones@sentir.fun>",
       to: [email],
@@ -71,6 +77,12 @@ export async function POST(req: NextRequest) {
               <p style="color:rgba(255,255,255,0.7);font-size:11px;text-transform:uppercase;letter-spacing:1px;margin:0 0 4px;">FORMA DE PAGO</p>
               <p style="font-size:15px;font-weight:600;margin:0;">${metodoPagoLabel}${!esPrecioGratis && precioFinal > 0 ? `&emsp;<span style="font-size:18px;font-weight:bold;">$${montoAcordado.toLocaleString("es-AR")} ${moneda}</span>${modalidadPago === "sena" ? `&emsp;<span style="font-size:12px;color:rgba(255,255,255,0.6);">(total: $${precioFinal.toLocaleString("es-AR")})</span>` : ""}` : ""}</p>
             </div>
+
+            ${mostrarAlias ? `
+            <div style="background:rgba(255,255,255,0.15);border-radius:12px;padding:10px 24px;margin-bottom:6px;">
+              <p style="color:rgba(255,255,255,0.7);font-size:11px;text-transform:uppercase;letter-spacing:1px;margin:0 0 4px;">DATOS PARA TRANSFERIR</p>
+              <p style="font-size:20px;font-weight:bold;margin:0;">Alias: ${aliasPago}</p>
+            </div>` : ""}
 
             <div style="background:rgba(255,255,255,0.2);border-radius:12px;padding:10px 24px;margin-bottom:16px;">
               <p style="font-size:14px;font-weight:bold;margin:0 0 4px;">⏳ Estado: PENDIENTE hasta el pago</p>

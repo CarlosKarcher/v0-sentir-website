@@ -61,7 +61,8 @@ export default function Inicio() {
         <p className="frase" style={{ marginTop: 18 }}>«{FRASE}»</p>
       </section>
 
-      <div className="tarjetas">
+      {/* quien llega desde Sentir entra como guía: solo ve «Abrir una mesa». Los invitados entran con el link de la mesa */}
+      <div className="tarjetas" style={nombreSentir ? { maxWidth: 560, marginInline: "auto" } : undefined}>
         <form className="panel" onSubmit={crear}>
           <h2>Abrir una mesa</h2>
           {nombreSentir ? (
@@ -94,6 +95,7 @@ export default function Inicio() {
           </button>
         </form>
 
+        {!nombreSentir && (
         <form className="panel" onSubmit={unirse}>
           <h2>Tengo un código</h2>
           <p className="muted" style={{ margin: 0 }}>
@@ -114,6 +116,7 @@ export default function Inicio() {
             Entrar
           </button>
         </form>
+        )}
       </div>
 
       <div className="etapas-lista">

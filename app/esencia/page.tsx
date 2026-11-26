@@ -37,7 +37,7 @@ export default function Inicio() {
           <span className="chispa" /> Nuestra Esencia
         </span>
         {nombreSentir && (
-          <span style={{ textAlign: "center" }}>
+          <span style={{ textAlign: "center", fontFamily: "var(--f-serif), serif", fontSize: "1.6rem", lineHeight: 1.2 }}>
             ¡Bienvenido/a, <b>{nombreSentir}</b>!
           </span>
         )}
@@ -60,7 +60,7 @@ export default function Inicio() {
           <h2>Abrir una mesa</h2>
           {nombreSentir ? (
             <p style={{ margin: 0 }}>
-              ¡Hola, <b>{nombreSentir}</b>! Te damos la bienvenida a Nuestra Esencia. Si abrís una mesa, vas a ser{" "}
+              Si abrís una mesa, vas a ser{" "}
               <b>el guía del juego</b>, y podés elegir iniciar el juego <b>«Con guía»</b> o <b>«Por turnos»</b>. Luego invitás
               a los demás y acompañás su recorrido. ¡Disfrutalo!
             </p>

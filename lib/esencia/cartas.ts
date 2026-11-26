@@ -1,5 +1,6 @@
-// Cartas del juego: 24 por etapa (alcanza para 6 personas × 4 vueltas sin repetir).
-// Desde la etapa 3 las preguntas son más profundas. Al final, las cartas de cierre.
+// Cartas del juego: 48 por etapa (240 en total). Se juegan igual que siempre: 6 personas × 4 vueltas
+// usan 24 por etapa, y el resto da más variedad al azar entre partidas.
+// Desde la etapa 3 las preguntas son más profundas. Al final, las 12 cartas de cierre.
 
 export type Tipo = "pensar" | "sentir" | "accionar";
 
@@ -20,7 +21,7 @@ export interface Carta {
   etapa: number; // 0..4
   tipo: Tipo;
   texto: string;
-  comodin?: Comodin; // cartas marcadas: 4 por nivel, una de cada comodín
+  comodin?: Comodin; // cartas marcadas: 8 por nivel, dos de cada comodín (40 en total)
 }
 
 export interface Etapa {
@@ -45,13 +46,18 @@ export const TIPOS: Record<Tipo, { nombre: string; signo: string }> = {
 
 const c = (etapa: number, tipo: Tipo, texto: string, n: number): Carta => ({ id: `${etapa}-${n}`, etapa, tipo, texto });
 
-/** Cartas marcadas como comodín o regalo: una de cada tipo en cada nivel */
+/** Cartas marcadas como comodín o regalo: dos de cada tipo en cada nivel */
 const COMODINES_FIJOS: Record<string, Comodin> = {
   "0-1": "elegir", "0-12": "todos", "0-14": "derecha", "0-10": "izquierda",
+  "0-26": "elegir", "0-40": "todos", "0-33": "derecha", "0-38": "izquierda",
   "1-3": "elegir", "1-22": "todos", "1-7": "derecha", "1-4": "izquierda",
+  "1-27": "elegir", "1-34": "todos", "1-41": "derecha", "1-38": "izquierda",
   "2-1": "elegir", "2-19": "todos", "2-12": "derecha", "2-16": "izquierda",
+  "2-29": "elegir", "2-35": "todos", "2-37": "derecha", "2-40": "izquierda",
   "3-11": "elegir", "3-20": "todos", "3-18": "derecha", "3-10": "izquierda",
+  "3-33": "elegir", "3-39": "todos", "3-36": "derecha", "3-30": "izquierda",
   "4-1": "elegir", "4-21": "todos", "4-12": "derecha", "4-11": "izquierda",
+  "4-31": "elegir", "4-39": "todos", "4-42": "derecha", "4-36": "izquierda",
 };
 
 const BASE: Carta[] = [
@@ -80,6 +86,30 @@ const BASE: Carta[] = [
   c(0, "accionar", "Elegí a alguien de la mesa y hacele una pregunta que te dé curiosidad sobre su vida.", 22),
   c(0, "accionar", "Contá algo que te pasó esta semana y que todavía te hace sonreír.", 23),
   c(0, "accionar", "Mostrá algo que tengas cerca y que te acompañe hace muchos años, y contá su historia.", 24),
+  c(0, "pensar", "Si pudieras elegir tu nombre de nuevo, ¿cuál te pondrías y por qué?", 25),
+  c(0, "pensar", "¿Qué libro, serie o película te dejó pensando últimamente?", 26),
+  c(0, "pensar", "¿Qué pasatiempo tuviste alguna vez y dejaste, y por qué?", 27),
+  c(0, "pensar", "¿Qué es lo primero que hacés cuando te levantás?", 28),
+  c(0, "pensar", "¿A qué lugar de tu infancia volverías por un día?", 29),
+  c(0, "pensar", "¿Qué cosa simple te parece un lujo?", 30),
+  c(0, "pensar", "Si pudieras compartir una cena con cualquier persona, viva o no, ¿a quién elegirías?", 31),
+  c(0, "pensar", "¿Qué palabra o expresión usás tanto que ya es parte de vos?", 32),
+  c(0, "pensar", "¿Cuál fue tu primer trabajo, o tu primera forma de ganarte unos pesos, y qué te dejó?", 33),
+  c(0, "pensar", "¿Qué aprendiste hace poco que te entusiasmó?", 34),
+  c(0, "sentir", "¿Qué olor te lleva directo a tu infancia, y qué sentís cuando aparece?", 35),
+  c(0, "sentir", "¿Qué música te levanta el ánimo cuando estás bajo o baja?", 36),
+  c(0, "sentir", "¿Con qué animal te sentís identificado o identificada hoy, y por qué?", 37),
+  c(0, "sentir", "¿Qué te emociona aunque lo hayas visto mil veces?", 38),
+  c(0, "sentir", "¿Cuál es tu momento favorito del día, y qué sentís en ese momento?", 39),
+  c(0, "sentir", "¿Qué te pone de buen humor sin falla?", 40),
+  c(0, "sentir", "¿Qué lugar de la naturaleza te hace sentir en paz?", 41),
+  c(0, "sentir", "¿Qué te dio alegría hoy, aunque haya sido algo mínimo?", 42),
+  c(0, "accionar", "Mostrá por la cámara lo que tenés alrededor y contá qué te gusta de ese lugar.", 43),
+  c(0, "accionar", "Contá la historia de tu nombre: quién lo eligió y por qué.", 44),
+  c(0, "accionar", "Hacé un gesto o un sonido que te represente, y que el grupo lo repita.", 45),
+  c(0, "accionar", "Contá un viaje, corto o largo, que te haya cambiado algo.", 46),
+  c(0, "accionar", "Decí algo que te gustaría que esta mesa sepa de vos antes de seguir.", 47),
+  c(0, "accionar", "Contá una costumbre tuya que a otros les parece rara.", 48),
 
   // ---------- 2 · Descubrirnos ----------
   c(1, "pensar", "¿Cuánto de lo que sos elegiste, y cuánto aprendiste a ser?", 1),
@@ -106,6 +136,30 @@ const BASE: Carta[] = [
   c(1, "accionar", "Nombrá tres palabras que te definen hoy, y una que te gustaría que te definiera.", 22),
   c(1, "accionar", "Contá una decisión que tomaste contra la corriente y que hoy volverías a tomar.", 23),
   c(1, "accionar", "Elegí a alguien de la mesa y decile qué valor creés que lo guía, por lo que viste de él o de ella hoy.", 24),
+  c(1, "pensar", "¿Qué regla de la casa de tu infancia seguís aplicando sin darte cuenta?", 25),
+  c(1, "pensar", "¿Qué te enseñaron que era importante y hoy ya no te importa tanto?", 26),
+  c(1, "pensar", "¿Qué es para vos la libertad?", 27),
+  c(1, "pensar", "¿En qué parte de tu vida sentís que hacés lo que pensás?", 28),
+  c(1, "pensar", "¿En qué te parecés a tu familia, y en qué sos completamente distinto o distinta?", 29),
+  c(1, "pensar", "¿Qué te gustaría que los más jóvenes de tu familia aprendan de vos?", 30),
+  c(1, "pensar", "¿Qué lugar ocupan la fe, la espiritualidad o la búsqueda de sentido en tu vida?", 31),
+  c(1, "pensar", "¿Qué te parece imperdonable, y por qué?", 32),
+  c(1, "pensar", "¿Qué idea defendés aunque te quedes en minoría?", 33),
+  c(1, "pensar", "¿Qué significa para vos ser una buena persona?", 34),
+  c(1, "sentir", "¿Cuándo sentiste que dejabas algo tuyo de lado para encajar?", 35),
+  c(1, "sentir", "¿Qué te hace sentir parte de algo más grande?", 36),
+  c(1, "sentir", "¿En qué grupo o lugar te sentiste fuera de lugar, y qué aprendiste de eso?", 37),
+  c(1, "sentir", "¿Qué elogio te cuesta recibir, y por qué?", 38),
+  c(1, "sentir", "¿Qué es lo que más te emociona de la gente que querés?", 39),
+  c(1, "sentir", "¿Cuándo te sentís útil de verdad?", 40),
+  c(1, "sentir", "¿Qué parte de tu forma de ser te gusta de verdad?", 41),
+  c(1, "sentir", "¿Qué te gustaría que la gente supiera de vos sin tener que explicarlo?", 42),
+  c(1, "accionar", "Contá una tradición familiar que te gustaría mantener, y otra que te gustaría cambiar.", 43),
+  c(1, "accionar", "Decí en voz alta una regla que te pusiste a vos mismo o a vos misma, y si la seguís cumpliendo.", 44),
+  c(1, "accionar", "Elegí a alguien de la mesa y decile en qué creés que se parecen.", 45),
+  c(1, "accionar", "Nombrá algo que hacés distinto a como se hacía en tu casa, y contá por qué.", 46),
+  c(1, "accionar", "Contá una vez en que dijiste que no y te sentiste fiel a vos.", 47),
+  c(1, "accionar", "Completá en voz alta: «Me siento más yo cuando…».", 48),
 
   // ---------- 3 · Sentirnos (más profundo) ----------
   c(2, "pensar", "¿Qué emoción aprendiste de chico o chica que no estaba permitido sentir en tu casa?", 1),
@@ -132,6 +186,30 @@ const BASE: Carta[] = [
   c(2, "accionar", "Pedile al grupo lo que necesitás ahora mismo: silencio, una palabra, una mirada.", 22),
   c(2, "accionar", "Poné una mano en el lugar del cuerpo donde sentís el dolor más viejo, y contá qué guarda.", 23),
   c(2, "accionar", "Nombrá a alguien a quien le debés una disculpa, y decí qué le dirías.", 24),
+  c(2, "pensar", "¿Qué emoción te cuesta más mostrar delante de otros?", 25),
+  c(2, "pensar", "¿Qué parte de vos escondés para que te quieran?", 26),
+  c(2, "pensar", "¿Qué te pasó que nunca le contaste a nadie como realmente lo viviste?", 27),
+  c(2, "pensar", "¿De quién esperás todavía un reconocimiento que no llega?", 28),
+  c(2, "pensar", "¿Qué necesitás escuchar que nadie te dice?", 29),
+  c(2, "pensar", "¿Qué miedo de tu infancia sigue vivo en vos, aunque haya cambiado de forma?", 30),
+  c(2, "pensar", "¿En qué momento aprendiste que tenías que arreglártelas solo o sola?", 31),
+  c(2, "pensar", "¿Qué rechazo te marcó más de lo que admitís?", 32),
+  c(2, "pensar", "¿A quién necesitás ponerle un límite y todavía no te animás?", 33),
+  c(2, "pensar", "¿Qué culpa cargás que quizás no te corresponde?", 34),
+  c(2, "sentir", "¿En qué parte del cuerpo sentís la tristeza cuando aparece?", 35),
+  c(2, "sentir", "¿Qué te hace sentir rechazado o rechazada, aunque sepas que no es así?", 36),
+  c(2, "sentir", "¿Cuándo fue la última vez que te sentiste realmente cuidado o cuidada?", 37),
+  c(2, "sentir", "¿Qué te duele de cómo te tratás a vos mismo o a vos misma?", 38),
+  c(2, "sentir", "¿Qué despedida te quedó pendiente?", 39),
+  c(2, "sentir", "¿Qué ternura te cuesta pedir?", 40),
+  c(2, "sentir", "¿Qué te desborda, y qué hacés cuando te pasa?", 41),
+  c(2, "sentir", "¿Qué momento de tu vida te gustaría que alguien abrazara con vos?", 42),
+  c(2, "accionar", "Respirá hondo tres veces y decí en una palabra qué está pasando adentro tuyo ahora.", 43),
+  c(2, "accionar", "Completá en voz alta: «Lo que más me duele hoy es…».", 44),
+  c(2, "accionar", "Contale al grupo qué se movió en vos al escuchar a alguien hoy, y a quién.", 45),
+  c(2, "accionar", "Nombrá un miedo que tenés y decí qué necesitarías para atravesarlo.", 46),
+  c(2, "accionar", "Pedile a alguien de la mesa que te diga una frase que necesitás escuchar.", 47),
+  c(2, "accionar", "Completá en voz alta: «Hoy me permito sentir…».", 48),
 
   // ---------- 4 · Reconocernos (más profundo) ----------
   c(3, "pensar", "¿Qué repetís de tu madre o de tu padre que juraste que nunca ibas a repetir?", 1),
@@ -158,6 +236,30 @@ const BASE: Carta[] = [
   c(3, "accionar", "Decí en voz alta una frase de reconciliación con tu historia, empezando por «Acepto que…».", 22),
   c(3, "accionar", "Mirá a alguien del grupo y contale algo de tu historia que nunca le contaste a nadie, si te animás.", 23),
   c(3, "accionar", "Nombrá a tu padre y a tu madre, y decí una cosa que tomás de cada uno con gratitud.", 24),
+  c(3, "pensar", "¿Qué historia de tu familia se cuenta siempre, y cuál no se cuenta nunca?", 25),
+  c(3, "pensar", "¿Qué aprendiste de tu madre sin que te lo enseñara con palabras?", 26),
+  c(3, "pensar", "¿Qué aprendiste de tu padre sin que te lo enseñara con palabras?", 27),
+  c(3, "pensar", "¿Qué lugar ocupás entre tus hermanos, o qué significó para vos no tenerlos?", 28),
+  c(3, "pensar", "¿Qué juicio sobre alguien de tu familia estás empezando a soltar?", 29),
+  c(3, "pensar", "¿Qué te enseñó la persona que más te hizo sufrir?", 30),
+  c(3, "pensar", "¿Qué parte de tu historia contás siempre igual, y cómo sería contarla distinto?", 31),
+  c(3, "pensar", "¿Hay alguien en tu familia de quien no se habla? ¿Qué sabés de esa persona?", 32),
+  c(3, "pensar", "¿Qué te dieron tus padres que recién ahora valorás?", 33),
+  c(3, "pensar", "¿Qué etapa de tu vida todavía no terminaste de entender?", 34),
+  c(3, "sentir", "¿Qué sentís cuando mirás una foto tuya de cuando eras chico o chica?", 35),
+  c(3, "sentir", "¿Qué te emociona de tu propia historia cuando la mirás de lejos?", 36),
+  c(3, "sentir", "¿A quién de tu familia te parecés más por dentro, y cómo te hace sentir eso?", 37),
+  c(3, "sentir", "¿Qué te gustaría decirle a alguien que ya no está?", 38),
+  c(3, "sentir", "¿Qué herida tuya hoy mirás con respeto?", 39),
+  c(3, "sentir", "¿Qué te reconcilia con tu pasado?", 40),
+  c(3, "sentir", "¿Qué sentís que tu historia te pide hoy?", 41),
+  c(3, "sentir", "¿En qué momento sentiste que tu familia, aun con sus errores, te sostenía?", 42),
+  c(3, "accionar", "Contá un momento de tu historia del que hoy te sentís orgulloso u orgullosa.", 43),
+  c(3, "accionar", "Completá en voz alta: «Gracias a lo que viví, hoy puedo…».", 44),
+  c(3, "accionar", "Nombrá a alguien de tu familia que quedó afuera u olvidado, y decí en voz alta: «Vos también pertenecés».", 45),
+  c(3, "accionar", "Contá una decisión de tus padres o tus abuelos que cambió tu vida, y agradecela en voz alta.", 46),
+  c(3, "accionar", "Decí en voz alta: «Lo que pasó, pasó. Hoy elijo…».", 47),
+  c(3, "accionar", "Mirá a alguien del grupo y decile qué de su historia te enseñó algo hoy.", 48),
 
   // ---------- 5 · Transformarnos (más profundo) ----------
   c(4, "pensar", "Si dejaras de tener miedo, ¿qué empezarías a hacer mañana mismo?", 1),
@@ -184,6 +286,30 @@ const BASE: Carta[] = [
   c(4, "accionar", "Pedile a alguien del grupo que te acompañe en algo que querés empezar.", 22),
   c(4, "accionar", "Escribí o decí una frase que te quieras regalar para lo que viene.", 23),
   c(4, "accionar", "Elegí a una persona de tu vida a quien vas a llamar o escribir esta semana, y contá qué le vas a decir.", 24),
+  c(4, "pensar", "¿Qué hábito te está quitando vida, y cuál te la daría?", 25),
+  c(4, "pensar", "¿Qué excusa usás más seguido para no cambiar?", 26),
+  c(4, "pensar", "¿Qué harías distinto si confiaras más en vos?", 27),
+  c(4, "pensar", "¿Qué querés aprender en los próximos años, aunque te dé vergüenza empezar?", 28),
+  c(4, "pensar", "¿Qué lugar o qué persona te ayuda a ser tu mejor versión?", 29),
+  c(4, "pensar", "¿Qué rol estás listo o lista para dejar de ocupar?", 30),
+  c(4, "pensar", "¿Qué pedido importante todavía no hiciste, y a quién?", 31),
+  c(4, "pensar", "¿Qué significa para vos empezar de nuevo?", 32),
+  c(4, "pensar", "¿Qué cambio pequeño haría una gran diferencia en tu día a día?", 33),
+  c(4, "pensar", "¿Cómo te gustaría que fuera tu vida dentro de diez años?", 34),
+  c(4, "sentir", "¿Qué sentís cuando te imaginás viviendo la vida que querés?", 35),
+  c(4, "sentir", "¿Qué miedo te gustaría transformar en impulso?", 36),
+  c(4, "sentir", "¿Qué necesitás para sentirte en paz con lo que viene?", 37),
+  c(4, "sentir", "¿A quién querés tener cerca en tu próxima etapa?", 38),
+  c(4, "sentir", "¿Qué te da esperanza hoy?", 39),
+  c(4, "sentir", "¿Qué te gustaría sentir más seguido?", 40),
+  c(4, "sentir", "¿Qué te dirías para darte ánimo cuando dudes?", 41),
+  c(4, "sentir", "¿Qué parte de vos merece una nueva oportunidad?", 42),
+  c(4, "accionar", "Decí en voz alta un sueño tuyo como si ya estuviera pasando, empezando por «Estoy…».", 43),
+  c(4, "accionar", "Nombrá algo que vas a dejar de postergar, y decí cuándo empezás.", 44),
+  c(4, "accionar", "Elegí a alguien del grupo y decile qué te gustaría verle lograr.", 45),
+  c(4, "accionar", "Completá en voz alta: «Me doy permiso para…».", 46),
+  c(4, "accionar", "Nombrá a una persona a la que le vas a pedir ayuda, y contá para qué.", 47),
+  c(4, "accionar", "Proponé un gesto concreto para cuidarte esta semana, y contáselo al grupo.", 48),
 ];
 
 export const CARTAS: Carta[] = BASE.map((carta) => (COMODINES_FIJOS[carta.id] ? { ...carta, comodin: COMODINES_FIJOS[carta.id] } : carta));
@@ -196,6 +322,12 @@ export const CIERRES: string[] = [
   "Respirá hondo. ¿Cómo está tu cuerpo ahora, comparado con el comienzo?",
   "Agradecé algo a este grupo, a tu manera.",
   "¿Qué te gustaría recordar de este momento?",
+  "¿Qué descubriste de vos hoy?",
+  "Regalale a alguien del grupo una frase que te gustaría que se lleve.",
+  "¿Qué pregunta de hoy te vas a seguir haciendo?",
+  "¿Con qué gesto o compromiso salís de esta mesa?",
+  "Nombrá una emoción con la que llegaste y otra con la que te vas.",
+  "Mirá a cada persona del grupo por un momento y despedite en silencio, a tu manera.",
 ];
 
 export const FRASE = "Cuando nos animamos a mostrarnos, aparece lo esencial.";

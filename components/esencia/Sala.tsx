@@ -466,8 +466,20 @@ function ModoSelector({ estado }: { estado: Estado }) {
 function Control({ estado }: { estado: Estado }) {
   const enviar = useSala((s) => s.enviar);
   const guia = estado.modo === "facilitador";
+  const [confirmarFin, setConfirmarFin] = useState(false);
   return (
     <div className="control">
+      {confirmarFin && (
+        <Confirmar
+          titulo="Terminar el juego"
+          aceptar="Aceptar"
+          onAceptar={() => { enviar({ a: "terminar" }); setConfirmarFin(false); }}
+          onCancelar={() => setConfirmarFin(false)}
+        >
+          ¿Confirmás que querés <b>terminar el juego para todos</b>?<br />
+          Toda la mesa pasa a la pantalla final.
+        </Confirmar>
+      )}
       <div className="titulo">¿Cómo seguimos jugando?</div>
       <ModoSelector estado={estado} />
       {guia && estado.fase === "juego" && (
@@ -501,7 +513,7 @@ function Control({ estado }: { estado: Estado }) {
           </button>
         ))}
         <button className={`btn chico ${estado.fase === "cierre" ? "activo" : ""}`} onClick={() => enviar({ a: "cierre" })}>Cierre</button>
-        <button className="btn chico" onClick={() => confirm("¿Terminar el juego para todos?") && enviar({ a: "terminar" })}>Terminar</button>
+        <button className="btn chico" onClick={() => setConfirmarFin(true)}>Terminar</button>
       </div>
     </div>
   );

@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import { useUser } from "@/lib/user-context"
-import { supabase } from "@/lib/supabase-client"
 import { LoginModal } from "@/components/login-modal"
 import { Button } from "@/components/ui/button"
 import { Menu } from "lucide-react"
@@ -28,37 +27,13 @@ export function Header({ onAnotate }: HeaderProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [adminPanelOpen, setAdminPanelOpen] = useState(false)
   const [loginOpen, setLoginOpen] = useState(false)
-  const { estado, nombre, nroMiembro, esAdmin, adminCelular, email, logout } = useUser()
+  const { estado, nombre, nroMiembro, esAdmin, adminCelular, puedeEsencia, logout } = useUser()
 
   const logueado = estado === "registrado" || estado === "sin_registro"
 
-  // Nuestra Esencia: solo entran miembros de Sentir con al menos un taller (las constelaciones no cuentan).
-  // Los invitados a una mesa entran directo con el link o el código, sin pasar por acá.
-  const [avisoEsencia, setAvisoEsencia] = useState<{ texto: string; ingresar?: boolean } | null>(null)
-  const abrirEsencia = async (e: React.MouseEvent) => {
-    e.preventDefault()
-    setIsOpen(false)
-    if (estado !== "registrado" || !email) {
-      setAvisoEsencia({ texto: "Para entrar a Nuestra Esencia, primero ingresá con tu email de Sentir.", ingresar: true })
-      return
-    }
-    // la pestaña se abre ya (si se abre después de esperar la respuesta, el navegador la bloquea)
-    const pestana = window.open("", "_blank")
-    const { data, error } = await supabase.rpc("esencia_puede_abrir_mesa", { p_email: email })
-    if (!error && data?.habilitado) {
-      if (pestana) pestana.location.href = "/esencia"
-      else window.open("/esencia", "_blank")
-      return
-    }
-    pestana?.close()
-    setAvisoEsencia({
-      texto: error
-        ? "No pudimos verificar tu ingreso. Probá de nuevo en un momento."
-        : data?.miembro
-          ? "Nuestra Esencia es para quienes ya hicieron al menos un taller de Sentir."
-          : "No estás registrado como miembro de Sentir.",
-    })
-  }
+  // Nuestra Esencia: la opción se habilita solo para miembros con al menos un taller (las constelaciones
+  // no cuentan) o administradores; si no, queda en gris. Las páginas /esencia vuelven a controlarlo.
+  const AVISO_ESENCIA = "Para quienes hicieron al menos un taller de Sentir"
 
   return (
     <>
@@ -221,13 +196,24 @@ export function Header({ onAnotate }: HeaderProps) {
               </NavigationMenuItem>
 
               <NavigationMenuItem>
-                <NavigationMenuLink
-                  href="/esencia"
-                  onClick={abrirEsencia}
-                  className={cn("group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50")}
-                >
-                  Nuestra Esencia
-                </NavigationMenuLink>
+                {puedeEsencia ? (
+                  <NavigationMenuLink
+                    href="/esencia"
+                    target="_blank"
+                    rel="noopener"
+                    className={cn("group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50")}
+                  >
+                    Nuestra Esencia
+                  </NavigationMenuLink>
+                ) : (
+                  <span
+                    aria-disabled="true"
+                    title={AVISO_ESENCIA}
+                    className="inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium text-muted-foreground/50 cursor-not-allowed select-none"
+                  >
+                    Nuestra Esencia
+                  </span>
+                )}
               </NavigationMenuItem>
 
               <NavigationMenuItem>
@@ -297,7 +283,14 @@ export function Header({ onAnotate }: HeaderProps) {
                 <a href="#proximos-eventos" className="text-center text-lg font-semibold text-white bg-green-600 hover:bg-green-700 px-4 py-3 rounded-lg transition-colors" onClick={() => setIsOpen(false)}>Inscribir a talleres</a>
                 <a href="#equipo" className="text-lg font-medium hover:text-primary transition-colors" onClick={() => setIsOpen(false)}>Equipo</a>
                 <a href="https://tinyurl.com/AlasdelSurPatagonia" target="_blank" rel="noopener noreferrer" className="text-lg font-medium hover:text-primary transition-colors" onClick={() => setIsOpen(false)}>Merchandising</a>
-                <a href="/esencia" className="text-lg font-medium hover:text-primary transition-colors" onClick={abrirEsencia}>Nuestra Esencia</a>
+                {puedeEsencia ? (
+                  <a href="/esencia" target="_blank" rel="noopener" className="text-lg font-medium hover:text-primary transition-colors" onClick={() => setIsOpen(false)}>Nuestra Esencia</a>
+                ) : (
+                  <span aria-disabled="true" className="text-lg font-medium text-muted-foreground/50 cursor-not-allowed select-none">
+                    Nuestra Esencia
+                    <span className="block text-xs font-normal">{AVISO_ESENCIA}</span>
+                  </span>
+                )}
                 <a href="#musica-sentir" className="text-lg font-medium hover:text-primary transition-colors" onClick={(e) => { e.preventDefault(); setIsOpen(false); setTimeout(() => scrollToElement("musica-sentir", 80), 100) }}>Música de Sentir</a>
                 {esAdmin && (
                   <button onClick={() => { setIsOpen(false); setAdminPanelOpen(true) }} className="mt-2 w-full text-left text-lg font-bold text-white bg-blue-900 hover:bg-blue-800 px-4 py-3 rounded-lg transition-colors">
@@ -371,20 +364,6 @@ export function Header({ onAnotate }: HeaderProps) {
       onLoginSuccess={() => setLoginOpen(false)}
     />
 
-    {avisoEsencia && (
-      <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 p-4" onClick={() => setAvisoEsencia(null)}>
-        <div className="w-full max-w-sm rounded-2xl bg-white p-6 text-center shadow-2xl dark:bg-gray-900" onClick={(e) => e.stopPropagation()}>
-          <h3 className="mb-2 text-xl font-bold text-blue-900">Nuestra Esencia</h3>
-          <p className="mb-5 text-gray-600 dark:text-gray-300">{avisoEsencia.texto}</p>
-          <div className="flex justify-center gap-2">
-            {avisoEsencia.ingresar && (
-              <Button onClick={() => { setAvisoEsencia(null); setLoginOpen(true) }}>Ingresar</Button>
-            )}
-            <Button variant="outline" onClick={() => setAvisoEsencia(null)}>Cerrar</Button>
-          </div>
-        </div>
-      </div>
-    )}
   </>
   )
 }

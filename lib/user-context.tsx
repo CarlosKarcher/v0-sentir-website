@@ -12,6 +12,8 @@ interface UserContextType {
   esAdmin: boolean
   adminCelular: { caracteristica: string; numero: string }
   email: string | null
+  // Nuestra Esencia: miembro con al menos un taller (las constelaciones no cuentan) o administrador
+  puedeEsencia: boolean
   loginWithEmail: (email: string) => Promise<{ encontrado: boolean }>
   logout: () => void
 }
@@ -23,6 +25,7 @@ const UserContext = createContext<UserContextType>({
   esAdmin: false,
   adminCelular: { caracteristica: "", numero: "" },
   email: null,
+  puedeEsencia: false,
   loginWithEmail: async () => ({ encontrado: false }),
   logout: () => {},
 })
@@ -42,6 +45,16 @@ function clearSaved() {
   try { localStorage.removeItem(STORAGE_KEY) } catch {}
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function cumpleEsencia(data: any): boolean {
+  if (data?.origen !== "miembro") return false
+  if (data.es_admin) return true
+  return !!(
+    data.taller_autoconocimiento || data.taller_transformacion || data.taller_myl ||
+    data.taller_guerrero || data.taller_nino_interior || data.taller_biodecodificacion
+  )
+}
+
 export function UserProvider({ children }: { children: React.ReactNode }) {
   const [estado, setEstado] = useState<EstadoUsuario>("cargando")
   const [nombre, setNombre] = useState<string | null>(null)
@@ -49,6 +62,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const [esAdmin, setEsAdmin] = useState(false)
   const [adminCelular, setAdminCelular] = useState({ caracteristica: "", numero: "" })
   const [email, setEmail] = useState<string | null>(null)
+  const [puedeEsencia, setPuedeEsencia] = useState(false)
 
   const cargarUsuario = async (emailUser: string) => {
     const { data, error } = await supabase.rpc("buscar_email_registrado", { p_email: emailUser.toLowerCase() })
@@ -66,6 +80,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         numero: data.celular_numero || "",
       })
       setEmail(emailUser)
+      setPuedeEsencia(cumpleEsencia(data))
       setEstado("registrado")
     } else {
       // El email no existe en la BD — sí borrar sesión
@@ -95,6 +110,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         numero: data.celular_numero || "",
       })
       setEmail(emailUser.toLowerCase())
+      setPuedeEsencia(cumpleEsencia(data))
       setEstado("registrado")
       return { encontrado: true }
     } else {
@@ -110,10 +126,11 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     setEsAdmin(false)
     setAdminCelular({ caracteristica: "", numero: "" })
     setEmail(null)
+    setPuedeEsencia(false)
   }
 
   return (
-    <UserContext.Provider value={{ estado, nombre, nroMiembro, esAdmin, adminCelular, email, loginWithEmail, logout }}>
+    <UserContext.Provider value={{ estado, nombre, nroMiembro, esAdmin, adminCelular, email, puedeEsencia, loginWithEmail, logout }}>
       {children}
     </UserContext.Provider>
   )

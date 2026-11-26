@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next"
 import { Fraunces, Inter, Pinyon_Script } from "next/font/google"
 import "./esencia.css"
+import { EsenciaAcceso } from "@/components/esencia/Acceso"
 
 // Nuestra Esencia: juego de encuentro (ideado por Carlos Karcher), con su propia estética dentro de Sentir
 const serif = Fraunces({ subsets: ["latin"], variable: "--f-serif", weight: ["300", "400", "500"], style: ["normal", "italic"] })
@@ -16,5 +17,9 @@ export const metadata: Metadata = {
 export const viewport: Viewport = { themeColor: "#17120f", width: "device-width", initialScale: 1, viewportFit: "cover" }
 
 export default function EsenciaLayout({ children }: { children: React.ReactNode }) {
-  return <div className={`esencia ${serif.variable} ${sans.variable} ${firma.variable}`}>{children}</div>
+  return (
+    <div className={`esencia ${serif.variable} ${sans.variable} ${firma.variable}`}>
+      <EsenciaAcceso>{children}</EsenciaAcceso>
+    </div>
+  )
 }

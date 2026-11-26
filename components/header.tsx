@@ -115,15 +115,27 @@ export function Header({ onAnotate }: HeaderProps) {
                 </NavigationMenuContent>
               </NavigationMenuItem>
 
+              {/* Agenda de Turnos (https://turnos-two-iota.vercel.app/): oculta del menú por ahora */}
+
               <NavigationMenuItem>
-                <NavigationMenuLink
-                  href="https://turnos-two-iota.vercel.app/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={cn("group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50")}
-                >
-                  Agenda de Turnos
-                </NavigationMenuLink>
+                {puedeEsencia ? (
+                  <NavigationMenuLink
+                    href="/esencia"
+                    target="_blank"
+                    rel="noopener"
+                    className={cn("group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50")}
+                  >
+                    Nuestra Esencia
+                  </NavigationMenuLink>
+                ) : (
+                  <span
+                    aria-disabled="true"
+                    title={AVISO_ESENCIA}
+                    className="inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium text-muted-foreground/50 cursor-not-allowed select-none"
+                  >
+                    Nuestra Esencia
+                  </span>
+                )}
               </NavigationMenuItem>
 
               <NavigationMenuItem>
@@ -196,27 +208,6 @@ export function Header({ onAnotate }: HeaderProps) {
               </NavigationMenuItem>
 
               <NavigationMenuItem>
-                {puedeEsencia ? (
-                  <NavigationMenuLink
-                    href="/esencia"
-                    target="_blank"
-                    rel="noopener"
-                    className={cn("group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50")}
-                  >
-                    Nuestra Esencia
-                  </NavigationMenuLink>
-                ) : (
-                  <span
-                    aria-disabled="true"
-                    title={AVISO_ESENCIA}
-                    className="inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium text-muted-foreground/50 cursor-not-allowed select-none"
-                  >
-                    Nuestra Esencia
-                  </span>
-                )}
-              </NavigationMenuItem>
-
-              <NavigationMenuItem>
                 <NavigationMenuLink
                   href="#musica-sentir"
                   onClick={(e) => { e.preventDefault(); scrollToElement("musica-sentir", 80) }}
@@ -276,13 +267,7 @@ export function Header({ onAnotate }: HeaderProps) {
                 <a href="#nuestra-mision" className="text-lg font-medium hover:text-primary transition-colors" onClick={() => setIsOpen(false)}>Nuestra Misión</a>
                 <a href="#que-ofrecemos" className="text-lg font-medium hover:text-primary transition-colors" onClick={() => setIsOpen(false)}>Qué Ofrecemos</a>
                 <a href="#a-quien-va-dirigido" className="text-lg font-medium hover:text-primary transition-colors" onClick={() => setIsOpen(false)}>A Quién Va Dirigido</a>
-                <a href="https://turnos-two-iota.vercel.app/" target="_blank" rel="noopener noreferrer" className="text-lg font-medium hover:text-primary transition-colors" onClick={() => setIsOpen(false)}>Agenda de Turnos</a>
-                <a href="#proximos-eventos" className="text-lg font-medium hover:text-primary transition-colors" onClick={() => setIsOpen(false)}>Próximos Eventos</a>
-                <a href="#testimonios" className="text-lg font-medium hover:text-primary transition-colors" onClick={() => setIsOpen(false)}>Testimonios</a>
-                <a href="#talleres" className="text-lg font-medium hover:text-primary transition-colors" onClick={() => setIsOpen(false)}>Talleres y Sesiones</a>
-                <a href="#proximos-eventos" className="text-center text-lg font-semibold text-white bg-green-600 hover:bg-green-700 px-4 py-3 rounded-lg transition-colors" onClick={() => setIsOpen(false)}>Inscribir a talleres</a>
-                <a href="#equipo" className="text-lg font-medium hover:text-primary transition-colors" onClick={() => setIsOpen(false)}>Equipo</a>
-                <a href="https://tinyurl.com/AlasdelSurPatagonia" target="_blank" rel="noopener noreferrer" className="text-lg font-medium hover:text-primary transition-colors" onClick={() => setIsOpen(false)}>Merchandising</a>
+                {/* Agenda de Turnos: oculta del menú por ahora */}
                 {puedeEsencia ? (
                   <a href="/esencia" target="_blank" rel="noopener" className="text-lg font-medium hover:text-primary transition-colors" onClick={() => setIsOpen(false)}>Nuestra Esencia</a>
                 ) : (
@@ -291,6 +276,12 @@ export function Header({ onAnotate }: HeaderProps) {
                     <span className="block text-xs font-normal">{AVISO_ESENCIA}</span>
                   </span>
                 )}
+                <a href="#proximos-eventos" className="text-lg font-medium hover:text-primary transition-colors" onClick={() => setIsOpen(false)}>Próximos Eventos</a>
+                <a href="#testimonios" className="text-lg font-medium hover:text-primary transition-colors" onClick={() => setIsOpen(false)}>Testimonios</a>
+                <a href="#talleres" className="text-lg font-medium hover:text-primary transition-colors" onClick={() => setIsOpen(false)}>Talleres y Sesiones</a>
+                <a href="#proximos-eventos" className="text-center text-lg font-semibold text-white bg-green-600 hover:bg-green-700 px-4 py-3 rounded-lg transition-colors" onClick={() => setIsOpen(false)}>Inscribir a talleres</a>
+                <a href="#equipo" className="text-lg font-medium hover:text-primary transition-colors" onClick={() => setIsOpen(false)}>Equipo</a>
+                <a href="https://tinyurl.com/AlasdelSurPatagonia" target="_blank" rel="noopener noreferrer" className="text-lg font-medium hover:text-primary transition-colors" onClick={() => setIsOpen(false)}>Merchandising</a>
                 <a href="#musica-sentir" className="text-lg font-medium hover:text-primary transition-colors" onClick={(e) => { e.preventDefault(); setIsOpen(false); setTimeout(() => scrollToElement("musica-sentir", 80), 100) }}>Música de Sentir</a>
                 {esAdmin && (
                   <button onClick={() => { setIsOpen(false); setAdminPanelOpen(true) }} className="mt-2 w-full text-left text-lg font-bold text-white bg-blue-900 hover:bg-blue-800 px-4 py-3 rounded-lg transition-colors">

@@ -67,7 +67,8 @@ export default function Inicio() {
           {nombreSentir ? (
             <p style={{ margin: 0 }}>
               ¡Hola, <b>{nombreSentir}</b>! Te damos la bienvenida a Nuestra Esencia. Si abrís una mesa, vas a ser{" "}
-              <b>el guía del juego</b>: invitás a los demás y acompañás el recorrido.
+              <b>el guía del juego</b>, y podés elegir iniciar el juego <b>«Con guía»</b> o <b>«Por turnos»</b>. Luego invitás
+              a los demás y acompañás su recorrido. ¡Disfrutalo!
             </p>
           ) : (
             <label className="campo">

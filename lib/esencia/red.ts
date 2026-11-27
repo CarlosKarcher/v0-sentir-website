@@ -68,7 +68,9 @@ export async function conectar(opts: {
   modo: Modo;
   local: MediaStream | null;
 }) {
-  const { codigo, nombre, anfitrion, modo, local } = opts;
+  const { codigo, anfitrion, modo, local } = opts;
+  // puede cambiar en la mesa (acción "nombre"); si el invitado se reconecta, vuelve con el nombre nuevo
+  let nombre = opts.nombre;
   const { default: PeerCtor } = await import("peerjs");
   const set = useSala.setState;
   set({ local, remotos: {}, estado: null, conexion: "conectando", detalle: undefined });
@@ -204,7 +206,12 @@ export async function conectar(opts: {
       if (reintento) clearTimeout(reintento);
       reintento = setTimeout(llamarAnfitrion, 3000);
     };
-    set({ enviar: (ac) => alAnfitrion?.open && alAnfitrion.send({ t: "accion", ac } satisfies Mensaje) });
+    set({
+      enviar: (ac) => {
+        if (ac.a === "nombre" && ac.n.trim()) nombre = ac.n.trim();
+        if (alAnfitrion?.open) alAnfitrion.send({ t: "accion", ac } satisfies Mensaje);
+      },
+    });
     peer.on("open", () => {
       set({ miId: peer.id });
       llamarAnfitrion();

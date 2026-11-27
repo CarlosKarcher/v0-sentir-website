@@ -7,7 +7,7 @@ import { useUser } from "@/lib/user-context";
 import { BotonTutorial } from "./Tutorial";
 import { registrarEsencia } from "@/lib/esencia/contador";
 import { CARTAS, CIERRES, ETAPAS, FRASE, MAX_JUGADORES, PERMITIR_PASO, TIPOS } from "@/lib/esencia/cartas";
-import { DORSO_INICIAL, VUELTAS_POR_ETAPA, type Comodin, type Estado, type Jugador } from "@/lib/esencia/juego";
+import { DORSO_INICIAL, MAX_NOMBRE, VUELTAS_POR_ETAPA, type Comodin, type Estado, type Jugador } from "@/lib/esencia/juego";
 import { guardarNombre, leerAnfitrion, leerNombre } from "@/lib/esencia/local";
 import { conectar, useSala } from "@/lib/esencia/red";
 import { DORSOS } from "./Dorsos";
@@ -262,6 +262,7 @@ function Invitar({ codigo, chico }: { codigo: string; chico?: boolean }) {
 
 function Espera({ codigo, estado, soyAnfitrion }: { codigo: string; estado: Estado; soyAnfitrion: boolean }) {
   const enviar = useSala((s) => s.enviar);
+  const miId = useSala((s) => s.miId);
   const anfitrion = estado.jugadores.find((j) => j.anfitrion);
   const { email: emailSentir } = useUser(); // para el contador de juegos realizados
   return (
@@ -274,9 +275,13 @@ function Espera({ codigo, estado, soyAnfitrion }: { codigo: string; estado: Esta
         </p>
       </div>
       <div className="chips">
-        {estado.jugadores.map((j) => (
-          <span key={j.id} className={`chip ${j.anfitrion ? "anf" : ""}`}>{j.nombre}</span>
-        ))}
+        {estado.jugadores.map((j) =>
+          j.id === miId ? (
+            <MiNombre key={j.id} nombre={j.nombre} className={`chip ${j.anfitrion ? "anf" : ""}`} />
+          ) : (
+            <span key={j.id} className={`chip ${j.anfitrion ? "anf" : ""}`}>{j.nombre}</span>
+          ),
+        )}
       </div>
       {soyAnfitrion ? (
         <>
@@ -582,7 +587,7 @@ function Videos({ estado, miId }: { estado: Estado; miId: string }) {
           <div key={j.id} className={`cuadro ${(estado.responde ?? estado.turno) === j.id && estado.fase !== "espera" ? "habla" : ""}`}>
             <span className="inicial">{j.nombre.slice(0, 1).toUpperCase()}</span>
             {s && <Video stream={s} espejo={yo} silencio={yo} />}
-            <span className="nombre">{yo ? `${j.nombre} (vos)` : j.nombre}</span>
+            {yo ? <MiNombre nombre={j.nombre} sufijo=" (vos)" className="nombre" /> : <span className="nombre">{j.nombre}</span>}
             {soyAnfitrion && !yo && (
               <button
                 className="cerrar-sesion"
@@ -617,6 +622,50 @@ function Videos({ estado, miId }: { estado: Estado; miId: string }) {
         </Confirmar>
       )}
     </div>
+  );
+}
+
+/** Botón con el nombre propio: al tocarlo, cada jugador puede cambiar cómo aparece en la mesa */
+function MiNombre({ nombre, className, sufijo = "" }: { nombre: string; className?: string; sufijo?: string }) {
+  const enviar = useSala((s) => s.enviar);
+  const [editando, setEditando] = useState(false);
+  const [valor, setValor] = useState(nombre);
+  const campo = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (editando) setTimeout(() => campo.current?.select(), 0);
+  }, [editando]);
+  const listo = valor.replace(/\s+/g, " ").trim();
+  const guardar = () => {
+    if (!listo) return;
+    enviar({ a: "nombre", n: listo.slice(0, MAX_NOMBRE) });
+    setEditando(false);
+  };
+  return (
+    <>
+      <button
+        type="button"
+        className={`${className ?? ""} mi-nombre`}
+        title="Cambiar mi nombre"
+        onClick={() => { setValor(nombre); setEditando(true); }}
+      >
+        {nombre}{sufijo} <span aria-hidden>✎</span>
+      </button>
+      {editando && (
+        <Confirmar titulo="Tu nombre en la mesa" aceptar="Guardar" onAceptar={guardar} onCancelar={() => setEditando(false)}>
+          Escribí cómo querés que te vean los demás.
+          <input
+            ref={campo}
+            className="texto"
+            style={{ display: "block", width: "100%", marginTop: 12 }}
+            value={valor}
+            maxLength={MAX_NOMBRE}
+            onChange={(e) => setValor(e.target.value)}
+            onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); guardar(); } }}
+            aria-label="Tu nombre"
+          />
+        </Confirmar>
+      )}
+    </>
   );
 }
 

@@ -53,7 +53,10 @@ export type Accion =
   | { a: "terminar" }
   | { a: "modo"; m: Modo }
   | { a: "dorso"; n: number }
+  | { a: "nombre"; n: string } // cada jugador puede cambiar su propio nombre
   | { a: "reiniciar" };
+
+export const MAX_NOMBRE = 30;
 
 /** Dorsos disponibles (ver components/Dorsos.tsx); el inicial es la Baraja clásica */
 export const CANT_DORSOS = 5;
@@ -275,6 +278,14 @@ export function aplicar(e: Estado, quien: string, ac: Accion): Estado {
     case "dorso":
       if (!esAnfitrion || !Number.isInteger(ac.n) || ac.n < 0 || ac.n >= CANT_DORSOS) return e;
       return { ...e, dorso: ac.n };
+
+    case "nombre": {
+      // solo el propio nombre, en cualquier momento de la partida
+      const n = String(ac.n ?? "").replace(/\s+/g, " ").trim().slice(0, MAX_NOMBRE);
+      const yo = e.jugadores.find((j) => j.id === quien);
+      if (!n || !yo || yo.nombre === n) return e;
+      return { ...e, jugadores: e.jugadores.map((j) => (j.id === quien ? { ...j, nombre: n } : j)) };
+    }
 
     case "reiniciar":
       // otra partida con la misma gente: vuelve a la sala de espera (se mezcla al empezar)

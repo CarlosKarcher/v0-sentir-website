@@ -69,9 +69,13 @@ export function BotonTutorial({ texto = "¿Primera vez? Mirá cómo se juega" }:
 
   return (
     <>
-      <button type="button" className="btn chico tutorial-boton" onClick={() => setAbierto(true)}>
-        ▶ {texto}
-      </button>
+      {/* el botón titila suave y una flechita lo señala, para invitar a ver el tutorial */}
+      <span className="tutorial-llamada">
+        <span className="tutorial-flecha" aria-hidden="true">➜</span>
+        <button type="button" className="btn tutorial-boton" onClick={() => setAbierto(true)}>
+          ▶ {texto}
+        </button>
+      </span>
       {recuadro && (raiz ? createPortal(recuadro, raiz) : recuadro)}
     </>
   );

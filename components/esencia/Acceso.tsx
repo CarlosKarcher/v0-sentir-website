@@ -52,8 +52,8 @@ export function EsenciaAcceso({ children }: { children: React.ReactNode }) {
               Primero, <em>entrá a Sentir</em>
             </h1>
             <p>
-              Para jugar, primero registrate o ingresá en <b>sentir.fun</b> desde este mismo navegador. Después volvé a abrir
-              el link de la mesa.
+              Aún no estás registrado en la página de Sentir. Registrate primero, por favor. Este espacio es solo para personas
+              que realizaron algún taller de Sentir. ¡Abrazo y te esperamos!
             </p>
             <a className="btn primario" href="/" style={{ marginTop: 18 }}>
               Ir a Sentir

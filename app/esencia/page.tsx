@@ -6,6 +6,7 @@ import { ETAPAS, FRASE, MAX_JUGADORES, PERMITIR_PASO } from "@/lib/esencia/carta
 import type { Modo } from "@/lib/esencia/juego";
 import { guardarAnfitrion, leerNombre, guardarNombre, nuevoCodigo } from "@/lib/esencia/local";
 import { useUser } from "@/lib/user-context";
+import { BotonTutorial } from "@/components/esencia/Tutorial";
 
 export default function Inicio() {
   const router = useRouter();
@@ -52,6 +53,7 @@ export default function Inicio() {
         </h1>
         <p>Un juego de encuentro: empezamos conociéndonos entre nosotros y terminamos descubriendo algo de nosotros mismos.</p>
         <p className="frase" style={{ marginTop: 18 }}>«{FRASE}»</p>
+        <BotonTutorial />
       </section>
 
       {/* acá solo se abre una mesa (quien la abre es el guía). Los invitados entran únicamente con el link de la mesa */}

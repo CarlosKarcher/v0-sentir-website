@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { useUser } from "@/lib/user-context";
+import { BotonTutorial } from "./Tutorial";
 import { CARTAS, CIERRES, ETAPAS, FRASE, MAX_JUGADORES, PERMITIR_PASO, TIPOS } from "@/lib/esencia/cartas";
 import { DORSO_INICIAL, VUELTAS_POR_ETAPA, type Comodin, type Estado, type Jugador } from "@/lib/esencia/juego";
 import { guardarNombre, leerAnfitrion, leerNombre } from "@/lib/esencia/local";
@@ -113,6 +114,9 @@ function Antesala({ local, onEntrar }: { local: MediaStream | null | undefined; 
           </label>
         )}
         <button className="btn primario ancho" disabled={!n.trim()}>Entrar a la mesa</button>
+        <div style={{ textAlign: "center", marginTop: -10 }}>
+          <BotonTutorial />
+        </div>
         <p className="muted small" style={{ textAlign: "center", margin: 0 }}>
           {PERMITIR_PASO
             ? "Nadie está obligado a responder. Se puede pasar, guardar silencio o simplemente escuchar."

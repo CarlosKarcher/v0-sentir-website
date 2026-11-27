@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import Link from "next/link";
 import { useUser } from "@/lib/user-context";
 import { BotonTutorial } from "./Tutorial";
+import { registrarEsencia } from "@/lib/esencia/contador";
 import { CARTAS, CIERRES, ETAPAS, FRASE, MAX_JUGADORES, PERMITIR_PASO, TIPOS } from "@/lib/esencia/cartas";
 import { DORSO_INICIAL, VUELTAS_POR_ETAPA, type Comodin, type Estado, type Jugador } from "@/lib/esencia/juego";
 import { guardarNombre, leerAnfitrion, leerNombre } from "@/lib/esencia/local";
@@ -262,6 +263,7 @@ function Invitar({ codigo, chico }: { codigo: string; chico?: boolean }) {
 function Espera({ codigo, estado, soyAnfitrion }: { codigo: string; estado: Estado; soyAnfitrion: boolean }) {
   const enviar = useSala((s) => s.enviar);
   const anfitrion = estado.jugadores.find((j) => j.anfitrion);
+  const { email: emailSentir } = useUser(); // para el contador de juegos realizados
   return (
     <div className="lobby">
       <div className="etapa-titulo">
@@ -288,7 +290,7 @@ function Espera({ codigo, estado, soyAnfitrion }: { codigo: string; estado: Esta
           <div className="solo-celular">
             <Compartir codigo={codigo} grande />
           </div>
-          <button className="btn primario" onClick={() => enviar({ a: "empezar" })}>
+          <button className="btn primario" onClick={() => { enviar({ a: "empezar" }); registrarEsencia("juego", emailSentir); }}>
             {estado.jugadores.length < 2 ? "Empezar igual" : "Empezar el juego"}
           </button>
         </>

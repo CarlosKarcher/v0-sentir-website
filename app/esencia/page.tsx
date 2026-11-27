@@ -7,18 +7,25 @@ import type { Modo } from "@/lib/esencia/juego";
 import { guardarAnfitrion, leerNombre, guardarNombre, nuevoCodigo } from "@/lib/esencia/local";
 import { useUser } from "@/lib/user-context";
 import { BotonTutorial } from "@/components/esencia/Tutorial";
+import { leerContadores, registrarEsencia, type ContadoresEsencia } from "@/lib/esencia/contador";
 
 export default function Inicio() {
   const router = useRouter();
   // en Sentir ya sabemos quién es: se usa su nombre de Sentir y no se le pregunta
-  const { nombre: nombreSentir } = useUser();
+  const { nombre: nombreSentir, email, esAdmin } = useUser();
   const [nombre, setNombre] = useState("");
   const [modo, setModo] = useState<Modo>("facilitador");
+  // contador: solo para administradores de Sentir (la base no se lo devuelve a nadie más)
+  const [contadores, setContadores] = useState<ContadoresEsencia | null>(null);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setNombre(nombreSentir || leerNombre());
   }, [nombreSentir]);
+
+  useEffect(() => {
+    if (esAdmin && email) leerContadores(email).then(setContadores);
+  }, [esAdmin, email]);
 
   const crear = (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,6 +34,7 @@ export default function Inicio() {
     guardarNombre(n);
     const c = nuevoCodigo();
     guardarAnfitrion(c, { nombre: n, modo });
+    registrarEsencia("mesa", email); // contador: una mesa abierta
     router.push(`/esencia/sala/${c}`);
   };
 
@@ -109,6 +117,16 @@ export default function Inicio() {
           : "Cada respuesta vale. Tomate tu tiempo y respondé desde donde estés hoy."}
       </p>
       <p className="muted small" style={{ textAlign: "right", margin: "28px 0 0" }}>Realizado por Carlos Karcher.</p>
+      {/* solo administradores: ingresos al juego · mesas abiertas · juegos realizados (al pasar el mouse se ve qué es cada uno) */}
+      {esAdmin && contadores && (
+        <p
+          className="small"
+          title={`Ingresos al juego: ${contadores.ingresos} · Mesas abiertas: ${contadores.mesas} · Juegos realizados: ${contadores.juegos}`}
+          style={{ textAlign: "center", margin: "18px 0 0", color: "var(--soft)", letterSpacing: "0.08em" }}
+        >
+          {contadores.ingresos} · {contadores.mesas} · {contadores.juegos}
+        </p>
+      )}
     </main>
   );
 }

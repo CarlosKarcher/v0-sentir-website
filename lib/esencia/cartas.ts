@@ -201,7 +201,7 @@ const BASE: Carta[] = [
   c(2, "sentir", "¿Cuándo fue la última vez que te sentiste realmente cuidado o cuidada?", 37),
   c(2, "sentir", "¿Qué te duele de cómo te tratás a vos mismo o a vos misma?", 38),
   c(2, "sentir", "¿Qué despedida te quedó pendiente?", 39),
-  c(2, "sentir", "¿Qué ternura te cuesta pedir?", 40),
+  c(2, "sentir", "¿Qué gesto de cariño te cuesta pedir?", 40),
   c(2, "sentir", "¿Qué te desborda, y qué hacés cuando te pasa?", 41),
   c(2, "sentir", "¿En qué momento de tu vida te hubiera hecho falta un abrazo?", 42),
   c(2, "accionar", "Respirá hondo tres veces y decí en una palabra qué está pasando adentro tuyo ahora.", 43),

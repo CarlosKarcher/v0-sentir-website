@@ -276,7 +276,7 @@ const BASE: Carta[] = [
   c(4, "sentir", "¿Qué sueño abandonaste y todavía te llama?", 12),
   c(4, "sentir", "¿Qué te da miedo de cambiar: perder, fracasar o que te vaya bien?", 13),
   c(4, "sentir", "Decile a alguien del grupo qué posibilidad ves en él o en ella que quizás no ve.", 14),
-  c(4, "sentir", "¿Qué querés que la gente recuerde de vos cuando ya no estés?", 15),
+  c(4, "sentir", "¿Qué querés que la gente que te importa recuerde de vos cuando ya no estés?", 15),
   c(4, "sentir", "¿Qué parte de vos está naciendo y necesita espacio?", 16),
   c(4, "sentir", "¿Qué te estás negando a recibir: amor, ayuda, descanso, reconocimiento?", 17),
   c(4, "sentir", "Imaginate dentro de cinco años, en paz. ¿Qué te agradecería esa persona que vas a ser?", 18),

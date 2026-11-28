@@ -203,7 +203,7 @@ const BASE: Carta[] = [
   c(2, "sentir", "¿Qué despedida te quedó pendiente?", 39),
   c(2, "sentir", "¿Qué ternura te cuesta pedir?", 40),
   c(2, "sentir", "¿Qué te desborda, y qué hacés cuando te pasa?", 41),
-  c(2, "sentir", "¿Qué momento de tu vida te gustaría que alguien abrazara con vos?", 42),
+  c(2, "sentir", "¿En qué momento de tu vida te hubiera hecho falta un abrazo?", 42),
   c(2, "accionar", "Respirá hondo tres veces y decí en una palabra qué está pasando adentro tuyo ahora.", 43),
   c(2, "accionar", "Completá en voz alta: «Lo que más me duele hoy es…».", 44),
   c(2, "accionar", "Contale al grupo qué se movió en vos al escuchar a alguien hoy, y a quién.", 45),

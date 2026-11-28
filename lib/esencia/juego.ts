@@ -7,8 +7,12 @@ export type { Comodin };
 export type Modo = "facilitador" | "turnos";
 export type Fase = "espera" | "juego" | "cierre" | "fin";
 
-/** Mínimo de cartas por persona en cada etapa (= vueltas por etapa) */
+/** Vueltas por etapa si el guía no elige otra cosa (= mínimo de cartas por persona en cada etapa) */
 export const VUELTAS_POR_ETAPA = 4;
+/** Opciones que puede elegir el guía antes de empezar */
+export const OPCIONES_VUELTAS = [3, 4] as const;
+/** Vueltas por etapa de esta partida */
+export const vueltasDe = (e: Estado) => e.vueltas ?? VUELTAS_POR_ETAPA;
 
 const cartaDe = (id: string) => CARTAS.find((c) => c.id === id);
 
@@ -23,7 +27,8 @@ export interface Estado {
   fase: Fase;
   jugadores: Jugador[];
   etapa: number;
-  vuelta: number; // vuelta dentro de la etapa (1..VUELTAS_POR_ETAPA)
+  vuelta: number; // vuelta dentro de la etapa (1..vueltas)
+  vueltas?: number; // vueltas por etapa (3 o 4): lo elige el guía antes de empezar
   turno: string | null; // a quién le toca (saca la carta en modo turnos)
   cartaId: string | null; // carta de etapa en juego
   cierre: number | null; // índice de carta de cierre en juego
@@ -56,6 +61,7 @@ export type Accion =
   | { a: "cierre" }
   | { a: "terminar" }
   | { a: "modo"; m: Modo }
+  | { a: "vueltas"; n: number } // vueltas por etapa (solo antes de empezar)
   | { a: "dorso"; n: number }
   | { a: "nombre"; n: string } // cada jugador puede cambiar su propio nombre
   | { a: "atras" } // deshace el último sacar / guardar / pasar / regalar (por si se tocó sin querer)
@@ -83,7 +89,7 @@ export function mezclar<T>(xs: T[]): T[] {
 
 /** Campos que se reinician al empezar una etapa. El comodín asegurado cae en la primera mitad de la etapa. */
 function inicioDeEtapa(e: Estado, etapa: number): Partial<Estado> {
-  const cartasMin = Math.max(1, e.jugadores.length) * VUELTAS_POR_ETAPA;
+  const cartasMin = Math.max(1, e.jugadores.length) * vueltasDe(e);
   return {
     etapa,
     vuelta: 1,
@@ -175,7 +181,7 @@ function sacarCarta(e: Estado): Estado {
 }
 
 /** Modo turnos: pasa al siguiente que todavía no tuvo carta en esta vuelta;
- *  al completar la vuelta sigue la próxima, y después de VUELTAS_POR_ETAPA avanza la etapa. */
+ *  al completar la vuelta sigue la próxima, y después de la última vuelta avanza la etapa. */
 function siguienteTurno(e: Estado): Estado {
   const respondieron = e.turno && !e.respondieron.includes(e.turno) ? [...e.respondieron, e.turno] : e.respondieron;
   const orden = e.jugadores.map((j) => j.id);
@@ -186,7 +192,7 @@ function siguienteTurno(e: Estado): Estado {
   // vuelta completa
   const proximo = orden[(desde + 1) % orden.length] ?? null;
   if (e.fase === "cierre") return { ...limpio, fase: "fin", turno: null, respondieron: [] };
-  if (e.vuelta < VUELTAS_POR_ETAPA) return { ...limpio, vuelta: e.vuelta + 1, turno: proximo, respondieron: [] };
+  if (e.vuelta < vueltasDe(e)) return { ...limpio, vuelta: e.vuelta + 1, turno: proximo, respondieron: [] };
   if (e.etapa < ETAPAS.length - 1) return { ...limpio, ...inicioDeEtapa(e, e.etapa + 1), turno: proximo };
   return { ...limpio, fase: "cierre", turno: proximo, respondieron: [] };
 }
@@ -194,7 +200,7 @@ function siguienteTurno(e: Estado): Estado {
 /** Acciones que se pueden deshacer con "Volver atrás" */
 const DESHACIBLES: Accion["a"][] = ["sacar", "listo", "paso", "regalar"];
 /** Acciones que no cambian el recorrido: no borran el paso guardado */
-const NEUTRAS: Accion["a"][] = ["nombre", "dorso"];
+const NEUTRAS: Accion["a"][] = ["nombre", "dorso", "vueltas"];
 
 /** ¿Esta persona puede volver atrás? El guía siempre; en modo turnos, también quien tenía o tiene el turno. */
 export function puedeVolver(e: Estado, quien: string): boolean {
@@ -322,6 +328,10 @@ function aplicarAccion(e: Estado, quien: string, ac: Accion): Estado {
         return { ...e, modo: ac.m, turno: e.turno ?? e.jugadores[0]?.id ?? null, respondieron: [], paso: false };
       }
       return { ...e, modo: ac.m };
+
+    case "vueltas":
+      if (!esAnfitrion || e.fase !== "espera" || !(OPCIONES_VUELTAS as readonly number[]).includes(ac.n)) return e;
+      return { ...e, vueltas: ac.n };
 
     case "dorso":
       if (!esAnfitrion || !Number.isInteger(ac.n) || ac.n < 0 || ac.n >= CANT_DORSOS) return e;

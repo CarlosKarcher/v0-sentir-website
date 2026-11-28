@@ -166,6 +166,13 @@
 .esencia .modo-selector button { border: 0; background: transparent; padding: 8px 18px; border-radius: 999px; cursor: pointer; color: var(--muted); font-size: 0.92rem; }
 .esencia .modo-selector button.activo { background: var(--luz); color: #1d140d; font-weight: 600; }
 
+/* rondas por etapa: el guía elige antes de empezar */
+.esencia .rondas { display: grid; gap: 10px; justify-items: center; }
+.esencia .duraciones { border-collapse: collapse; font-size: 0.85rem; color: var(--muted); }
+.esencia .duraciones th, .esencia .duraciones td { padding: 4px 12px; border-bottom: 1px solid var(--line); text-align: center; font-weight: 400; }
+.esencia .duraciones th:first-child, .esencia .duraciones td:first-child { text-align: left; }
+.esencia .duraciones tr.activo td { color: var(--ink); font-weight: 600; }
+
 /* panel de los invitados: se ve igual pero no se puede tocar */
 .esencia .solo-mirar .btn { cursor: default; pointer-events: none; }
 

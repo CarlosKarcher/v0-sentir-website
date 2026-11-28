@@ -1,8 +1,9 @@
 import { supabase } from "@/lib/supabase-client";
 
 // Contador de Nuestra Esencia (tabla esencia_eventos en la base de Sentir).
-// ingreso: un miembro entra al juego · mesa: un guía abre una mesa · juego: el guía empieza el juego.
-export type EventoEsencia = "ingreso" | "mesa" | "juego";
+// ingreso: un miembro entra al juego · mesa: un guía abre una mesa · juego: el guía empieza el juego (hora de inicio)
+// fin: el juego termina (hora de fin; lo anota el guía)
+export type EventoEsencia = "ingreso" | "mesa" | "juego" | "fin";
 
 /** Anota un evento. Nunca frena el juego: si falla, se ignora. */
 export function registrarEsencia(tipo: EventoEsencia, email?: string | null) {

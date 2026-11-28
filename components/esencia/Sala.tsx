@@ -7,7 +7,7 @@ import { useUser } from "@/lib/user-context";
 import { BotonTutorial } from "./Tutorial";
 import { registrarEsencia } from "@/lib/esencia/contador";
 import { CARTAS, CIERRES, ETAPAS, FRASE, MAX_JUGADORES, PERMITIR_PASO, TIPOS } from "@/lib/esencia/cartas";
-import { DORSO_INICIAL, MAX_NOMBRE, VUELTAS_POR_ETAPA, puedeVolver, type Comodin, type Estado, type Jugador } from "@/lib/esencia/juego";
+import { DORSO_INICIAL, MAX_NOMBRE, OPCIONES_VUELTAS, puedeVolver, vueltasDe, type Comodin, type Estado, type Jugador } from "@/lib/esencia/juego";
 import { guardarNombre, leerAnfitrion, leerNombre } from "@/lib/esencia/local";
 import { conectar, useSala } from "@/lib/esencia/red";
 import { DORSOS } from "./Dorsos";
@@ -132,6 +132,16 @@ function Antesala({ local, onEntrar }: { local: MediaStream | null | undefined; 
 
 function Mesa({ codigo }: { codigo: string }) {
   const { estado, conexion, detalle, miId } = useSala();
+  const { email: emailSentir } = useUser();
+
+  // hora de fin: el guía la anota cuando el juego pasa a la pantalla final (por "Terminar" o al completar el cierre)
+  const faseAntes = useRef(estado?.fase);
+  const soyGuia = !!estado?.jugadores.find((j) => j.id === miId)?.anfitrion;
+  useEffect(() => {
+    const antes = faseAntes.current;
+    faseAntes.current = estado?.fase;
+    if (soyGuia && estado?.fase === "fin" && (antes === "juego" || antes === "cierre")) registrarEsencia("fin", emailSentir);
+  }, [estado?.fase, soyGuia, emailSentir]);
 
   if (!estado || !miId) {
     const textos: Record<string, string> = {
@@ -289,6 +299,7 @@ function Espera({ codigo, estado, soyAnfitrion }: { codigo: string; estado: Esta
             Compartí el link de la mesa con quienes van a jugar. Solo se puede entrar con ese link.
           </p>
           <ModoSelector estado={estado} />
+          <RondasSelector estado={estado} />
           <div className="fila solo-escritorio">
             <Invitar codigo={codigo} />
           </div>
@@ -300,7 +311,10 @@ function Espera({ codigo, estado, soyAnfitrion }: { codigo: string; estado: Esta
           </button>
         </>
       ) : (
-        <p className="muted">Cuando {anfitrion?.nombre ?? "quien abrió la mesa"} lo decida, empezamos.</p>
+        <p className="muted">
+          Cuando {anfitrion?.nombre ?? "quien abrió la mesa"} lo decida, empezamos.<br />
+          <span className="small">Partida de {vueltasDe(estado)} rondas por etapa · {duracionTexto(vueltasDe(estado), estado.jugadores.length)}</span>
+        </p>
       )}
       <p className="frase" style={{ margin: 0 }}>«{FRASE}»</p>
     </div>
@@ -332,7 +346,7 @@ function Juego({ estado, miId, soyAnfitrion }: { estado: Estado; miId: string; s
   const eligiendo = comodin === "elegir" && !responde; // falta elegir a quién se le regala
   const puedoRegalar = eligiendo && (esMiTurno || soyAnfitrion);
   const vueltaTxt =
-    estado.vuelta <= VUELTAS_POR_ETAPA ? `Vuelta ${estado.vuelta} de ${VUELTAS_POR_ETAPA}` : `Vuelta ${estado.vuelta}`;
+    estado.vuelta <= vueltasDe(estado) ? `Vuelta ${estado.vuelta} de ${vueltasDe(estado)}` : `Vuelta ${estado.vuelta}`;
 
   return (
     <>
@@ -479,6 +493,59 @@ function ModoSelector({ estado }: { estado: Estado }) {
   );
 }
 
+/** Duración aproximada medida en partidas reales (en minutos), según rondas por etapa y cantidad de jugadores */
+const DURACION: Record<number, { cuatro: number; seis: number }> = {
+  3: { cuatro: 80, seis: 120 },
+  4: { cuatro: 105, seis: 150 },
+};
+
+const horas = (min: number) => {
+  const h = Math.floor(min / 60);
+  const m = Math.round(min % 60);
+  return h ? `${h} h${m ? ` ${m} min` : ""}` : `${m} min`;
+};
+
+/** Texto con la duración aproximada para esta mesa (interpola entre 4 y 6 jugadores) */
+function duracionTexto(vueltas: number, jugadores: number) {
+  const d = DURACION[vueltas];
+  if (!d) return "";
+  const n = Math.max(2, jugadores);
+  const min = Math.round((d.cuatro + ((d.seis - d.cuatro) * (n - 4)) / 2) / 5) * 5;
+  return `con ${n} personas, unos ${horas(min)} aprox.`;
+}
+
+/** El guía elige 3 o 4 rondas por etapa antes de empezar, viendo cuánto dura cada opción */
+function RondasSelector({ estado }: { estado: Estado }) {
+  const enviar = useSala((s) => s.enviar);
+  const actual = vueltasDe(estado);
+  return (
+    <div className="rondas">
+      <div className="modo-selector" role="group" aria-label="Rondas por etapa">
+        {OPCIONES_VUELTAS.map((n) => (
+          <button key={n} className={actual === n ? "activo" : ""} onClick={() => enviar({ a: "vueltas", n })}>
+            {n} rondas por etapa
+          </button>
+        ))}
+      </div>
+      <table className="duraciones">
+        <thead>
+          <tr><th>Duración aprox.</th><th>4 personas</th><th>6 personas</th></tr>
+        </thead>
+        <tbody>
+          {OPCIONES_VUELTAS.map((n) => (
+            <tr key={n} className={actual === n ? "activo" : ""}>
+              <td>{n} rondas</td>
+              <td>{horas(DURACION[n].cuatro)}</td>
+              <td>{horas(DURACION[n].seis)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p className="muted small" style={{ margin: 0 }}>Esta mesa: {duracionTexto(actual, estado.jugadores.length)}</p>
+    </div>
+  );
+}
+
 function Control({ estado }: { estado: Estado }) {
   const enviar = useSala((s) => s.enviar);
   const guia = estado.modo === "facilitador";
@@ -500,9 +567,9 @@ function Control({ estado }: { estado: Estado }) {
       <ModoSelector estado={estado} />
       {guia && estado.fase === "juego" && (
         <p className="muted small" style={{ textAlign: "center", margin: 0 }}>
-          {estado.vuelta > VUELTAS_POR_ETAPA
-            ? `Ya completaron las ${VUELTAS_POR_ETAPA} vueltas de esta etapa: cuando quieras, pasá a la siguiente.`
-            : `Vuelta ${estado.vuelta} de ${VUELTAS_POR_ETAPA}: mínimo ${VUELTAS_POR_ETAPA} cartas por persona en cada etapa.`}
+          {estado.vuelta > vueltasDe(estado)
+            ? `Ya completaron las ${vueltasDe(estado)} vueltas de esta etapa: cuando quieras, pasá a la siguiente.`
+            : `Vuelta ${estado.vuelta} de ${vueltasDe(estado)}: mínimo ${vueltasDe(estado)} cartas por persona en cada etapa.`}
         </p>
       )}
       {guia && (

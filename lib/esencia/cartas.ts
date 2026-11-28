@@ -215,7 +215,7 @@ const BASE: Carta[] = [
   c(3, "pensar", "¿Qué repetís de tu madre o de tu padre que juraste que nunca ibas a repetir?", 1),
   c(3, "pensar", "¿Qué mentira te contaste durante años para no ver algo?", 2),
   c(3, "pensar", "¿Qué decisión de tu pasado todavía te pesa, y qué aprendiste de ella?", 3),
-  c(3, "pensar", "¿Qué lugar ocupaste en tu familia para que todo funcionara: el fuerte, el invisible, el que cuida, el problema?", 4),
+  c(3, "pensar", "¿Qué lugar ocupaste en tu familia para que todo funcionara?", 4),
   c(3, "pensar", "¿Qué secreto familiar sentís que todavía te toca de alguna manera?", 5),
   c(3, "pensar", "¿De qué te hacés cargo hoy que antes culpabas a otros?", 6),
   c(3, "pensar", "¿Qué parte de tu historia te avergüenza, y qué te enseñó?", 7),

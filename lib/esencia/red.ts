@@ -21,6 +21,8 @@ interface Sala {
   enviar: (ac: Accion) => void;
   /** solo el anfitrión: cierra la sesión de un jugador (por ejemplo si quedó trabada) */
   expulsar: (id: string) => void;
+  /** pone una cámara nueva en plena mesa (por ejemplo, después de «Reintentar» cuando no había cámara) */
+  cambiarCamara: (s: MediaStream) => void;
 }
 
 export const useSala = create<Sala>(() => ({
@@ -31,6 +33,7 @@ export const useSala = create<Sala>(() => ({
   remotos: {},
   enviar: () => {},
   expulsar: () => {},
+  cambiarCamara: () => {},
 }));
 
 const TURN_USER = process.env.NEXT_PUBLIC_TURN_USER;
@@ -54,7 +57,13 @@ const ICE = {
 function streamVacio(): MediaStream {
   const canvas = Object.assign(document.createElement("canvas"), { width: 160, height: 120 });
   canvas.getContext("2d")?.fillRect(0, 0, 160, 120);
-  return canvas.captureStream(1);
+  const s = canvas.captureStream(1);
+  // también un audio en silencio, así la llamada ya tiene lugar para el micrófono si después aparece la cámara
+  try {
+    const ac = new AudioContext();
+    ac.createMediaStreamDestination().stream.getAudioTracks().forEach((t) => s.addTrack(t));
+  } catch {}
+  return s;
 }
 
 export const idAnfitrion =(codigo: string) => `esencia-${codigo.toLowerCase()}`;
@@ -100,7 +109,21 @@ export async function conectar(opts: {
     });
   };
   // sin cámara igual mandamos un video negro, así la llamada se arma y esa persona ve a las demás
-  const salida = local ?? streamVacio();
+  let salida = local ?? streamVacio();
+  let reemplazo: MediaStream | null = null; // cámara conseguida en plena mesa (se apaga al salir)
+  set({
+    cambiarCamara: (s) => {
+      salida = s;
+      reemplazo = s;
+      for (const m of llamadas.values()) {
+        for (const snd of m.peerConnection?.getSenders() ?? []) {
+          const t = s.getTracks().find((x) => x.kind === snd.track?.kind);
+          if (t) snd.replaceTrack(t).catch(() => {});
+        }
+      }
+      set({ local: s });
+    },
+  });
   peer.on("call", (m) => {
     m.answer(salida);
     atarLlamada(m);
@@ -255,7 +278,8 @@ export async function conectar(opts: {
       for (const c of invitados.values()) c.close();
       alAnfitrion?.close();
       peer.destroy();
+      reemplazo?.getTracks().forEach((t) => t.stop());
     }, anfitrion ? 300 : 0);
-    set({ estado: null, remotos: {}, enviar: () => {}, expulsar: () => {} });
+    set({ estado: null, remotos: {}, enviar: () => {}, expulsar: () => {}, cambiarCamara: () => {} });
   };
 }

@@ -571,7 +571,22 @@ function Carta({ rev, visible, tipo, etiqueta, texto, dorso, cinta }: { rev: num
 /* ---------------- videos ---------------- */
 
 function Videos({ estado, miId }: { estado: Estado; miId: string }) {
-  const { local, remotos, expulsar } = useSala();
+  const { local, remotos, expulsar, cambiarCamara } = useSala();
+  const [probando, setProbando] = useState(false);
+  const [fallo, setFallo] = useState(false);
+  // sin cámara: volver a pedirla sin salir de la mesa
+  const reintentarCamara = () => {
+    setProbando(true);
+    setFallo(false);
+    navigator.mediaDevices
+      ?.getUserMedia({
+        video: { facingMode: "user", width: { ideal: 320 }, height: { ideal: 240 }, frameRate: { ideal: 15 } },
+        audio: { echoCancellation: true, noiseSuppression: true },
+      })
+      .then((st) => { cambiarCamara(st); setCam(true); setMic(true); })
+      .catch(() => setFallo(true))
+      .finally(() => setProbando(false));
+  };
   const soyAnfitrion = estado.jugadores.find((j) => j.id === miId)?.anfitrion ?? false;
   const [aCerrar, setACerrar] = useState<Jugador | null>(null); // jugador al que el guía quiere cerrarle la sesión
   const [mic, setMic] = useState(true);
@@ -587,6 +602,14 @@ function Videos({ estado, miId }: { estado: Estado; miId: string }) {
           <div key={j.id} className={`cuadro ${(estado.responde ?? estado.turno) === j.id && estado.fase !== "espera" ? "habla" : ""}`}>
             <span className="inicial">{j.nombre.slice(0, 1).toUpperCase()}</span>
             {s && <Video stream={s} espejo={yo} silencio={yo} />}
+            {yo && !local && (
+              <div className="sin-camara" title="Revisá el permiso de la cámara (icono a la izquierda de sentir.fun) y cerrá otros programas que la estén usando.">
+                <span>{fallo ? "Sigue sin cámara: revisá el permiso o cerrá otros programas que la usen" : "Sin cámara"}</span>
+                <button className="btn chico" onClick={reintentarCamara} disabled={probando}>
+                  {probando ? "Probando…" : "Reintentar"}
+                </button>
+              </div>
+            )}
             {yo ? <MiNombre nombre={j.nombre} sufijo=" (vos)" className="nombre" /> : <span className="nombre">{j.nombre}</span>}
             {soyAnfitrion && !yo && (
               <button

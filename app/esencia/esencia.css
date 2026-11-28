@@ -199,6 +199,9 @@
 .esencia .chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
 .esencia .chip { padding: 6px 14px; border-radius: 999px; border: 1px solid var(--line); font-size: 0.9rem; }
 .esencia .chip.anf { border-color: var(--luz); }
+/* sin cámara: aviso y botón para reintentar en el cuadro propio */
+.esencia .sin-camara { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 8px 8px 34px; text-align: center; font-size: 0.78rem; color: var(--soft); background: rgba(13, 10, 8, 0.82); }
+@media (max-width: 640px) { .esencia .sin-camara { font-size: 0.62rem; gap: 4px; padding: 4px 4px 22px; } }
 /* el nombre propio se puede tocar para cambiarlo */
 .esencia .mi-nombre { font: inherit; color: inherit; cursor: pointer; background: transparent; }
 .esencia .cuadro .nombre.mi-nombre { border: 0; background: rgba(0, 0, 0, 0.55); font-size: 0.8rem; }

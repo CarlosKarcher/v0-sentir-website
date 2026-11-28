@@ -330,6 +330,9 @@ const TEXTO_COMODIN: Record<Comodin, string> = {
   izquierda: "★ Regalo para tu izquierda",
 };
 
+/** Segundos que espera el botón "Listo" después de dar vuelta la carta */
+const ESPERA_LISTO = 15;
+
 function Juego({ estado, miId, soyAnfitrion }: { estado: Estado; miId: string; soyAnfitrion: boolean }) {
   const enviar = useSala((s) => s.enviar);
   const cierre = estado.fase === "cierre";
@@ -345,6 +348,15 @@ function Juego({ estado, miId, soyAnfitrion }: { estado: Estado; miId: string; s
   const comodin = hayCarta ? estado.comodin : null;
   const eligiendo = comodin === "elegir" && !responde; // falta elegir a quién se le regala
   const puedoRegalar = eligiendo && (esMiTurno || soyAnfitrion);
+  // al dar vuelta una carta, "Listo" y "Paso" esperan unos segundos: así un doble clic no pasa el turno sin querer
+  const [falta, setFalta] = useState(0);
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setFalta(hayCarta ? ESPERA_LISTO : 0);
+    if (!hayCarta) return;
+    const t = setInterval(() => setFalta((s) => (s > 0 ? s - 1 : 0)), 1000);
+    return () => clearInterval(t);
+  }, [estado.rev, hayCarta]);
   const vueltaTxt =
     estado.vuelta <= vueltasDe(estado) ? `Vuelta ${estado.vuelta} de ${vueltasDe(estado)}` : `Vuelta ${estado.vuelta}`;
 
@@ -429,8 +441,10 @@ function Juego({ estado, miId, soyAnfitrion }: { estado: Estado; miId: string; s
           hayCarta ? (
             eligiendo ? null : (
               <>
-                <button className="btn primario" onClick={() => enviar({ a: "listo" })}>Listo, sigue otra persona</button>
-                {PERMITIR_PASO && esMiTurno && <button className="btn" onClick={() => enviar({ a: "paso" })}>Paso</button>}
+                <button className="btn primario" disabled={falta > 0} onClick={() => enviar({ a: "listo" })}>
+                  {falta > 0 ? `Tomate tu tiempo… (${falta})` : "Listo, sigue otra persona"}
+                </button>
+                {PERMITIR_PASO && esMiTurno && <button className="btn" disabled={falta > 0} onClick={() => enviar({ a: "paso" })}>Paso</button>}
               </>
             )
           ) : (

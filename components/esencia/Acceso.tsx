@@ -1,27 +1,30 @@
 "use client"
 
 import { useEffect, useRef } from "react"
+import { usePathname } from "next/navigation"
 import { useUser } from "@/lib/user-context"
 import { registrarEsencia } from "@/lib/esencia/contador"
 
-// Control de entrada a Nuestra Esencia: solo juegan miembros de Sentir con al menos un taller
-// (las constelaciones no cuentan) o administradores, entren por el menú, por un link o con el código.
-// El juego NUNCA pide el mail: usa el usuario que el navegador ya tiene guardado de sentir.fun.
-// Si no hay ninguno, se manda a registrarse o ingresar en sentir.fun desde ese mismo navegador.
-// No toca el juego: si la persona cumple, se muestra la página tal cual.
+// Control de entrada a Nuestra Esencia. El juego NUNCA pide el mail.
+// - Abrir una mesa (la portada /esencia): solo miembros de Sentir con al menos un taller
+//   (las constelaciones no cuentan) o administradores, según el usuario que el navegador ya tiene guardado.
+// - Entrar con el link de una mesa (/esencia/sala/…): pasa cualquiera que el guía invitó, sin mail
+//   ni registro; la sala solo le pide el nombre si el navegador no lo conoce.
 export function EsenciaAcceso({ children }: { children: React.ReactNode }) {
   const { estado, puedeEsencia, email } = useUser()
+  const invitado = (usePathname() ?? "").startsWith("/esencia/sala/")
+  const pasa = puedeEsencia || invitado
 
-  // contador: un «ingreso» cada vez que un miembro entra al juego (por el menú o por el link de una mesa)
+  // contador: un «ingreso» cada vez que alguien entra al juego (por el menú o por el link de una mesa)
   const contado = useRef(false)
   useEffect(() => {
-    if (puedeEsencia && !contado.current) {
+    if (pasa && estado !== "cargando" && !contado.current) {
       contado.current = true
       registrarEsencia("ingreso", email)
     }
-  }, [puedeEsencia, email])
+  }, [pasa, estado, email])
 
-  if (puedeEsencia) return <>{children}</>
+  if (pasa) return <>{children}</>
 
   const cargando = estado === "cargando"
   const identificado = estado === "registrado" || estado === "sin_registro"

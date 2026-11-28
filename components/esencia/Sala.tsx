@@ -7,7 +7,7 @@ import { useUser } from "@/lib/user-context";
 import { BotonTutorial } from "./Tutorial";
 import { registrarEsencia } from "@/lib/esencia/contador";
 import { CARTAS, CIERRES, ETAPAS, FRASE, MAX_JUGADORES, PERMITIR_PASO, TIPOS } from "@/lib/esencia/cartas";
-import { DORSO_INICIAL, MAX_NOMBRE, VUELTAS_POR_ETAPA, type Comodin, type Estado, type Jugador } from "@/lib/esencia/juego";
+import { DORSO_INICIAL, MAX_NOMBRE, VUELTAS_POR_ETAPA, puedeVolver, type Comodin, type Estado, type Jugador } from "@/lib/esencia/juego";
 import { guardarNombre, leerAnfitrion, leerNombre } from "@/lib/esencia/local";
 import { conectar, useSala } from "@/lib/esencia/red";
 import { DORSOS } from "./Dorsos";
@@ -423,6 +423,11 @@ function Juego({ estado, miId, soyAnfitrion }: { estado: Estado; miId: string; s
             <button className="btn primario" onClick={() => enviar({ a: "sacar" })}>Sacar mi carta</button>
           )
         ) : null}
+        {puedeVolver(estado, miId) && (
+          <button className="btn chico" onClick={() => enviar({ a: "atras" })} title="Deshace el último paso, por si se tocó sin querer">
+            ↶ Volver atrás
+          </button>
+        )}
       </div>
 
       {soyAnfitrion ? <Control estado={estado} /> : <Recorrido estado={estado} />}

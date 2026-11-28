@@ -39,7 +39,11 @@ export interface Estado {
   comodinesEtapa: number; // comodines que salieron en esta etapa
   comodinEn: number; // en qué carta de la etapa sale el comodín asegurado
   rev: number; // cambia en cada carta nueva (para animar)
+  anterior?: Paso | null; // cómo estaba la mesa antes del último toque (para "Volver atrás")
 }
+
+/** Foto de la mesa antes de sacar, guardar, pasar o regalar una carta. Solo se guarda un paso. */
+export type Paso = Omit<Estado, "anterior">;
 
 export type Accion =
   | { a: "empezar" }
@@ -54,6 +58,7 @@ export type Accion =
   | { a: "modo"; m: Modo }
   | { a: "dorso"; n: number }
   | { a: "nombre"; n: string } // cada jugador puede cambiar su propio nombre
+  | { a: "atras" } // deshace el último sacar / guardar / pasar / regalar (por si se tocó sin querer)
   | { a: "reiniciar" };
 
 export const MAX_NOMBRE = 30;
@@ -186,7 +191,50 @@ function siguienteTurno(e: Estado): Estado {
   return { ...limpio, fase: "cierre", turno: proximo, respondieron: [] };
 }
 
+/** Acciones que se pueden deshacer con "Volver atrás" */
+const DESHACIBLES: Accion["a"][] = ["sacar", "listo", "paso", "regalar"];
+/** Acciones que no cambian el recorrido: no borran el paso guardado */
+const NEUTRAS: Accion["a"][] = ["nombre", "dorso"];
+
+/** ¿Esta persona puede volver atrás? El guía siempre; en modo turnos, también quien tenía o tiene el turno. */
+export function puedeVolver(e: Estado, quien: string): boolean {
+  const a = e.anterior;
+  if (!a || (e.fase !== "juego" && e.fase !== "cierre")) return false;
+  if (e.jugadores.find((j) => j.id === quien)?.anfitrion) return true;
+  return e.modo === "turnos" && (a.turno === quien || e.turno === quien);
+}
+
+function volverAtras(e: Estado, quien: string): Estado {
+  const a = e.anterior;
+  if (!a || !puedeVolver(e, quien)) return e;
+  // se vuelve a la foto anterior, pero con la gente, el dorso y el modo de ahora
+  const ids = new Set(e.jugadores.map((j) => j.id));
+  const vivo = (id: string | null) => (id && ids.has(id) ? id : null);
+  return {
+    ...a,
+    jugadores: e.jugadores,
+    dorso: e.dorso,
+    modo: e.modo,
+    turno: vivo(a.turno),
+    responde: vivo(a.responde),
+    respondieron: a.respondieron.filter((id) => ids.has(id)),
+    rev: e.rev + 1,
+    anterior: null,
+  };
+}
+
 export function aplicar(e: Estado, quien: string, ac: Accion): Estado {
+  if (ac.a === "atras") return volverAtras(e, quien);
+  const n = aplicarAccion(e, quien, ac);
+  if (n === e || NEUTRAS.includes(ac.a)) return n;
+  if (DESHACIBLES.includes(ac.a)) {
+    const { anterior: _, ...foto } = e;
+    return { ...n, anterior: foto };
+  }
+  return { ...n, anterior: null };
+}
+
+function aplicarAccion(e: Estado, quien: string, ac: Accion): Estado {
   const esAnfitrion = e.jugadores.find((j) => j.id === quien)?.anfitrion ?? false;
   const esSuTurno = e.turno === quien;
   const enJuego = e.fase === "juego" || e.fase === "cierre";
